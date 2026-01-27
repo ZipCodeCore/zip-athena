@@ -416,6 +416,12 @@ func (h *Handler) AddQuestionToQuizHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	// Validate IDs are positive
+	if req.QuizID <= 0 || req.QuestionID <= 0 {
+		http.Error(w, "quiz_id and question_id must be positive integers", http.StatusBadRequest)
+		return
+	}
+
 	if err := h.db.AddQuestionToQuiz(req.QuizID, req.QuestionID, req.Order); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -434,6 +440,12 @@ func (h *Handler) RemoveQuestionFromQuizHandler(w http.ResponseWriter, r *http.R
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate IDs are positive
+	if req.QuizID <= 0 || req.QuestionID <= 0 {
+		http.Error(w, "quiz_id and question_id must be positive integers", http.StatusBadRequest)
 		return
 	}
 
@@ -482,6 +494,12 @@ func (h *Handler) AddQuestionToTestHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	// Validate IDs are positive
+	if req.TestID <= 0 || req.QuestionID <= 0 {
+		http.Error(w, "test_id and question_id must be positive integers", http.StatusBadRequest)
+		return
+	}
+
 	if err := h.db.AddQuestionToTest(req.TestID, req.QuestionID, req.Order); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -500,6 +518,12 @@ func (h *Handler) RemoveQuestionFromTestHandler(w http.ResponseWriter, r *http.R
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate IDs are positive
+	if req.TestID <= 0 || req.QuestionID <= 0 {
+		http.Error(w, "test_id and question_id must be positive integers", http.StatusBadRequest)
 		return
 	}
 

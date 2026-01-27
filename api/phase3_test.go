@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -114,9 +115,9 @@ func TestGetQuizQuestions(t *testing.T) {
 	for i := 1; i <= 3; i++ {
 		question := &models.Question{
 			TopicID:         topic.ID,
-			QuestionText:    "Question " + string(rune('0'+i)),
+			QuestionText:    fmt.Sprintf("Question %d", i),
 			Difficulty:      i,
-			TopicQuestionID: "1." + string(rune('0'+i)),
+			TopicQuestionID: fmt.Sprintf("1.%d", i),
 			CreatedAt:       time.Now(),
 		}
 		db.CreateQuestion(question)
@@ -247,9 +248,9 @@ func TestGetTestQuestions(t *testing.T) {
 	for i := 1; i <= 5; i++ {
 		question := &models.Question{
 			TopicID:         topic.ID,
-			QuestionText:    "Question " + string(rune('0'+i)),
+			QuestionText:    "Question " + fmt.Sprintf("%d", i),
 			Difficulty:      i,
-			TopicQuestionID: "1." + string(rune('0'+i)),
+			TopicQuestionID: "1." + fmt.Sprintf("%d", i),
 			CreatedAt:       time.Now(),
 		}
 		db.CreateQuestion(question)
@@ -332,7 +333,7 @@ func TestListTests(t *testing.T) {
 	// Create multiple tests
 	for i := 1; i <= 3; i++ {
 		test := &models.Test{
-			Name:        "Test " + string(rune('0'+i)),
+			Name:        "Test " + fmt.Sprintf("%d", i),
 			TopicID:     topic.ID,
 			Description: "Test description",
 			TimeLimit:   60,
@@ -517,8 +518,8 @@ func TestGetCohortAnalytics(t *testing.T) {
 
 	for i := 1; i <= 5; i++ {
 		student := &models.User{
-			Username:  "student" + string(rune('0'+i)),
-			Email:     "student" + string(rune('0'+i)) + "@test.com",
+			Username:  "student" + fmt.Sprintf("%d", i),
+			Email:     "student" + fmt.Sprintf("%d", i) + "@test.com",
 			IsAdmin:   false,
 			CreatedAt: time.Now(),
 		}
@@ -684,9 +685,9 @@ func TestExportQuestions(t *testing.T) {
 	for i := 1; i <= 3; i++ {
 		question := &models.Question{
 			TopicID:         topic.ID,
-			QuestionText:    "SQL Question " + string(rune('0'+i)),
+			QuestionText:    "SQL Question " + fmt.Sprintf("%d", i),
 			Difficulty:      i,
-			TopicQuestionID: "3." + string(rune('0'+i)),
+			TopicQuestionID: "3." + fmt.Sprintf("%d", i),
 			CreatedAt:       time.Now(),
 		}
 		db.CreateQuestion(question)
