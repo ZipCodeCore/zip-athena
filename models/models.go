@@ -89,3 +89,97 @@ type UserQuestionState struct {
 	State         int       `json:"state"` // 0=New, 1=Learning, 2=Review, 3=Relearning
 	LastReview    time.Time `json:"last_review"`
 }
+
+// Test represents a formal assessment (Phase 3)
+type Test struct {
+	ID          int       `json:"id"`
+	Name        string    `json:"name"`
+	TopicID     int       `json:"topic_id"`
+	Description string    `json:"description"`
+	TimeLimit   int       `json:"time_limit"` // in minutes, 0 for unlimited
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+// QuizQuestion represents many-to-many relationship between Quiz and Question (Phase 3)
+type QuizQuestion struct {
+	ID         int `json:"id"`
+	QuizID     int `json:"quiz_id"`
+	QuestionID int `json:"question_id"`
+	Order      int `json:"order"` // Order of question in quiz
+}
+
+// TestQuestion represents many-to-many relationship between Test and Question (Phase 3)
+type TestQuestion struct {
+	ID         int `json:"id"`
+	TestID     int `json:"test_id"`
+	QuestionID int `json:"question_id"`
+	Order      int `json:"order"` // Order of question in test
+}
+
+// StudentProgress represents analytics data for a student (Phase 3)
+type StudentProgress struct {
+	UserID              int                `json:"user_id"`
+	Username            string             `json:"username"`
+	TotalQuizzes        int                `json:"total_quizzes"`
+	CompletedQuizzes    int                `json:"completed_quizzes"`
+	AverageScore        float64            `json:"average_score"`
+	TotalPoints         int                `json:"total_points"`
+	QuestionAccuracy    float64            `json:"question_accuracy"`
+	TopicBreakdown      map[string]float64 `json:"topic_breakdown"`      // topic -> accuracy
+	RecentActivity      []QuizAttempt      `json:"recent_activity"`
+	FSRSMetrics         FSRSMetrics        `json:"fsrs_metrics"`
+}
+
+// FSRSMetrics represents FSRS-related statistics (Phase 3)
+type FSRSMetrics struct {
+	TotalCards     int     `json:"total_cards"`
+	DueCards       int     `json:"due_cards"`
+	NewCards       int     `json:"new_cards"`
+	ReviewCards    int     `json:"review_cards"`
+	AvgStability   float64 `json:"avg_stability"`
+	AvgDifficulty  float64 `json:"avg_difficulty"`
+}
+
+// CohortAnalytics represents analytics for all students (Phase 3)
+type CohortAnalytics struct {
+	TotalStudents       int                    `json:"total_students"`
+	ActiveStudents      int                    `json:"active_students"`      // students active in last 7 days
+	AverageCohortScore  float64                `json:"average_cohort_score"`
+	TotalQuizzesTaken   int                    `json:"total_quizzes_taken"`
+	TopPerformers       []StudentProgress      `json:"top_performers"`       // top 5 students
+	BottomPerformers    []StudentProgress      `json:"bottom_performers"`    // bottom 5 students
+	TopicDifficulty     map[string]float64     `json:"topic_difficulty"`     // topic -> avg difficulty
+	QuestionStats       []QuestionStatistic    `json:"question_stats"`
+}
+
+// QuestionStatistic represents statistics for a specific question (Phase 3)
+type QuestionStatistic struct {
+	QuestionID      int     `json:"question_id"`
+	TopicQuestionID string  `json:"topic_question_id"`
+	QuestionText    string  `json:"question_text"`
+	TotalAttempts   int     `json:"total_attempts"`
+	CorrectAttempts int     `json:"correct_attempts"`
+	Accuracy        float64 `json:"accuracy"`
+	AvgDifficulty   float64 `json:"avg_difficulty"`
+}
+
+// QuizExport represents the export format for quizzes (Phase 3)
+type QuizExport struct {
+	Quiz      Quiz                `json:"quiz"`
+	Questions []QuestionWithAnswers `json:"questions"`
+}
+
+// QuestionWithAnswers represents a question with its answers for export (Phase 3)
+type QuestionWithAnswers struct {
+	Question Question `json:"question"`
+	Answers  []Answer `json:"answers"`
+}
+
+// QuizImport represents the import format for quizzes (Phase 3)
+type QuizImport struct {
+	Name        string                `json:"name"`
+	TopicID     int                   `json:"topic_id"`
+	Description string                `json:"description"`
+	Questions   []QuestionWithAnswers `json:"questions"`
+}
