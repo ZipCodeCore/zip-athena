@@ -63,3 +63,29 @@ type QuestionAttempt struct {
 	LastAttemptTime     time.Time `json:"last_attempt_time"`
 	LastAttemptCorrect  bool      `json:"last_attempt_correct"`
 }
+
+// Quiz represents a structured quiz with a topic and number (e.g., java.1, python.2)
+type Quiz struct {
+	ID          int       `json:"id"`
+	Name        string    `json:"name"`        // e.g., "java.1", "python.2"
+	TopicID     int       `json:"topic_id"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+// UserQuestionState tracks FSRS state for each user-question pair
+type UserQuestionState struct {
+	ID            int       `json:"id"`
+	UserID        int       `json:"user_id"`
+	QuestionID    int       `json:"question_id"`
+	Due           time.Time `json:"due"`
+	Stability     float64   `json:"stability"`
+	Difficulty    float64   `json:"difficulty"`
+	ElapsedDays   int       `json:"elapsed_days"`
+	ScheduledDays int       `json:"scheduled_days"`
+	Reps          int       `json:"reps"`
+	Lapses        int       `json:"lapses"`
+	State         int       `json:"state"` // 0=New, 1=Learning, 2=Review, 3=Relearning
+	LastReview    time.Time `json:"last_review"`
+}
