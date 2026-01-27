@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructor Dashboard - Athena</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .metric-card {
+            border-left: 4px solid;
+            transition: transform 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .metric-card.primary { border-color: #0d6efd; }
+        .metric-card.success { border-color: #198754; }
+        .metric-card.warning { border-color: #ffc107; }
+        .metric-card.info { border-color: #0dcaf0; }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        .metric-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        .student-card {
+            transition: background-color 0.2s;
+        }
+        .student-card:hover {
+            background-color: #f8f9fa;
+        }
+        .progress-topic {
+            margin-bottom: 1rem;
+        }
+        .topic-accuracy-bar {
+            height: 8px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-mortarboard-fill"></i> Athena Instructor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#cohort-analytics">Cohort Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#student-progress">Student Progress</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#import-export">Import/Export</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin.html">Admin Panel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- Cohort Analytics Section -->
+        <section id="cohort-analytics" class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2><i class="bi bi-people-fill"></i> Cohort Analytics</h2>
+                <button class="btn btn-primary" onclick="loadCohortAnalytics()">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+            </div>
+
+            <!-- Metrics Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card metric-card primary">
+                        <div class="card-body">
+                            <div class="metric-label">Total Students</div>
+                            <p class="metric-value" id="total-students">--</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card metric-card success">
+                        <div class="card-body">
+                            <div class="metric-label">Active Students (7 days)</div>
+                            <p class="metric-value" id="active-students">--</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card metric-card warning">
+                        <div class="card-body">
+                            <div class="metric-label">Total Quizzes Taken</div>
+                            <p class="metric-value" id="total-quizzes">--</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card metric-card info">
+                        <div class="card-body">
+                            <div class="metric-label">Average Score</div>
+                            <p class="metric-value" id="avg-score">--</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top and Bottom Performers -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-trophy-fill"></i> Top Performers</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="top-performers" class="list-group list-group-flush">
+                                <div class="text-center text-muted py-3">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-warning">
+                            <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Students Needing Help</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="bottom-performers" class="list-group list-group-flush">
+                                <div class="text-center text-muted py-3">Loading...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic Difficulty -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill"></i> Topic Difficulty Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <div id="topic-difficulty"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Student Progress Section -->
+        <section id="student-progress" class="mb-5">
+            <h2 class="mb-3"><i class="bi bi-person-badge-fill"></i> Individual Student Progress</h2>
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="student-select" class="form-label">Select Student:</label>
+                            <select id="student-select" class="form-select" onchange="loadStudentProgress()">
+                                <option value="">-- Select a student --</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div id="student-details" class="mt-4" style="display: none;">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="metric-label">Completed Quizzes</div>
+                                        <p class="metric-value text-primary" id="student-completed-quizzes">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="metric-label">Average Score</div>
+                                        <p class="metric-value text-success" id="student-avg-score">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="metric-label">Total Points</div>
+                                        <p class="metric-value text-warning" id="student-total-points">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="metric-label">Question Accuracy</div>
+                                        <p class="metric-value text-info" id="student-question-accuracy">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Topic Performance</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="student-topic-breakdown"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">FSRS Metrics</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="student-fsrs-metrics"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card mt-3">
+                            <div class="card-header">
+                                <h6 class="mb-0">Recent Activity</h6>
+                            </div>
+                            <div class="card-body">
+                                <div id="student-recent-activity"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Import/Export Section -->
+        <section id="import-export" class="mb-5">
+            <h2 class="mb-3"><i class="bi bi-arrow-down-up"></i> Import/Export</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-download"></i> Export</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Export Quizzes</h6>
+                            <div class="mb-3">
+                                <label for="quiz-export-select" class="form-label">Select Quiz:</label>
+                                <select id="quiz-export-select" class="form-select">
+                                    <option value="">-- Select a quiz --</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="exportQuiz()">
+                                <i class="bi bi-file-earmark-arrow-down"></i> Export Quiz
+                            </button>
+                            
+                            <hr>
+                            
+                            <h6>Export All Questions</h6>
+                            <p class="text-muted small">Export all questions with answers as JSON</p>
+                            <button class="btn btn-primary" onclick="exportQuestions()">
+                                <i class="bi bi-file-earmark-arrow-down"></i> Export All Questions
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-upload"></i> Import</h5>
+                        </div>
+                        <div class="card-body">
+                            <h6>Import Quiz</h6>
+                            <div class="mb-3">
+                                <label for="quiz-import-file" class="form-label">Select JSON file:</label>
+                                <input type="file" class="form-control" id="quiz-import-file" accept=".json">
+                            </div>
+                            <button class="btn btn-success" onclick="importQuiz()">
+                                <i class="bi bi-file-earmark-arrow-up"></i> Import Quiz
+                            </button>
+                            
+                            <hr>
+                            
+                            <h6>Import Questions</h6>
+                            <div class="mb-3">
+                                <label for="questions-import-file" class="form-label">Select JSON file:</label>
+                                <input type="file" class="form-control" id="questions-import-file" accept=".json">
+                            </div>
+                            <button class="btn btn-success" onclick="importQuestions()">
+                                <i class="bi bi-file-earmark-arrow-up"></i> Import Questions
+                            </button>
+                            
+                            <hr>
+                            
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> 
+                                See <a href="/IMPORT_EXPORT_FORMAT.md" target="_blank">IMPORT_EXPORT_FORMAT.md</a> 
+                                for detailed format documentation.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get user ID from session storage or prompt
+        let userId = localStorage.getItem('userId');
+        if (!userId) {
+            userId = prompt('Enter your User ID (admin only):');
+            if (userId) {
+                localStorage.setItem('userId', userId);
+            }
+        }
+
+        // Load initial data
+        loadCohortAnalytics();
+        loadQuizzes();
+        loadStudentList();
+
+        function loadCohortAnalytics() {
+            fetch('/instructor/cohort-analytics', {
+                headers: {'X-User-ID': userId}
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('total-students').textContent = data.total_students || 0;
+                document.getElementById('active-students').textContent = data.active_students || 0;
+                document.getElementById('total-quizzes').textContent = data.total_quizzes_taken || 0;
+                document.getElementById('avg-score').textContent = data.average_cohort_score ? data.average_cohort_score.toFixed(1) + '%' : '0%';
+
+                // Top performers
+                const topPerformers = document.getElementById('top-performers');
+                topPerformers.innerHTML = '';
+                if (data.top_performers && data.top_performers.length > 0) {
+                    data.top_performers.forEach((student, index) => {
+                        topPerformers.innerHTML += `
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <span><strong>#${index + 1}</strong> ${student.username}</span>
+                                <span class="badge bg-success rounded-pill">${student.average_score.toFixed(1)}%</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    topPerformers.innerHTML = '<div class="text-center text-muted py-3">No data available</div>';
+                }
+
+                // Bottom performers
+                const bottomPerformers = document.getElementById('bottom-performers');
+                bottomPerformers.innerHTML = '';
+                if (data.bottom_performers && data.bottom_performers.length > 0) {
+                    data.bottom_performers.forEach(student => {
+                        bottomPerformers.innerHTML += `
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>${student.username}</span>
+                                <span class="badge bg-warning rounded-pill">${student.average_score.toFixed(1)}%</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    bottomPerformers.innerHTML = '<div class="text-center text-muted py-3">No data available</div>';
+                }
+
+                // Topic difficulty
+                const topicDifficulty = document.getElementById('topic-difficulty');
+                topicDifficulty.innerHTML = '';
+                if (data.topic_difficulty) {
+                    for (const [topic, difficulty] of Object.entries(data.topic_difficulty)) {
+                        topicDifficulty.innerHTML += `
+                            <div class="mb-2">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span>${topic}</span>
+                                    <span class="text-muted">${difficulty.toFixed(2)}</span>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar ${difficulty > 5 ? 'bg-danger' : difficulty > 3 ? 'bg-warning' : 'bg-success'}" 
+                                         style="width: ${(difficulty / 10) * 100}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            })
+            .catch(error => console.error('Error loading cohort analytics:', error));
+        }
+
+        function loadStudentList() {
+            fetch('/admin/users', {
+                headers: {'X-User-ID': userId}
+            })
+            .then(response => response.json())
+            .then(users => {
+                const select = document.getElementById('student-select');
+                users.filter(u => !u.is_admin).forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user.id;
+                    option.textContent = `${user.username} (${user.email})`;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading students:', error));
+        }
+
+        function loadStudentProgress() {
+            const studentId = document.getElementById('student-select').value;
+            if (!studentId) {
+                document.getElementById('student-details').style.display = 'none';
+                return;
+            }
+
+            fetch(`/instructor/student-progress?user_id=${studentId}`, {
+                headers: {'X-User-ID': userId}
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('student-details').style.display = 'block';
+                document.getElementById('student-completed-quizzes').textContent = data.completed_quizzes || 0;
+                document.getElementById('student-avg-score').textContent = data.average_score ? data.average_score.toFixed(1) + '%' : '0%';
+                document.getElementById('student-total-points').textContent = data.total_points || 0;
+                document.getElementById('student-question-accuracy').textContent = data.question_accuracy ? data.question_accuracy.toFixed(1) + '%' : '0%';
+
+                // Topic breakdown
+                const topicBreakdown = document.getElementById('student-topic-breakdown');
+                topicBreakdown.innerHTML = '';
+                if (data.topic_breakdown) {
+                    for (const [topic, accuracy] of Object.entries(data.topic_breakdown)) {
+                        topicBreakdown.innerHTML += `
+                            <div class="progress-topic">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small>${topic}</small>
+                                    <small class="text-muted">${accuracy.toFixed(1)}%</small>
+                                </div>
+                                <div class="progress topic-accuracy-bar">
+                                    <div class="progress-bar" style="width: ${accuracy}%"></div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    topicBreakdown.innerHTML = '<p class="text-muted">No topic data available</p>';
+                }
+
+                // FSRS metrics
+                const fsrsMetrics = document.getElementById('student-fsrs-metrics');
+                fsrsMetrics.innerHTML = `
+                    <p><strong>Total Cards:</strong> ${data.fsrs_metrics?.total_cards || 0}</p>
+                    <p><strong>Due Cards:</strong> ${data.fsrs_metrics?.due_cards || 0}</p>
+                    <p><strong>New Cards:</strong> ${data.fsrs_metrics?.new_cards || 0}</p>
+                    <p><strong>Review Cards:</strong> ${data.fsrs_metrics?.review_cards || 0}</p>
+                    <p><strong>Avg Stability:</strong> ${data.fsrs_metrics?.avg_stability?.toFixed(2) || '0.00'}</p>
+                    <p><strong>Avg Difficulty:</strong> ${data.fsrs_metrics?.avg_difficulty?.toFixed(2) || '0.00'}</p>
+                `;
+
+                // Recent activity
+                const recentActivity = document.getElementById('student-recent-activity');
+                recentActivity.innerHTML = '';
+                if (data.recent_activity && data.recent_activity.length > 0) {
+                    data.recent_activity.forEach(attempt => {
+                        const score = attempt.total_questions > 0 ? (attempt.correct_answers / attempt.total_questions * 100).toFixed(1) : 0;
+                        recentActivity.innerHTML += `
+                            <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                                <span>${new Date(attempt.start_time).toLocaleDateString()}</span>
+                                <span>${attempt.correct_answers}/${attempt.total_questions} (${score}%)</span>
+                            </div>
+                        `;
+                    });
+                } else {
+                    recentActivity.innerHTML = '<p class="text-muted">No recent activity</p>';
+                }
+            })
+            .catch(error => console.error('Error loading student progress:', error));
+        }
+
+        function loadQuizzes() {
+            fetch('/admin/quizzes', {
+                headers: {'X-User-ID': userId}
+            })
+            .then(response => response.json())
+            .then(quizzes => {
+                const select = document.getElementById('quiz-export-select');
+                quizzes.forEach(quiz => {
+                    const option = document.createElement('option');
+                    option.value = quiz.id;
+                    option.textContent = quiz.name;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading quizzes:', error));
+        }
+
+        function exportQuiz() {
+            const quizId = document.getElementById('quiz-export-select').value;
+            if (!quizId) {
+                alert('Please select a quiz to export');
+                return;
+            }
+
+            window.location.href = `/instructor/quizzes/export?id=${quizId}`;
+        }
+
+        function exportQuestions() {
+            window.location.href = '/instructor/questions/export';
+        }
+
+        function importQuiz() {
+            const fileInput = document.getElementById('quiz-import-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file to import');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    fetch('/instructor/quizzes/import', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-User-ID': userId
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        alert(result.message || 'Quiz imported successfully!');
+                        fileInput.value = '';
+                        loadQuizzes(); // Reload quiz list
+                    })
+                    .catch(error => {
+                        console.error('Error importing quiz:', error);
+                        alert('Error importing quiz. Check console for details.');
+                    });
+                } catch (error) {
+                    alert('Invalid JSON file');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function importQuestions() {
+            const fileInput = document.getElementById('questions-import-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a file to import');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    fetch('/instructor/questions/import', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-User-ID': userId
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        alert(result.message || 'Questions imported successfully!');
+                        fileInput.value = '';
+                    })
+                    .catch(error => {
+                        console.error('Error importing questions:', error);
+                        alert('Error importing questions. Check console for details.');
+                    });
+                } catch (error) {
+                    alert('Invalid JSON file');
+                }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
