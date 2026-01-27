@@ -2,6 +2,8 @@ package database
 
 import (
 	"errors"
+	"fmt"
+	"time"
 	"github.com/ZipCodeCore/zip-athena/models"
 	"sync"
 )
@@ -43,40 +45,74 @@ type Database interface {
 	GetQuestionAttempt(id int) (*models.QuestionAttempt, error)
 	GetQuestionAttemptsByUser(userID int) ([]*models.QuestionAttempt, error)
 	UpdateQuestionAttempt(attempt *models.QuestionAttempt) error
+
+	// Quiz operations (Phase 2)
+	CreateQuiz(quiz *models.Quiz) error
+	GetQuiz(id int) (*models.Quiz, error)
+	ListQuizzes() ([]*models.Quiz, error)
+	UpdateQuiz(quiz *models.Quiz) error
+	DeleteQuiz(id int) error
+
+	// UserQuestionState operations (Phase 2 - FSRS)
+	CreateUserQuestionState(state *models.UserQuestionState) error
+	GetUserQuestionState(userID, questionID int) (*models.UserQuestionState, error)
+	GetUserQuestionStatesByUser(userID int) ([]*models.UserQuestionState, error)
+	GetDueUserQuestionStates(userID int) ([]*models.UserQuestionState, error)
+	UpdateUserQuestionState(state *models.UserQuestionState) error
+	
+	// Admin operations (Phase 2)
+	ListUsers() ([]*models.User, error)
+	UpdateUser(user *models.User) error
+	DeleteUser(id int) error
+	ListQuestions() ([]*models.Question, error)
+	UpdateQuestion(question *models.Question) error
+	DeleteQuestion(id int) error
+	UpdateAnswer(answer *models.Answer) error
+	DeleteAnswer(id int) error
+	UpdateTopic(topic *models.Topic) error
+	DeleteTopic(id int) error
 }
 
 // InMemoryDB implements the Database interface using in-memory storage
 type InMemoryDB struct {
-	users            map[int]*models.User
-	topics           map[int]*models.Topic
-	questions        map[int]*models.Question
-	answers          map[int]*models.Answer
-	quizAttempts     map[int]*models.QuizAttempt
-	questionAttempts map[int]*models.QuestionAttempt
-	nextUserID       int
-	nextTopicID      int
-	nextQuestionID   int
-	nextAnswerID     int
-	nextQuizID       int
-	nextQAttemptID   int
-	mu               sync.RWMutex
+	users               map[int]*models.User
+	topics              map[int]*models.Topic
+	questions           map[int]*models.Question
+	answers             map[int]*models.Answer
+	quizAttempts        map[int]*models.QuizAttempt
+	questionAttempts    map[int]*models.QuestionAttempt
+	quizzes             map[int]*models.Quiz
+	userQuestionStates  map[string]*models.UserQuestionState // key: "userID-questionID"
+	nextUserID          int
+	nextTopicID         int
+	nextQuestionID      int
+	nextAnswerID        int
+	nextQuizAttemptID   int
+	nextQAttemptID      int
+	nextQuizID          int
+	nextUQStateID       int
+	mu                  sync.RWMutex
 }
 
 // NewInMemoryDB creates a new in-memory database
 func NewInMemoryDB() *InMemoryDB {
 	return &InMemoryDB{
-		users:            make(map[int]*models.User),
-		topics:           make(map[int]*models.Topic),
-		questions:        make(map[int]*models.Question),
-		answers:          make(map[int]*models.Answer),
-		quizAttempts:     make(map[int]*models.QuizAttempt),
-		questionAttempts: make(map[int]*models.QuestionAttempt),
-		nextUserID:       1,
-		nextTopicID:      1,
-		nextQuestionID:   1,
-		nextAnswerID:     1,
-		nextQuizID:       1,
-		nextQAttemptID:   1,
+		users:              make(map[int]*models.User),
+		topics:             make(map[int]*models.Topic),
+		questions:          make(map[int]*models.Question),
+		answers:            make(map[int]*models.Answer),
+		quizAttempts:       make(map[int]*models.QuizAttempt),
+		questionAttempts:   make(map[int]*models.QuestionAttempt),
+		quizzes:            make(map[int]*models.Quiz),
+		userQuestionStates: make(map[string]*models.UserQuestionState),
+		nextUserID:         1,
+		nextTopicID:        1,
+		nextQuestionID:     1,
+		nextAnswerID:       1,
+		nextQuizAttemptID:  1,
+		nextQAttemptID:     1,
+		nextQuizID:         1,
+		nextUQStateID:      1,
 	}
 }
 
@@ -296,4 +332,236 @@ func (db *InMemoryDB) UpdateQuestionAttempt(attempt *models.QuestionAttempt) err
 	}
 	db.questionAttempts[attempt.ID] = attempt
 	return nil
+}
+
+// Quiz operations
+func (db *InMemoryDB) CreateQuiz(quiz *models.Quiz) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+quiz.ID = db.nextQuizID
+db.nextQuizID++
+db.quizzes[quiz.ID] = quiz
+return nil
+}
+
+func (db *InMemoryDB) GetQuiz(id int) (*models.Quiz, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+quiz, exists := db.quizzes[id]
+if !exists {
+return nil, ErrNotFound
+}
+return quiz, nil
+}
+
+func (db *InMemoryDB) ListQuizzes() ([]*models.Quiz, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+quizzes := make([]*models.Quiz, 0, len(db.quizzes))
+for _, quiz := range db.quizzes {
+quizzes = append(quizzes, quiz)
+}
+return quizzes, nil
+}
+
+func (db *InMemoryDB) UpdateQuiz(quiz *models.Quiz) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.quizzes[quiz.ID]; !exists {
+return ErrNotFound
+}
+db.quizzes[quiz.ID] = quiz
+return nil
+}
+
+func (db *InMemoryDB) DeleteQuiz(id int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.quizzes[id]; !exists {
+return ErrNotFound
+}
+delete(db.quizzes, id)
+return nil
+}
+
+// UserQuestionState operations
+func (db *InMemoryDB) CreateUserQuestionState(state *models.UserQuestionState) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+state.ID = db.nextUQStateID
+db.nextUQStateID++
+key := fmt.Sprintf("%d-%d", state.UserID, state.QuestionID)
+db.userQuestionStates[key] = state
+return nil
+}
+
+func (db *InMemoryDB) GetUserQuestionState(userID, questionID int) (*models.UserQuestionState, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+key := fmt.Sprintf("%d-%d", userID, questionID)
+state, exists := db.userQuestionStates[key]
+if !exists {
+return nil, ErrNotFound
+}
+return state, nil
+}
+
+func (db *InMemoryDB) GetUserQuestionStatesByUser(userID int) ([]*models.UserQuestionState, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+states := make([]*models.UserQuestionState, 0)
+for _, state := range db.userQuestionStates {
+if state.UserID == userID {
+states = append(states, state)
+}
+}
+return states, nil
+}
+
+func (db *InMemoryDB) GetDueUserQuestionStates(userID int) ([]*models.UserQuestionState, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+now := time.Now()
+states := make([]*models.UserQuestionState, 0)
+for _, state := range db.userQuestionStates {
+if state.UserID == userID && !state.Due.After(now) {
+states = append(states, state)
+}
+}
+return states, nil
+}
+
+func (db *InMemoryDB) UpdateUserQuestionState(state *models.UserQuestionState) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+key := fmt.Sprintf("%d-%d", state.UserID, state.QuestionID)
+if _, exists := db.userQuestionStates[key]; !exists {
+return ErrNotFound
+}
+db.userQuestionStates[key] = state
+return nil
+}
+
+// Admin operations - Users
+func (db *InMemoryDB) ListUsers() ([]*models.User, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+users := make([]*models.User, 0, len(db.users))
+for _, user := range db.users {
+users = append(users, user)
+}
+return users, nil
+}
+
+func (db *InMemoryDB) UpdateUser(user *models.User) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.users[user.ID]; !exists {
+return ErrNotFound
+}
+db.users[user.ID] = user
+return nil
+}
+
+func (db *InMemoryDB) DeleteUser(id int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.users[id]; !exists {
+return ErrNotFound
+}
+delete(db.users, id)
+return nil
+}
+
+// Admin operations - Questions
+func (db *InMemoryDB) ListQuestions() ([]*models.Question, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+questions := make([]*models.Question, 0, len(db.questions))
+for _, question := range db.questions {
+questions = append(questions, question)
+}
+return questions, nil
+}
+
+func (db *InMemoryDB) UpdateQuestion(question *models.Question) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.questions[question.ID]; !exists {
+return ErrNotFound
+}
+db.questions[question.ID] = question
+return nil
+}
+
+func (db *InMemoryDB) DeleteQuestion(id int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.questions[id]; !exists {
+return ErrNotFound
+}
+delete(db.questions, id)
+return nil
+}
+
+// Admin operations - Answers
+func (db *InMemoryDB) UpdateAnswer(answer *models.Answer) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.answers[answer.ID]; !exists {
+return ErrNotFound
+}
+db.answers[answer.ID] = answer
+return nil
+}
+
+func (db *InMemoryDB) DeleteAnswer(id int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.answers[id]; !exists {
+return ErrNotFound
+}
+delete(db.answers, id)
+return nil
+}
+
+// Admin operations - Topics
+func (db *InMemoryDB) UpdateTopic(topic *models.Topic) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.topics[topic.ID]; !exists {
+return ErrNotFound
+}
+db.topics[topic.ID] = topic
+return nil
+}
+
+func (db *InMemoryDB) DeleteTopic(id int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.topics[id]; !exists {
+return ErrNotFound
+}
+delete(db.topics, id)
+return nil
 }

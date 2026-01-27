@@ -102,6 +102,34 @@ func (db *SQLiteDB) initSchema() error {
 		FOREIGN KEY (user_id) REFERENCES users(id),
 		FOREIGN KEY (question_id) REFERENCES questions(id)
 	);
+
+	CREATE TABLE IF NOT EXISTS quizzes (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		topic_id INTEGER NOT NULL,
+		description TEXT,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (topic_id) REFERENCES topics(id)
+	);
+
+	CREATE TABLE IF NOT EXISTS user_question_states (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id INTEGER NOT NULL,
+		question_id INTEGER NOT NULL,
+		due DATETIME NOT NULL,
+		stability REAL NOT NULL,
+		difficulty REAL NOT NULL,
+		elapsed_days INTEGER NOT NULL,
+		scheduled_days INTEGER NOT NULL,
+		reps INTEGER NOT NULL,
+		lapses INTEGER NOT NULL,
+		state INTEGER NOT NULL,
+		last_review DATETIME,
+		FOREIGN KEY (user_id) REFERENCES users(id),
+		FOREIGN KEY (question_id) REFERENCES questions(id),
+		UNIQUE(user_id, question_id)
+	);
 	`
 
 	_, err := db.db.Exec(schema)
@@ -501,6 +529,364 @@ result, err := db.db.Exec(
 "UPDATE question_attempts SET correct_attempts = ?, incorrect_attempts = ?, last_attempt_time = ?, last_attempt_correct = ? WHERE id = ?",
 attempt.CorrectAttempts, attempt.IncorrectAttempts, attempt.LastAttemptTime, attempt.LastAttemptCorrect, attempt.ID,
 )
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+// Quiz operations
+func (db *SQLiteDB) CreateQuiz(quiz *models.Quiz) error {
+result, err := db.db.Exec(
+"INSERT INTO quizzes (name, topic_id, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+quiz.Name, quiz.TopicID, quiz.Description, quiz.CreatedAt, quiz.UpdatedAt,
+)
+if err != nil {
+return err
+}
+id, err := result.LastInsertId()
+if err != nil {
+return err
+}
+quiz.ID = int(id)
+return nil
+}
+
+func (db *SQLiteDB) GetQuiz(id int) (*models.Quiz, error) {
+quiz := &models.Quiz{}
+err := db.db.QueryRow(
+"SELECT id, name, topic_id, description, created_at, updated_at FROM quizzes WHERE id = ?",
+id,
+).Scan(&quiz.ID, &quiz.Name, &quiz.TopicID, &quiz.Description, &quiz.CreatedAt, &quiz.UpdatedAt)
+if err == sql.ErrNoRows {
+return nil, ErrNotFound
+}
+if err != nil {
+return nil, err
+}
+return quiz, nil
+}
+
+func (db *SQLiteDB) ListQuizzes() ([]*models.Quiz, error) {
+rows, err := db.db.Query("SELECT id, name, topic_id, description, created_at, updated_at FROM quizzes")
+if err != nil {
+return nil, err
+}
+defer rows.Close()
+
+var quizzes []*models.Quiz
+for rows.Next() {
+quiz := &models.Quiz{}
+if err := rows.Scan(&quiz.ID, &quiz.Name, &quiz.TopicID, &quiz.Description, &quiz.CreatedAt, &quiz.UpdatedAt); err != nil {
+return nil, err
+}
+quizzes = append(quizzes, quiz)
+}
+return quizzes, rows.Err()
+}
+
+func (db *SQLiteDB) UpdateQuiz(quiz *models.Quiz) error {
+result, err := db.db.Exec(
+"UPDATE quizzes SET name = ?, topic_id = ?, description = ?, updated_at = ? WHERE id = ?",
+quiz.Name, quiz.TopicID, quiz.Description, quiz.UpdatedAt, quiz.ID,
+)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+func (db *SQLiteDB) DeleteQuiz(id int) error {
+result, err := db.db.Exec("DELETE FROM quizzes WHERE id = ?", id)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+// UserQuestionState operations
+func (db *SQLiteDB) CreateUserQuestionState(state *models.UserQuestionState) error {
+result, err := db.db.Exec(
+"INSERT INTO user_question_states (user_id, question_id, due, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+state.UserID, state.QuestionID, state.Due, state.Stability, state.Difficulty, state.ElapsedDays, state.ScheduledDays, state.Reps, state.Lapses, state.State, state.LastReview,
+)
+if err != nil {
+return err
+}
+id, err := result.LastInsertId()
+if err != nil {
+return err
+}
+state.ID = int(id)
+return nil
+}
+
+func (db *SQLiteDB) GetUserQuestionState(userID, questionID int) (*models.UserQuestionState, error) {
+state := &models.UserQuestionState{}
+err := db.db.QueryRow(
+"SELECT id, user_id, question_id, due, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review FROM user_question_states WHERE user_id = ? AND question_id = ?",
+userID, questionID,
+).Scan(&state.ID, &state.UserID, &state.QuestionID, &state.Due, &state.Stability, &state.Difficulty, &state.ElapsedDays, &state.ScheduledDays, &state.Reps, &state.Lapses, &state.State, &state.LastReview)
+if err == sql.ErrNoRows {
+return nil, ErrNotFound
+}
+if err != nil {
+return nil, err
+}
+return state, nil
+}
+
+func (db *SQLiteDB) GetUserQuestionStatesByUser(userID int) ([]*models.UserQuestionState, error) {
+rows, err := db.db.Query(
+"SELECT id, user_id, question_id, due, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review FROM user_question_states WHERE user_id = ?",
+userID,
+)
+if err != nil {
+return nil, err
+}
+defer rows.Close()
+
+var states []*models.UserQuestionState
+for rows.Next() {
+state := &models.UserQuestionState{}
+if err := rows.Scan(&state.ID, &state.UserID, &state.QuestionID, &state.Due, &state.Stability, &state.Difficulty, &state.ElapsedDays, &state.ScheduledDays, &state.Reps, &state.Lapses, &state.State, &state.LastReview); err != nil {
+return nil, err
+}
+states = append(states, state)
+}
+return states, rows.Err()
+}
+
+func (db *SQLiteDB) GetDueUserQuestionStates(userID int) ([]*models.UserQuestionState, error) {
+rows, err := db.db.Query(
+"SELECT id, user_id, question_id, due, stability, difficulty, elapsed_days, scheduled_days, reps, lapses, state, last_review FROM user_question_states WHERE user_id = ? AND due <= datetime('now')",
+userID,
+)
+if err != nil {
+return nil, err
+}
+defer rows.Close()
+
+var states []*models.UserQuestionState
+for rows.Next() {
+state := &models.UserQuestionState{}
+if err := rows.Scan(&state.ID, &state.UserID, &state.QuestionID, &state.Due, &state.Stability, &state.Difficulty, &state.ElapsedDays, &state.ScheduledDays, &state.Reps, &state.Lapses, &state.State, &state.LastReview); err != nil {
+return nil, err
+}
+states = append(states, state)
+}
+return states, rows.Err()
+}
+
+func (db *SQLiteDB) UpdateUserQuestionState(state *models.UserQuestionState) error {
+result, err := db.db.Exec(
+"UPDATE user_question_states SET due = ?, stability = ?, difficulty = ?, elapsed_days = ?, scheduled_days = ?, reps = ?, lapses = ?, state = ?, last_review = ? WHERE id = ?",
+state.Due, state.Stability, state.Difficulty, state.ElapsedDays, state.ScheduledDays, state.Reps, state.Lapses, state.State, state.LastReview, state.ID,
+)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+// Admin operations - Users
+func (db *SQLiteDB) ListUsers() ([]*models.User, error) {
+rows, err := db.db.Query("SELECT id, username, email, is_admin, total_points, created_at FROM users")
+if err != nil {
+return nil, err
+}
+defer rows.Close()
+
+var users []*models.User
+for rows.Next() {
+user := &models.User{}
+if err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.IsAdmin, &user.TotalPoints, &user.CreatedAt); err != nil {
+return nil, err
+}
+users = append(users, user)
+}
+return users, rows.Err()
+}
+
+func (db *SQLiteDB) UpdateUser(user *models.User) error {
+result, err := db.db.Exec(
+"UPDATE users SET username = ?, email = ?, is_admin = ?, total_points = ? WHERE id = ?",
+user.Username, user.Email, user.IsAdmin, user.TotalPoints, user.ID,
+)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+func (db *SQLiteDB) DeleteUser(id int) error {
+result, err := db.db.Exec("DELETE FROM users WHERE id = ?", id)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+// Admin operations - Questions
+func (db *SQLiteDB) ListQuestions() ([]*models.Question, error) {
+rows, err := db.db.Query(
+"SELECT id, topic_id, question_text, difficulty, tags, topic_question_id, created_at FROM questions",
+)
+if err != nil {
+return nil, err
+}
+defer rows.Close()
+
+var questions []*models.Question
+for rows.Next() {
+question := &models.Question{}
+var tagsJSON string
+if err := rows.Scan(&question.ID, &question.TopicID, &question.QuestionText, &question.Difficulty, &tagsJSON, &question.TopicQuestionID, &question.CreatedAt); err != nil {
+return nil, err
+}
+if err := json.Unmarshal([]byte(tagsJSON), &question.Tags); err != nil {
+return nil, err
+}
+questions = append(questions, question)
+}
+return questions, rows.Err()
+}
+
+func (db *SQLiteDB) UpdateQuestion(question *models.Question) error {
+tagsJSON, err := json.Marshal(question.Tags)
+if err != nil {
+return err
+}
+
+result, err := db.db.Exec(
+"UPDATE questions SET topic_id = ?, question_text = ?, difficulty = ?, tags = ?, topic_question_id = ? WHERE id = ?",
+question.TopicID, question.QuestionText, question.Difficulty, string(tagsJSON), question.TopicQuestionID, question.ID,
+)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+func (db *SQLiteDB) DeleteQuestion(id int) error {
+result, err := db.db.Exec("DELETE FROM questions WHERE id = ?", id)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+// Admin operations - Answers
+func (db *SQLiteDB) UpdateAnswer(answer *models.Answer) error {
+result, err := db.db.Exec(
+"UPDATE answers SET question_id = ?, answer_text = ?, is_correct = ? WHERE id = ?",
+answer.QuestionID, answer.AnswerText, answer.IsCorrect, answer.ID,
+)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+func (db *SQLiteDB) DeleteAnswer(id int) error {
+result, err := db.db.Exec("DELETE FROM answers WHERE id = ?", id)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+// Admin operations - Topics
+func (db *SQLiteDB) UpdateTopic(topic *models.Topic) error {
+result, err := db.db.Exec(
+"UPDATE topics SET name = ?, description = ? WHERE id = ?",
+topic.Name, topic.Description, topic.ID,
+)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
+}
+
+func (db *SQLiteDB) DeleteTopic(id int) error {
+result, err := db.db.Exec("DELETE FROM topics WHERE id = ?", id)
 if err != nil {
 return err
 }
