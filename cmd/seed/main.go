@@ -59,10 +59,28 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 	}
 
 	for i := range topics {
-		if err := db.CreateTopic(&topics[i]); err != nil {
-			log.Printf("Warning: Failed to create topic %s: %v", topics[i].Name, err)
-		} else {
-			fmt.Printf("Created topic: %s (ID: %d)\n", topics[i].Name, topics[i].ID)
+		// Check if topic already exists by name
+		existingTopics, err := db.ListTopics()
+		if err != nil {
+			log.Printf("Warning: Failed to list topics: %v", err)
+		}
+		
+		topicExists := false
+		for _, existingTopic := range existingTopics {
+			if existingTopic.Name == topics[i].Name {
+				topics[i] = *existingTopic
+				topicExists = true
+				fmt.Printf("Topic already exists: %s (ID: %d)\n", topics[i].Name, topics[i].ID)
+				break
+			}
+		}
+		
+		if !topicExists {
+			if err := db.CreateTopic(&topics[i]); err != nil {
+				log.Printf("Warning: Failed to create topic %s: %v", topics[i].Name, err)
+			} else {
+				fmt.Printf("Created topic: %s (ID: %d)\n", topics[i].Name, topics[i].ID)
+			}
 		}
 	}
 
@@ -150,13 +168,28 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 
 	if len(topics) > 0 {
 		topicID := topics[0].ID
+		// Get existing questions for this topic
+		existingQuestions, _ := db.GetQuestionsByTopic(topicID)
+		existingQuestionsMap := make(map[string]bool)
+		for _, eq := range existingQuestions {
+			existingQuestionsMap[eq.TopicQuestionID] = true
+		}
+		
 		for i, q := range javaQuestions {
+			topicQuestionID := fmt.Sprintf("%d.%d", topicID, i+1)
+			
+			// Check if question already exists
+			if existingQuestionsMap[topicQuestionID] {
+				fmt.Printf("Question already exists: %s (ID: %s)\n", truncate(q.text, 50), topicQuestionID)
+				continue
+			}
+			
 			question := models.Question{
 				TopicID:         topicID,
 				QuestionText:    q.text,
 				Difficulty:      q.difficulty,
 				Tags:            q.tags,
-				TopicQuestionID: fmt.Sprintf("%d.%d", topicID, i+1),
+				TopicQuestionID: topicQuestionID,
 				CreatedAt:       time.Now(),
 			}
 
@@ -237,13 +270,28 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 
 	if len(topics) > 1 {
 		topicID := topics[1].ID
+		// Get existing questions for this topic
+		existingQuestions, _ := db.GetQuestionsByTopic(topicID)
+		existingQuestionsMap := make(map[string]bool)
+		for _, eq := range existingQuestions {
+			existingQuestionsMap[eq.TopicQuestionID] = true
+		}
+		
 		for i, q := range pythonQuestions {
+			topicQuestionID := fmt.Sprintf("%d.%d", topicID, i+1)
+			
+			// Check if question already exists
+			if existingQuestionsMap[topicQuestionID] {
+				fmt.Printf("Question already exists: %s (ID: %s)\n", truncate(q.text, 50), topicQuestionID)
+				continue
+			}
+			
 			question := models.Question{
 				TopicID:         topicID,
 				QuestionText:    q.text,
 				Difficulty:      q.difficulty,
 				Tags:            q.tags,
-				TopicQuestionID: fmt.Sprintf("%d.%d", topicID, i+1),
+				TopicQuestionID: topicQuestionID,
 				CreatedAt:       time.Now(),
 			}
 
@@ -324,13 +372,28 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 
 	if len(topics) > 2 {
 		topicID := topics[2].ID
+		// Get existing questions for this topic
+		existingQuestions, _ := db.GetQuestionsByTopic(topicID)
+		existingQuestionsMap := make(map[string]bool)
+		for _, eq := range existingQuestions {
+			existingQuestionsMap[eq.TopicQuestionID] = true
+		}
+		
 		for i, q := range sqlQuestions {
+			topicQuestionID := fmt.Sprintf("%d.%d", topicID, i+1)
+			
+			// Check if question already exists
+			if existingQuestionsMap[topicQuestionID] {
+				fmt.Printf("Question already exists: %s (ID: %s)\n", truncate(q.text, 50), topicQuestionID)
+				continue
+			}
+			
 			question := models.Question{
 				TopicID:         topicID,
 				QuestionText:    q.text,
 				Difficulty:      q.difficulty,
 				Tags:            q.tags,
-				TopicQuestionID: fmt.Sprintf("%d.%d", topicID, i+1),
+				TopicQuestionID: topicQuestionID,
 				CreatedAt:       time.Now(),
 			}
 
@@ -381,6 +444,28 @@ return fmt.Errorf("failed to create admin user: %w", err)
 fmt.Println("Created admin user (username: admin, password: admin)")
 } else {
 fmt.Println("Admin user already exists")
+}
+
+// Create regular user
+userPassword, err := hashPassword("user")
+if err != nil {
+return fmt.Errorf("failed to hash user password: %w", err)
+}
+
+// Check if regular user already exists
+_, err = db.GetUserByUsername("user")
+if err == database.ErrNotFound {
+// Create regular user
+_, err = db.DB().Exec(
+"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+"user", "user@zipcodewilmington.com", userPassword, false, 0, time.Now(),
+)
+if err != nil {
+return fmt.Errorf("failed to create regular user: %w", err)
+}
+fmt.Println("Created regular user (username: user, password: user)")
+} else {
+fmt.Println("Regular user already exists")
 }
 
 // Create quizzes
@@ -665,12 +750,20 @@ isCorrect bool
 }
 
 for i, q := range additionalJavaQuestions {
+topicQuestionID := fmt.Sprintf("%d.%d", javaTopicID, startNum+i)
+
+// Check if question already exists
+if existingQuestionsMap[topicQuestionID] {
+fmt.Printf("Question already exists: %d.%d\n", javaTopicID, startNum+i)
+continue
+}
+
 question := models.Question{
 TopicID:         javaTopicID,
 QuestionText:    q.text,
 Difficulty:      q.difficulty,
 Tags:            q.tags,
-TopicQuestionID: fmt.Sprintf("%d.%d", javaTopicID, startNum+i),
+TopicQuestionID: topicQuestionID,
 CreatedAt:       time.Now(),
 }
 
@@ -696,6 +789,10 @@ db.CreateAnswer(&answer)
 if len(topics) > 1 {
 pythonTopicID := topics[1].ID
 existingPythonQuestions, _ := db.GetQuestionsByTopic(pythonTopicID)
+existingQuestionsMap := make(map[string]bool)
+for _, eq := range existingPythonQuestions {
+existingQuestionsMap[eq.TopicQuestionID] = true
+}
 startNum := len(existingPythonQuestions) + 1
 
 additionalPythonQuestions := []struct {
@@ -920,12 +1017,20 @@ isCorrect bool
 }
 
 for i, q := range additionalPythonQuestions {
+topicQuestionID := fmt.Sprintf("%d.%d", pythonTopicID, startNum+i)
+
+// Check if question already exists
+if existingQuestionsMap[topicQuestionID] {
+fmt.Printf("Question already exists: %d.%d\n", pythonTopicID, startNum+i)
+continue
+}
+
 question := models.Question{
 TopicID:         pythonTopicID,
 QuestionText:    q.text,
 Difficulty:      q.difficulty,
 Tags:            q.tags,
-TopicQuestionID: fmt.Sprintf("%d.%d", pythonTopicID, startNum+i),
+TopicQuestionID: topicQuestionID,
 CreatedAt:       time.Now(),
 }
 
