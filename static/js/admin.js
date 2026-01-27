@@ -352,7 +352,7 @@ async function saveTopic() {
                 body: JSON.stringify(topicData)
             });
         } else {
-            // Create new topic
+            // Create new topic (use standard endpoint since there's no admin create endpoint)
             response = await fetch('/topics', {
                 method: 'POST',
                 headers: {

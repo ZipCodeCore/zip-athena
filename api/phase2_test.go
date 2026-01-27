@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -232,7 +233,7 @@ func TestListQuizzes(t *testing.T) {
 	// Create quizzes
 	for i := 1; i <= 3; i++ {
 		quiz := &models.Quiz{
-			Name:        "java." + string(rune('0'+i)),
+			Name:        "java." + strconv.Itoa(i),
 			TopicID:     1,
 			Description: "Test quiz",
 			CreatedAt:   time.Now(),
@@ -352,9 +353,9 @@ func TestGetDueQuestions(t *testing.T) {
 	for i := 1; i <= 3; i++ {
 		question := &models.Question{
 			TopicID:         1,
-			QuestionText:    "Question " + string(rune('0'+i)),
+			QuestionText:    "Question " + strconv.Itoa(i),
 			Difficulty:      2,
-			TopicQuestionID: "1." + string(rune('0'+i)),
+			TopicQuestionID: "1." + strconv.Itoa(i),
 			CreatedAt:       time.Now(),
 		}
 		db.CreateQuestion(question)
@@ -421,9 +422,9 @@ func TestAdaptiveQuizGeneration(t *testing.T) {
 	for i := 1; i <= 5; i++ {
 		question := &models.Question{
 			TopicID:         topic.ID,
-			QuestionText:    "Question " + string(rune('0'+i)),
+			QuestionText:    "Question " + strconv.Itoa(i),
 			Difficulty:      2,
-			TopicQuestionID: "1." + string(rune('0'+i)),
+			TopicQuestionID: "1." + strconv.Itoa(i),
 			CreatedAt:       time.Now(),
 		}
 		db.CreateQuestion(question)
@@ -582,10 +583,10 @@ func TestListAllQuestions(t *testing.T) {
 	for i := 1; i <= 5; i++ {
 		question := &models.Question{
 			TopicID:         1,
-			QuestionText:    "Question " + string(rune('0'+i)),
+			QuestionText:    "Question " + strconv.Itoa(i),
 			Difficulty:      2,
 			Tags:            []string{"test"},
-			TopicQuestionID: "1." + string(rune('0'+i)),
+			TopicQuestionID: "1." + strconv.Itoa(i),
 			CreatedAt:       time.Now(),
 		}
 		db.CreateQuestion(question)
