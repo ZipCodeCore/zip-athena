@@ -526,6 +526,10 @@ fmt.Printf("Created quiz: %s (ID: %d)\n", quiz3Name, quiz3.ID)
 if len(topics) > 0 {
 javaTopicID := topics[0].ID
 existingJavaQuestions, _ := db.GetQuestionsByTopic(javaTopicID)
+existingQuestionsMap := make(map[string]bool)
+for _, eq := range existingJavaQuestions {
+existingQuestionsMap[eq.TopicQuestionID] = true
+}
 startNum := len(existingJavaQuestions) + 1
 
 additionalJavaQuestions := []struct {
