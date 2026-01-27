@@ -334,6 +334,7 @@ Unlike generic quiz platforms (Kahoot!, Quizlet), Athena is purpose-built for te
   - Tag questions with multiple concepts
   - Associate questions with topics
   - Activate/deactivate questions without deletion
+  - Create Import/Export via a JSON format question-answer data
 - **User Value**: Maintain high-quality, relevant question content
 
 #### F10: Test Creation & Management
