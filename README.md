@@ -2,6 +2,22 @@
 
 Athena is a specialized testing application for students who are learning how to develop software. It is a web-based three-tier application with an API business logic middle-end and a relational database backend.
 
+## Current Status: Phase 1 MVP Complete ✅
+
+Phase 1 implements the core student experience including user authentication, quiz taking, progress tracking, and a Bootstrap-based UI. See [PHASE1_README.md](PHASE1_README.md) for detailed usage instructions.
+
+## Quick Start (Phase 1)
+
+```bash
+# Seed the database with sample questions
+go run cmd/seed/main.go
+
+# Start the server
+go run main.go
+
+# Open browser to http://localhost:8080
+```
+
 ## Phase 0 - Core Implementation
 
 This phase includes the foundational structure with 20 comprehensive tests covering:
@@ -13,8 +29,8 @@ This phase includes the foundational structure with 20 comprehensive tests cover
 ## Architecture
 
 - **Backend**: Go API server
-- **Database**: In-memory storage (ready for relational database integration)
-- **Frontend**: JavaScript/JSON (to be implemented)
+- **Database**: SQLite3 (Phase 1) - ready for PostgreSQL/MySQL migration
+- **Frontend**: HTML/JavaScript with Bootstrap CSS framework
 
 ## Project Structure
 

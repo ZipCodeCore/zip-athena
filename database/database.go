@@ -36,11 +36,13 @@ type Database interface {
 	CreateQuizAttempt(attempt *models.QuizAttempt) error
 	GetQuizAttempt(id int) (*models.QuizAttempt, error)
 	GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, error)
+	UpdateQuizAttempt(attempt *models.QuizAttempt) error
 
 	// QuestionAttempt operations
 	CreateQuestionAttempt(attempt *models.QuestionAttempt) error
 	GetQuestionAttempt(id int) (*models.QuestionAttempt, error)
 	GetQuestionAttemptsByUser(userID int) ([]*models.QuestionAttempt, error)
+	UpdateQuestionAttempt(attempt *models.QuestionAttempt) error
 }
 
 // InMemoryDB implements the Database interface using in-memory storage
@@ -239,6 +241,17 @@ func (db *InMemoryDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, 
 	return attempts, nil
 }
 
+func (db *InMemoryDB) UpdateQuizAttempt(attempt *models.QuizAttempt) error {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+
+	if _, exists := db.quizAttempts[attempt.ID]; !exists {
+		return ErrNotFound
+	}
+	db.quizAttempts[attempt.ID] = attempt
+	return nil
+}
+
 // QuestionAttempt operations
 func (db *InMemoryDB) CreateQuestionAttempt(attempt *models.QuestionAttempt) error {
 	db.mu.Lock()
@@ -272,4 +285,15 @@ func (db *InMemoryDB) GetQuestionAttemptsByUser(userID int) ([]*models.QuestionA
 		}
 	}
 	return attempts, nil
+}
+
+func (db *InMemoryDB) UpdateQuestionAttempt(attempt *models.QuestionAttempt) error {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+
+	if _, exists := db.questionAttempts[attempt.ID]; !exists {
+		return ErrNotFound
+	}
+	db.questionAttempts[attempt.ID] = attempt
+	return nil
 }

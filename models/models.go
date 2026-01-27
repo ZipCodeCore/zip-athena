@@ -7,6 +7,7 @@ type User struct {
 	ID           int       `json:"id"`
 	Username     string    `json:"username"`
 	Email        string    `json:"email"`
+	Password     string    `json:"password,omitempty"` // Only used for auth, not returned in API
 	IsAdmin      bool      `json:"is_admin"`
 	TotalPoints  int       `json:"total_points"`
 	CreatedAt    time.Time `json:"created_at"`
