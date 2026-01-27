@@ -81,7 +81,7 @@ func NewCard() Card {
 		ElapsedDays:   0,
 		ScheduledDays: 0,
 		Reps:          0,
-		Lapses        0,
+		Lapses:        0,
 		State:         0, // New
 		LastReview:    time.Time{},
 	}

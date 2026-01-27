@@ -84,6 +84,80 @@ func main() {
 		}
 	})
 
+	// Phase 2: FSRS routes
+	http.HandleFunc("/fsrs/review", handler.ReviewQuestionHandler)
+	http.HandleFunc("/fsrs/due", handler.GetDueQuestionsHandler)
+	http.HandleFunc("/fsrs/quiz/generate", handler.GenerateAdaptiveQuizHandler)
+
+	// Phase 2: Admin routes
+	http.HandleFunc("/admin/users", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.ListUsersHandler(w, r)
+			} else if r.Method == http.MethodPut {
+				handler.UpdateUserHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteUserHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	http.HandleFunc("/admin/questions", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.ListQuestionsHandler(w, r)
+			} else if r.Method == http.MethodPut {
+				handler.UpdateQuestionHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteQuestionHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	http.HandleFunc("/admin/quizzes", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.ListQuizzesHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.CreateQuizHandler(w, r)
+			} else if r.Method == http.MethodPut {
+				handler.UpdateQuizHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteQuizHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	http.HandleFunc("/admin/topics", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPut {
+				handler.UpdateTopicHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteTopicHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	http.HandleFunc("/admin/answers", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPut {
+				handler.UpdateAnswerHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteAnswerHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
 	port := ":8080"
 	fmt.Printf("Athena API server starting on port %s\n", port)
 	fmt.Printf("Database: %s\n", dbPath)
