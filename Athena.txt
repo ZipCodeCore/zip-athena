@@ -1,0 +1,55 @@
+Athena is a specialized testing application for students who are learning how to develop software.  
+It is a web-based three-tier app with an API business logic middle-end with a relational database backend. 
+The front end is a JavaScript/json type front end application that allows the student 
+to access to a large amount of questions and answers quiz items that they are working on periodically over many weeks in a learn to program course.
+
+The student logged in and is faced with a series of topical areas. Each topical area has hundreds of questions 
+that need to be answered by the student correctly. The format is that the student looks at a question chooses, 
+either chooses a multiple choice answer, and the system scores it correct or incorrect.
+
+The system has a "space repetition system" that takes incorrect answers and schedules them for a future quiz, 
+correct answer answers are still referenced forward so that the student gains confidence from things they already know.
+
+Examples of quiz items might be "what is the result of this if statement" and the possible answers might 
+be the correct response +2 or three slightly incorrect responses.
+
+Topical areas for the app are kept in the database each topical area has hundreds of quiz questions. 
+Answer options and correct answer configurations. Topical areas might be "Java" or Python or sequel or agile.
+
+The questions and answers are also ranked by difficulty. Easiest questions are ranked with a one on up to say maybe 
+five or seven being the hardest questions in the database. Each question will also have a series of topic tags that 
+can be used to group when a student has trouble with a series of questions that share the same tag a tag like 
+control structures might be assigned to if statements while loops for loops break statements and alike. 
+When a student has multiple failures on any of these topics, a quick examination of the tags assigned to them might 
+reveal that control structures is an area student is currently having trouble with on the questions.
+
+The data model for the app has a series of users some of whom happened to be Admin's where a user has many quiz attempts. 
+Each quiz attempt has total questions asked total questions answered correctly. Each student has a total points field, 
+where the total correct number of questions is kept from all quiz attempts. Each quiz attempt has a start date time and a completed date time.
+There are many topics in the database each topic has many questions. Each questions has a question text and a series of 
+possible answer answers each question has a correct answer registered each question also has a topicid.questionid (like 3.17) number that 
+can be used to reference questions in a students quiz attempt object. Each quiz attempt has a list of question ID 
+numbers that are kept track of with a correct or incorrect score for each question that the student attempted 
+during the quiz attempt each student has many question attempts each question attempt has a question ID, which is still 
+the topicid.questionid number. Each question attempt has also the the number of correct and incorrect attempts along with the 
+date time of the last correct or incorrect attempt.
+
+This information on question attempts will be used by advanced algorithms in the app, such as space repetition, and or 
+other algorithms that schedule question attempts for students when a quiz is generated from the database. 
+When a student wishes to take a quiz, the system looks at all the recently correctly answered, and recently incorrectly answered 
+quiz question attempts, and generates a quiz of some number of questions based on the algorithms results.
+
+Applications like Anki and Knowt and Kahoot! And Quilt our examples of existing applications that Athena will be modeled after.
+Athena is used by the ZIPCodeWilmington as a student progress tool for its software development courses.
+
+There will be two primary interfaces, the one that the students see and one that Admin instructors will see. 
+The instructors will see student progress for each student. They'll see summary statistics for each student and can 
+drill down into specific areas of common student mis-understandings. Each student will be able to see their total scores, 
+both correct and incorrect their progress through the database. I.e. percentage of questions answered correctly 
+and be able to drill down on each quiz attempt to see the questions answered correctly or incorrectly.
+
+There will also be a test type in addition to a quiz attempt. 
+A test attempt type will be a timed quiz that will have a larger impact on the students progress. 
+Each test will be a series of wired quiz questions that get used every time a particular student 
+takes it a specific tes the system will have multiple tests. 
+Each test will have multiple questions on each test will also have a record of many student test attempts.
