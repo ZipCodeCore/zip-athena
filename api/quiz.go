@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -85,7 +86,6 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Shuffle and limit questions
-	rand.Seed(time.Now().UnixNano())
 	rand.Shuffle(len(questions), func(i, j int) {
 		questions[i], questions[j] = questions[j], questions[i]
 	})
@@ -203,6 +203,12 @@ func (h *Handler) SubmitAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		quizAttempt.CorrectAnswers++
 	}
 
+	// Save quiz attempt updates to database
+	if err := h.db.UpdateQuizAttempt(quizAttempt); err != nil {
+		http.Error(w, "Failed to update quiz attempt", http.StatusInternalServerError)
+		return
+	}
+
 	// Update or create question attempt
 	questionAttempts, err := h.db.GetQuestionAttemptsByUser(req.UserID)
 	if err != nil {
@@ -225,6 +231,12 @@ func (h *Handler) SubmitAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		existingAttempt.LastAttemptTime = time.Now()
 		existingAttempt.LastAttemptCorrect = correct
+		
+		// Update existing attempt in database
+		if err := h.db.UpdateQuestionAttempt(existingAttempt); err != nil {
+			// Log error but don't fail the request
+			fmt.Printf("Warning: Failed to update question attempt: %v\n", err)
+		}
 	} else {
 		newAttempt := &models.QuestionAttempt{
 			UserID:             req.UserID,

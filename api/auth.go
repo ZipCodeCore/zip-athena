@@ -1,14 +1,13 @@
 package api
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"net/http"
 	"time"
 
 	"github.com/ZipCodeCore/zip-athena/database"
 	"github.com/ZipCodeCore/zip-athena/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // RegisterRequest represents the request body for registration
@@ -30,10 +29,16 @@ type AuthResponse struct {
 	Message string       `json:"message"`
 }
 
-// hashPassword creates a simple hash of the password
-func hashPassword(password string) string {
-	hash := sha256.Sum256([]byte(password))
-	return hex.EncodeToString(hash[:])
+// hashPassword creates a bcrypt hash of the password
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+// checkPasswordHash compares a password with a hash
+func checkPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
 
 // RegisterHandler handles POST /auth/register
@@ -55,11 +60,18 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Hash password
+	hashedPassword, err := hashPassword(req.Password)
+	if err != nil {
+		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+		return
+	}
+
 	// Create user with hashed password
 	user := &models.User{
 		Username:    req.Username,
 		Email:       req.Email,
-		Password:    hashPassword(req.Password),
+		Password:    hashedPassword,
 		IsAdmin:     false,
 		TotalPoints: 0,
 		CreatedAt:   time.Now(),
@@ -136,8 +148,7 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Verify password
-	hashedPassword := hashPassword(req.Password)
-	if user.Password != hashedPassword {
+	if !checkPasswordHash(req.Password, user.Password) {
 		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
 		return
 	}

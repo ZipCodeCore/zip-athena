@@ -416,6 +416,33 @@ func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, er
 	return attempts, rows.Err()
 }
 
+func (db *SQLiteDB) UpdateQuizAttempt(attempt *models.QuizAttempt) error {
+	questionIDsJSON, err := json.Marshal(attempt.QuestionIDs)
+	if err != nil {
+		return err
+	}
+	questionResultsJSON, err := json.Marshal(attempt.QuestionResults)
+	if err != nil {
+		return err
+	}
+
+	result, err := db.db.Exec(
+		"UPDATE quiz_attempts SET completed_time = ?, total_questions = ?, correct_answers = ?, question_ids = ?, question_results = ? WHERE id = ?",
+		attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON), attempt.ID,
+	)
+	if err != nil {
+		return err
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return ErrNotFound
+	}
+	return nil
+}
+
 // QuestionAttempt operations
 func (db *SQLiteDB) CreateQuestionAttempt(attempt *models.QuestionAttempt) error {
 	result, err := db.db.Exec(
@@ -467,4 +494,22 @@ func (db *SQLiteDB) GetQuestionAttemptsByUser(userID int) ([]*models.QuestionAtt
 		attempts = append(attempts, attempt)
 	}
 	return attempts, rows.Err()
+}
+
+func (db *SQLiteDB) UpdateQuestionAttempt(attempt *models.QuestionAttempt) error {
+result, err := db.db.Exec(
+"UPDATE question_attempts SET correct_attempts = ?, incorrect_attempts = ?, last_attempt_time = ?, last_attempt_correct = ? WHERE id = ?",
+attempt.CorrectAttempts, attempt.IncorrectAttempts, attempt.LastAttemptTime, attempt.LastAttemptCorrect, attempt.ID,
+)
+if err != nil {
+return err
+}
+rows, err := result.RowsAffected()
+if err != nil {
+return err
+}
+if rows == 0 {
+return ErrNotFound
+}
+return nil
 }
