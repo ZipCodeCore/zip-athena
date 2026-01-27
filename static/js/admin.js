@@ -110,10 +110,18 @@ async function editUser(userId) {
 
 async function saveUser() {
     const userId = document.getElementById('userId').value;
+    const totalPoints = parseInt(document.getElementById('userTotalPoints').value);
+    
+    // Validate total points
+    if (isNaN(totalPoints) || totalPoints < 0) {
+        alert('Total Points must be a valid non-negative number');
+        return;
+    }
+    
     const userData = {
         username: document.getElementById('userUsername').value,
         email: document.getElementById('userEmail').value,
-        total_points: parseInt(document.getElementById('userTotalPoints').value),
+        total_points: totalPoints,
         is_admin: document.getElementById('userIsAdmin').checked
     };
 
@@ -220,10 +228,23 @@ async function saveQuestion() {
     const tagsInput = document.getElementById('questionTags').value;
     const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
     
+    const topicId = parseInt(document.getElementById('questionTopicId').value);
+    const difficulty = parseInt(document.getElementById('questionDifficulty').value);
+    
+    // Validate inputs
+    if (isNaN(topicId) || topicId < 1) {
+        alert('Topic ID must be a valid positive number');
+        return;
+    }
+    if (isNaN(difficulty) || difficulty < 1 || difficulty > 7) {
+        alert('Difficulty must be a number between 1 and 7');
+        return;
+    }
+    
     const questionData = {
         question_text: document.getElementById('questionText').value,
-        topic_id: parseInt(document.getElementById('questionTopicId').value),
-        difficulty: parseInt(document.getElementById('questionDifficulty').value),
+        topic_id: topicId,
+        difficulty: difficulty,
         tags: tags,
         topic_question_id: document.getElementById('questionTopicQuestionId').value
     };

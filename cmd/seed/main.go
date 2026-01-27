@@ -58,13 +58,14 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 		{Name: "SQL Database", Description: "Structured Query Language basics", CreatedAt: time.Now()},
 	}
 
+	// Get existing topics once before the loop
+	existingTopics, err := db.ListTopics()
+	if err != nil {
+		log.Printf("Warning: Failed to list topics: %v", err)
+		existingTopics = []*models.Topic{} // Use empty list if query fails
+	}
+	
 	for i := range topics {
-		// Check if topic already exists by name
-		existingTopics, err := db.ListTopics()
-		if err != nil {
-			log.Printf("Warning: Failed to list topics: %v", err)
-		}
-		
 		topicExists := false
 		for _, existingTopic := range existingTopics {
 			if existingTopic.Name == topics[i].Name {
