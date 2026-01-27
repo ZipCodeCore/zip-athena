@@ -7,6 +7,7 @@ import (
 
 	"github.com/ZipCodeCore/zip-athena/database"
 	"github.com/ZipCodeCore/zip-athena/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func truncate(s string, maxLen int) string {
@@ -14,6 +15,11 @@ func truncate(s string, maxLen int) string {
 		return s
 	}
 	return s[:maxLen] + "..."
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
 }
 
 func main() {
@@ -350,22 +356,6 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 	}
 
 	return nil
-}
-package main
-
-import (
-"fmt"
-"log"
-"time"
-
-"github.com/ZipCodeCore/zip-athena/database"
-"github.com/ZipCodeCore/zip-athena/models"
-"golang.org/x/crypto/bcrypt"
-)
-
-func hashPassword(password string) (string, error) {
-bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-return string(bytes), err
 }
 
 func seedPhase2Data(db *database.SQLiteDB) error {
