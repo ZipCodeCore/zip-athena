@@ -280,7 +280,7 @@ func TestConcurrentUserCreation(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		go func(idx int) {
 			user := &models.User{
-				Username:  "user" + string(rune(idx)),
+				Username:  "concurrentuser",
 				Email:     "user@example.com",
 				CreatedAt: time.Now(),
 			}
