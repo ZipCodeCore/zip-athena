@@ -1,7 +1,7 @@
 # Athena - Technical Knowledge Assessment Platform
 ## Project Specification Document
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Date:** January 27, 2026  
 **Organization:** ZipCodeWilmington  
 **Document Type:** Product Specification & Functional Requirements  
