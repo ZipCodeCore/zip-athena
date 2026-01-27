@@ -65,7 +65,6 @@
             <div class="tab-pane fade" id="questions" role="tabpanel">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3>Question Management</h3>
-                    <button class="btn btn-primary" onclick="showCreateQuestionModal()">Add Question</button>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-striped">
@@ -188,6 +187,84 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" onclick="saveTopic()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalTitle">Edit User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <input type="hidden" id="userId">
+                        <div class="mb-3">
+                            <label for="userUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="userUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="userEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userTotalPoints" class="form-label">Total Points</label>
+                            <input type="number" class="form-control" id="userTotalPoints" min="0" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="userIsAdmin">
+                            <label class="form-check-label" for="userIsAdmin">Is Admin</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUser()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Question Modal -->
+    <div class="modal fade" id="questionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="questionModalTitle">Edit Question</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="questionForm">
+                        <input type="hidden" id="questionId">
+                        <div class="mb-3">
+                            <label for="questionText" class="form-label">Question Text</label>
+                            <textarea class="form-control" id="questionText" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="questionTopicId" class="form-label">Topic ID</label>
+                            <input type="number" class="form-control" id="questionTopicId" min="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="questionDifficulty" class="form-label">Difficulty (1-7)</label>
+                            <input type="number" class="form-control" id="questionDifficulty" min="1" max="7" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="questionTags" class="form-label">Tags (comma-separated)</label>
+                            <input type="text" class="form-control" id="questionTags" placeholder="tag1, tag2, tag3">
+                        </div>
+                        <div class="mb-3">
+                            <label for="questionTopicQuestionId" class="form-label">Topic Question ID</label>
+                            <input type="text" class="form-control" id="questionTopicQuestionId" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveQuestion()">Save</button>
                 </div>
             </div>
         </div>

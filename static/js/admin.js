@@ -56,6 +56,7 @@ async function loadUsers() {
                 <td>${user.total_points}</td>
                 <td>${new Date(user.created_at).toLocaleDateString()}</td>
                 <td>
+                    <button class="btn btn-sm btn-warning" onclick="editUser(${user.id})">Edit</button>
                     <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" 
                             ${user.id === currentUser.id ? 'disabled' : ''}>Delete</button>
                 </td>
@@ -90,6 +91,62 @@ async function deleteUser(userId) {
     }
 }
 
+async function editUser(userId) {
+    const users = await (await fetch('/admin/users', {
+        headers: { 'X-User-ID': currentUser.id.toString() }
+    })).json();
+    
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+
+    document.getElementById('userModalTitle').textContent = 'Edit User';
+    document.getElementById('userId').value = user.id;
+    document.getElementById('userUsername').value = user.username;
+    document.getElementById('userEmail').value = user.email;
+    document.getElementById('userTotalPoints').value = user.total_points;
+    document.getElementById('userIsAdmin').checked = user.is_admin;
+    new bootstrap.Modal(document.getElementById('userModal')).show();
+}
+
+async function saveUser() {
+    const userId = document.getElementById('userId').value;
+    const totalPoints = parseInt(document.getElementById('userTotalPoints').value);
+    
+    // Validate total points
+    if (isNaN(totalPoints) || totalPoints < 0) {
+        alert('Total Points must be a valid non-negative number');
+        return;
+    }
+    
+    const userData = {
+        username: document.getElementById('userUsername').value,
+        email: document.getElementById('userEmail').value,
+        total_points: totalPoints,
+        is_admin: document.getElementById('userIsAdmin').checked
+    };
+
+    try {
+        const response = await fetch(`/admin/users?id=${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-User-ID': currentUser.id.toString()
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.ok) {
+            bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+            await loadUsers();
+        } else {
+            throw new Error('Failed to save user');
+        }
+    } catch (error) {
+        console.error('Error saving user:', error);
+        alert('Failed to save user');
+    }
+}
+
 // Question Management
 async function loadQuestions() {
     try {
@@ -114,6 +171,7 @@ async function loadQuestions() {
                 <td>${q.difficulty}</td>
                 <td>${q.tags ? q.tags.join(', ') : ''}</td>
                 <td>
+                    <button class="btn btn-sm btn-warning" onclick="editQuestion(${q.id})">Edit</button>
                     <button class="btn btn-sm btn-danger" onclick="deleteQuestion(${q.id})">Delete</button>
                 </td>
             `;
@@ -144,6 +202,72 @@ async function deleteQuestion(questionId) {
     } catch (error) {
         console.error('Error deleting question:', error);
         alert('Failed to delete question');
+    }
+}
+
+async function editQuestion(questionId) {
+    const questions = await (await fetch('/admin/questions', {
+        headers: { 'X-User-ID': currentUser.id.toString() }
+    })).json();
+    
+    const question = questions.find(q => q.id === questionId);
+    if (!question) return;
+
+    document.getElementById('questionModalTitle').textContent = 'Edit Question';
+    document.getElementById('questionId').value = question.id;
+    document.getElementById('questionText').value = question.question_text;
+    document.getElementById('questionTopicId').value = question.topic_id;
+    document.getElementById('questionDifficulty').value = question.difficulty;
+    document.getElementById('questionTags').value = question.tags ? question.tags.join(', ') : '';
+    document.getElementById('questionTopicQuestionId').value = question.topic_question_id;
+    new bootstrap.Modal(document.getElementById('questionModal')).show();
+}
+
+async function saveQuestion() {
+    const questionId = document.getElementById('questionId').value;
+    const tagsInput = document.getElementById('questionTags').value;
+    const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+    
+    const topicId = parseInt(document.getElementById('questionTopicId').value);
+    const difficulty = parseInt(document.getElementById('questionDifficulty').value);
+    
+    // Validate inputs
+    if (isNaN(topicId) || topicId < 1) {
+        alert('Topic ID must be a valid positive number');
+        return;
+    }
+    if (isNaN(difficulty) || difficulty < 1 || difficulty > 7) {
+        alert('Difficulty must be a number between 1 and 7');
+        return;
+    }
+    
+    const questionData = {
+        question_text: document.getElementById('questionText').value,
+        topic_id: topicId,
+        difficulty: difficulty,
+        tags: tags,
+        topic_question_id: document.getElementById('questionTopicQuestionId').value
+    };
+
+    try {
+        const response = await fetch(`/admin/questions?id=${questionId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-User-ID': currentUser.id.toString()
+            },
+            body: JSON.stringify(questionData)
+        });
+
+        if (response.ok) {
+            bootstrap.Modal.getInstance(document.getElementById('questionModal')).hide();
+            await loadQuestions();
+        } else {
+            throw new Error('Failed to save question');
+        }
+    } catch (error) {
+        console.error('Error saving question:', error);
+        alert('Failed to save question');
     }
 }
 
