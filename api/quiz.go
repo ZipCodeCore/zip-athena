@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ZipCodeCore/zip-athena/database"
+	"github.com/ZipCodeCore/zip-athena/fsrs"
 	"github.com/ZipCodeCore/zip-athena/models"
 )
 
@@ -334,8 +335,98 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 		h.db.UpdateUserPoints(user.ID, user.TotalPoints)
 	}
 
+	// Update FSRS state for each question in the quiz
+	h.updateFSRSStatesForQuiz(quizAttempt)
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(quizAttempt)
+}
+
+// updateFSRSStatesForQuiz updates FSRS state for all questions in a quiz attempt
+func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
+	// Get all questions to map TopicQuestionID to QuestionID
+	allQuestions, err := h.db.ListQuestions()
+	if err != nil {
+		return // Silently fail - don't block quiz completion
+	}
+
+	questionMap := make(map[string]*models.Question)
+	for _, q := range allQuestions {
+		questionMap[q.TopicQuestionID] = q
+	}
+
+	// Process each question in the quiz
+	for topicQuestionID, wasCorrect := range quizAttempt.QuestionResults {
+		question, exists := questionMap[topicQuestionID]
+		if !exists {
+			continue
+		}
+
+		// Determine FSRS rating based on correctness
+		// Correct = Good (3), Incorrect = Again (1)
+		rating := 1 // Again (incorrect)
+		if wasCorrect {
+			rating = 3 // Good (correct)
+		}
+
+		// Get or create user question state
+		state, err := h.db.GetUserQuestionState(quizAttempt.UserID, question.ID)
+		if err != nil {
+			if err == database.ErrNotFound {
+				// Create new state for this question
+				state = &models.UserQuestionState{
+					UserID:     quizAttempt.UserID,
+					QuestionID: question.ID,
+					Due:        time.Now(),
+					State:      0, // New
+				}
+				if err := h.db.CreateUserQuestionState(state); err != nil {
+					continue // Skip this question if creation fails
+				}
+			} else {
+				continue // Skip this question if error
+			}
+		}
+
+		// Convert to FSRS card
+		card := fsrs.Card{
+			Due:           state.Due,
+			Stability:     state.Stability,
+			Difficulty:    state.Difficulty,
+			ElapsedDays:   state.ElapsedDays,
+			ScheduledDays: state.ScheduledDays,
+			Reps:          state.Reps,
+			Lapses:        state.Lapses,
+			State:         state.State,
+			LastReview:    state.LastReview,
+		}
+
+		// Apply FSRS algorithm
+		params := fsrs.NewDefaultParameters()
+		schedulingCards := params.Repeat(card, time.Now())
+
+		// Get the scheduling info based on rating
+		var schedulingInfo fsrs.SchedulingInfo
+		if rating == 1 {
+			schedulingInfo = schedulingCards.Again
+		} else {
+			schedulingInfo = schedulingCards.Good
+		}
+
+		// Update state with new values
+		state.Due = schedulingInfo.Card.Due
+		state.Stability = schedulingInfo.Card.Stability
+		state.Difficulty = schedulingInfo.Card.Difficulty
+		state.ElapsedDays = schedulingInfo.Card.ElapsedDays
+		state.ScheduledDays = schedulingInfo.Card.ScheduledDays
+		state.Reps = schedulingInfo.Card.Reps
+		state.Lapses = schedulingInfo.Card.Lapses
+		state.State = schedulingInfo.Card.State
+		state.LastReview = schedulingInfo.Card.LastReview
+
+		// Save updated state
+		h.db.UpdateUserQuestionState(state)
+	}
 }
 
 // RetakeQuizHandler handles POST /quiz/retake
