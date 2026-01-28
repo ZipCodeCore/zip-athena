@@ -57,6 +57,8 @@ func (db *SQLiteDB) initSchema() error {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
 		description TEXT,
+		is_active BOOLEAN DEFAULT 1,
+		display_order INTEGER DEFAULT 0,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);
 
@@ -171,7 +173,56 @@ func (db *SQLiteDB) initSchema() error {
 	`
 
 	_, err := db.db.Exec(schema)
-	return err
+	if err != nil {
+		return err
+	}
+	
+	// Run migrations for existing databases
+	return db.runMigrations()
+}
+
+// runMigrations applies database migrations for schema changes
+func (db *SQLiteDB) runMigrations() error {
+	// Migration: Add is_active and display_order to topics table if they don't exist
+	// Check if columns exist
+	var hasIsActive, hasDisplayOrder bool
+	
+	// Check for is_active column
+	rows, err := db.db.Query("PRAGMA table_info(topics)")
+	if err == nil {
+		defer rows.Close()
+		for rows.Next() {
+			var cid int
+			var name, ctype string
+			var notnull, pk int
+			var dfltValue interface{}
+			if err := rows.Scan(&cid, &name, &ctype, &notnull, &dfltValue, &pk); err == nil {
+				if name == "is_active" {
+					hasIsActive = true
+				}
+				if name == "display_order" {
+					hasDisplayOrder = true
+				}
+			}
+		}
+	}
+	
+	// Add missing columns
+	if !hasIsActive {
+		_, err := db.db.Exec("ALTER TABLE topics ADD COLUMN is_active BOOLEAN DEFAULT 1")
+		if err != nil {
+			return fmt.Errorf("failed to add is_active column: %w", err)
+		}
+	}
+	
+	if !hasDisplayOrder {
+		_, err := db.db.Exec("ALTER TABLE topics ADD COLUMN display_order INTEGER DEFAULT 0")
+		if err != nil {
+			return fmt.Errorf("failed to add display_order column: %w", err)
+		}
+	}
+	
+	return nil
 }
 
 // User operations
@@ -238,9 +289,23 @@ func (db *SQLiteDB) UpdateUserPoints(id int, points int) error {
 
 // Topic operations
 func (db *SQLiteDB) CreateTopic(topic *models.Topic) error {
+	// Set defaults for new fields
+	if topic.IsActive == false && topic.ID == 0 {
+		topic.IsActive = true // Default to active for new topics
+	}
+	
+	// Get max display_order and increment
+	if topic.DisplayOrder == 0 {
+		var maxOrder int
+		err := db.db.QueryRow("SELECT COALESCE(MAX(display_order), 0) FROM topics").Scan(&maxOrder)
+		if err == nil {
+			topic.DisplayOrder = maxOrder + 1
+		}
+	}
+	
 	result, err := db.db.Exec(
-		"INSERT INTO topics (name, description, created_at) VALUES (?, ?, ?)",
-		topic.Name, topic.Description, topic.CreatedAt,
+		"INSERT INTO topics (name, description, is_active, display_order, created_at) VALUES (?, ?, ?, ?, ?)",
+		topic.Name, topic.Description, topic.IsActive, topic.DisplayOrder, topic.CreatedAt,
 	)
 	if err != nil {
 		return err
@@ -256,9 +321,9 @@ func (db *SQLiteDB) CreateTopic(topic *models.Topic) error {
 func (db *SQLiteDB) GetTopic(id int) (*models.Topic, error) {
 	topic := &models.Topic{}
 	err := db.db.QueryRow(
-		"SELECT id, name, description, created_at FROM topics WHERE id = ?",
+		"SELECT id, name, description, is_active, display_order, created_at FROM topics WHERE id = ?",
 		id,
-	).Scan(&topic.ID, &topic.Name, &topic.Description, &topic.CreatedAt)
+	).Scan(&topic.ID, &topic.Name, &topic.Description, &topic.IsActive, &topic.DisplayOrder, &topic.CreatedAt)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -269,21 +334,21 @@ func (db *SQLiteDB) GetTopic(id int) (*models.Topic, error) {
 }
 
 func (db *SQLiteDB) ListTopics() ([]*models.Topic, error) {
-	rows, err := db.db.Query("SELECT id, name, description, created_at FROM topics")
+	rows, err := db.db.Query("SELECT id, name, description, is_active, display_order, created_at FROM topics ORDER BY display_order ASC")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var topics []*models.Topic
+	topics := make([]*models.Topic, 0)
 	for rows.Next() {
 		topic := &models.Topic{}
-		if err := rows.Scan(&topic.ID, &topic.Name, &topic.Description, &topic.CreatedAt); err != nil {
+		if err := rows.Scan(&topic.ID, &topic.Name, &topic.Description, &topic.IsActive, &topic.DisplayOrder, &topic.CreatedAt); err != nil {
 			return nil, err
 		}
 		topics = append(topics, topic)
 	}
-	return topics, rows.Err()
+	return topics, nil
 }
 
 // Question operations
@@ -926,25 +991,26 @@ return nil
 
 // Admin operations - Topics
 func (db *SQLiteDB) UpdateTopic(topic *models.Topic) error {
-result, err := db.db.Exec(
-"UPDATE topics SET name = ?, description = ? WHERE id = ?",
-topic.Name, topic.Description, topic.ID,
-)
-if err != nil {
-return err
-}
-rows, err := result.RowsAffected()
-if err != nil {
-return err
-}
-if rows == 0 {
-return ErrNotFound
-}
-return nil
+	result, err := db.db.Exec(
+		"UPDATE topics SET name = ?, description = ?, is_active = ?, display_order = ? WHERE id = ?",
+		topic.Name, topic.Description, topic.IsActive, topic.DisplayOrder, topic.ID,
+	)
+	if err != nil {
+		return err
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
 
 func (db *SQLiteDB) DeleteTopic(id int) error {
-result, err := db.db.Exec("DELETE FROM topics WHERE id = ?", id)
+	// Soft delete: set is_active to false instead of deleting
+	result, err := db.db.Exec("UPDATE topics SET is_active = 0 WHERE id = ?", id)
 if err != nil {
 return err
 }
@@ -1597,4 +1663,16 @@ func (db *SQLiteDB) GetStudentWeakAreas(userID int) (*models.WeakAreas, error) {
 	}
 	
 	return weakAreas, nil
+}
+
+// ReorderTopics updates the display_order for topics
+func (db *SQLiteDB) ReorderTopics(topicIDs []int) error {
+// Update display_order for each topic based on its position in the array
+for i, topicID := range topicIDs {
+_, err := db.db.Exec("UPDATE topics SET display_order = ? WHERE id = ?", i, topicID)
+if err != nil {
+return err
+}
+}
+return nil
 }

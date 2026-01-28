@@ -251,6 +251,31 @@ func main() {
 		})(w, r)
 	})
 
+	// Phase 3: Topic Management routes (instructor)
+	http.HandleFunc("/instructor/topics", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.CreateInstructorTopicHandler(w, r)
+			} else if r.Method == http.MethodPut {
+				handler.UpdateInstructorTopicHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteInstructorTopicHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	
+	http.HandleFunc("/instructor/topics/reorder", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPut {
+				handler.ReorderTopicsHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
 	// Phase 3: Test management routes
 	http.HandleFunc("/admin/tests", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {

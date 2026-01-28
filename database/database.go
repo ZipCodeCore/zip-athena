@@ -99,6 +99,9 @@ type Database interface {
 	ListStudentsWithMetrics(searchQuery string, sortBy string, filterCohort string) ([]*models.StudentProgress, error)
 	GetStudentQuizHistory(userID int) ([]*models.QuizAttempt, error)
 	GetStudentWeakAreas(userID int) (*models.WeakAreas, error)
+	
+	// Phase 3: Topic Management
+	ReorderTopics(topicIDs []int) error
 }
 
 // InMemoryDB implements the Database interface using in-memory storage
@@ -197,6 +200,23 @@ func (db *InMemoryDB) CreateTopic(topic *models.Topic) error {
 
 	topic.ID = db.nextTopicID
 	db.nextTopicID++
+	
+	// Set defaults for new fields
+	if topic.IsActive == false && topic.ID == 0 {
+		topic.IsActive = true
+	}
+	
+	// Get max display_order and increment
+	if topic.DisplayOrder == 0 {
+		maxOrder := 0
+		for _, t := range db.topics {
+			if t.DisplayOrder > maxOrder {
+				maxOrder = t.DisplayOrder
+			}
+		}
+		topic.DisplayOrder = maxOrder + 1
+	}
+	
 	db.topics[topic.ID] = topic
 	return nil
 }
@@ -220,6 +240,16 @@ func (db *InMemoryDB) ListTopics() ([]*models.Topic, error) {
 	for _, topic := range db.topics {
 		topics = append(topics, topic)
 	}
+	
+	// Sort by display_order
+	for i := 0; i < len(topics); i++ {
+		for j := i + 1; j < len(topics); j++ {
+			if topics[i].DisplayOrder > topics[j].DisplayOrder {
+				topics[i], topics[j] = topics[j], topics[i]
+			}
+		}
+	}
+	
 	return topics, nil
 }
 
@@ -585,25 +615,27 @@ return nil
 
 // Admin operations - Topics
 func (db *InMemoryDB) UpdateTopic(topic *models.Topic) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-if _, exists := db.topics[topic.ID]; !exists {
-return ErrNotFound
-}
-db.topics[topic.ID] = topic
-return nil
+	if _, exists := db.topics[topic.ID]; !exists {
+		return ErrNotFound
+	}
+	db.topics[topic.ID] = topic
+	return nil
 }
 
 func (db *InMemoryDB) DeleteTopic(id int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-if _, exists := db.topics[id]; !exists {
-return ErrNotFound
-}
-delete(db.topics, id)
-return nil
+	topic, exists := db.topics[id]
+	if !exists {
+		return ErrNotFound
+	}
+	// Soft delete: set is_active to false
+	topic.IsActive = false
+	return nil
 }
 
 func (db *InMemoryDB) GetAnswer(id int) (*models.Answer, error) {
@@ -1276,4 +1308,19 @@ TotalAttempts: stats.total,
 }
 
 return weakAreas, nil
+}
+
+// ReorderTopics updates the display_order for topics
+func (db *InMemoryDB) ReorderTopics(topicIDs []int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+for i, topicID := range topicIDs {
+topic, exists := db.topics[topicID]
+if !exists {
+return ErrNotFound
+}
+topic.DisplayOrder = i
+}
+return nil
 }

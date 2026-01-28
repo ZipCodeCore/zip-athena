@@ -689,3 +689,113 @@ func (h *Handler) GetTestQuestionsHandler(w http.ResponseWriter, r *http.Request
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(questions)
 }
+
+// Phase 3: Topic Management Handlers
+
+// CreateTopicHandler creates a new topic (instructor operation)
+func (h *Handler) CreateInstructorTopicHandler(w http.ResponseWriter, r *http.Request) {
+var topic models.Topic
+if err := json.NewDecoder(r.Body).Decode(&topic); err != nil {
+http.Error(w, err.Error(), http.StatusBadRequest)
+return
+}
+
+topic.CreatedAt = time.Now()
+topic.IsActive = true
+
+if err := h.db.CreateTopic(&topic); err != nil {
+log.Printf("ERROR: Failed to create topic: %v\n", err)
+http.Error(w, err.Error(), http.StatusInternalServerError)
+return
+}
+
+w.Header().Set("Content-Type", "application/json")
+w.WriteHeader(http.StatusCreated)
+json.NewEncoder(w).Encode(topic)
+}
+
+// UpdateInstructorTopicHandler updates a topic (instructor operation)
+func (h *Handler) UpdateInstructorTopicHandler(w http.ResponseWriter, r *http.Request) {
+idStr := r.URL.Query().Get("id")
+if idStr == "" {
+http.Error(w, "topic id is required", http.StatusBadRequest)
+return
+}
+
+id, err := strconv.Atoi(idStr)
+if err != nil {
+http.Error(w, "Invalid topic id", http.StatusBadRequest)
+return
+}
+
+var topic models.Topic
+if err := json.NewDecoder(r.Body).Decode(&topic); err != nil {
+http.Error(w, err.Error(), http.StatusBadRequest)
+return
+}
+
+topic.ID = id
+
+if err := h.db.UpdateTopic(&topic); err == database.ErrNotFound {
+http.Error(w, "Topic not found", http.StatusNotFound)
+return
+} else if err != nil {
+log.Printf("ERROR: Failed to update topic (ID: %d): %v\n", id, err)
+http.Error(w, err.Error(), http.StatusInternalServerError)
+return
+}
+
+w.Header().Set("Content-Type", "application/json")
+json.NewEncoder(w).Encode(topic)
+}
+
+// DeleteInstructorTopicHandler soft deletes (deactivates) a topic
+func (h *Handler) DeleteInstructorTopicHandler(w http.ResponseWriter, r *http.Request) {
+idStr := r.URL.Query().Get("id")
+if idStr == "" {
+http.Error(w, "topic id is required", http.StatusBadRequest)
+return
+}
+
+id, err := strconv.Atoi(idStr)
+if err != nil {
+http.Error(w, "Invalid topic id", http.StatusBadRequest)
+return
+}
+
+if err := h.db.DeleteTopic(id); err == database.ErrNotFound {
+http.Error(w, "Topic not found", http.StatusNotFound)
+return
+} else if err != nil {
+log.Printf("ERROR: Failed to delete topic (ID: %d): %v\n", id, err)
+http.Error(w, err.Error(), http.StatusInternalServerError)
+return
+}
+
+w.WriteHeader(http.StatusNoContent)
+}
+
+// ReorderTopicsHandler updates the display order of topics
+func (h *Handler) ReorderTopicsHandler(w http.ResponseWriter, r *http.Request) {
+var request struct {
+TopicIDs []int `json:"topic_ids"`
+}
+
+if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+http.Error(w, err.Error(), http.StatusBadRequest)
+return
+}
+
+if len(request.TopicIDs) == 0 {
+http.Error(w, "topic_ids array is required", http.StatusBadRequest)
+return
+}
+
+if err := h.db.ReorderTopics(request.TopicIDs); err != nil {
+log.Printf("ERROR: Failed to reorder topics: %v\n", err)
+http.Error(w, err.Error(), http.StatusInternalServerError)
+return
+}
+
+w.WriteHeader(http.StatusNoContent)
+}

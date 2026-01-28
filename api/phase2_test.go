@@ -775,10 +775,13 @@ func TestDeleteTopic(t *testing.T) {
 		t.Errorf("Expected status 204, got %d", rec.Code)
 	}
 
-	// Verify deletion
-	_, err := db.GetTopic(1)
-	if err != database.ErrNotFound {
-		t.Error("Topic should have been deleted")
+	// Verify soft deletion (topic should still exist but be inactive)
+	topic, err := db.GetTopic(1)
+	if err != nil {
+		t.Error("Topic should still exist after soft delete, got error:", err)
+	}
+	if topic.IsActive {
+		t.Error("Topic should be inactive after soft delete")
 	}
 }
 
