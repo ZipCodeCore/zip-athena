@@ -45,6 +45,9 @@ type QuizAttempt struct {
 	ID                 int       `json:"id"`
 	UserID             int       `json:"user_id"`
 	QuizID             *int      `json:"quiz_id,omitempty"`
+	ParentAttemptID    *int      `json:"parent_attempt_id,omitempty"` // Reference to original attempt if this is a retake
+	AttemptNumber      int       `json:"attempt_number"` // 1 for first attempt, 2 for first retake, etc.
+	IsRetake           bool      `json:"is_retake"` // True if this is a retake attempt
 	StartTime          time.Time `json:"start_time"`
 	CompletedTime      *time.Time `json:"completed_time,omitempty"`
 	TotalQuestions     int       `json:"total_questions"`
