@@ -686,7 +686,10 @@ This document outlines a comprehensive curriculum for teaching programming funda
 - Timedelta objects for time arithmetic
 - Formatting dates with `strftime()`
 - Parsing dates with `strptime()`
-- Time zones (basics with `timezone`)
+- Time zones basics
+  - Using `timezone` class
+  - Creating timezone-aware datetime objects
+  - UTC and timezone conversion
 - The `time` module basics
 
 ### 24. Common Standard Library Modules
