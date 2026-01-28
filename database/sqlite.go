@@ -81,13 +81,15 @@ func (db *SQLiteDB) initSchema() error {
 	CREATE TABLE IF NOT EXISTS quiz_attempts (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		user_id INTEGER NOT NULL,
+		quiz_id INTEGER,
 		start_time DATETIME NOT NULL,
 		completed_time DATETIME,
 		total_questions INTEGER DEFAULT 0,
 		correct_answers INTEGER DEFAULT 0,
 		question_ids TEXT,
 		question_results TEXT,
-		FOREIGN KEY (user_id) REFERENCES users(id)
+		FOREIGN KEY (user_id) REFERENCES users(id),
+		FOREIGN KEY (quiz_id) REFERENCES quizzes(id)
 	);
 
 	CREATE TABLE IF NOT EXISTS question_attempts (
@@ -395,8 +397,8 @@ func (db *SQLiteDB) CreateQuizAttempt(attempt *models.QuizAttempt) error {
 	}
 
 	result, err := db.db.Exec(
-		"INSERT INTO quiz_attempts (user_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results) VALUES (?, ?, ?, ?, ?, ?, ?)",
-		attempt.UserID, attempt.StartTime, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON),
+		"INSERT INTO quiz_attempts (user_id, quiz_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+		attempt.UserID, attempt.QuizID, attempt.StartTime, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON),
 	)
 	if err != nil {
 		return err
@@ -413,11 +415,12 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 	attempt := &models.QuizAttempt{}
 	var questionIDsJSON, questionResultsJSON string
 	var completedTime sql.NullTime
+	var quizID sql.NullInt64
 
 	err := db.db.QueryRow(
-		"SELECT id, user_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE id = ?",
+		"SELECT id, user_id, quiz_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE id = ?",
 		id,
-	).Scan(&attempt.ID, &attempt.UserID, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON)
+	).Scan(&attempt.ID, &attempt.UserID, &quizID, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -427,6 +430,10 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 
 	if completedTime.Valid {
 		attempt.CompletedTime = &completedTime.Time
+	}
+	if quizID.Valid {
+		quizIDInt := int(quizID.Int64)
+		attempt.QuizID = &quizIDInt
 	}
 
 	if err := json.Unmarshal([]byte(questionIDsJSON), &attempt.QuestionIDs); err != nil {
@@ -441,7 +448,7 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 
 func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, error) {
 	rows, err := db.db.Query(
-		"SELECT id, user_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE user_id = ?",
+		"SELECT id, user_id, quiz_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE user_id = ?",
 		userID,
 	)
 	if err != nil {
@@ -454,13 +461,18 @@ func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, er
 		attempt := &models.QuizAttempt{}
 		var questionIDsJSON, questionResultsJSON string
 		var completedTime sql.NullTime
+		var quizID sql.NullInt64
 
-		if err := rows.Scan(&attempt.ID, &attempt.UserID, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON); err != nil {
+		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON); err != nil {
 			return nil, err
 		}
 
 		if completedTime.Valid {
 			attempt.CompletedTime = &completedTime.Time
+		}
+		if quizID.Valid {
+			quizIDInt := int(quizID.Int64)
+			attempt.QuizID = &quizIDInt
 		}
 
 		if err := json.Unmarshal([]byte(questionIDsJSON), &attempt.QuestionIDs); err != nil {
@@ -486,8 +498,8 @@ func (db *SQLiteDB) UpdateQuizAttempt(attempt *models.QuizAttempt) error {
 	}
 
 	result, err := db.db.Exec(
-		"UPDATE quiz_attempts SET completed_time = ?, total_questions = ?, correct_answers = ?, question_ids = ?, question_results = ? WHERE id = ?",
-		attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON), attempt.ID,
+		"UPDATE quiz_attempts SET quiz_id = ?, completed_time = ?, total_questions = ?, correct_answers = ?, question_ids = ?, question_results = ? WHERE id = ?",
+		attempt.QuizID, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON), attempt.ID,
 	)
 	if err != nil {
 		return err

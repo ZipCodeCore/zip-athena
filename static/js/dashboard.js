@@ -91,14 +91,24 @@ function loadQuizAttempts(quizAttempts) {
                 : 0;
             
             const startTime = new Date(attempt.start_time).toLocaleString();
-            const completedTime = attempt.completed_time 
-                ? new Date(attempt.completed_time).toLocaleString() 
-                : 'In Progress';
+            const isCompleted = attempt.completed_time !== null && attempt.completed_time !== undefined;
+            const status = isCompleted ? 'Completed' : 'In Progress';
+            const statusBadgeClass = isCompleted ? 'bg-success' : 'bg-warning';
+            
+            // Get quiz description (fallback to Quiz ID if not available)
+            const quizDescription = attempt.quiz_description || attempt.quiz_name || `Quiz #${attempt.id}`;
+            
+            // Determine if retake button should be shown (completed quiz with score < 100%)
+            const showRetake = isCompleted && score < 100;
+            const retakeButton = showRetake 
+                ? `<button class="btn btn-sm btn-primary" onclick="retakeQuiz(${attempt.quiz_id})">Retake</button>`
+                : '';
 
             row.innerHTML = `
                 <td>${attempt.id}</td>
+                <td>${quizDescription}</td>
                 <td>${startTime}</td>
-                <td>${completedTime}</td>
+                <td><span class="badge ${statusBadgeClass}">${status}</span></td>
                 <td>${attempt.total_questions}</td>
                 <td>${attempt.correct_answers}</td>
                 <td>
@@ -106,11 +116,44 @@ function loadQuizAttempts(quizAttempts) {
                         ${score}%
                     </span>
                 </td>
+                <td>${retakeButton}</td>
             `;
             table.appendChild(row);
         });
     } else {
-        table.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No quiz attempts yet. Start a quiz to see your progress!</td></tr>';
+        table.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No quiz attempts yet. Start a quiz to see your progress!</td></tr>';
+    }
+}
+
+// Retake a quiz
+async function retakeQuiz(quizId) {
+    if (!quizId) {
+        alert('Unable to retake this quiz. Quiz information not available.');
+        return;
+    }
+    
+    try {
+        // Fetch the quiz details to get the topic_id
+        const response = await fetch(`/quizzes/${quizId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch quiz details');
+        }
+        
+        const quiz = await response.json();
+        
+        // Fetch the topic details to get the topic name
+        const topicResponse = await fetch(`/topics/${quiz.topic_id}`);
+        if (!topicResponse.ok) {
+            throw new Error('Failed to fetch topic details');
+        }
+        
+        const topic = await topicResponse.json();
+        
+        // Navigate to the quiz page with the topic information
+        window.location.href = `/quiz.html?topic_id=${quiz.topic_id}&topic_name=${encodeURIComponent(topic.name)}`;
+    } catch (error) {
+        console.error('Error retaking quiz:', error);
+        alert('Unable to retake this quiz. Please try again later.');
     }
 }
 

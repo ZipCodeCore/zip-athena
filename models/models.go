@@ -44,6 +44,7 @@ type Answer struct {
 type QuizAttempt struct {
 	ID                 int       `json:"id"`
 	UserID             int       `json:"user_id"`
+	QuizID             *int      `json:"quiz_id,omitempty"`
 	StartTime          time.Time `json:"start_time"`
 	CompletedTime      *time.Time `json:"completed_time,omitempty"`
 	TotalQuestions     int       `json:"total_questions"`

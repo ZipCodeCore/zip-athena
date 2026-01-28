@@ -73,6 +73,13 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 		req.NumQuestions = 10 // Default to 10 questions
 	}
 
+	// Get topic to use in quiz name
+	topic, err := h.db.GetTopic(req.TopicID)
+	if err != nil {
+		http.Error(w, "Topic not found", http.StatusNotFound)
+		return
+	}
+
 	// Get questions for the topic
 	questions, err := h.db.GetQuestionsByTopic(req.TopicID)
 	if err != nil {
@@ -94,6 +101,20 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 		questions = questions[:req.NumQuestions]
 	}
 
+	// Create or use existing quiz for this topic
+	quiz := &models.Quiz{
+		Name:        fmt.Sprintf("%s Quiz", topic.Name),
+		TopicID:     req.TopicID,
+		Description: fmt.Sprintf("Auto-generated quiz for %s", topic.Name),
+		CreatedAt:   time.Now(),
+		UpdatedAt:   time.Now(),
+	}
+	
+	if err := h.db.CreateQuiz(quiz); err != nil {
+		// If quiz creation fails, it might already exist, but continue anyway
+		// We'll just not set the quiz_id
+	}
+
 	// Create quiz attempt
 	questionIDs := make([]string, len(questions))
 	for i, q := range questions {
@@ -102,6 +123,7 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 
 	quizAttempt := &models.QuizAttempt{
 		UserID:          req.UserID,
+		QuizID:          &quiz.ID,
 		StartTime:       time.Now(),
 		TotalQuestions:  len(questions),
 		CorrectAnswers:  0,
@@ -289,6 +311,12 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 	// Mark as completed
 	now := time.Now()
 	quizAttempt.CompletedTime = &now
+	
+	// Save the updated quiz attempt
+	if err := h.db.UpdateQuizAttempt(quizAttempt); err != nil {
+		http.Error(w, "Failed to update quiz attempt", http.StatusInternalServerError)
+		return
+	}
 
 	// Update user's total points
 	user, err := h.db.GetUser(quizAttempt.UserID)
@@ -332,6 +360,31 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 		quizAttempts = []*models.QuizAttempt{}
 	}
 
+	// Enrich quiz attempts with quiz information
+	type QuizAttemptWithQuiz struct {
+		*models.QuizAttempt
+		QuizName        string `json:"quiz_name,omitempty"`
+		QuizDescription string `json:"quiz_description,omitempty"`
+	}
+
+	enrichedAttempts := make([]QuizAttemptWithQuiz, 0, len(quizAttempts))
+	for _, qa := range quizAttempts {
+		enriched := QuizAttemptWithQuiz{
+			QuizAttempt: qa,
+		}
+		
+		// If the attempt has a quiz_id, fetch the quiz details
+		if qa.QuizID != nil {
+			quiz, err := h.db.GetQuiz(*qa.QuizID)
+			if err == nil {
+				enriched.QuizName = quiz.Name
+				enriched.QuizDescription = quiz.Description
+			}
+		}
+		
+		enrichedAttempts = append(enrichedAttempts, enriched)
+	}
+
 	// Get question attempts
 	questionAttempts, err := h.db.GetQuestionAttemptsByUser(userID)
 	if err != nil {
@@ -363,7 +416,7 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 		"total_quizzes":     len(quizAttempts),
 		"total_questions":   totalQuestions,
 		"total_correct":     totalCorrect,
-		"quiz_attempts":     quizAttempts,
+		"quiz_attempts":     enrichedAttempts,
 		"question_attempts": questionAttempts,
 	}
 

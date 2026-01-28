@@ -113,6 +113,34 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(topics)
 }
 
+// GetTopicHandler handles GET /topics/{id}
+func (h *Handler) GetTopicHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	idStr := r.URL.Query().Get("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid topic ID", http.StatusBadRequest)
+		return
+	}
+
+	topic, err := h.db.GetTopic(id)
+	if err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "Topic not found", http.StatusNotFound)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(topic)
+}
+
 // CreateQuestionHandler handles POST /questions
 func (h *Handler) CreateQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
