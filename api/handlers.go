@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -35,6 +36,7 @@ func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	user.CreatedAt = time.Now()
 	if err := h.db.CreateUser(&user); err != nil {
+		log.Printf("ERROR: Failed to create user: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -64,6 +66,7 @@ func (h *Handler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "User not found", http.StatusNotFound)
 			return
 		}
+		log.Printf("ERROR: Failed to get user %d: %v\n", id, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -87,6 +90,7 @@ func (h *Handler) CreateTopicHandler(w http.ResponseWriter, r *http.Request) {
 
 	topic.CreatedAt = time.Now()
 	if err := h.db.CreateTopic(&topic); err != nil {
+		log.Printf("ERROR: Failed to create topic: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -105,6 +109,7 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 
 	topics, err := h.db.ListTopics()
 	if err != nil {
+		log.Printf("ERROR: Failed to list topics: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -133,6 +138,7 @@ func (h *Handler) GetTopicHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Topic not found", http.StatusNotFound)
 			return
 		}
+		log.Printf("ERROR: Failed to get topic %d: %v\n", id, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -156,6 +162,7 @@ func (h *Handler) CreateQuestionHandler(w http.ResponseWriter, r *http.Request) 
 
 	question.CreatedAt = time.Now()
 	if err := h.db.CreateQuestion(&question); err != nil {
+		log.Printf("ERROR: Failed to create question: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

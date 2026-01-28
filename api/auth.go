@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -63,6 +64,7 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// Hash password
 	hashedPassword, err := hashPassword(req.Password)
 	if err != nil {
+		log.Printf("ERROR: Failed to hash password for user %s: %v\n", req.Username, err)
 		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 		return
 	}
@@ -84,6 +86,7 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			user.Username, user.Email, user.Password, user.IsAdmin, user.TotalPoints, user.CreatedAt,
 		)
 		if err != nil {
+			log.Printf("ERROR: Failed to create user %s: %v\n", user.Username, err)
 			http.Error(w, "Username or email already exists", http.StatusConflict)
 			return
 		}
@@ -92,6 +95,7 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// Fallback for in-memory DB
 		if err := h.db.CreateUser(user); err != nil {
+			log.Printf("ERROR: Failed to create user %s in in-memory DB: %v\n", user.Username, err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -140,9 +144,11 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if err == database.ErrNotFound {
+			// Don't log "not found" as it could be username enumeration attempts
 			http.Error(w, "Invalid username or password", http.StatusUnauthorized)
 			return
 		}
+		log.Printf("ERROR: Failed to get user %s during login: %v\n", req.Username, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
