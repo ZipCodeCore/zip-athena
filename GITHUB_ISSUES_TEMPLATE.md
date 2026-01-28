@@ -108,7 +108,6 @@ Implement an instructor dashboard page that displays all registered students wit
 ### Database Changes
 - [ ] Add index on users.email for search performance
 - [ ] Add index on users.created_at for cohort filtering
-- [ ] Add materialized view or caching for student metrics
 
 ### Unit Tests Required
 1. Test student list retrieval with basic metrics
@@ -138,20 +137,20 @@ Implement an instructor dashboard page that displays all registered students wit
 
 ### Technical Notes
 - Use debounced search (300ms delay) to reduce API calls
-- Cache student metrics for 5 minutes to improve performance
+- Cache student metrics for 5 minutes to improve performance (consider materialized view for production)
 - Consider using virtual scrolling for very large lists (>1000 students)
 - Ensure mobile layout stacks table into cards
 
 ### Definition of Done
-- [x] All acceptance criteria met
-- [x] All 12 unit tests written and passing
-- [x] Code reviewed and approved
-- [x] API documentation updated
-- [x] UI screenshots added to PR
-- [x] Manual testing on Chrome, Firefox, Safari
-- [x] Mobile responsive verified
-- [x] No new security vulnerabilities (CodeQL passed)
-- [x] API response time <200ms (tested with 500 students)
+- [ ] All acceptance criteria met
+- [ ] All 12 unit tests written and passing
+- [ ] Code reviewed and approved
+- [ ] API documentation updated
+- [ ] UI screenshots added to PR
+- [ ] Manual testing on Chrome, Firefox, Safari
+- [ ] Mobile responsive verified
+- [ ] No new security vulnerabilities (CodeQL passed)
+- [ ] API response time <200ms (tested with 500 students)
 ```
 
 ---
@@ -282,17 +281,17 @@ localStorage.setItem('test_attempt', JSON.stringify({
 ```
 
 ### Definition of Done
-- [x] All acceptance criteria met
-- [x] All 15 unit tests written and passing
-- [x] Timer accuracy tested (doesn't drift over 60 minutes)
-- [x] Page refresh handling tested
-- [x] Auto-submit tested (wait for timer to expire)
-- [x] Code reviewed and approved
-- [x] Documentation updated
-- [x] Manual testing on Chrome, Firefox, Safari
-- [x] Mobile responsive verified
-- [x] No new security vulnerabilities
-- [x] Server-side time validation prevents cheating
+- [ ] All acceptance criteria met
+- [ ] All 15 unit tests written and passing
+- [ ] Timer accuracy tested (doesn't drift over 60 minutes)
+- [ ] Page refresh handling tested
+- [ ] Auto-submit tested (wait for timer to expire)
+- [ ] Code reviewed and approved
+- [ ] Documentation updated
+- [ ] Manual testing on Chrome, Firefox, Safari
+- [ ] Mobile responsive verified
+- [ ] No new security vulnerabilities
+- [ ] Server-side time validation prevents cheating
 ```
 
 ---
@@ -430,16 +429,16 @@ Line,Error,Topic,Question
 ```
 
 ### Definition of Done
-- [x] All acceptance criteria met
-- [x] All 16 unit tests written and passing
-- [x] Import of 500 questions <10 seconds (tested)
-- [x] CSV parsing handles edge cases (quotes, commas in text)
-- [x] Code reviewed and approved
-- [x] Documentation updated (CSV format guide)
-- [x] Manual testing with various CSV files
-- [x] Error handling tested (malformed CSV, empty file)
-- [x] No new security vulnerabilities
-- [x] File upload size limit enforced (10 MB)
+- [ ] All acceptance criteria met
+- [ ] All 16 unit tests written and passing
+- [ ] Import of 500 questions <10 seconds (tested)
+- [ ] CSV parsing handles edge cases (quotes, commas in text)
+- [ ] Code reviewed and approved
+- [ ] Documentation updated (CSV format guide)
+- [ ] Manual testing with various CSV files
+- [ ] Error handling tested (malformed CSV, empty file)
+- [ ] No new security vulnerabilities
+- [ ] File upload size limit enforced (10 MB)
 ```
 
 ---
