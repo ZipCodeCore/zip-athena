@@ -119,7 +119,7 @@ go test -v ./api
 ## Next Steps
 
 - Implement frontend JavaScript application
-- Add PostgreSQL/MySQL database backend
+- Add Sqlite3 database backend
 - Implement spaced repetition algorithm
 - Add authentication and authorization
 - Implement test attempt functionality
