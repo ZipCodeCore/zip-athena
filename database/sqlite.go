@@ -170,8 +170,8 @@ func (db *SQLiteDB) initSchema() error {
 // User operations
 func (db *SQLiteDB) CreateUser(user *models.User) error {
 	result, err := db.db.Exec(
-		"INSERT INTO users (username, email, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?)",
-		user.Username, user.Email, user.IsAdmin, user.TotalPoints, user.CreatedAt,
+		"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+		user.Username, user.Email, user.Password, user.IsAdmin, user.TotalPoints, user.CreatedAt,
 	)
 	if err != nil {
 		return err

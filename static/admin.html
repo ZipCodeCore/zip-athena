@@ -135,7 +135,7 @@
 
     <!-- Create/Edit Quiz Modal -->
     <div class="modal fade" id="quizModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="quizModalTitle">Create Quiz</h5>
@@ -157,6 +157,32 @@
                             <textarea class="form-control" id="quizDescription" rows="3"></textarea>
                         </div>
                     </form>
+
+                    <!-- Questions Section (only shown when editing existing quiz) -->
+                    <div id="quizQuestionsSection" style="display: none;">
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6>Quiz Questions</h6>
+                            <button type="button" class="btn btn-sm btn-success" onclick="showAddQuestionToQuizForm()">Add Question</button>
+                        </div>
+
+                        <!-- Add Question to Quiz Form -->
+                        <div id="addQuestionToQuizForm" style="display: none;" class="mb-3 p-3 border rounded bg-light">
+                            <div class="mb-2">
+                                <label for="quizQuestionId" class="form-label">Question ID</label>
+                                <input type="number" class="form-control" id="quizQuestionId" min="1" required>
+                            </div>
+                            <div class="mb-2">
+                                <label for="quizQuestionOrder" class="form-label">Order</label>
+                                <input type="number" class="form-control" id="quizQuestionOrder" min="0" value="0" required>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="addQuestionToQuiz()">Add Question</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="cancelAddQuestionToQuiz()">Cancel</button>
+                        </div>
+
+                        <!-- Quiz Questions List -->
+                        <div id="quizQuestionsList"></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -239,7 +265,7 @@
 
     <!-- Create/Edit Question Modal -->
     <div class="modal fade" id="questionModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="questionModalTitle">Edit Question</h5>
@@ -269,6 +295,32 @@
                             <input type="text" class="form-control" id="questionTopicQuestionId" required>
                         </div>
                     </form>
+
+                    <!-- Answers Section (only shown when editing existing question) -->
+                    <div id="answersSection" style="display: none;">
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6>Answer Alternatives</h6>
+                            <button type="button" class="btn btn-sm btn-success" onclick="showAddAnswerForm()">Add Answer</button>
+                        </div>
+                        
+                        <!-- Add Answer Form -->
+                        <div id="addAnswerForm" style="display: none;" class="mb-3 p-3 border rounded bg-light">
+                            <div class="mb-2">
+                                <label for="newAnswerText" class="form-label">Answer Text</label>
+                                <input type="text" class="form-control" id="newAnswerText" required>
+                            </div>
+                            <div class="mb-2 form-check">
+                                <input type="checkbox" class="form-check-input" id="newAnswerIsCorrect">
+                                <label class="form-check-label" for="newAnswerIsCorrect">Is Correct Answer</label>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="addAnswer()">Save Answer</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="cancelAddAnswer()">Cancel</button>
+                        </div>
+
+                        <!-- Answers List -->
+                        <div id="answersList"></div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
