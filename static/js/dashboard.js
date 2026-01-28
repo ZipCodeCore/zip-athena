@@ -9,6 +9,11 @@ if (!user) {
 // Display user info
 document.getElementById('userDisplay').textContent = `Welcome, ${user.username}!`;
 
+// Show admin button if user is admin
+if (user.is_admin) {
+    document.getElementById('adminButton').style.display = 'inline-block';
+}
+
 // Logout function
 function logout() {
     localStorage.removeItem('user');

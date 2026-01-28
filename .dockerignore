@@ -1,0 +1,29 @@
+# Binaries
+athena
+main
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Data directory
+data/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# IDE
+.vscode/
+.idea/
+
+# Test files
+*_test.go
+
+# OS files
+.DS_Store
