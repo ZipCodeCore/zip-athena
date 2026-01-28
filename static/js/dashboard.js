@@ -91,14 +91,24 @@ function loadQuizAttempts(quizAttempts) {
                 : 0;
             
             const startTime = new Date(attempt.start_time).toLocaleString();
-            const completedTime = attempt.completed_time 
-                ? new Date(attempt.completed_time).toLocaleString() 
-                : 'In Progress';
+            const isCompleted = attempt.completed_time !== null && attempt.completed_time !== undefined;
+            const status = isCompleted ? 'Completed' : 'In Progress';
+            const statusBadgeClass = isCompleted ? 'bg-success' : 'bg-warning';
+            
+            // Get quiz description (fallback to Quiz ID if not available)
+            const quizDescription = attempt.quiz_description || attempt.quiz_name || `Quiz #${attempt.id}`;
+            
+            // Determine if retake button should be shown (completed quiz with score < 100%)
+            const showRetake = isCompleted && score < 100;
+            const retakeButton = showRetake 
+                ? `<button class="btn btn-sm btn-primary" onclick="retakeQuiz(${attempt.quiz_id})">Retake</button>`
+                : '';
 
             row.innerHTML = `
                 <td>${attempt.id}</td>
+                <td>${quizDescription}</td>
                 <td>${startTime}</td>
-                <td>${completedTime}</td>
+                <td><span class="badge ${statusBadgeClass}">${status}</span></td>
                 <td>${attempt.total_questions}</td>
                 <td>${attempt.correct_answers}</td>
                 <td>
@@ -106,12 +116,27 @@ function loadQuizAttempts(quizAttempts) {
                         ${score}%
                     </span>
                 </td>
+                <td>${retakeButton}</td>
             `;
             table.appendChild(row);
         });
     } else {
-        table.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No quiz attempts yet. Start a quiz to see your progress!</td></tr>';
+        table.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No quiz attempts yet. Start a quiz to see your progress!</td></tr>';
     }
+}
+
+// Retake a quiz
+function retakeQuiz(quizId) {
+    if (!quizId) {
+        alert('Unable to retake this quiz. Quiz information not available.');
+        return;
+    }
+    
+    // For now, we'll need to get the topic_id associated with this quiz
+    // Since we're creating quizzes on-the-fly based on topics, we can navigate to the topic
+    // In a more robust implementation, we'd fetch the quiz details and get the topic_id
+    // For this implementation, we'll just reload the page and let the user select the topic again
+    window.location.reload();
 }
 
 // Start a quiz
