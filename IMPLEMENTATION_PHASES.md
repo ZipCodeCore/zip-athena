@@ -9,10 +9,12 @@ This document organizes all Feature Requirements from SPECIFICATION.md into logi
 - ✅ **Phase 0**: Backend Foundation - COMPLETE
 - ✅ **Phase 1**: Core Student Experience - COMPLETE  
 - ✅ **Phase 2**: Spaced Repetition (FSRS) - COMPLETE
-- 🔲 **Phase 3**: Instructor Analytics & Management
-- 🔲 **Phase 4**: Advanced Student Features & Testing
-- 🔲 **Phase 5**: Content Management & Quality
-- 🔲 **Phase 6**: Performance & Polish
+- 🔲 **Phase 3**: Instructor Analytics & Management (32 tests)
+- 🔲 **Phase 4**: Advanced Student Features & Testing (44 tests)
+- 🔲 **Phase 5**: Content Management & Quality (35 tests)
+- 🔲 **Phase 6**: Performance & Polish (20 tests)
+
+**Total Planned**: 131+ unit tests across Phases 3-6
 
 ---
 
@@ -75,7 +77,7 @@ Implement an instructor dashboard page that displays all registered students wit
 - Status indicators (colored badges)
 - Responsive design for mobile
 
-### Database Queries Needed
+### Database Queries
 - Aggregate user statistics (quiz attempts, accuracy)
 - Join user and quiz attempt data
 - Filter and search operations
@@ -251,12 +253,12 @@ Allow instructors to create, edit, and manage topic categories for organizing qu
 - Instructor can view and search students
 - Instructor can drill into student analytics
 - Instructor can view cohort performance
-- All Phase 3 unit tests passing (28+ tests)
+- All Phase 3 unit tests passing (32+ tests)
 - Instructor UI is responsive and intuitive
 - Documentation complete
 
 ### Estimated Testing
-**Unit Tests**: ~28 tests minimum
+**Unit Tests**: ~32 tests minimum
 - Student List & Search: 8 tests
 - Individual Student Analytics: 8 tests
 - Cohort Analytics: 9 tests
@@ -581,12 +583,12 @@ Provide instructors with analytics on how questions perform, helping identify qu
 - Tag-based practice available
 - Instructors can create and manage tests
 - Question analytics help improve content
-- All Phase 4 unit tests passing (35+ tests)
+- All Phase 4 unit tests passing (44+ tests)
 - UI supports all new features
 - Documentation complete
 
 ### Estimated Testing
-**Unit Tests**: ~35 tests minimum
+**Unit Tests**: ~44 tests minimum
 - Quiz Attempt History: 7 tests
 - Timed Test Taking: 10 tests
 - Tag-Based Review: 7 tests
@@ -871,12 +873,12 @@ Implement a quality review queue for flagged questions, enabling content admins 
 - Bulk import supports 500+ questions
 - Tagging system enables concept organization
 - Quality review process established
-- All Phase 5 unit tests passing (30+ tests)
+- All Phase 5 unit tests passing (35+ tests)
 - Content team can efficiently manage questions
 - Documentation complete
 
 ### Estimated Testing
-**Unit Tests**: ~30 tests minimum
+**Unit Tests**: ~35 tests minimum
 - Question Management: 10 tests
 - Bulk Import: 10 tests
 - Tagging System: 8 tests
@@ -1169,10 +1171,19 @@ Implement security, monitoring, and deployment features for production launch.
 
 ## Testing Strategy Across All Phases
 
+### Testing Strategy Across All Phases
+
 ### Testing Pyramid
-- **Unit Tests**: 150+ tests (70%)
+- **Unit Tests**: 130+ tests (70%)
 - **Integration Tests**: 50+ tests (20%)
 - **E2E Tests**: 20+ tests (10%)
+
+### Phase Test Breakdown
+- **Phase 3**: 32 unit tests (Instructor features)
+- **Phase 4**: 44 unit tests (Student & testing features)
+- **Phase 5**: 35 unit tests (Content management)
+- **Phase 6**: 20 unit tests (Performance & polish)
+- **Total**: 131+ unit tests planned
 
 ### Test Categories
 1. **Model Tests**: Validate data structures
