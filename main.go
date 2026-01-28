@@ -256,4 +256,3 @@ func main() {
 	fmt.Printf("Database: %s\n", dbPath)
 	log.Fatal(http.ListenAndServe(port, nil))
 }
-
