@@ -18,6 +18,8 @@ type Topic struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
+	IsActive    bool      `json:"is_active"`    // For soft delete (Phase 3)
+	DisplayOrder int      `json:"display_order"` // For reordering (Phase 3)
 	CreatedAt   time.Time `json:"created_at"`
 }
 
@@ -186,4 +188,27 @@ type QuizImport struct {
 	TopicID     int                   `json:"topic_id"`
 	Description string                `json:"description"`
 	Questions   []QuestionWithAnswers `json:"questions"`
+}
+
+// WeakAreas represents a student's weak topics and tags (Phase 3)
+type WeakAreas struct {
+	UserID      int                `json:"user_id"`
+	Username    string             `json:"username"`
+	WeakTopics  []TopicWeakness    `json:"weak_topics"`  // Topics with < 60% accuracy
+	WeakTags    []TagWeakness      `json:"weak_tags"`    // Tags with < 60% accuracy
+}
+
+// TopicWeakness represents weakness in a specific topic (Phase 3)
+type TopicWeakness struct {
+	TopicID     int     `json:"topic_id"`
+	TopicName   string  `json:"topic_name"`
+	Accuracy    float64 `json:"accuracy"`
+	TotalAttempts int   `json:"total_attempts"`
+}
+
+// TagWeakness represents weakness in a specific tag/concept (Phase 3)
+type TagWeakness struct {
+	Tag         string  `json:"tag"`
+	Accuracy    float64 `json:"accuracy"`
+	TotalAttempts int   `json:"total_attempts"`
 }

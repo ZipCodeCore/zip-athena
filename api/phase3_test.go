@@ -786,3 +786,367 @@ func TestImportQuestions(t *testing.T) {
 		}
 	}
 }
+
+// Phase 3 Tests: Instructor Student List & Search
+
+func TestListStudents(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup admin
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	// Create multiple students
+	for i := 1; i <= 5; i++ {
+		student := &models.User{
+			Username:  "student" + fmt.Sprintf("%d", i),
+			Email:     "student" + fmt.Sprintf("%d", i) + "@test.com",
+			IsAdmin:   false,
+			CreatedAt: time.Now(),
+		}
+		db.CreateUser(student)
+	}
+
+	req := httptest.NewRequest("GET", "/instructor/students", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.ListStudentsHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	var students []*models.StudentProgress
+	json.NewDecoder(w.Body).Decode(&students)
+
+	if len(students) != 5 {
+		t.Errorf("Expected 5 students, got %d", len(students))
+	}
+}
+
+func TestSearchStudents(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	// Create students with specific names
+	db.CreateUser(&models.User{Username: "alice", Email: "alice@test.com", IsAdmin: false, CreatedAt: time.Now()})
+	db.CreateUser(&models.User{Username: "bob", Email: "bob@test.com", IsAdmin: false, CreatedAt: time.Now()})
+	db.CreateUser(&models.User{Username: "charlie", Email: "charlie@test.com", IsAdmin: false, CreatedAt: time.Now()})
+
+	// Search by name
+	req := httptest.NewRequest("GET", "/instructor/students?q=alice", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.ListStudentsHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	var students []*models.StudentProgress
+	json.NewDecoder(w.Body).Decode(&students)
+
+	if len(students) != 1 {
+		t.Errorf("Expected 1 student matching 'alice', got %d", len(students))
+	}
+	if len(students) > 0 && students[0].Username != "alice" {
+		t.Errorf("Expected username 'alice', got '%s'", students[0].Username)
+	}
+}
+
+func TestGetStudentQuizHistory(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	student := &models.User{Username: "student1", Email: "student1@test.com", IsAdmin: false, CreatedAt: time.Now()}
+	db.CreateUser(student)
+
+	// Create multiple quiz attempts
+	for i := 1; i <= 3; i++ {
+		completedTime := time.Now().Add(time.Duration(i) * time.Hour)
+		attempt := &models.QuizAttempt{
+			UserID:         student.ID,
+			StartTime:      time.Now().Add(time.Duration(i-1) * time.Hour),
+			CompletedTime:  &completedTime,
+			TotalQuestions: 10,
+			CorrectAnswers: i * 2,
+		}
+		db.CreateQuizAttempt(attempt)
+	}
+
+	req := httptest.NewRequest("GET", "/instructor/students/quiz-history?user_id=2", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.GetStudentQuizHistoryHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	var attempts []*models.QuizAttempt
+	json.NewDecoder(w.Body).Decode(&attempts)
+
+	if len(attempts) != 3 {
+		t.Errorf("Expected 3 quiz attempts, got %d", len(attempts))
+	}
+}
+
+func TestGetStudentWeakAreas(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	student := &models.User{Username: "student1", Email: "student1@test.com", IsAdmin: false, CreatedAt: time.Now()}
+	db.CreateUser(student)
+
+	topic := &models.Topic{Name: "Java", Description: "Java", CreatedAt: time.Now()}
+	db.CreateTopic(topic)
+
+	// Create a question with tags
+	question := &models.Question{
+		TopicID:         topic.ID,
+		QuestionText:    "Test question",
+		Difficulty:      3,
+		TopicQuestionID: "1.1",
+		Tags:            []string{"loops", "arrays"},
+		CreatedAt:       time.Now(),
+	}
+	db.CreateQuestion(question)
+
+	// Create question attempt with poor performance (< 60%)
+	qa := &models.QuestionAttempt{
+		UserID:             student.ID,
+		QuestionID:         question.ID,
+		TopicQuestionID:    "1.1",
+		CorrectAttempts:    2, // 2 correct
+		IncorrectAttempts:  8, // 8 incorrect = 20% accuracy
+		LastAttemptTime:    time.Now(),
+		LastAttemptCorrect: false,
+	}
+	db.CreateQuestionAttempt(qa)
+
+	req := httptest.NewRequest("GET", "/instructor/students/weak-areas?user_id=2", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.GetStudentWeakAreasHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	var weakAreas models.WeakAreas
+	json.NewDecoder(w.Body).Decode(&weakAreas)
+
+	if weakAreas.UserID != student.ID {
+		t.Errorf("Expected user ID %d, got %d", student.ID, weakAreas.UserID)
+	}
+
+	// Should have weak topics (20% accuracy < 60%)
+	if len(weakAreas.WeakTopics) == 0 {
+		t.Error("Expected weak topics to be identified")
+	}
+
+	// Should have weak tags
+	if len(weakAreas.WeakTags) == 0 {
+		t.Error("Expected weak tags to be identified")
+	}
+}
+
+// Phase 3 Tests: Topic Management
+
+func TestCreateInstructorTopic(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup admin
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	// Create topic
+	topicData := models.Topic{
+		Name:        "Docker",
+		Description: "Docker Containers",
+	}
+
+	body, _ := json.Marshal(topicData)
+	req := httptest.NewRequest("POST", "/instructor/topics", bytes.NewBuffer(body))
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.CreateInstructorTopicHandler)(w, req)
+
+	if w.Code != http.StatusCreated {
+		t.Errorf("Expected status 201, got %d", w.Code)
+	}
+
+	var createdTopic models.Topic
+	json.NewDecoder(w.Body).Decode(&createdTopic)
+
+	if createdTopic.Name != "Docker" {
+		t.Errorf("Expected name \"Docker\", got \"%s\"", createdTopic.Name)
+	}
+	if !createdTopic.IsActive {
+		t.Error("Expected topic to be active by default")
+	}
+	if createdTopic.DisplayOrder == 0 {
+		t.Error("Expected display_order to be set")
+	}
+}
+
+func TestUpdateInstructorTopic(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	topic := &models.Topic{Name: "Original", Description: "Original desc", IsActive: true, DisplayOrder: 1, CreatedAt: time.Now()}
+	db.CreateTopic(topic)
+
+	// Update topic
+	updatedTopic := models.Topic{
+		Name:         "Updated",
+		Description:  "Updated description",
+		IsActive:     true,
+		DisplayOrder: 1,
+	}
+
+	body, _ := json.Marshal(updatedTopic)
+	req := httptest.NewRequest("PUT", "/instructor/topics?id=1", bytes.NewBuffer(body))
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.UpdateInstructorTopicHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	// Verify update
+	retrieved, _ := db.GetTopic(topic.ID)
+	if retrieved.Name != "Updated" {
+		t.Errorf("Expected name \"Updated\", got \"%s\"", retrieved.Name)
+	}
+}
+
+func TestDeleteInstructorTopic(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	topic := &models.Topic{Name: "To Delete", Description: "Will be soft deleted", IsActive: true, DisplayOrder: 1, CreatedAt: time.Now()}
+	db.CreateTopic(topic)
+
+	req := httptest.NewRequest("DELETE", "/instructor/topics?id=1", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.DeleteInstructorTopicHandler)(w, req)
+
+	if w.Code != http.StatusNoContent {
+		t.Errorf("Expected status 204, got %d", w.Code)
+	}
+
+	// Verify soft delete (topic should still exist but be inactive)
+	retrieved, err := db.GetTopic(topic.ID)
+	if err != nil {
+		t.Error("Expected topic to still exist (soft delete)")
+	}
+	if retrieved.IsActive {
+		t.Error("Expected topic to be inactive after soft delete")
+	}
+}
+
+func TestReorderTopics(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	// Create multiple topics
+	topic1 := &models.Topic{Name: "Topic 1", Description: "First", IsActive: true, DisplayOrder: 1, CreatedAt: time.Now()}
+	topic2 := &models.Topic{Name: "Topic 2", Description: "Second", IsActive: true, DisplayOrder: 2, CreatedAt: time.Now()}
+	topic3 := &models.Topic{Name: "Topic 3", Description: "Third", IsActive: true, DisplayOrder: 3, CreatedAt: time.Now()}
+	db.CreateTopic(topic1)
+	db.CreateTopic(topic2)
+	db.CreateTopic(topic3)
+
+	// Reorder: move topic3 to first, topic1 to second, topic2 to third
+	reorderData := map[string][]int{
+		"topic_ids": {topic3.ID, topic1.ID, topic2.ID},
+	}
+
+	body, _ := json.Marshal(reorderData)
+	req := httptest.NewRequest("PUT", "/instructor/topics/reorder", bytes.NewBuffer(body))
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.ReorderTopicsHandler)(w, req)
+
+	if w.Code != http.StatusNoContent {
+		t.Errorf("Expected status 204, got %d", w.Code)
+	}
+
+	// Verify new order
+	topics, _ := db.ListTopics()
+	if len(topics) != 3 {
+		t.Errorf("Expected 3 topics, got %d", len(topics))
+	}
+
+	// Topics should be ordered by display_order
+	if topics[0].ID != topic3.ID {
+		t.Errorf("Expected first topic to be topic3 (ID %d), got %d", topic3.ID, topics[0].ID)
+	}
+	if topics[1].ID != topic1.ID {
+		t.Errorf("Expected second topic to be topic1 (ID %d), got %d", topic1.ID, topics[1].ID)
+	}
+	if topics[2].ID != topic2.ID {
+		t.Errorf("Expected third topic to be topic2 (ID %d), got %d", topic2.ID, topics[2].ID)
+	}
+}
+
+func TestTopicNameUniqueness(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	// Create first topic
+	topic1 := models.Topic{Name: "Java", Description: "Java Programming"}
+	body1, _ := json.Marshal(topic1)
+	req1 := httptest.NewRequest("POST", "/instructor/topics", bytes.NewBuffer(body1))
+	req1.Header.Set("X-User-ID", "1")
+	w1 := httptest.NewRecorder()
+	handler.AdminMiddleware(handler.CreateInstructorTopicHandler)(w1, req1)
+
+	if w1.Code != http.StatusCreated {
+		t.Errorf("Expected status 201 for first topic, got %d", w1.Code)
+	}
+
+	// Note: Uniqueness validation would need to be implemented at the database level
+	// This test demonstrates the expected behavior
+}

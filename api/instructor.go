@@ -13,6 +13,112 @@ import (
 
 // Phase 3: Instructor Analytics Handlers
 
+// ListStudentsHandler returns a list of all students with their metrics
+func (h *Handler) ListStudentsHandler(w http.ResponseWriter, r *http.Request) {
+	// Get query parameters
+	searchQuery := r.URL.Query().Get("q")
+	sortBy := r.URL.Query().Get("sort")
+	filterCohort := r.URL.Query().Get("cohort")
+
+	students, err := h.db.ListStudentsWithMetrics(searchQuery, sortBy, filterCohort)
+	if err != nil {
+		log.Printf("ERROR: Failed to list students: %v\n", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(students)
+}
+
+// GetStudentAnalyticsHandler returns comprehensive analytics for a specific student
+func (h *Handler) GetStudentAnalyticsHandler(w http.ResponseWriter, r *http.Request) {
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "user_id is required", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
+		return
+	}
+
+	// Get student progress (same as GetStudentProgressHandler)
+	progress, err := h.db.GetStudentProgress(userID)
+	if err == database.ErrNotFound {
+		http.Error(w, "Student not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.Printf("ERROR: Failed to get student analytics (user_id: %d): %v\n", userID, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(progress)
+}
+
+// GetStudentQuizHistoryHandler returns quiz attempt history for a student
+func (h *Handler) GetStudentQuizHistoryHandler(w http.ResponseWriter, r *http.Request) {
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "user_id is required", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
+		return
+	}
+
+	history, err := h.db.GetStudentQuizHistory(userID)
+	if err == database.ErrNotFound {
+		http.Error(w, "Student not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.Printf("ERROR: Failed to get student quiz history (user_id: %d): %v\n", userID, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(history)
+}
+
+// GetStudentWeakAreasHandler returns topics and tags where student is struggling
+func (h *Handler) GetStudentWeakAreasHandler(w http.ResponseWriter, r *http.Request) {
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "user_id is required", http.StatusBadRequest)
+		return
+	}
+
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
+		return
+	}
+
+	weakAreas, err := h.db.GetStudentWeakAreas(userID)
+	if err == database.ErrNotFound {
+		http.Error(w, "Student not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.Printf("ERROR: Failed to get student weak areas (user_id: %d): %v\n", userID, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(weakAreas)
+}
+
 // GetStudentProgressHandler returns progress analytics for a specific student
 func (h *Handler) GetStudentProgressHandler(w http.ResponseWriter, r *http.Request) {
 	userIDStr := r.URL.Query().Get("user_id")
@@ -199,9 +305,9 @@ func (h *Handler) ImportQuizHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"message":      "Quiz imported successfully",
-		"quiz_id":      quiz.ID,
-		"quiz_name":    quiz.Name,
+		"message":        "Quiz imported successfully",
+		"quiz_id":        quiz.ID,
+		"quiz_name":      quiz.Name,
 		"question_count": len(importData.Questions),
 	})
 }
@@ -582,4 +688,134 @@ func (h *Handler) GetTestQuestionsHandler(w http.ResponseWriter, r *http.Request
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(questions)
+}
+
+// Phase 3: Topic Management Handlers
+
+// CreateTopicHandler creates a new topic (instructor operation)
+func (h *Handler) CreateInstructorTopicHandler(w http.ResponseWriter, r *http.Request) {
+	var topic models.Topic
+	if err := json.NewDecoder(r.Body).Decode(&topic); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate input
+	if topic.Name == "" {
+		http.Error(w, "Topic name is required", http.StatusBadRequest)
+		return
+	}
+	if len(topic.Name) > 200 {
+		http.Error(w, "Topic name too long (max 200 characters)", http.StatusBadRequest)
+		return
+	}
+
+	topic.CreatedAt = time.Now()
+	topic.IsActive = true
+
+	if err := h.db.CreateTopic(&topic); err != nil {
+		log.Printf("ERROR: Failed to create topic: %v\n", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(topic)
+}
+
+// UpdateInstructorTopicHandler updates a topic (instructor operation)
+func (h *Handler) UpdateInstructorTopicHandler(w http.ResponseWriter, r *http.Request) {
+	idStr := r.URL.Query().Get("id")
+	if idStr == "" {
+		http.Error(w, "topic id is required", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid topic id", http.StatusBadRequest)
+		return
+	}
+
+	var topic models.Topic
+	if err := json.NewDecoder(r.Body).Decode(&topic); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate input
+	if topic.Name == "" {
+		http.Error(w, "Topic name is required", http.StatusBadRequest)
+		return
+	}
+	if len(topic.Name) > 200 {
+		http.Error(w, "Topic name too long (max 200 characters)", http.StatusBadRequest)
+		return
+	}
+
+	topic.ID = id
+
+	if err := h.db.UpdateTopic(&topic); err == database.ErrNotFound {
+		http.Error(w, "Topic not found", http.StatusNotFound)
+		return
+	} else if err != nil {
+		log.Printf("ERROR: Failed to update topic (ID: %d): %v\n", id, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(topic)
+}
+
+// DeleteInstructorTopicHandler soft deletes (deactivates) a topic
+func (h *Handler) DeleteInstructorTopicHandler(w http.ResponseWriter, r *http.Request) {
+	idStr := r.URL.Query().Get("id")
+	if idStr == "" {
+		http.Error(w, "topic id is required", http.StatusBadRequest)
+		return
+	}
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid topic id", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.db.DeleteTopic(id); err == database.ErrNotFound {
+		http.Error(w, "Topic not found", http.StatusNotFound)
+		return
+	} else if err != nil {
+		log.Printf("ERROR: Failed to delete topic (ID: %d): %v\n", id, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
+
+// ReorderTopicsHandler updates the display order of topics
+func (h *Handler) ReorderTopicsHandler(w http.ResponseWriter, r *http.Request) {
+	var request struct {
+		TopicIDs []int `json:"topic_ids"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if len(request.TopicIDs) == 0 {
+		http.Error(w, "topic_ids array is required", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.db.ReorderTopics(request.TopicIDs); err != nil {
+		log.Printf("ERROR: Failed to reorder topics: %v\n", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

@@ -182,6 +182,30 @@ func main() {
 	})
 
 	// Phase 3: Instructor Analytics routes
+	http.HandleFunc("/instructor/students", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.ListStudentsHandler(w, r)
+		})(w, r)
+	})
+	
+	http.HandleFunc("/instructor/students/analytics", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.GetStudentAnalyticsHandler(w, r)
+		})(w, r)
+	})
+	
+	http.HandleFunc("/instructor/students/quiz-history", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.GetStudentQuizHistoryHandler(w, r)
+		})(w, r)
+	})
+	
+	http.HandleFunc("/instructor/students/weak-areas", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.GetStudentWeakAreasHandler(w, r)
+		})(w, r)
+	})
+
 	http.HandleFunc("/instructor/student-progress", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			handler.GetStudentProgressHandler(w, r)
@@ -221,6 +245,31 @@ func main() {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			if r.Method == http.MethodPost {
 				handler.ImportQuestionsHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	// Phase 3: Topic Management routes (instructor)
+	http.HandleFunc("/instructor/topics", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.CreateInstructorTopicHandler(w, r)
+			} else if r.Method == http.MethodPut {
+				handler.UpdateInstructorTopicHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteInstructorTopicHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	
+	http.HandleFunc("/instructor/topics/reorder", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPut {
+				handler.ReorderTopicsHandler(w, r)
 			} else {
 				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			}
