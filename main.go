@@ -94,6 +94,8 @@ func main() {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			if r.Method == http.MethodGet {
 				handler.ListUsersHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.CreateUserHandler(w, r)
 			} else if r.Method == http.MethodPut {
 				handler.UpdateUserHandler(w, r)
 			} else if r.Method == http.MethodDelete {
@@ -108,6 +110,8 @@ func main() {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			if r.Method == http.MethodGet {
 				handler.ListQuestionsHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.CreateQuestionHandler(w, r)
 			} else if r.Method == http.MethodPut {
 				handler.UpdateQuestionHandler(w, r)
 			} else if r.Method == http.MethodDelete {
