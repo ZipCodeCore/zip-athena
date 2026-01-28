@@ -347,7 +347,9 @@ func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
 	// Get all questions to map TopicQuestionID to QuestionID
 	allQuestions, err := h.db.ListQuestions()
 	if err != nil {
-		return // Silently fail - don't block quiz completion
+		// Log error but don't block quiz completion
+		fmt.Printf("Warning: Failed to load questions for FSRS update: %v\n", err)
+		return
 	}
 
 	questionMap := make(map[string]*models.Question)
@@ -355,10 +357,14 @@ func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
 		questionMap[q.TopicQuestionID] = q
 	}
 
+	// Track failures for logging
+	var failedUpdates []string
+
 	// Process each question in the quiz
 	for topicQuestionID, wasCorrect := range quizAttempt.QuestionResults {
 		question, exists := questionMap[topicQuestionID]
 		if !exists {
+			failedUpdates = append(failedUpdates, fmt.Sprintf("%s (question not found)", topicQuestionID))
 			continue
 		}
 
@@ -381,10 +387,12 @@ func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
 					State:      0, // New
 				}
 				if err := h.db.CreateUserQuestionState(state); err != nil {
-					continue // Skip this question if creation fails
+					failedUpdates = append(failedUpdates, fmt.Sprintf("%s (create state failed: %v)", topicQuestionID, err))
+					continue
 				}
 			} else {
-				continue // Skip this question if error
+				failedUpdates = append(failedUpdates, fmt.Sprintf("%s (get state failed: %v)", topicQuestionID, err))
+				continue
 			}
 		}
 
@@ -425,7 +433,17 @@ func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
 		state.LastReview = schedulingInfo.Card.LastReview
 
 		// Save updated state
-		h.db.UpdateUserQuestionState(state)
+		if err := h.db.UpdateUserQuestionState(state); err != nil {
+			failedUpdates = append(failedUpdates, fmt.Sprintf("%s (update failed: %v)", topicQuestionID, err))
+		}
+	}
+
+	// Log any failures
+	if len(failedUpdates) > 0 {
+		fmt.Printf("Warning: Failed to update FSRS for %d question(s) in quiz attempt %d:\n", len(failedUpdates), quizAttempt.ID)
+		for _, failure := range failedUpdates {
+			fmt.Printf("  - %s\n", failure)
+		}
 	}
 }
 
