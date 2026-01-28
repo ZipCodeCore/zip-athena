@@ -103,8 +103,22 @@ async function editUser(userId) {
     document.getElementById('userId').value = user.id;
     document.getElementById('userUsername').value = user.username;
     document.getElementById('userEmail').value = user.email;
+    document.getElementById('userPassword').value = '';
+    document.getElementById('userPassword').required = false;
     document.getElementById('userTotalPoints').value = user.total_points;
     document.getElementById('userIsAdmin').checked = user.is_admin;
+    new bootstrap.Modal(document.getElementById('userModal')).show();
+}
+
+function showCreateUserModal() {
+    document.getElementById('userModalTitle').textContent = 'Create User';
+    document.getElementById('userId').value = '';
+    document.getElementById('userUsername').value = '';
+    document.getElementById('userEmail').value = '';
+    document.getElementById('userPassword').value = '';
+    document.getElementById('userPassword').required = true;
+    document.getElementById('userTotalPoints').value = '0';
+    document.getElementById('userIsAdmin').checked = false;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
 
@@ -125,25 +139,50 @@ async function saveUser() {
         is_admin: document.getElementById('userIsAdmin').checked
     };
 
+    // Add password if creating or if it's been changed
+    const password = document.getElementById('userPassword').value;
+    if (password) {
+        userData.password = password;
+    }
+
     try {
-        const response = await fetch(`/admin/users?id=${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-User-ID': currentUser.id.toString()
-            },
-            body: JSON.stringify(userData)
-        });
+        let response;
+        if (userId) {
+            // Update existing user
+            response = await fetch(`/admin/users?id=${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-ID': currentUser.id.toString()
+                },
+                body: JSON.stringify(userData)
+            });
+        } else {
+            // Create new user
+            if (!password) {
+                alert('Password is required for new users');
+                return;
+            }
+            response = await fetch('/admin/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-ID': currentUser.id.toString()
+                },
+                body: JSON.stringify(userData)
+            });
+        }
 
         if (response.ok) {
             bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
             await loadUsers();
         } else {
-            throw new Error('Failed to save user');
+            const errorText = await response.text();
+            throw new Error(errorText || 'Failed to save user');
         }
     } catch (error) {
         console.error('Error saving user:', error);
-        alert('Failed to save user');
+        alert('Failed to save user: ' + error.message);
     }
 }
 
@@ -223,6 +262,17 @@ async function editQuestion(questionId) {
     new bootstrap.Modal(document.getElementById('questionModal')).show();
 }
 
+function showCreateQuestionModal() {
+    document.getElementById('questionModalTitle').textContent = 'Create Question';
+    document.getElementById('questionId').value = '';
+    document.getElementById('questionText').value = '';
+    document.getElementById('questionTopicId').value = '';
+    document.getElementById('questionDifficulty').value = '1';
+    document.getElementById('questionTags').value = '';
+    document.getElementById('questionTopicQuestionId').value = '';
+    new bootstrap.Modal(document.getElementById('questionModal')).show();
+}
+
 async function saveQuestion() {
     const questionId = document.getElementById('questionId').value;
     const tagsInput = document.getElementById('questionTags').value;
@@ -250,29 +300,40 @@ async function saveQuestion() {
     };
 
     try {
-        const response = await fetch(`/admin/questions?id=${questionId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-User-ID': currentUser.id.toString()
-            },
-            body: JSON.stringify(questionData)
-        });
+        let response;
+        if (questionId) {
+            // Update existing question
+            response = await fetch(`/admin/questions?id=${questionId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-ID': currentUser.id.toString()
+                },
+                body: JSON.stringify(questionData)
+            });
+        } else {
+            // Create new question
+            response = await fetch('/admin/questions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-ID': currentUser.id.toString()
+                },
+                body: JSON.stringify(questionData)
+            });
+        }
 
         if (response.ok) {
             bootstrap.Modal.getInstance(document.getElementById('questionModal')).hide();
             await loadQuestions();
         } else {
-            throw new Error('Failed to save question');
+            const errorText = await response.text();
+            throw new Error(errorText || 'Failed to save question');
         }
     } catch (error) {
         console.error('Error saving question:', error);
-        alert('Failed to save question');
+        alert('Failed to save question: ' + error.message);
     }
-}
-
-function showCreateQuestionModal() {
-    alert('Question creation UI coming soon. Use the API to create questions for now.');
 }
 
 // Quiz Management
