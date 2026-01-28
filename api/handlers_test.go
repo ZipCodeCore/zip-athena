@@ -218,8 +218,7 @@ func TestGetProgressHandlerIncludesInProgressQuizzes(t *testing.T) {
 	}
 
 	// Verify total_questions includes both completed and in-progress quizzes
-	// Expected: 5 (completed) + 2 (in-progress, only answered questions counted via QuestionResults) = 7
-	// But we want all questions answered, so should be 5 + 2 = 7 based on QuestionResults length
+	// Expected: 5 (from completed quiz) + 2 (answered in in-progress quiz) = 7
 	totalQuestions := int(progress["total_questions"].(float64))
 	expectedTotalQuestions := 7 // 5 from completed + 2 answered in progress
 	if totalQuestions != expectedTotalQuestions {
