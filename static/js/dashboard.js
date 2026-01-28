@@ -126,17 +126,35 @@ function loadQuizAttempts(quizAttempts) {
 }
 
 // Retake a quiz
-function retakeQuiz(quizId) {
+async function retakeQuiz(quizId) {
     if (!quizId) {
         alert('Unable to retake this quiz. Quiz information not available.');
         return;
     }
     
-    // For now, we'll need to get the topic_id associated with this quiz
-    // Since we're creating quizzes on-the-fly based on topics, we can navigate to the topic
-    // In a more robust implementation, we'd fetch the quiz details and get the topic_id
-    // For this implementation, we'll just reload the page and let the user select the topic again
-    window.location.reload();
+    try {
+        // Fetch the quiz details to get the topic_id
+        const response = await fetch(`/quizzes/${quizId}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch quiz details');
+        }
+        
+        const quiz = await response.json();
+        
+        // Fetch the topic details to get the topic name
+        const topicResponse = await fetch(`/topics/${quiz.topic_id}`);
+        if (!topicResponse.ok) {
+            throw new Error('Failed to fetch topic details');
+        }
+        
+        const topic = await topicResponse.json();
+        
+        // Navigate to the quiz page with the topic information
+        window.location.href = `/quiz.html?topic_id=${quiz.topic_id}&topic_name=${encodeURIComponent(topic.name)}`;
+    } catch (error) {
+        console.error('Error retaking quiz:', error);
+        alert('Unable to retake this quiz. Please try again later.');
+    }
 }
 
 // Start a quiz

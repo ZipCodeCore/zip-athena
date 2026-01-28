@@ -50,7 +50,12 @@ func main() {
 		if r.Method == http.MethodPost {
 			handler.CreateTopicHandler(w, r)
 		} else if r.Method == http.MethodGet {
-			handler.ListTopicsHandler(w, r)
+			// Check if ID parameter is provided
+			if r.URL.Query().Get("id") != "" {
+				handler.GetTopicHandler(w, r)
+			} else {
+				handler.ListTopicsHandler(w, r)
+			}
 		} else {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
@@ -72,6 +77,15 @@ func main() {
 	http.HandleFunc("/quiz/submit-answer", handler.SubmitAnswerHandler)
 	http.HandleFunc("/quiz/complete", handler.CompleteQuizHandler)
 	http.HandleFunc("/progress", handler.GetProgressHandler)
+
+	// Quizzes route (for getting quiz details by ID)
+	http.HandleFunc("/quizzes", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			handler.GetQuizHandler(w, r)
+		} else {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
 
 	// Quiz attempt routes
 	http.HandleFunc("/quiz-attempts", func(w http.ResponseWriter, r *http.Request) {

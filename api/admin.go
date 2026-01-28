@@ -220,6 +220,34 @@ func (h *Handler) ListQuizzesHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(quizzes)
 }
 
+// GetQuizHandler handles GET /quizzes/{id}
+func (h *Handler) GetQuizHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	idStr := r.URL.Query().Get("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid quiz ID", http.StatusBadRequest)
+		return
+	}
+
+	quiz, err := h.db.GetQuiz(id)
+	if err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "Quiz not found", http.StatusNotFound)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(quiz)
+}
+
 // CreateQuizHandler handles POST /admin/quizzes
 func (h *Handler) CreateQuizHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
