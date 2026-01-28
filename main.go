@@ -76,6 +76,7 @@ func main() {
 	http.HandleFunc("/quiz/generate", handler.GenerateQuizHandler)
 	http.HandleFunc("/quiz/submit-answer", handler.SubmitAnswerHandler)
 	http.HandleFunc("/quiz/complete", handler.CompleteQuizHandler)
+	http.HandleFunc("/quiz/retake", handler.RetakeQuizHandler)
 	http.HandleFunc("/progress", handler.GetProgressHandler)
 
 	// Quizzes route (for getting quiz details by ID)

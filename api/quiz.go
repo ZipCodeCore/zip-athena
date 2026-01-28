@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/ZipCodeCore/zip-athena/database"
+	"github.com/ZipCodeCore/zip-athena/fsrs"
 	"github.com/ZipCodeCore/zip-athena/models"
 )
 
@@ -48,6 +49,12 @@ type SubmitAnswerResponse struct {
 // CompleteQuizRequest represents completing a quiz
 type CompleteQuizRequest struct {
 	QuizAttemptID int `json:"quiz_attempt_id"`
+}
+
+// RetakeQuizRequest represents requesting a quiz retake
+type RetakeQuizRequest struct {
+	ParentAttemptID int `json:"parent_attempt_id"`
+	UserID          int `json:"user_id"`
 }
 
 // GenerateQuizHandler handles POST /quiz/generate
@@ -124,6 +131,9 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 	quizAttempt := &models.QuizAttempt{
 		UserID:          req.UserID,
 		QuizID:          &quiz.ID,
+		ParentAttemptID: nil,
+		AttemptNumber:   1,
+		IsRetake:        false,
 		StartTime:       time.Now(),
 		TotalQuestions:  len(questions),
 		CorrectAnswers:  0,
@@ -325,8 +335,230 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 		h.db.UpdateUserPoints(user.ID, user.TotalPoints)
 	}
 
+	// Update FSRS state for each question in the quiz
+	h.updateFSRSStatesForQuiz(quizAttempt)
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(quizAttempt)
+}
+
+// updateFSRSStatesForQuiz updates FSRS state for all questions in a quiz attempt
+func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
+	// Get all questions to map TopicQuestionID to QuestionID
+	allQuestions, err := h.db.ListQuestions()
+	if err != nil {
+		// Log error but don't block quiz completion
+		fmt.Printf("Warning: Failed to load questions for FSRS update: %v\n", err)
+		return
+	}
+
+	questionMap := make(map[string]*models.Question)
+	for _, q := range allQuestions {
+		questionMap[q.TopicQuestionID] = q
+	}
+
+	// Track failures for logging
+	var failedUpdates []string
+
+	// Process each question in the quiz
+	for topicQuestionID, wasCorrect := range quizAttempt.QuestionResults {
+		question, exists := questionMap[topicQuestionID]
+		if !exists {
+			failedUpdates = append(failedUpdates, fmt.Sprintf("%s (question not found)", topicQuestionID))
+			continue
+		}
+
+		// Determine FSRS rating based on correctness
+		// Correct = Good (3), Incorrect = Again (1)
+		rating := 1 // Again (incorrect)
+		if wasCorrect {
+			rating = 3 // Good (correct)
+		}
+
+		// Get or create user question state
+		state, err := h.db.GetUserQuestionState(quizAttempt.UserID, question.ID)
+		if err != nil {
+			if err == database.ErrNotFound {
+				// Create new state for this question
+				state = &models.UserQuestionState{
+					UserID:     quizAttempt.UserID,
+					QuestionID: question.ID,
+					Due:        time.Now(),
+					State:      0, // New
+				}
+				if err := h.db.CreateUserQuestionState(state); err != nil {
+					failedUpdates = append(failedUpdates, fmt.Sprintf("%s (create state failed: %v)", topicQuestionID, err))
+					continue
+				}
+			} else {
+				failedUpdates = append(failedUpdates, fmt.Sprintf("%s (get state failed: %v)", topicQuestionID, err))
+				continue
+			}
+		}
+
+		// Convert to FSRS card
+		card := fsrs.Card{
+			Due:           state.Due,
+			Stability:     state.Stability,
+			Difficulty:    state.Difficulty,
+			ElapsedDays:   state.ElapsedDays,
+			ScheduledDays: state.ScheduledDays,
+			Reps:          state.Reps,
+			Lapses:        state.Lapses,
+			State:         state.State,
+			LastReview:    state.LastReview,
+		}
+
+		// Apply FSRS algorithm
+		params := fsrs.NewDefaultParameters()
+		schedulingCards := params.Repeat(card, time.Now())
+
+		// Get the scheduling info based on rating
+		var schedulingInfo fsrs.SchedulingInfo
+		if rating == 1 {
+			schedulingInfo = schedulingCards.Again
+		} else {
+			schedulingInfo = schedulingCards.Good
+		}
+
+		// Update state with new values
+		state.Due = schedulingInfo.Card.Due
+		state.Stability = schedulingInfo.Card.Stability
+		state.Difficulty = schedulingInfo.Card.Difficulty
+		state.ElapsedDays = schedulingInfo.Card.ElapsedDays
+		state.ScheduledDays = schedulingInfo.Card.ScheduledDays
+		state.Reps = schedulingInfo.Card.Reps
+		state.Lapses = schedulingInfo.Card.Lapses
+		state.State = schedulingInfo.Card.State
+		state.LastReview = schedulingInfo.Card.LastReview
+
+		// Save updated state
+		if err := h.db.UpdateUserQuestionState(state); err != nil {
+			failedUpdates = append(failedUpdates, fmt.Sprintf("%s (update failed: %v)", topicQuestionID, err))
+		}
+	}
+
+	// Log any failures
+	if len(failedUpdates) > 0 {
+		fmt.Printf("Warning: Failed to update FSRS for %d question(s) in quiz attempt %d:\n", len(failedUpdates), quizAttempt.ID)
+		for _, failure := range failedUpdates {
+			fmt.Printf("  - %s\n", failure)
+		}
+	}
+}
+
+// RetakeQuizHandler handles POST /quiz/retake
+// Generates a new quiz attempt with the same questions as a previous attempt
+func (h *Handler) RetakeQuizHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req RetakeQuizRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Get the parent quiz attempt
+	parentAttempt, err := h.db.GetQuizAttempt(req.ParentAttemptID)
+	if err != nil {
+		http.Error(w, "Parent quiz attempt not found", http.StatusNotFound)
+		return
+	}
+
+	// Verify user
+	if parentAttempt.UserID != req.UserID {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	// Check if parent quiz is completed
+	if parentAttempt.CompletedTime == nil {
+		http.Error(w, "Cannot retake an incomplete quiz", http.StatusBadRequest)
+		return
+	}
+
+	// Check if student scored 100% (no retake needed)
+	if parentAttempt.CorrectAnswers == parentAttempt.TotalQuestions {
+		http.Error(w, "Cannot retake a quiz with 100% score", http.StatusBadRequest)
+		return
+	}
+
+	// Get the questions from the parent attempt using their TopicQuestionIDs
+	questions := make([]*models.Question, 0, len(parentAttempt.QuestionIDs))
+	allQuestions, err := h.db.ListQuestions()
+	if err != nil {
+		http.Error(w, "Failed to retrieve questions", http.StatusInternalServerError)
+		return
+	}
+
+	// Build a map of TopicQuestionID -> Question for efficient lookup
+	questionMap := make(map[string]*models.Question)
+	for _, q := range allQuestions {
+		questionMap[q.TopicQuestionID] = q
+	}
+
+	// Reconstruct the question list from parent attempt
+	for _, topicQuestionID := range parentAttempt.QuestionIDs {
+		if q, exists := questionMap[topicQuestionID]; exists {
+			questions = append(questions, q)
+		}
+	}
+
+	if len(questions) == 0 {
+		http.Error(w, "No questions found for retake", http.StatusNotFound)
+		return
+	}
+
+	// Calculate attempt number
+	attemptNumber := parentAttempt.AttemptNumber + 1
+
+	// Create new quiz attempt as a retake
+	retakeAttempt := &models.QuizAttempt{
+		UserID:          req.UserID,
+		QuizID:          parentAttempt.QuizID,
+		ParentAttemptID: &req.ParentAttemptID,
+		AttemptNumber:   attemptNumber,
+		IsRetake:        true,
+		StartTime:       time.Now(),
+		TotalQuestions:  len(questions),
+		CorrectAnswers:  0,
+		QuestionIDs:     parentAttempt.QuestionIDs, // Use same questions as parent
+		QuestionResults: make(map[string]bool),
+	}
+
+	if err := h.db.CreateQuizAttempt(retakeAttempt); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Build response with questions and answers
+	quizQuestions := make([]QuizQuestion, len(questions))
+	for i, q := range questions {
+		answers, err := h.db.GetAnswersByQuestion(q.ID)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Shuffle answers
+		rand.Shuffle(len(answers), func(i, j int) {
+			answers[i], answers[j] = answers[j], answers[i]
+		})
+
+		quizQuestions[i] = QuizQuestion{
+			Question: q,
+			Answers:  answers,
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(GenerateQuizResponse{
+		QuizAttemptID: retakeAttempt.ID,
+		Questions:     quizQuestions,
+	})
 }
 
 // GetProgressHandler handles GET /progress?user_id={id}
