@@ -311,6 +311,12 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 	// Mark as completed
 	now := time.Now()
 	quizAttempt.CompletedTime = &now
+	
+	// Save the updated quiz attempt
+	if err := h.db.UpdateQuizAttempt(quizAttempt); err != nil {
+		http.Error(w, "Failed to update quiz attempt", http.StatusInternalServerError)
+		return
+	}
 
 	// Update user's total points
 	user, err := h.db.GetUser(quizAttempt.UserID)
