@@ -342,8 +342,17 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 	totalQuestions := 0
 	totalCorrect := 0
 	for _, qa := range quizAttempts {
+		// Count questions answered from all quizzes (completed and in-progress)
+		// For completed quizzes, all questions were answered
+		// For in-progress quizzes, count only the questions that have been answered
 		if qa.CompletedTime != nil {
+			// Completed quiz - all questions were answered
 			totalQuestions += qa.TotalQuestions
+			totalCorrect += qa.CorrectAnswers
+		} else {
+			// In-progress quiz - count only answered questions (those in QuestionResults)
+			answeredCount := len(qa.QuestionResults)
+			totalQuestions += answeredCount
 			totalCorrect += qa.CorrectAnswers
 		}
 	}
