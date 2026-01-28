@@ -13,6 +13,112 @@ import (
 
 // Phase 3: Instructor Analytics Handlers
 
+// ListStudentsHandler returns a list of all students with their metrics
+func (h *Handler) ListStudentsHandler(w http.ResponseWriter, r *http.Request) {
+	// Get query parameters
+	searchQuery := r.URL.Query().Get("q")
+	sortBy := r.URL.Query().Get("sort")
+	filterCohort := r.URL.Query().Get("cohort")
+	
+	students, err := h.db.ListStudentsWithMetrics(searchQuery, sortBy, filterCohort)
+	if err != nil {
+		log.Printf("ERROR: Failed to list students: %v\n", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(students)
+}
+
+// GetStudentAnalyticsHandler returns comprehensive analytics for a specific student
+func (h *Handler) GetStudentAnalyticsHandler(w http.ResponseWriter, r *http.Request) {
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "user_id is required", http.StatusBadRequest)
+		return
+	}
+	
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
+		return
+	}
+	
+	// Get student progress (same as GetStudentProgressHandler)
+	progress, err := h.db.GetStudentProgress(userID)
+	if err == database.ErrNotFound {
+		http.Error(w, "Student not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.Printf("ERROR: Failed to get student analytics (user_id: %d): %v\n", userID, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(progress)
+}
+
+// GetStudentQuizHistoryHandler returns quiz attempt history for a student
+func (h *Handler) GetStudentQuizHistoryHandler(w http.ResponseWriter, r *http.Request) {
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "user_id is required", http.StatusBadRequest)
+		return
+	}
+	
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
+		return
+	}
+	
+	history, err := h.db.GetStudentQuizHistory(userID)
+	if err == database.ErrNotFound {
+		http.Error(w, "Student not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.Printf("ERROR: Failed to get student quiz history (user_id: %d): %v\n", userID, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(history)
+}
+
+// GetStudentWeakAreasHandler returns topics and tags where student is struggling
+func (h *Handler) GetStudentWeakAreasHandler(w http.ResponseWriter, r *http.Request) {
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "user_id is required", http.StatusBadRequest)
+		return
+	}
+	
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
+		return
+	}
+	
+	weakAreas, err := h.db.GetStudentWeakAreas(userID)
+	if err == database.ErrNotFound {
+		http.Error(w, "Student not found", http.StatusNotFound)
+		return
+	}
+	if err != nil {
+		log.Printf("ERROR: Failed to get student weak areas (user_id: %d): %v\n", userID, err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(weakAreas)
+}
+
 // GetStudentProgressHandler returns progress analytics for a specific student
 func (h *Handler) GetStudentProgressHandler(w http.ResponseWriter, r *http.Request) {
 	userIDStr := r.URL.Query().Get("user_id")

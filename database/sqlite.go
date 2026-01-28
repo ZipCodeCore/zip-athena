@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/ZipCodeCore/zip-athena/models"
 	_ "github.com/mattn/go-sqlite3"
@@ -1401,4 +1402,199 @@ func (db *SQLiteDB) GetCohortAnalytics() (*models.CohortAnalytics, error) {
 	}
 
 	return analytics, nil
+}
+
+// ListStudentsWithMetrics returns a list of all students with their performance metrics
+func (db *SQLiteDB) ListStudentsWithMetrics(searchQuery string, sortBy string, filterCohort string) ([]*models.StudentProgress, error) {
+	// Get all non-admin users
+	query := "SELECT id FROM users WHERE is_admin = 0"
+	args := []interface{}{}
+	
+	// Add search filter if provided
+	if searchQuery != "" {
+		query += " AND (username LIKE ? OR email LIKE ?)"
+		searchPattern := "%" + searchQuery + "%"
+		args = append(args, searchPattern, searchPattern)
+	}
+	
+	rows, err := db.db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	
+	students := make([]*models.StudentProgress, 0)
+	for rows.Next() {
+		var userID int
+		if err := rows.Scan(&userID); err != nil {
+			continue
+		}
+		
+		// Get full progress for each student
+		progress, err := db.GetStudentProgress(userID)
+		if err != nil {
+			continue
+		}
+		students = append(students, progress)
+	}
+	
+	// Sort students based on sortBy parameter
+	// For now, we return unsorted - sorting can be done in the handler
+	// TODO: Implement sorting by accuracy, completion rate, last activity
+	
+	return students, nil
+}
+
+// GetStudentQuizHistory returns all quiz attempts for a student
+func (db *SQLiteDB) GetStudentQuizHistory(userID int) ([]*models.QuizAttempt, error) {
+	// Verify user exists
+	_, err := db.GetUser(userID)
+	if err != nil {
+		return nil, err
+	}
+	
+	rows, err := db.db.Query(`
+		SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake,
+		       start_time, completed_time, total_questions, correct_answers
+		FROM quiz_attempts
+		WHERE user_id = ?
+		ORDER BY start_time DESC
+	`, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	
+	attempts := make([]*models.QuizAttempt, 0)
+	for rows.Next() {
+		attempt := &models.QuizAttempt{}
+		var quizID, parentAttemptID *int
+		var completedTime *time.Time
+		
+		err := rows.Scan(
+			&attempt.ID,
+			&attempt.UserID,
+			&quizID,
+			&parentAttemptID,
+			&attempt.AttemptNumber,
+			&attempt.IsRetake,
+			&attempt.StartTime,
+			&completedTime,
+			&attempt.TotalQuestions,
+			&attempt.CorrectAnswers,
+		)
+		if err != nil {
+			continue
+		}
+		
+		attempt.QuizID = quizID
+		attempt.ParentAttemptID = parentAttemptID
+		attempt.CompletedTime = completedTime
+		attempts = append(attempts, attempt)
+	}
+	
+	return attempts, nil
+}
+
+// GetStudentWeakAreas identifies topics and tags where student is struggling (< 60% accuracy)
+func (db *SQLiteDB) GetStudentWeakAreas(userID int) (*models.WeakAreas, error) {
+	user, err := db.GetUser(userID)
+	if err != nil {
+		return nil, err
+	}
+	
+	weakAreas := &models.WeakAreas{
+		UserID:     userID,
+		Username:   user.Username,
+		WeakTopics: make([]models.TopicWeakness, 0),
+		WeakTags:   make([]models.TagWeakness, 0),
+	}
+	
+	// Get weak topics (< 60% accuracy)
+	topicRows, err := db.db.Query(`
+		SELECT t.id, t.name,
+		       SUM(qa.correct_attempts) as correct,
+		       SUM(qa.correct_attempts + qa.incorrect_attempts) as total,
+		       CAST(SUM(qa.correct_attempts) AS REAL) / SUM(qa.correct_attempts + qa.incorrect_attempts) * 100 as accuracy
+		FROM topics t
+		JOIN questions q ON t.id = q.topic_id
+		JOIN question_attempts qa ON q.id = qa.question_id
+		WHERE qa.user_id = ?
+		GROUP BY t.id, t.name
+		HAVING total > 0 AND accuracy < 60
+		ORDER BY accuracy ASC
+	`, userID)
+	
+	if err == nil {
+		defer topicRows.Close()
+		for topicRows.Next() {
+			var topicID int
+			var topicName string
+			var correct, total int
+			var accuracy float64
+			
+			if topicRows.Scan(&topicID, &topicName, &correct, &total, &accuracy) == nil {
+				weakAreas.WeakTopics = append(weakAreas.WeakTopics, models.TopicWeakness{
+					TopicID:       topicID,
+					TopicName:     topicName,
+					Accuracy:      accuracy,
+					TotalAttempts: total,
+				})
+			}
+		}
+	}
+	
+	// Get weak tags (< 60% accuracy)
+	// This requires extracting tags from questions and calculating accuracy per tag
+	// For simplicity, we'll query question attempts and aggregate by tags
+	qaRows, err := db.db.Query(`
+		SELECT qa.question_id, qa.correct_attempts, qa.incorrect_attempts
+		FROM question_attempts qa
+		WHERE qa.user_id = ?
+	`, userID)
+	
+	if err == nil {
+		defer qaRows.Close()
+		
+		// Map to store tag statistics: tag -> [correct, total]
+		tagStats := make(map[string][2]int)
+		
+		for qaRows.Next() {
+			var questionID, correct, incorrect int
+			if qaRows.Scan(&questionID, &correct, &incorrect) == nil {
+				// Get question tags
+				question, err := db.GetQuestion(questionID)
+				if err != nil {
+					continue
+				}
+				
+				total := correct + incorrect
+				for _, tag := range question.Tags {
+					stats := tagStats[tag]
+					stats[0] += correct
+					stats[1] += total
+					tagStats[tag] = stats
+				}
+			}
+		}
+		
+		// Calculate accuracy for each tag and filter weak ones
+		for tag, stats := range tagStats {
+			correct := stats[0]
+			total := stats[1]
+			
+			if total > 0 {
+				accuracy := float64(correct) / float64(total) * 100
+				if accuracy < 60 {
+					weakAreas.WeakTags = append(weakAreas.WeakTags, models.TagWeakness{
+						Tag:           tag,
+						Accuracy:      accuracy,
+						TotalAttempts: total,
+					})
+				}
+			}
+		}
+	}
+	
+	return weakAreas, nil
 }

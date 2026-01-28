@@ -182,6 +182,30 @@ func main() {
 	})
 
 	// Phase 3: Instructor Analytics routes
+	http.HandleFunc("/instructor/students", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.ListStudentsHandler(w, r)
+		})(w, r)
+	})
+	
+	http.HandleFunc("/instructor/students/analytics", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.GetStudentAnalyticsHandler(w, r)
+		})(w, r)
+	})
+	
+	http.HandleFunc("/instructor/students/quiz-history", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.GetStudentQuizHistoryHandler(w, r)
+		})(w, r)
+	})
+	
+	http.HandleFunc("/instructor/students/weak-areas", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.GetStudentWeakAreasHandler(w, r)
+		})(w, r)
+	})
+
 	http.HandleFunc("/instructor/student-progress", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			handler.GetStudentProgressHandler(w, r)

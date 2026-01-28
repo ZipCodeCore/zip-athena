@@ -3,6 +3,7 @@ package database
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 	"github.com/ZipCodeCore/zip-athena/models"
 	"sync"
@@ -93,6 +94,11 @@ type Database interface {
 	GetStudentProgress(userID int) (*models.StudentProgress, error)
 	GetCohortAnalytics() (*models.CohortAnalytics, error)
 	GetAnswer(id int) (*models.Answer, error)
+	
+	// Phase 3: Instructor operations
+	ListStudentsWithMetrics(searchQuery string, sortBy string, filterCohort string) ([]*models.StudentProgress, error)
+	GetStudentQuizHistory(userID int) ([]*models.QuizAttempt, error)
+	GetStudentWeakAreas(userID int) (*models.WeakAreas, error)
 }
 
 // InMemoryDB implements the Database interface using in-memory storage
@@ -1106,4 +1112,168 @@ analytics.QuestionStats = append(analytics.QuestionStats, stat)
 }
 
 return analytics, nil
+}
+
+// ListStudentsWithMetrics returns a list of all students with their performance metrics
+func (db *InMemoryDB) ListStudentsWithMetrics(searchQuery string, sortBy string, filterCohort string) ([]*models.StudentProgress, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+students := make([]*models.StudentProgress, 0)
+
+for _, user := range db.users {
+// Skip admin users
+if user.IsAdmin {
+continue
+}
+
+// Apply search filter if provided
+if searchQuery != "" {
+// Simple case-insensitive search in username and email
+queryLower := strings.ToLower(searchQuery)
+usernameLower := strings.ToLower(user.Username)
+emailLower := strings.ToLower(user.Email)
+
+if !strings.Contains(usernameLower, queryLower) && !strings.Contains(emailLower, queryLower) {
+continue
+}
+}
+
+// Get student progress
+progress, err := db.GetStudentProgress(user.ID)
+if err != nil {
+continue
+}
+
+students = append(students, progress)
+}
+
+// Note: Sorting by sortBy parameter would be implemented here
+// For simplicity, returning unsorted list
+
+return students, nil
+}
+
+// GetStudentQuizHistory returns all quiz attempts for a student
+func (db *InMemoryDB) GetStudentQuizHistory(userID int) ([]*models.QuizAttempt, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+// Verify user exists
+if _, exists := db.users[userID]; !exists {
+return nil, ErrNotFound
+}
+
+attempts := make([]*models.QuizAttempt, 0)
+for _, attempt := range db.quizAttempts {
+if attempt.UserID == userID {
+attempts = append(attempts, attempt)
+}
+}
+
+// Sort by start time descending (most recent first)
+// Simple bubble sort for small datasets
+for i := 0; i < len(attempts); i++ {
+for j := i + 1; j < len(attempts); j++ {
+if attempts[i].StartTime.Before(attempts[j].StartTime) {
+attempts[i], attempts[j] = attempts[j], attempts[i]
+}
+}
+}
+
+return attempts, nil
+}
+
+// GetStudentWeakAreas identifies topics and tags where student is struggling (< 60% accuracy)
+func (db *InMemoryDB) GetStudentWeakAreas(userID int) (*models.WeakAreas, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+user, exists := db.users[userID]
+if !exists {
+return nil, ErrNotFound
+}
+
+weakAreas := &models.WeakAreas{
+UserID:     userID,
+Username:   user.Username,
+WeakTopics: make([]models.TopicWeakness, 0),
+WeakTags:   make([]models.TagWeakness, 0),
+}
+
+// Calculate topic accuracy
+topicStats := make(map[int]struct {
+correct int
+total   int
+})
+
+for _, qa := range db.questionAttempts {
+if qa.UserID == userID {
+question, exists := db.questions[qa.QuestionID]
+if !exists {
+continue
+}
+
+stats := topicStats[question.TopicID]
+stats.correct += qa.CorrectAttempts
+stats.total += qa.CorrectAttempts + qa.IncorrectAttempts
+topicStats[question.TopicID] = stats
+}
+}
+
+// Identify weak topics (< 60% accuracy)
+for topicID, stats := range topicStats {
+if stats.total > 0 {
+accuracy := float64(stats.correct) / float64(stats.total) * 100
+if accuracy < 60 {
+topic, exists := db.topics[topicID]
+if exists {
+weakAreas.WeakTopics = append(weakAreas.WeakTopics, models.TopicWeakness{
+TopicID:       topicID,
+TopicName:     topic.Name,
+Accuracy:      accuracy,
+TotalAttempts: stats.total,
+})
+}
+}
+}
+}
+
+// Calculate tag accuracy
+tagStats := make(map[string]struct {
+correct int
+total   int
+})
+
+for _, qa := range db.questionAttempts {
+if qa.UserID == userID {
+question, exists := db.questions[qa.QuestionID]
+if !exists {
+continue
+}
+
+for _, tag := range question.Tags {
+stats := tagStats[tag]
+stats.correct += qa.CorrectAttempts
+stats.total += qa.CorrectAttempts + qa.IncorrectAttempts
+tagStats[tag] = stats
+}
+}
+}
+
+// Identify weak tags (< 60% accuracy)
+for tag, stats := range tagStats {
+if stats.total > 0 {
+accuracy := float64(stats.correct) / float64(stats.total) * 100
+if accuracy < 60 {
+weakAreas.WeakTags = append(weakAreas.WeakTags, models.TagWeakness{
+Tag:           tag,
+Accuracy:      accuracy,
+TotalAttempts: stats.total,
+})
+}
+}
+}
+
+return weakAreas, nil
 }

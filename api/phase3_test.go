@@ -786,3 +786,184 @@ func TestImportQuestions(t *testing.T) {
 		}
 	}
 }
+
+// Phase 3 Tests: Instructor Student List & Search
+
+func TestListStudents(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup admin
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	// Create multiple students
+	for i := 1; i <= 5; i++ {
+		student := &models.User{
+			Username:  "student" + fmt.Sprintf("%d", i),
+			Email:     "student" + fmt.Sprintf("%d", i) + "@test.com",
+			IsAdmin:   false,
+			CreatedAt: time.Now(),
+		}
+		db.CreateUser(student)
+	}
+
+	req := httptest.NewRequest("GET", "/instructor/students", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.ListStudentsHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	var students []*models.StudentProgress
+	json.NewDecoder(w.Body).Decode(&students)
+
+	if len(students) != 5 {
+		t.Errorf("Expected 5 students, got %d", len(students))
+	}
+}
+
+func TestSearchStudents(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	// Create students with specific names
+	db.CreateUser(&models.User{Username: "alice", Email: "alice@test.com", IsAdmin: false, CreatedAt: time.Now()})
+	db.CreateUser(&models.User{Username: "bob", Email: "bob@test.com", IsAdmin: false, CreatedAt: time.Now()})
+	db.CreateUser(&models.User{Username: "charlie", Email: "charlie@test.com", IsAdmin: false, CreatedAt: time.Now()})
+
+	// Search by name
+	req := httptest.NewRequest("GET", "/instructor/students?q=alice", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.ListStudentsHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	var students []*models.StudentProgress
+	json.NewDecoder(w.Body).Decode(&students)
+
+	if len(students) != 1 {
+		t.Errorf("Expected 1 student matching 'alice', got %d", len(students))
+	}
+	if len(students) > 0 && students[0].Username != "alice" {
+		t.Errorf("Expected username 'alice', got '%s'", students[0].Username)
+	}
+}
+
+func TestGetStudentQuizHistory(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	student := &models.User{Username: "student1", Email: "student1@test.com", IsAdmin: false, CreatedAt: time.Now()}
+	db.CreateUser(student)
+
+	// Create multiple quiz attempts
+	for i := 1; i <= 3; i++ {
+		completedTime := time.Now().Add(time.Duration(i) * time.Hour)
+		attempt := &models.QuizAttempt{
+			UserID:         student.ID,
+			StartTime:      time.Now().Add(time.Duration(i-1) * time.Hour),
+			CompletedTime:  &completedTime,
+			TotalQuestions: 10,
+			CorrectAnswers: i * 2,
+		}
+		db.CreateQuizAttempt(attempt)
+	}
+
+	req := httptest.NewRequest("GET", "/instructor/students/quiz-history?user_id=2", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.GetStudentQuizHistoryHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	var attempts []*models.QuizAttempt
+	json.NewDecoder(w.Body).Decode(&attempts)
+
+	if len(attempts) != 3 {
+		t.Errorf("Expected 3 quiz attempts, got %d", len(attempts))
+	}
+}
+
+func TestGetStudentWeakAreas(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Setup
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	student := &models.User{Username: "student1", Email: "student1@test.com", IsAdmin: false, CreatedAt: time.Now()}
+	db.CreateUser(student)
+
+	topic := &models.Topic{Name: "Java", Description: "Java", CreatedAt: time.Now()}
+	db.CreateTopic(topic)
+
+	// Create a question with tags
+	question := &models.Question{
+		TopicID:         topic.ID,
+		QuestionText:    "Test question",
+		Difficulty:      3,
+		TopicQuestionID: "1.1",
+		Tags:            []string{"loops", "arrays"},
+		CreatedAt:       time.Now(),
+	}
+	db.CreateQuestion(question)
+
+	// Create question attempt with poor performance (< 60%)
+	qa := &models.QuestionAttempt{
+		UserID:             student.ID,
+		QuestionID:         question.ID,
+		TopicQuestionID:    "1.1",
+		CorrectAttempts:    2,  // 2 correct
+		IncorrectAttempts:  8,  // 8 incorrect = 20% accuracy
+		LastAttemptTime:    time.Now(),
+		LastAttemptCorrect: false,
+	}
+	db.CreateQuestionAttempt(qa)
+
+	req := httptest.NewRequest("GET", "/instructor/students/weak-areas?user_id=2", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.GetStudentWeakAreasHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", w.Code)
+	}
+
+	var weakAreas models.WeakAreas
+	json.NewDecoder(w.Body).Decode(&weakAreas)
+
+	if weakAreas.UserID != student.ID {
+		t.Errorf("Expected user ID %d, got %d", student.ID, weakAreas.UserID)
+	}
+
+	// Should have weak topics (20% accuracy < 60%)
+	if len(weakAreas.WeakTopics) == 0 {
+		t.Error("Expected weak topics to be identified")
+	}
+
+	// Should have weak tags
+	if len(weakAreas.WeakTags) == 0 {
+		t.Error("Expected weak tags to be identified")
+	}
+}
