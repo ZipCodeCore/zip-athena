@@ -342,10 +342,8 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 	totalQuestions := 0
 	totalCorrect := 0
 	for _, qa := range quizAttempts {
-		if qa.CompletedTime != nil {
-			totalQuestions += qa.TotalQuestions
-			totalCorrect += qa.CorrectAnswers
-		}
+		totalQuestions += qa.TotalQuestions
+		totalCorrect += qa.CorrectAnswers
 	}
 
 	progress := map[string]interface{}{
