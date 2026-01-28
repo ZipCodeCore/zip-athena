@@ -410,6 +410,16 @@ func (h *Handler) CreateAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Validate required fields
+	if answer.QuestionID <= 0 {
+		http.Error(w, "question_id must be a positive integer", http.StatusBadRequest)
+		return
+	}
+	if answer.AnswerText == "" {
+		http.Error(w, "answer_text is required", http.StatusBadRequest)
+		return
+	}
+
 	if err := h.db.CreateAnswer(&answer); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

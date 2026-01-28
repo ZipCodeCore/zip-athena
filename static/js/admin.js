@@ -622,15 +622,30 @@ async function loadAnswers(questionId) {
         answers.forEach(answer => {
             const answerDiv = document.createElement('div');
             answerDiv.className = 'border rounded p-2 mb-2';
-            answerDiv.innerHTML = `
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>${answer.is_correct ? '✓ ' : ''}${answer.answer_text}</strong>
-                        ${answer.is_correct ? '<span class="badge bg-success ms-2">Correct</span>' : ''}
-                    </div>
-                    <button class="btn btn-sm btn-danger" onclick="deleteAnswer(${answer.id})">Delete</button>
-                </div>
-            `;
+            
+            const container = document.createElement('div');
+            container.className = 'd-flex justify-content-between align-items-start';
+            
+            const textDiv = document.createElement('div');
+            const strong = document.createElement('strong');
+            strong.textContent = (answer.is_correct ? '✓ ' : '') + answer.answer_text;
+            textDiv.appendChild(strong);
+            
+            if (answer.is_correct) {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-success ms-2';
+                badge.textContent = 'Correct';
+                textDiv.appendChild(badge);
+            }
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'btn btn-sm btn-danger';
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.onclick = () => deleteAnswer(answer.id);
+            
+            container.appendChild(textDiv);
+            container.appendChild(deleteBtn);
+            answerDiv.appendChild(container);
             answersList.appendChild(answerDiv);
         });
     } catch (error) {
@@ -736,15 +751,34 @@ async function loadQuizQuestions(quizId) {
         questions.forEach((question, index) => {
             const questionDiv = document.createElement('div');
             questionDiv.className = 'border rounded p-2 mb-2';
-            questionDiv.innerHTML = `
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>#${index + 1}:</strong> ${question.question_text.substring(0, 60)}...
-                        <br><small class="text-muted">ID: ${question.id} | Topic ID: ${question.topic_id}</small>
-                    </div>
-                    <button class="btn btn-sm btn-danger" onclick="removeQuestionFromQuiz(${quizId}, ${question.id})">Remove</button>
-                </div>
-            `;
+            
+            const container = document.createElement('div');
+            container.className = 'd-flex justify-content-between align-items-start';
+            
+            const textDiv = document.createElement('div');
+            const strong = document.createElement('strong');
+            strong.textContent = `#${index + 1}: `;
+            textDiv.appendChild(strong);
+            
+            const questionText = document.createTextNode(question.question_text.substring(0, 60) + '...');
+            textDiv.appendChild(questionText);
+            
+            const br = document.createElement('br');
+            textDiv.appendChild(br);
+            
+            const small = document.createElement('small');
+            small.className = 'text-muted';
+            small.textContent = `ID: ${question.id} | Topic ID: ${question.topic_id}`;
+            textDiv.appendChild(small);
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'btn btn-sm btn-danger';
+            removeBtn.textContent = 'Remove';
+            removeBtn.onclick = () => removeQuestionFromQuiz(quizId, question.id);
+            
+            container.appendChild(textDiv);
+            container.appendChild(removeBtn);
+            questionDiv.appendChild(container);
             questionsList.appendChild(questionDiv);
         });
     } catch (error) {
@@ -779,6 +813,11 @@ async function addQuestionToQuiz() {
 
     if (!questionId || questionId < 1) {
         alert('Please enter a valid question ID');
+        return;
+    }
+    
+    if (isNaN(order) || order < 0) {
+        alert('Please enter a valid order (non-negative number)');
         return;
     }
 
