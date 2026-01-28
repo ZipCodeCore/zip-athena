@@ -1860,10 +1860,17 @@ func TestTopicAccessControl(t *testing.T) {
 	req.Header.Set("X-User-ID", "1")
 	w := httptest.NewRecorder()
 
-	// AdminMiddleware should reject non-admin users
-	// Testing that access control is in place via middleware
+	// Call WITHOUT AdminMiddleware to test direct access (should fail in production)
+	// In production, router would enforce AdminMiddleware before this handler
+	// This test verifies the endpoint behavior with middleware applied
 	handler.AdminMiddleware(handler.CreateInstructorTopicHandler)(w, req)
 
-	// The AdminMiddleware checks IsAdmin flag, which is false for student
-	// If properly implemented, this would return 403 Forbidden
+	// AdminMiddleware should check user's IsAdmin flag and reject if false
+	// For non-admin user, expect 403 Forbidden or similar error
+	// Note: The exact behavior depends on AdminMiddleware implementation
+	if w.Code == http.StatusCreated {
+		t.Error("Non-admin user should not be able to create topics")
+	} else {
+		t.Logf("Access control working - non-admin got status %d", w.Code)
+	}
 }

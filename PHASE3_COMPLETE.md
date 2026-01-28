@@ -153,16 +153,17 @@ Phase 3 has been successfully implemented with all requirements met and exceeded
 35. ✅ TestCohortHardestQuestions - Hardest questions identification
 36. ✅ TestCohortEmptyState - Empty cohort handling
 37. ✅ TestCohortLargePerformance - Large cohort (100 students)
-38. ✅ TestCohortExport - Export functionality (covered in import/export)
+
+Note: Cohort export functionality is covered by the import/export tests (tests 11-14)
 
 #### Topic Management (7 tests)
-39. ✅ TestCreateInstructorTopic - Topic creation with validation
-40. ✅ TestUpdateInstructorTopic - Topic updates
-41. ✅ TestDeleteInstructorTopic - Topic soft deletion
-42. ✅ TestReorderTopics - Topic reordering
-43. ✅ TestTopicNameUniqueness - Uniqueness validation
-44. ✅ TestTopicValidationErrors - Error handling (empty name, too long)
-45. ✅ TestTopicAccessControl - Access control validation
+38. ✅ TestCreateInstructorTopic - Topic creation with validation
+39. ✅ TestUpdateInstructorTopic - Topic updates
+40. ✅ TestDeleteInstructorTopic - Topic soft deletion
+41. ✅ TestReorderTopics - Topic reordering
+42. ✅ TestTopicNameUniqueness - Uniqueness validation
+43. ✅ TestTopicValidationErrors - Error handling (empty name, too long)
+44. ✅ TestTopicAccessControl - Access control validation
 
 **Total: 44 tests (exceeds minimum requirement of 32 tests)**
 
@@ -170,7 +171,7 @@ Phase 3 has been successfully implemented with all requirements met and exceeded
 
 ### Backend
 - `api/instructor.go` - Instructor analytics and management handlers (822 lines)
-- `api/phase3_test.go` - Phase 3 comprehensive tests (1,698 lines)
+- `api/phase3_test.go` - Phase 3 comprehensive tests (1,876 lines)
 - `database/sqlite.go` - Extended with Phase 3 operations
 - `models/models.go` - Extended with Test, StudentProgress, and FSRSMetrics models
 
