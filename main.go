@@ -166,7 +166,11 @@ func main() {
 
 	http.HandleFunc("/admin/answers", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
-			if r.Method == http.MethodPut {
+			if r.Method == http.MethodGet {
+				handler.ListAnswersHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.CreateAnswerHandler(w, r)
+			} else if r.Method == http.MethodPut {
 				handler.UpdateAnswerHandler(w, r)
 			} else if r.Method == http.MethodDelete {
 				handler.DeleteAnswerHandler(w, r)

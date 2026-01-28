@@ -396,6 +396,68 @@ func (h *Handler) DeleteTopicHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Answer CRUD handlers
+// ListAnswersHandler handles GET /admin/answers?question_id=X
+func (h *Handler) ListAnswersHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	questionIDStr := r.URL.Query().Get("question_id")
+	if questionIDStr == "" {
+		http.Error(w, "question_id is required", http.StatusBadRequest)
+		return
+	}
+
+	questionID, err := strconv.Atoi(questionIDStr)
+	if err != nil {
+		http.Error(w, "Invalid question ID", http.StatusBadRequest)
+		return
+	}
+
+	answers, err := h.db.GetAnswersByQuestion(questionID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(answers)
+}
+
+// CreateAnswerHandler handles POST /admin/answers
+func (h *Handler) CreateAnswerHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var answer models.Answer
+	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate required fields
+	if answer.QuestionID <= 0 {
+		http.Error(w, "question_id must be a positive integer", http.StatusBadRequest)
+		return
+	}
+	if answer.AnswerText == "" {
+		http.Error(w, "answer_text is required", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.db.CreateAnswer(&answer); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(answer)
+}
+
 // UpdateAnswerHandler handles PUT /admin/answers/{id}
 func (h *Handler) UpdateAnswerHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
