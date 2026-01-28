@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -32,6 +33,7 @@ func (h *Handler) GetStudentProgressHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	if err != nil {
+		log.Printf("ERROR: Failed to get student progress (user_id: %d): %v\n", userID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -44,6 +46,7 @@ func (h *Handler) GetStudentProgressHandler(w http.ResponseWriter, r *http.Reque
 func (h *Handler) GetCohortAnalyticsHandler(w http.ResponseWriter, r *http.Request) {
 	analytics, err := h.db.GetCohortAnalytics()
 	if err != nil {
+		log.Printf("ERROR: Failed to get cohort analytics: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -75,6 +78,7 @@ func (h *Handler) ExportQuizHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
+		log.Printf("ERROR: Failed to get quiz (ID: %d): %v\n", quizID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -82,6 +86,7 @@ func (h *Handler) ExportQuizHandler(w http.ResponseWriter, r *http.Request) {
 	// Get questions for this quiz
 	questions, err := h.db.GetQuizQuestions(quizID)
 	if err != nil {
+		log.Printf("ERROR: Failed to get quiz questions (quiz_id: %d): %v\n", quizID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -91,6 +96,7 @@ func (h *Handler) ExportQuizHandler(w http.ResponseWriter, r *http.Request) {
 	for _, q := range questions {
 		answers, err := h.db.GetAnswersByQuestion(q.ID)
 		if err != nil {
+			log.Printf("ERROR: Failed to get answers for quiz export (quiz_id: %d, question_id: %d): %v\n", quizID, q.ID, err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -145,6 +151,7 @@ func (h *Handler) ImportQuizHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.db.CreateQuiz(quiz); err != nil {
+		log.Printf("ERROR: Failed to create quiz during import: %v\n", err)
 		http.Error(w, "Failed to create quiz: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -162,12 +169,14 @@ func (h *Handler) ImportQuizHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if err := h.db.CreateQuestion(question); err != nil {
+			log.Printf("ERROR: Failed to create question during quiz import (quiz_id: %d): %v\n", quiz.ID, err)
 			http.Error(w, "Failed to create question: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		// Add question to quiz
 		if err := h.db.AddQuestionToQuiz(quiz.ID, question.ID, order); err != nil {
+			log.Printf("ERROR: Failed to link question to quiz (quiz_id: %d, question_id: %d): %v\n", quiz.ID, question.ID, err)
 			http.Error(w, "Failed to link question to quiz: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -180,6 +189,7 @@ func (h *Handler) ImportQuizHandler(w http.ResponseWriter, r *http.Request) {
 				IsCorrect:  answer.IsCorrect,
 			}
 			if err := h.db.CreateAnswer(a); err != nil {
+				log.Printf("ERROR: Failed to create answer during quiz import (question_id: %d): %v\n", question.ID, err)
 				http.Error(w, "Failed to create answer: "+err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -201,6 +211,7 @@ func (h *Handler) ExportQuestionsHandler(w http.ResponseWriter, r *http.Request)
 	// Get all questions
 	questions, err := h.db.ListQuestions()
 	if err != nil {
+		log.Printf("ERROR: Failed to list questions for export: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -210,6 +221,7 @@ func (h *Handler) ExportQuestionsHandler(w http.ResponseWriter, r *http.Request)
 	for _, q := range questions {
 		answers, err := h.db.GetAnswersByQuestion(q.ID)
 		if err != nil {
+			log.Printf("ERROR: Failed to get answers (question_id: %d) for questions export: %v\n", q.ID, err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -252,6 +264,7 @@ func (h *Handler) ImportQuestionsHandler(w http.ResponseWriter, r *http.Request)
 		}
 
 		if err := h.db.CreateQuestion(question); err != nil {
+			log.Printf("ERROR: Failed to create question during questions import: %v\n", err)
 			http.Error(w, "Failed to create question: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -264,6 +277,7 @@ func (h *Handler) ImportQuestionsHandler(w http.ResponseWriter, r *http.Request)
 				IsCorrect:  answer.IsCorrect,
 			}
 			if err := h.db.CreateAnswer(a); err != nil {
+				log.Printf("ERROR: Failed to create answer during questions import (question_id: %d): %v\n", question.ID, err)
 				http.Error(w, "Failed to create answer: "+err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -294,6 +308,7 @@ func (h *Handler) CreateTestHandler(w http.ResponseWriter, r *http.Request) {
 	test.UpdatedAt = time.Now()
 
 	if err := h.db.CreateTest(&test); err != nil {
+		log.Printf("ERROR: Failed to create test: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -323,6 +338,7 @@ func (h *Handler) GetTestHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
+		log.Printf("ERROR: Failed to get test (ID: %d): %v\n", id, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -335,6 +351,7 @@ func (h *Handler) GetTestHandler(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) ListTestsHandler(w http.ResponseWriter, r *http.Request) {
 	tests, err := h.db.ListTests()
 	if err != nil {
+		log.Printf("ERROR: Failed to list tests: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -370,6 +387,7 @@ func (h *Handler) UpdateTestHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Test not found", http.StatusNotFound)
 		return
 	} else if err != nil {
+		log.Printf("ERROR: Failed to update test (ID: %d): %v\n", id, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -396,6 +414,7 @@ func (h *Handler) DeleteTestHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Test not found", http.StatusNotFound)
 		return
 	} else if err != nil {
+		log.Printf("ERROR: Failed to delete test (ID: %d): %v\n", id, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -423,6 +442,7 @@ func (h *Handler) AddQuestionToQuizHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	if err := h.db.AddQuestionToQuiz(req.QuizID, req.QuestionID, req.Order); err != nil {
+		log.Printf("ERROR: Failed to add question to quiz (quiz_id: %d, question_id: %d): %v\n", req.QuizID, req.QuestionID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -450,6 +470,7 @@ func (h *Handler) RemoveQuestionFromQuizHandler(w http.ResponseWriter, r *http.R
 	}
 
 	if err := h.db.RemoveQuestionFromQuiz(req.QuizID, req.QuestionID); err != nil {
+		log.Printf("ERROR: Failed to remove question from quiz (quiz_id: %d, question_id: %d): %v\n", req.QuizID, req.QuestionID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -473,6 +494,7 @@ func (h *Handler) GetQuizQuestionsHandler(w http.ResponseWriter, r *http.Request
 
 	questions, err := h.db.GetQuizQuestions(quizID)
 	if err != nil {
+		log.Printf("ERROR: Failed to get questions for quiz (quiz_id: %d): %v\n", quizID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -501,6 +523,7 @@ func (h *Handler) AddQuestionToTestHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	if err := h.db.AddQuestionToTest(req.TestID, req.QuestionID, req.Order); err != nil {
+		log.Printf("ERROR: Failed to add question to test (test_id: %d, question_id: %d): %v\n", req.TestID, req.QuestionID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -528,6 +551,7 @@ func (h *Handler) RemoveQuestionFromTestHandler(w http.ResponseWriter, r *http.R
 	}
 
 	if err := h.db.RemoveQuestionFromTest(req.TestID, req.QuestionID); err != nil {
+		log.Printf("ERROR: Failed to remove question from test (test_id: %d, question_id: %d): %v\n", req.TestID, req.QuestionID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -551,6 +575,7 @@ func (h *Handler) GetTestQuestionsHandler(w http.ResponseWriter, r *http.Request
 
 	questions, err := h.db.GetTestQuestions(testID)
 	if err != nil {
+		log.Printf("ERROR: Failed to get questions for test (test_id: %d): %v\n", testID, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

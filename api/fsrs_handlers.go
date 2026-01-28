@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -185,6 +186,7 @@ func (h *Handler) GetDueQuestionsHandler(w http.ResponseWriter, r *http.Request)
 
 		question, err := h.db.GetQuestion(state.QuestionID)
 		if err != nil {
+			log.Printf("ERROR: Failed to get question %d for due questions list: %v\n", state.QuestionID, err)
 			continue
 		}
 
@@ -195,6 +197,7 @@ func (h *Handler) GetDueQuestionsHandler(w http.ResponseWriter, r *http.Request)
 
 		answers, err := h.db.GetAnswersByQuestion(question.ID)
 		if err != nil {
+			log.Printf("ERROR: Failed to get answers for question %d in due questions list: %v\n", question.ID, err)
 			continue
 		}
 

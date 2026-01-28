@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -120,6 +121,7 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 	if err := h.db.CreateQuiz(quiz); err != nil {
 		// If quiz creation fails, it might already exist, but continue anyway
 		// We'll just not set the quiz_id
+		log.Printf("ERROR: Failed to create quiz for topic %d: %v\n", req.TopicID, err)
 	}
 
 	// Create quiz attempt
@@ -267,7 +269,7 @@ func (h *Handler) SubmitAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		// Update existing attempt in database
 		if err := h.db.UpdateQuestionAttempt(existingAttempt); err != nil {
 			// Log error but don't fail the request
-			fmt.Printf("Warning: Failed to update question attempt: %v\n", err)
+			log.Printf("ERROR: Failed to update question attempt: %v\n", err)
 		}
 	} else {
 		newAttempt := &models.QuestionAttempt{
@@ -284,7 +286,9 @@ func (h *Handler) SubmitAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			newAttempt.IncorrectAttempts = 1
 		}
-		h.db.CreateQuestionAttempt(newAttempt)
+		if err := h.db.CreateQuestionAttempt(newAttempt); err != nil {
+			log.Printf("ERROR: Failed to create question attempt for user %d, question %d: %v\n", req.UserID, req.QuestionID, err)
+		}
 	}
 
 	response := SubmitAnswerResponse{
@@ -332,7 +336,11 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 	user, err := h.db.GetUser(quizAttempt.UserID)
 	if err == nil {
 		user.TotalPoints += quizAttempt.CorrectAnswers
-		h.db.UpdateUserPoints(user.ID, user.TotalPoints)
+		if err := h.db.UpdateUserPoints(user.ID, user.TotalPoints); err != nil {
+			log.Printf("ERROR: Failed to update user points for user %d: %v\n", user.ID, err)
+		}
+	} else {
+		log.Printf("ERROR: Failed to get user %d for points update: %v\n", quizAttempt.UserID, err)
 	}
 
 	// Update FSRS state for each question in the quiz
@@ -348,7 +356,7 @@ func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
 	allQuestions, err := h.db.ListQuestions()
 	if err != nil {
 		// Log error but don't block quiz completion
-		fmt.Printf("Warning: Failed to load questions for FSRS update: %v\n", err)
+		log.Printf("ERROR: Failed to load questions for FSRS update: %v\n", err)
 		return
 	}
 
@@ -440,9 +448,9 @@ func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
 
 	// Log any failures
 	if len(failedUpdates) > 0 {
-		fmt.Printf("Warning: Failed to update FSRS for %d question(s) in quiz attempt %d:\n", len(failedUpdates), quizAttempt.ID)
+		log.Printf("ERROR: Failed to update FSRS for %d question(s) in quiz attempt %d:\n", len(failedUpdates), quizAttempt.ID)
 		for _, failure := range failedUpdates {
-			fmt.Printf("  - %s\n", failure)
+			log.Printf("  - %s\n", failure)
 		}
 	}
 }
@@ -589,6 +597,7 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 	// Get quiz attempts
 	quizAttempts, err := h.db.GetQuizAttemptsByUser(userID)
 	if err != nil {
+		log.Printf("ERROR: Failed to get quiz attempts for user %d: %v\n", userID, err)
 		quizAttempts = []*models.QuizAttempt{}
 	}
 
@@ -611,6 +620,8 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 			if err == nil {
 				enriched.QuizName = quiz.Name
 				enriched.QuizDescription = quiz.Description
+			} else {
+				log.Printf("ERROR: Failed to get quiz %d for enrichment: %v\n", *qa.QuizID, err)
 			}
 		}
 		
@@ -620,6 +631,7 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 	// Get question attempts
 	questionAttempts, err := h.db.GetQuestionAttemptsByUser(userID)
 	if err != nil {
+		log.Printf("ERROR: Failed to get question attempts for user %d: %v\n", userID, err)
 		questionAttempts = []*models.QuestionAttempt{}
 	}
 
