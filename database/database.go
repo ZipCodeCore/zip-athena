@@ -71,6 +71,28 @@ type Database interface {
 	DeleteAnswer(id int) error
 	UpdateTopic(topic *models.Topic) error
 	DeleteTopic(id int) error
+	
+	// Phase 3: Test operations
+	CreateTest(test *models.Test) error
+	GetTest(id int) (*models.Test, error)
+	ListTests() ([]*models.Test, error)
+	UpdateTest(test *models.Test) error
+	DeleteTest(id int) error
+	
+	// Phase 3: Many-to-many Quiz-Question relationships
+	AddQuestionToQuiz(quizID, questionID, order int) error
+	RemoveQuestionFromQuiz(quizID, questionID int) error
+	GetQuizQuestions(quizID int) ([]*models.Question, error)
+	
+	// Phase 3: Many-to-many Test-Question relationships
+	AddQuestionToTest(testID, questionID, order int) error
+	RemoveQuestionFromTest(testID, questionID int) error
+	GetTestQuestions(testID int) ([]*models.Question, error)
+	
+	// Phase 3: Analytics operations
+	GetStudentProgress(userID int) (*models.StudentProgress, error)
+	GetCohortAnalytics() (*models.CohortAnalytics, error)
+	GetAnswer(id int) (*models.Answer, error)
 }
 
 // InMemoryDB implements the Database interface using in-memory storage
@@ -83,6 +105,9 @@ type InMemoryDB struct {
 	questionAttempts    map[int]*models.QuestionAttempt
 	quizzes             map[int]*models.Quiz
 	userQuestionStates  map[string]*models.UserQuestionState // key: "userID-questionID"
+	tests               map[int]*models.Test                 // Phase 3
+	quizQuestions       map[string]*models.QuizQuestion      // key: "quizID-questionID" Phase 3
+	testQuestions       map[string]*models.TestQuestion      // key: "testID-questionID" Phase 3
 	nextUserID          int
 	nextTopicID         int
 	nextQuestionID      int
@@ -91,6 +116,9 @@ type InMemoryDB struct {
 	nextQAttemptID      int
 	nextQuizID          int
 	nextUQStateID       int
+	nextTestID          int // Phase 3
+	nextQuizQuestionID  int // Phase 3
+	nextTestQuestionID  int // Phase 3
 	mu                  sync.RWMutex
 }
 
@@ -105,6 +133,9 @@ func NewInMemoryDB() *InMemoryDB {
 		questionAttempts:   make(map[int]*models.QuestionAttempt),
 		quizzes:            make(map[int]*models.Quiz),
 		userQuestionStates: make(map[string]*models.UserQuestionState),
+		tests:              make(map[int]*models.Test),
+		quizQuestions:      make(map[string]*models.QuizQuestion),
+		testQuestions:      make(map[string]*models.TestQuestion),
 		nextUserID:         1,
 		nextTopicID:        1,
 		nextQuestionID:     1,
@@ -113,6 +144,9 @@ func NewInMemoryDB() *InMemoryDB {
 		nextQAttemptID:     1,
 		nextQuizID:         1,
 		nextUQStateID:      1,
+		nextTestID:         1,
+		nextQuizQuestionID: 1,
+		nextTestQuestionID: 1,
 	}
 }
 
@@ -564,4 +598,512 @@ return ErrNotFound
 }
 delete(db.topics, id)
 return nil
+}
+
+func (db *InMemoryDB) GetAnswer(id int) (*models.Answer, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+answer, exists := db.answers[id]
+if !exists {
+return nil, ErrNotFound
+}
+return answer, nil
+}
+
+// Phase 3: Test operations
+func (db *InMemoryDB) CreateTest(test *models.Test) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+test.ID = db.nextTestID
+db.nextTestID++
+db.tests[test.ID] = test
+return nil
+}
+
+func (db *InMemoryDB) GetTest(id int) (*models.Test, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+test, exists := db.tests[id]
+if !exists {
+return nil, ErrNotFound
+}
+return test, nil
+}
+
+func (db *InMemoryDB) ListTests() ([]*models.Test, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+tests := make([]*models.Test, 0, len(db.tests))
+for _, test := range db.tests {
+tests = append(tests, test)
+}
+return tests, nil
+}
+
+func (db *InMemoryDB) UpdateTest(test *models.Test) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.tests[test.ID]; !exists {
+return ErrNotFound
+}
+db.tests[test.ID] = test
+return nil
+}
+
+func (db *InMemoryDB) DeleteTest(id int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+if _, exists := db.tests[id]; !exists {
+return ErrNotFound
+}
+delete(db.tests, id)
+return nil
+}
+
+// Phase 3: Many-to-many Quiz-Question relationships
+func (db *InMemoryDB) AddQuestionToQuiz(quizID, questionID, order int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+// Verify quiz and question exist
+if _, exists := db.quizzes[quizID]; !exists {
+return ErrNotFound
+}
+if _, exists := db.questions[questionID]; !exists {
+return ErrNotFound
+}
+
+key := fmt.Sprintf("%d-%d", quizID, questionID)
+qq := &models.QuizQuestion{
+ID:         db.nextQuizQuestionID,
+QuizID:     quizID,
+QuestionID: questionID,
+Order:      order,
+}
+db.nextQuizQuestionID++
+db.quizQuestions[key] = qq
+return nil
+}
+
+func (db *InMemoryDB) RemoveQuestionFromQuiz(quizID, questionID int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+key := fmt.Sprintf("%d-%d", quizID, questionID)
+if _, exists := db.quizQuestions[key]; !exists {
+return ErrNotFound
+}
+delete(db.quizQuestions, key)
+return nil
+}
+
+func (db *InMemoryDB) GetQuizQuestions(quizID int) ([]*models.Question, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+// Collect quiz questions with their order
+type orderedQuestion struct {
+question *models.Question
+order    int
+}
+orderedQuestions := make([]orderedQuestion, 0)
+
+for _, qq := range db.quizQuestions {
+if qq.QuizID == quizID {
+if question, exists := db.questions[qq.QuestionID]; exists {
+orderedQuestions = append(orderedQuestions, orderedQuestion{question, qq.Order})
+}
+}
+}
+
+// Sort by order
+for i := 0; i < len(orderedQuestions); i++ {
+for j := i + 1; j < len(orderedQuestions); j++ {
+if orderedQuestions[i].order > orderedQuestions[j].order {
+orderedQuestions[i], orderedQuestions[j] = orderedQuestions[j], orderedQuestions[i]
+}
+}
+}
+
+questions := make([]*models.Question, len(orderedQuestions))
+for i, oq := range orderedQuestions {
+questions[i] = oq.question
+}
+
+return questions, nil
+}
+
+// Phase 3: Many-to-many Test-Question relationships
+func (db *InMemoryDB) AddQuestionToTest(testID, questionID, order int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+// Verify test and question exist
+if _, exists := db.tests[testID]; !exists {
+return ErrNotFound
+}
+if _, exists := db.questions[questionID]; !exists {
+return ErrNotFound
+}
+
+key := fmt.Sprintf("%d-%d", testID, questionID)
+tq := &models.TestQuestion{
+ID:         db.nextTestQuestionID,
+TestID:     testID,
+QuestionID: questionID,
+Order:      order,
+}
+db.nextTestQuestionID++
+db.testQuestions[key] = tq
+return nil
+}
+
+func (db *InMemoryDB) RemoveQuestionFromTest(testID, questionID int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+key := fmt.Sprintf("%d-%d", testID, questionID)
+if _, exists := db.testQuestions[key]; !exists {
+return ErrNotFound
+}
+delete(db.testQuestions, key)
+return nil
+}
+
+func (db *InMemoryDB) GetTestQuestions(testID int) ([]*models.Question, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+// Collect test questions with their order
+type orderedQuestion struct {
+question *models.Question
+order    int
+}
+orderedQuestions := make([]orderedQuestion, 0)
+
+for _, tq := range db.testQuestions {
+if tq.TestID == testID {
+if question, exists := db.questions[tq.QuestionID]; exists {
+orderedQuestions = append(orderedQuestions, orderedQuestion{question, tq.Order})
+}
+}
+}
+
+// Sort by order
+for i := 0; i < len(orderedQuestions); i++ {
+for j := i + 1; j < len(orderedQuestions); j++ {
+if orderedQuestions[i].order > orderedQuestions[j].order {
+orderedQuestions[i], orderedQuestions[j] = orderedQuestions[j], orderedQuestions[i]
+}
+}
+}
+
+questions := make([]*models.Question, len(orderedQuestions))
+for i, oq := range orderedQuestions {
+questions[i] = oq.question
+}
+
+return questions, nil
+}
+
+// Phase 3: Analytics operations
+func (db *InMemoryDB) GetStudentProgress(userID int) (*models.StudentProgress, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+user, exists := db.users[userID]
+if !exists {
+return nil, ErrNotFound
+}
+
+progress := &models.StudentProgress{
+UserID:           userID,
+Username:         user.Username,
+TotalPoints:      user.TotalPoints,
+TopicBreakdown:   make(map[string]float64),
+}
+
+// Count quiz attempts
+var completedQuizzes int
+var totalScore float64
+recentActivity := make([]models.QuizAttempt, 0)
+
+for _, attempt := range db.quizAttempts {
+if attempt.UserID == userID {
+progress.TotalQuizzes++
+if attempt.CompletedTime != nil {
+completedQuizzes++
+if attempt.TotalQuestions > 0 {
+score := float64(attempt.CorrectAnswers) / float64(attempt.TotalQuestions) * 100
+totalScore += score
+}
+recentActivity = append(recentActivity, *attempt)
+}
+}
+}
+
+progress.CompletedQuizzes = completedQuizzes
+if completedQuizzes > 0 {
+progress.AverageScore = totalScore / float64(completedQuizzes)
+}
+
+// Sort and limit recent activity to 5
+// Simple bubble sort by start time (most recent first)
+for i := 0; i < len(recentActivity); i++ {
+for j := i + 1; j < len(recentActivity); j++ {
+if recentActivity[i].StartTime.Before(recentActivity[j].StartTime) {
+recentActivity[i], recentActivity[j] = recentActivity[j], recentActivity[i]
+}
+}
+}
+if len(recentActivity) > 5 {
+recentActivity = recentActivity[:5]
+}
+progress.RecentActivity = recentActivity
+
+// Calculate question accuracy
+var totalAttempts, correctAttempts int
+for _, qa := range db.questionAttempts {
+if qa.UserID == userID {
+totalAttempts += qa.CorrectAttempts + qa.IncorrectAttempts
+correctAttempts += qa.CorrectAttempts
+}
+}
+if totalAttempts > 0 {
+progress.QuestionAccuracy = float64(correctAttempts) / float64(totalAttempts) * 100
+}
+
+// Calculate topic breakdown
+topicAttempts := make(map[int]int)      // topicID -> total attempts
+topicCorrect := make(map[int]int)       // topicID -> correct attempts
+
+for _, qa := range db.questionAttempts {
+if qa.UserID == userID {
+if question, exists := db.questions[qa.QuestionID]; exists {
+topicAttempts[question.TopicID] += qa.CorrectAttempts + qa.IncorrectAttempts
+topicCorrect[question.TopicID] += qa.CorrectAttempts
+}
+}
+}
+
+for topicID, total := range topicAttempts {
+if topic, exists := db.topics[topicID]; exists && total > 0 {
+accuracy := float64(topicCorrect[topicID]) / float64(total) * 100
+progress.TopicBreakdown[topic.Name] = accuracy
+}
+}
+
+// Calculate FSRS metrics
+var totalCards, dueCards, newCards, reviewCards int
+var totalStability, totalDifficulty float64
+var cardCount int
+
+now := time.Now()
+for _, state := range db.userQuestionStates {
+if state.UserID == userID {
+totalCards++
+if state.State == 0 {
+newCards++
+} else if state.State == 2 {
+reviewCards++
+}
+if !state.Due.After(now) {
+dueCards++
+}
+totalStability += state.Stability
+totalDifficulty += state.Difficulty
+cardCount++
+}
+}
+
+progress.FSRSMetrics = models.FSRSMetrics{
+TotalCards:   totalCards,
+DueCards:     dueCards,
+NewCards:     newCards,
+ReviewCards:  reviewCards,
+}
+if cardCount > 0 {
+progress.FSRSMetrics.AvgStability = totalStability / float64(cardCount)
+progress.FSRSMetrics.AvgDifficulty = totalDifficulty / float64(cardCount)
+}
+
+return progress, nil
+}
+
+func (db *InMemoryDB) GetCohortAnalytics() (*models.CohortAnalytics, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+analytics := &models.CohortAnalytics{
+TopicDifficulty: make(map[string]float64),
+QuestionStats:   make([]models.QuestionStatistic, 0),
+}
+
+// Count students (non-admin users)
+studentIDs := make([]int, 0)
+for _, user := range db.users {
+if !user.IsAdmin {
+analytics.TotalStudents++
+studentIDs = append(studentIDs, user.ID)
+}
+}
+
+// Count active students (activity in last 7 days)
+sevenDaysAgo := time.Now().AddDate(0, 0, -7)
+activeStudents := make(map[int]bool)
+for _, attempt := range db.quizAttempts {
+if attempt.StartTime.After(sevenDaysAgo) {
+activeStudents[attempt.UserID] = true
+}
+}
+analytics.ActiveStudents = len(activeStudents)
+
+// Calculate average cohort score and total quizzes
+var totalScore float64
+var scoredQuizzes int
+
+for _, attempt := range db.quizAttempts {
+if attempt.CompletedTime != nil {
+analytics.TotalQuizzesTaken++
+if attempt.TotalQuestions > 0 {
+score := float64(attempt.CorrectAnswers) / float64(attempt.TotalQuestions) * 100
+totalScore += score
+scoredQuizzes++
+}
+}
+}
+
+if scoredQuizzes > 0 {
+analytics.AverageCohortScore = totalScore / float64(scoredQuizzes)
+}
+
+// Get top and bottom performers
+studentScores := make(map[int]float64)
+studentQuizCounts := make(map[int]int)
+
+for _, attempt := range db.quizAttempts {
+if attempt.CompletedTime != nil && attempt.TotalQuestions > 0 {
+score := float64(attempt.CorrectAnswers) / float64(attempt.TotalQuestions) * 100
+studentScores[attempt.UserID] += score
+studentQuizCounts[attempt.UserID]++
+}
+}
+
+// Calculate average scores for each student
+type studentScore struct {
+userID   int
+avgScore float64
+}
+scores := make([]studentScore, 0)
+for userID, totalScore := range studentScores {
+if count := studentQuizCounts[userID]; count > 0 {
+scores = append(scores, studentScore{userID, totalScore / float64(count)})
+}
+}
+
+// Sort by score (descending)
+for i := 0; i < len(scores); i++ {
+for j := i + 1; j < len(scores); j++ {
+if scores[i].avgScore < scores[j].avgScore {
+scores[i], scores[j] = scores[j], scores[i]
+}
+}
+}
+
+// Get top 5 performers
+topCount := 5
+if len(scores) < topCount {
+topCount = len(scores)
+}
+topPerformers := make([]models.StudentProgress, 0, topCount)
+for i := 0; i < topCount; i++ {
+if progress, err := db.GetStudentProgress(scores[i].userID); err == nil {
+topPerformers = append(topPerformers, *progress)
+}
+}
+analytics.TopPerformers = topPerformers
+
+// Get bottom 5 performers
+bottomCount := 5
+if len(scores) < bottomCount {
+bottomCount = len(scores)
+}
+bottomPerformers := make([]models.StudentProgress, 0, bottomCount)
+for i := len(scores) - 1; i >= len(scores)-bottomCount && i >= 0; i-- {
+if progress, err := db.GetStudentProgress(scores[i].userID); err == nil {
+bottomPerformers = append(bottomPerformers, *progress)
+}
+}
+analytics.BottomPerformers = bottomPerformers
+
+// Calculate topic difficulty (avg FSRS difficulty per topic)
+topicDifficulties := make(map[int][]float64) // topicID -> []difficulty values
+
+for _, state := range db.userQuestionStates {
+if question, exists := db.questions[state.QuestionID]; exists {
+topicDifficulties[question.TopicID] = append(topicDifficulties[question.TopicID], state.Difficulty)
+}
+}
+
+for topicID, difficulties := range topicDifficulties {
+if topic, exists := db.topics[topicID]; exists && len(difficulties) > 0 {
+var sum float64
+for _, d := range difficulties {
+sum += d
+}
+analytics.TopicDifficulty[topic.Name] = sum / float64(len(difficulties))
+}
+}
+
+// Calculate question statistics
+questionAttemptCounts := make(map[int]int)
+questionCorrectCounts := make(map[int]int)
+
+for _, qa := range db.questionAttempts {
+totalAttempts := qa.CorrectAttempts + qa.IncorrectAttempts
+questionAttemptCounts[qa.QuestionID] += totalAttempts
+questionCorrectCounts[qa.QuestionID] += qa.CorrectAttempts
+}
+
+for questionID, totalAttempts := range questionAttemptCounts {
+if question, exists := db.questions[questionID]; exists {
+var accuracy float64
+if totalAttempts > 0 {
+accuracy = float64(questionCorrectCounts[questionID]) / float64(totalAttempts) * 100
+}
+
+// Calculate average FSRS difficulty for this question
+var totalDifficulty float64
+var difficultyCount int
+for _, state := range db.userQuestionStates {
+if state.QuestionID == questionID {
+totalDifficulty += state.Difficulty
+difficultyCount++
+}
+}
+var avgDifficulty float64
+if difficultyCount > 0 {
+avgDifficulty = totalDifficulty / float64(difficultyCount)
+}
+
+stat := models.QuestionStatistic{
+QuestionID:      questionID,
+TopicQuestionID: question.TopicQuestionID,
+QuestionText:    question.QuestionText,
+TotalAttempts:   totalAttempts,
+CorrectAttempts: questionCorrectCounts[questionID],
+Accuracy:        accuracy,
+AvgDifficulty:   avgDifficulty,
+}
+analytics.QuestionStats = append(analytics.QuestionStats, stat)
+}
+}
+
+return analytics, nil
 }

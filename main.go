@@ -158,6 +158,99 @@ func main() {
 		})(w, r)
 	})
 
+	// Phase 3: Instructor Analytics routes
+	http.HandleFunc("/instructor/student-progress", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.GetStudentProgressHandler(w, r)
+		})(w, r)
+	})
+
+	http.HandleFunc("/instructor/cohort-analytics", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.GetCohortAnalyticsHandler(w, r)
+		})(w, r)
+	})
+
+	// Phase 3: Import/Export routes
+	http.HandleFunc("/instructor/quizzes/export", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.ExportQuizHandler(w, r)
+		})(w, r)
+	})
+
+	http.HandleFunc("/instructor/quizzes/import", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.ImportQuizHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	http.HandleFunc("/instructor/questions/export", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			handler.ExportQuestionsHandler(w, r)
+		})(w, r)
+	})
+
+	http.HandleFunc("/instructor/questions/import", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.ImportQuestionsHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	// Phase 3: Test management routes
+	http.HandleFunc("/admin/tests", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.ListTestsHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.CreateTestHandler(w, r)
+			} else if r.Method == http.MethodPut {
+				handler.UpdateTestHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteTestHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	// Phase 3: Quiz-Question relationship routes
+	http.HandleFunc("/admin/quiz-questions", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.GetQuizQuestionsHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.AddQuestionToQuizHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.RemoveQuestionFromQuizHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	// Phase 3: Test-Question relationship routes
+	http.HandleFunc("/admin/test-questions", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.GetTestQuestionsHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.AddQuestionToTestHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.RemoveQuestionFromTestHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
 	port := ":8080"
 	fmt.Printf("Athena API server starting on port %s\n", port)
 	fmt.Printf("Database: %s\n", dbPath)
