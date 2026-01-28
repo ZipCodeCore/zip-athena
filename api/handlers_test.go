@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/ZipCodeCore/zip-athena/database"
 	"github.com/ZipCodeCore/zip-athena/models"
@@ -154,5 +156,86 @@ func TestCreateQuizAttemptHandler(t *testing.T) {
 
 	if created.CorrectAnswers != attempt.CorrectAnswers {
 		t.Errorf("Expected %d correct answers, got %d", attempt.CorrectAnswers, created.CorrectAnswers)
+	}
+}
+
+// Test 21: GetProgressHandler should count questions from all quizzes including in-progress ones
+func TestGetProgressHandlerIncludesInProgressQuizzes(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Create a user
+	user := &models.User{
+		Username: "progressuser",
+		Email:    "progress@example.com",
+	}
+	if err := db.CreateUser(user); err != nil {
+		t.Fatalf("Failed to create user: %v", err)
+	}
+
+	// Create a completed quiz attempt
+	completedTime := time.Now()
+	completedAttempt := &models.QuizAttempt{
+		UserID:          user.ID,
+		StartTime:       time.Now().Add(-1 * time.Hour),
+		CompletedTime:   &completedTime,
+		TotalQuestions:  5,
+		CorrectAnswers:  3,
+		QuestionIDs:     []string{"1.1", "1.2", "1.3", "1.4", "1.5"},
+		QuestionResults: map[string]bool{"1.1": true, "1.2": true, "1.3": true, "1.4": false, "1.5": false},
+	}
+	if err := db.CreateQuizAttempt(completedAttempt); err != nil {
+		t.Fatalf("Failed to create completed quiz attempt: %v", err)
+	}
+
+	// Create an in-progress quiz attempt (no CompletedTime)
+	inProgressAttempt := &models.QuizAttempt{
+		UserID:          user.ID,
+		StartTime:       time.Now(),
+		CompletedTime:   nil, // This is in progress
+		TotalQuestions:  4,
+		CorrectAnswers:  2,
+		QuestionIDs:     []string{"2.1", "2.2", "2.3", "2.4"},
+		QuestionResults: map[string]bool{"2.1": true, "2.2": true},
+	}
+	if err := db.CreateQuizAttempt(inProgressAttempt); err != nil {
+		t.Fatalf("Failed to create in-progress quiz attempt: %v", err)
+	}
+
+	// Get progress
+	req := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(user.ID), nil)
+	w := httptest.NewRecorder()
+
+	handler.GetProgressHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
+	}
+
+	var progress map[string]interface{}
+	if err := json.NewDecoder(w.Body).Decode(&progress); err != nil {
+		t.Fatalf("Failed to decode response: %v", err)
+	}
+
+	// Verify total_questions includes both completed and in-progress quizzes
+	// Expected: 5 (from completed quiz) + 2 (answered in in-progress quiz) = 7
+	totalQuestions := int(progress["total_questions"].(float64))
+	expectedTotalQuestions := 7 // 5 from completed + 2 answered in progress
+	if totalQuestions != expectedTotalQuestions {
+		t.Errorf("Expected total_questions to be %d (from both completed and in-progress quizzes), got %d", expectedTotalQuestions, totalQuestions)
+	}
+
+	// Verify total_correct includes both completed and in-progress quizzes
+	// Expected: 3 (completed) + 2 (in-progress) = 5
+	totalCorrect := int(progress["total_correct"].(float64))
+	expectedTotalCorrect := 5
+	if totalCorrect != expectedTotalCorrect {
+		t.Errorf("Expected total_correct to be %d (from both completed and in-progress quizzes), got %d", expectedTotalCorrect, totalCorrect)
+	}
+
+	// Verify total_quizzes includes both completed and in-progress
+	totalQuizzes := int(progress["total_quizzes"].(float64))
+	if totalQuizzes != 2 {
+		t.Errorf("Expected total_quizzes to be 2, got %d", totalQuizzes)
 	}
 }
