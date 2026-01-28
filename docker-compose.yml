@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: athena-app
     ports:
-      - "8080:8080"
+      - "9206:9206"
     volumes:
       # Mount the data directory to persist SQLite database on host
       - ./data:/data
@@ -15,7 +15,7 @@ services:
       - DB_PATH=/data/athena.db
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9206/"]
       interval: 30s
       timeout: 10s
       retries: 3

@@ -251,7 +251,7 @@ func main() {
 		})(w, r)
 	})
 
-	port := ":8080"
+	port := ":9206"
 	fmt.Printf("Athena API server starting on port %s\n", port)
 	fmt.Printf("Database: %s\n", dbPath)
 	log.Fatal(http.ListenAndServe(port, nil))

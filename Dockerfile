@@ -41,7 +41,7 @@ RUN mkdir -p /data
 ENV DB_PATH=/data/athena.db
 
 # Expose port
-EXPOSE 8080
+EXPOSE 9206
 
 # Run the application
 CMD ["./athena"]

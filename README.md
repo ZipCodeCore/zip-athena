@@ -15,7 +15,7 @@ go run cmd/seed/main.go
 # Start the server
 go run main.go
 
-# Open browser to http://localhost:8080
+# Open browser to http://localhost:9206
 ```
 
 ## Phase 0 - Core Implementation
@@ -52,7 +52,7 @@ go build -o athena .
 ./athena
 ```
 
-The server will start on port 8080.
+The server runs on port 9206.
 
 ## Running Tests
 
