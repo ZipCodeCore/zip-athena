@@ -118,6 +118,8 @@ String mood = switch (day) {
 System.out.println("Mood: " + mood);
 ```
 
+**Note:** Switch expressions require Java 14 or later. If you're using an older version, stick with the traditional switch statement above.
+
 ## Loop Statements
 
 Loops let you repeat actions. Instead of writing the same code 100 times, you write it once and loop it 100 times!

@@ -565,7 +565,7 @@ for i in range(1, 11):
 ```python
 # WRONG - indentation matters in Python!
 if x > 0:
-print("Positive")  # IndentationError!
+print("Positive")  # ERROR: IndentationError!
 
 # RIGHT
 if x > 0:
@@ -601,11 +601,11 @@ for item in items:
     print(item)
 
 # Instead of this:
-if condition == True:
+if condition == True:  # Redundant - comparing to True is unnecessary
     ...
 
 # Do this:
-if condition:
+if condition:  # Cleaner and more Pythonic
     ...
 ```
 

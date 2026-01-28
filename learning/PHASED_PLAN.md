@@ -335,9 +335,11 @@ Once learning resources are in place, quiz questions should be:
 - **Complex topic** (e.g., collections framework): 10-15 hours
 
 ### Total Estimated Effort
-- **Java**: ~50 topics × 8 hours average = 400 hours
-- **Python**: ~55 topics × 8 hours average = 440 hours
+- **Java**: ~20 major sections with multiple subsections ≈ 50 individual topics × 8 hours average = 400 hours
+- **Python**: ~27 major sections with multiple subsections ≈ 55 individual topics × 8 hours average = 440 hours
 - **Total**: ~840 hours (approximately 21 weeks at 40 hours/week)
+
+**Note**: Each curriculum section typically contains multiple subsections/topics. For example, the "Control Structures" section includes if/else, switch, while loops, for loops, etc., which we count as separate learning topics for planning purposes.
 
 ### Recommended Approach
 - **Parallel development**: Work on Java and Python topics simultaneously

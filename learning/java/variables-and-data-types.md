@@ -114,8 +114,8 @@ char symbol = '@';
 
 You can also use Unicode values:
 ```java
-char heart = '\u2764';  // ❤ symbol
-char copyright = '\u00A9';  // © symbol
+char heart = '\u2764';     // ❤ symbol
+char copyright = '\u00A9'; // © symbol
 ```
 
 ### Boolean Type
@@ -385,7 +385,8 @@ Remember: when both operands are integers, you get integer division.
 
 ```java
 int big = 2_000_000_000;
-int tooBig = big + big;  // Overflow! Wrong result
+int tooBig = big + big;  // Overflow! Wraps around to negative number
+System.out.println(tooBig);  // Prints: -294967296 (not 4000000000!)
 ```
 
 Use `long` for numbers that might exceed int's range.
@@ -396,6 +397,7 @@ Use `long` for numbers that might exceed int's range.
 float f1 = 0.1f;
 float f2 = 0.2f;
 float sum = f1 + f2;  // Might not be exactly 0.3!
+System.out.println(sum);  // Could print something like 0.30000001
 ```
 
 Floating-point math isn't always perfectly precise. Use `double` for better precision, or `BigDecimal` for money calculations.

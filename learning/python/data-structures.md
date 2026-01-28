@@ -337,8 +337,8 @@ fruits = {"apple", "banana", "cherry"}
 numbers = {1, 2, 3, 4, 5}
 
 # From a list (removes duplicates!)
-numbers = [1, 2, 2, 3, 3, 3, 4]
-unique = set(numbers)  # {1, 2, 3, 4}
+number_list = [1, 2, 2, 3, 3, 3, 4]
+unique = set(number_list)  # {1, 2, 3, 4}
 ```
 
 ### Set Operations
@@ -408,14 +408,14 @@ is_superset = set2 >= set1  # True
 ### When to Use Sets
 
 ```python
-# Remove duplicates
+# Remove duplicates (Python 3.7+ preserves insertion order in sets)
 numbers = [1, 2, 2, 3, 3, 3, 4, 4, 5]
 unique_numbers = list(set(numbers))  # [1, 2, 3, 4, 5]
 
 # Fast membership testing
 valid_users = {"alice", "bob", "charlie"}
 user = "alice"
-if user in valid_users:  # O(1) - constant time!
+if user in valid_users:  # O(1) average case - constant time!
     print("Valid user")
 
 # Find common elements

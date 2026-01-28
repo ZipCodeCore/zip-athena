@@ -18,7 +18,7 @@ The learning resources are organized by programming language, with each major to
 
 ### Python
 - **control-structures.md** - Making decisions and repeating actions in Python  
-- **data-structures.md** - Working with lists, dictionaries, sets, and tuples
+- **data-structures.md** - Working with lists, dictionaries, sets, and tuples (covers curriculum sections 6-9)
 
 ## How to Use These Resources
 
