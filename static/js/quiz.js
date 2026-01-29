@@ -11,7 +11,7 @@ document.getElementById('userDisplay').textContent = `Welcome, ${user.username}!
 
 // Show admin button if user is admin
 if (user.is_admin) {
-    document.getElementById('adminButton').style.display = 'inline-block';
+    document.getElementById('instructorButton').style.display = 'inline-block';
 }
 
 // Logout function
@@ -25,7 +25,10 @@ const urlParams = new URLSearchParams(window.location.search);
 const topicId = urlParams.get('topic_id');
 const topicName = urlParams.get('topic_name');
 
-if (!topicId) {
+// Check if there's a retake quiz in localStorage
+const currentQuiz = localStorage.getItem('currentQuiz');
+
+if (!topicId && !currentQuiz) {
     window.location.href = '/dashboard.html';
 }
 
@@ -36,7 +39,21 @@ let quizAttemptId = null;
 let score = 0;
 
 // Set topic title
-document.getElementById('topicTitle').textContent = `${decodeURIComponent(topicName)} Quiz`;
+if (currentQuiz) {
+    // This is a retake quiz
+    const quizObj = JSON.parse(currentQuiz);
+    document.getElementById('topicTitle').textContent = `Quiz Retake`;
+    // Initialize with retake data
+    quizData = quizObj;
+    quizAttemptId = quizObj.quiz_attempt_id;
+    // Clear the retake quiz from localStorage
+    localStorage.removeItem('currentQuiz');
+    displayQuestion();
+} else {
+    document.getElementById('topicTitle').textContent = `${decodeURIComponent(topicName)} Quiz`;
+    // Generate new quiz
+    generateQuiz();
+}
 
 // Generate quiz
 async function generateQuiz() {
@@ -248,5 +265,5 @@ async function completeQuiz() {
     }
 }
 
-// Start the quiz
-generateQuiz();
+// Quiz initialization is handled in the initialization section above
+// (either through generateQuiz() or loading from localStorage)
