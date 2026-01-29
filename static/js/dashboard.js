@@ -98,11 +98,15 @@ function loadQuizAttempts(quizAttempts) {
             // Get quiz description (fallback to Quiz ID if not available)
             const quizDescription = attempt.quiz_description || attempt.quiz_name || `Quiz #${attempt.id}`;
             
-            // Determine if retake button should be shown (completed quiz with score < 100%)
-            const showRetake = isCompleted && score < 100;
-            const retakeButton = showRetake 
-                ? `<button class="btn btn-sm btn-primary" onclick="retakeQuiz(${attempt.id})">Retake</button>`
-                : '';
+            // Determine action button based on status
+            let actionButton = '';
+            if (!isCompleted) {
+                // In progress - show Resume button
+                actionButton = `<button class="btn btn-sm btn-success" onclick="resumeQuiz(${attempt.id})">Resume</button>`;
+            } else if (score < 100) {
+                // Completed but not perfect - show Retake button
+                actionButton = `<button class="btn btn-sm btn-primary" onclick="retakeQuiz(${attempt.id})">Retake</button>`;
+            }
 
             row.innerHTML = `
                 <td>${attempt.id}</td>
@@ -116,12 +120,50 @@ function loadQuizAttempts(quizAttempts) {
                         ${score}%
                     </span>
                 </td>
-                <td>${retakeButton}</td>
+                <td>${actionButton}</td>
             `;
             table.appendChild(row);
         });
     } else {
         table.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No quiz attempts yet. Start a quiz to see your progress!</td></tr>';
+    }
+}
+
+// Resume an in-progress quiz
+async function resumeQuiz(attemptId) {
+    if (!attemptId) {
+        alert('Unable to resume this quiz. Quiz attempt information not available.');
+        return;
+    }
+    
+    try {
+        // Get the quiz attempt details with questions
+        const response = await fetch(`/students/quiz-history/${attemptId}`);
+        if (!response.ok) {
+            throw new Error('Failed to load quiz attempt details');
+        }
+        
+        const attemptDetails = await response.json();
+        
+        if (attemptDetails.completed_time) {
+            alert('This quiz is already completed. Use Retake to try again.');
+            return;
+        }
+        
+        // Store resume data in localStorage
+        localStorage.setItem('resumeQuiz', JSON.stringify({
+            attemptId: attemptDetails.id,
+            questionResults: attemptDetails.question_results || {},
+            questions: attemptDetails.questions || [],
+            totalQuestions: attemptDetails.total_questions,
+            correctAnswers: attemptDetails.correct_answers
+        }));
+        
+        // Navigate to the quiz page
+        window.location.href = '/quiz.html';
+    } catch (error) {
+        console.error('Error resuming quiz:', error);
+        alert('Unable to resume this quiz. Please try again later.');
     }
 }
 

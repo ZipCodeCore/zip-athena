@@ -1,2 +1,4 @@
 Athena API server starting on port :9206
 Database: ./athena.db
+2026/01/29 11:42:54 ERROR: Failed to get quiz attempt details: no such column: quiz_id
+2026/01/29 11:43:00 ERROR: Failed to get quiz attempt details: no such column: quiz_id

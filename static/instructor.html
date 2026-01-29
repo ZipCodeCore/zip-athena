@@ -522,7 +522,7 @@
                 // Clear existing options except the default
                 select.innerHTML = '<option value="">-- Select a student --</option>';
                 
-                const students = users.filter(u => !u.is_admin);
+                const students = users; //users.filter(u => !u.is_admin);
                 if (students.length === 0) {
                     console.warn('No students found');
                     return;

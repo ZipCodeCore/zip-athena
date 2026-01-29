@@ -35,7 +35,7 @@ func (h *Handler) GetQuizHistoryHandler(w http.ResponseWriter, r *http.Request) 
 
 	// Get optional topic filter
 	topicIDStr := r.URL.Query().Get("topic_id")
-	
+
 	// Get pagination parameters
 	page := 1
 	perPage := 10
@@ -104,8 +104,52 @@ func (h *Handler) GetQuizAttemptDetailsHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	// Load questions if quiz is in progress (for resume functionality)
+	var quizQuestions []QuizQuestion
+	if attempt.CompletedTime == nil && len(attempt.QuestionIDs) > 0 {
+		// Get all questions
+		allQuestions, err := h.db.ListQuestions()
+		if err != nil {
+			log.Printf("ERROR: Failed to list questions: %v\n", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Build a map of TopicQuestionID -> Question
+		questionMap := make(map[string]*models.Question)
+		for _, q := range allQuestions {
+			questionMap[q.TopicQuestionID] = q
+		}
+
+		// Reconstruct questions from QuestionIDs
+		for _, topicQuestionID := range attempt.QuestionIDs {
+			if q, exists := questionMap[topicQuestionID]; exists {
+				// Get answers for this question
+				answers, err := h.db.GetAnswersByQuestion(q.ID)
+				if err != nil {
+					log.Printf("ERROR: Failed to get answers for question %d: %v\n", q.ID, err)
+					continue
+				}
+
+				quizQuestions = append(quizQuestions, QuizQuestion{
+					Question: q,
+					Answers:  answers,
+				})
+			}
+		}
+	}
+
+	// Create response with both attempt and questions
+	response := struct {
+		*models.QuizAttempt
+		Questions []QuizQuestion `json:"questions,omitempty"`
+	}{
+		QuizAttempt: attempt,
+		Questions:   quizQuestions,
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(attempt)
+	json.NewEncoder(w).Encode(response)
 }
 
 // Phase 4: Timed Test Taking Handlers
@@ -229,10 +273,10 @@ func (h *Handler) StartTestHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Create new test attempt
 	attempt := &models.TestAttempt{
-		UserID:    req.UserID,
-		TestID:    testID,
-		StartTime: time.Now(),
-		Answers:   make(map[string]int),
+		UserID:          req.UserID,
+		TestID:          testID,
+		StartTime:       time.Now(),
+		Answers:         make(map[string]int),
 		QuestionResults: make(map[string]bool),
 	}
 
@@ -455,12 +499,12 @@ func (h *Handler) GenerateQuizByTagsHandler(w http.ResponseWriter, r *http.Reque
 
 	// Create quiz attempt
 	attempt := &models.QuizAttempt{
-		UserID:         req.UserID,
-		StartTime:      time.Now(),
-		TotalQuestions: len(questions),
-		QuestionIDs:    make([]string, len(questions)),
+		UserID:          req.UserID,
+		StartTime:       time.Now(),
+		TotalQuestions:  len(questions),
+		QuestionIDs:     make([]string, len(questions)),
 		QuestionResults: make(map[string]bool),
-		AttemptNumber:  1,
+		AttemptNumber:   1,
 	}
 
 	for i, q := range questions {

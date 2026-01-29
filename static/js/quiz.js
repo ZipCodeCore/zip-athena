@@ -27,8 +27,10 @@ const topicName = urlParams.get('topic_name');
 
 // Check if there's a retake quiz in localStorage
 const currentQuiz = localStorage.getItem('currentQuiz');
+// Check if there's a resume quiz in localStorage
+const resumeQuiz = localStorage.getItem('resumeQuiz');
 
-if (!topicId && !currentQuiz) {
+if (!topicId && !currentQuiz && !resumeQuiz) {
     window.location.href = '/dashboard.html';
 }
 
@@ -37,9 +39,22 @@ let quizData = null;
 let currentQuestionIndex = 0;
 let quizAttemptId = null;
 let score = 0;
+let answeredQuestions = {}; // Track which questions have been answered
 
-// Set topic title
-if (currentQuiz) {
+// Set topic title and initialize
+if (resumeQuiz) {
+    // This is a resumed quiz
+    const resumeData = JSON.parse(resumeQuiz);
+    document.getElementById('topicTitle').textContent = `Resume Quiz`;
+    quizAttemptId = resumeData.attemptId;
+    answeredQuestions = resumeData.questionResults || {};
+    
+    // Clear the resume data from localStorage
+    localStorage.removeItem('resumeQuiz');
+    
+    // Load the quiz attempt and resume
+    loadAndResumeQuiz(resumeData);
+} else if (currentQuiz) {
     // This is a retake quiz
     const quizObj = JSON.parse(currentQuiz);
     document.getElementById('topicTitle').textContent = `Quiz Retake`;
@@ -53,6 +68,45 @@ if (currentQuiz) {
     document.getElementById('topicTitle').textContent = `${decodeURIComponent(topicName)} Quiz`;
     // Generate new quiz
     generateQuiz();
+}
+
+// Load and resume a quiz
+async function loadAndResumeQuiz(resumeData) {
+    try {
+        // The resume data contains questions in the format [{question: {...}, answers: [...]}]
+        quizData = {
+            questions: resumeData.questions,
+            quiz_attempt_id: resumeData.attemptId
+        };
+        
+        // Find the first unanswered question
+        currentQuestionIndex = 0;
+        for (let i = 0; i < quizData.questions.length; i++) {
+            const quizQuestion = quizData.questions[i];
+            const question = quizQuestion.question;
+            const questionKey = question.topic_question_id || question.id.toString();
+            if (!answeredQuestions[questionKey]) {
+                currentQuestionIndex = i;
+                break;
+            }
+        }
+        
+        // If all questions answered, start at beginning
+        if (currentQuestionIndex === 0 && Object.keys(answeredQuestions).length > 0) {
+            const firstQuestion = quizData.questions[0].question;
+            const firstQuestionKey = firstQuestion.topic_question_id || firstQuestion.id.toString();
+            if (answeredQuestions[firstQuestionKey]) {
+                // All questions answered but quiz not completed - start from end
+                currentQuestionIndex = quizData.questions.length - 1;
+            }
+        }
+        
+        displayQuestion();
+    } catch (error) {
+        console.error('Error loading quiz for resume:', error);
+        alert('Unable to resume quiz. Returning to dashboard.');
+        window.location.href = '/dashboard.html';
+    }
 }
 
 // Generate quiz
