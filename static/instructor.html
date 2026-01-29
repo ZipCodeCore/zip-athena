@@ -156,6 +156,32 @@
                     <div id="topic-difficulty"></div>
                 </div>
             </div>
+
+            <!-- Question Performance Statistics -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-question-circle-fill"></i> Most Challenging Questions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="question-stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Question ID</th>
+                                    <th>Question</th>
+                                    <th>Total Attempts</th>
+                                    <th>Correct</th>
+                                    <th>Accuracy</th>
+                                    <th>Avg Difficulty</th>
+                                </tr>
+                            </thead>
+                            <tbody id="question-stats-body">
+                                <tr><td colspan="6" class="text-center text-muted py-3">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Student Progress Section -->
@@ -380,7 +406,7 @@
                 // Topic difficulty
                 const topicDifficulty = document.getElementById('topic-difficulty');
                 topicDifficulty.innerHTML = '';
-                if (data.topic_difficulty) {
+                if (data.topic_difficulty && Object.keys(data.topic_difficulty).length > 0) {
                     for (const [topic, difficulty] of Object.entries(data.topic_difficulty)) {
                         topicDifficulty.innerHTML += `
                             <div class="mb-2">
@@ -395,9 +421,42 @@
                             </div>
                         `;
                     }
+                } else {
+                    topicDifficulty.innerHTML = '<div class="text-center text-muted py-3">No topic difficulty data available</div>';
+                }
+
+                // Question statistics
+                const questionStatsBody = document.getElementById('question-stats-body');
+                questionStatsBody.innerHTML = '';
+                if (data.question_stats && data.question_stats.length > 0) {
+                    data.question_stats.forEach(stat => {
+                        const accuracyClass = stat.accuracy < 30 ? 'text-danger' : stat.accuracy < 60 ? 'text-warning' : 'text-success';
+                        const questionPreview = stat.question_text.length > 80 
+                            ? stat.question_text.substring(0, 80) + '...' 
+                            : stat.question_text;
+                        
+                        questionStatsBody.innerHTML += `
+                            <tr>
+                                <td><code>${stat.topic_question_id}</code></td>
+                                <td>${questionPreview}</td>
+                                <td>${stat.total_attempts}</td>
+                                <td>${stat.correct_attempts}</td>
+                                <td><span class="badge ${accuracyClass}">${stat.accuracy.toFixed(1)}%</span></td>
+                                <td>${stat.avg_difficulty.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    questionStatsBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-3">No question statistics available</td></tr>';
                 }
             })
-            .catch(error => console.error('Error loading cohort analytics:', error));
+            .catch(error => {
+                console.error('Error loading cohort analytics:', error);
+                document.getElementById('total-students').textContent = 'Error';
+                document.getElementById('active-students').textContent = 'Error';
+                document.getElementById('total-quizzes').textContent = 'Error';
+                document.getElementById('avg-score').textContent = 'Error';
+            });
         }
 
         function loadStudentList() {
