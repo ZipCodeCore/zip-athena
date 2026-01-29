@@ -1709,6 +1709,7 @@ func (db *SQLiteDB) ReorderTopics(topicIDs []int) error {
 	}
 	return nil
 }
+
 // Phase 4: SQLite implementations to append to sqlite.go
 
 // Phase 4: Quiz History Methods
@@ -1725,7 +1726,7 @@ func (db *SQLiteDB) GetQuizHistoryByUser(userID int, page int, perPage int) ([]*
 		ORDER BY completed_time DESC
 		LIMIT ? OFFSET ?
 	`
-	
+
 	rows, err := db.db.Query(query, userID, perPage, offset)
 	if err != nil {
 		return nil, err
@@ -1783,7 +1784,7 @@ func (db *SQLiteDB) GetQuizHistoryByTopic(userID int, topicID int, page int, per
 		ORDER BY qa.completed_time DESC
 		LIMIT ? OFFSET ?
 	`
-	
+
 	rows, err := db.db.Query(query, userID, topicID, perPage, offset)
 	if err != nil {
 		return nil, err
@@ -1844,7 +1845,7 @@ func (db *SQLiteDB) CreateTestAttempt(attempt *models.TestAttempt) error {
 			is_auto_submit, total_questions, correct_answers, score, answers, question_results)
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`
-	
+
 	result, err := db.db.Exec(query, attempt.UserID, attempt.TestID, attempt.StartTime,
 		nil, 0, false, 0, 0, 0.0, string(answersJSON), string(questionResultsJSON))
 	if err != nil {
@@ -1867,7 +1868,7 @@ func (db *SQLiteDB) GetTestAttempt(id int) (*models.TestAttempt, error) {
 		FROM test_attempts
 		WHERE id = ?
 	`
-	
+
 	attempt := &models.TestAttempt{}
 	var submitTime sql.NullTime
 	var answersJSON, questionResultsJSON string
@@ -1953,7 +1954,7 @@ func (db *SQLiteDB) SubmitTestAttempt(attemptID int, isAutoSubmit bool) error {
 	for _, q := range testQuestions {
 		questionKey := fmt.Sprintf("%d", q.ID)
 		answerID, hasAnswer := attempt.Answers[questionKey]
-		
+
 		if hasAnswer {
 			answer, err := db.GetAnswer(answerID)
 			if err == nil && answer.QuestionID == q.ID && answer.IsCorrect {
@@ -2002,7 +2003,7 @@ func (db *SQLiteDB) GetAvailableTests(userID int) ([]*models.Test, error) {
 		  AND (start_date IS NULL OR start_date <= ?)
 		  AND (end_date IS NULL OR end_date >= ?)
 	`
-	
+
 	rows, err := db.db.Query(query, now, now)
 	if err != nil {
 		return nil, err
@@ -2044,7 +2045,7 @@ func (db *SQLiteDB) GetTestAttemptsByUser(userID int, testID int) ([]*models.Tes
 		WHERE user_id = ? AND test_id = ?
 		ORDER BY start_time DESC
 	`
-	
+
 	rows, err := db.db.Query(query, userID, testID)
 	if err != nil {
 		return nil, err
@@ -2150,7 +2151,7 @@ func (db *SQLiteDB) GetTagStats(userID int) ([]*models.TagStats, error) {
 		JOIN questions q ON qa.question_id = q.id
 		WHERE qa.user_id = ? AND q.tags IS NOT NULL AND q.tags != '[]'
 	`
-	
+
 	rows, err := db.db.Query(query, userID)
 	if err != nil {
 		return nil, err
@@ -2288,7 +2289,7 @@ func (db *SQLiteDB) GetTestResultsByTest(testID int) (*models.TestResult, error)
 		WHERE ta.test_id = ? AND ta.submit_time IS NOT NULL
 		ORDER BY ta.submit_time DESC
 	`
-	
+
 	rows, err := db.db.Query(query, testID)
 	if err != nil {
 		return nil, err
@@ -2355,7 +2356,7 @@ func (db *SQLiteDB) GetQuestionAnalytics() ([]*models.QuestionAnalytics, error) 
 		LEFT JOIN question_attempts qa ON q.id = qa.question_id
 		GROUP BY q.id
 	`
-	
+
 	rows, err := db.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -2420,7 +2421,7 @@ func (db *SQLiteDB) GetQuestionDetailedAnalytics(questionID int) (*models.Questi
 		WHERE q.id = ?
 		GROUP BY q.id
 	`
-	
+
 	a := &models.QuestionAnalytics{
 		AnswerDistribution: make(map[int]int),
 	}

@@ -1150,48 +1150,48 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 
 func seedQuizAttempts(db *database.SQLiteDB) error {
 	fmt.Println("\n=== Seeding Quiz Attempts ===")
-	
+
 	// Seed random number generator
 	rand.Seed(time.Now().UnixNano())
-	
+
 	// Get all users
 	users, err := db.ListUsers()
 	if err != nil {
 		return fmt.Errorf("failed to list users: %v", err)
 	}
-	
+
 	// Get all quizzes
 	quizzes, err := db.ListQuizzes()
 	if err != nil {
 		return fmt.Errorf("failed to list quizzes: %v", err)
 	}
-	
+
 	if len(quizzes) == 0 {
 		return fmt.Errorf("no quizzes found in database")
 	}
-	
+
 	// For each user, create 1-2 successful quiz attempts
 	for _, user := range users {
 		fmt.Printf("\nCreating quiz attempts for user: %s (ID: %d)\n", user.Username, user.ID)
-		
+
 		attemptsNeeded := 1 + rand.Intn(2) // 1 or 2 attempts
 		successfulAttempts := 0
 		totalTries := 0
 		maxTries := 100 // Safety limit
-		
+
 		for successfulAttempts < attemptsNeeded && totalTries < maxTries {
 			totalTries++
-			
+
 			// Pick a random quiz
 			quiz := quizzes[rand.Intn(len(quizzes))]
-			
+
 			// Get questions for this quiz
 			questions, err := db.GetQuizQuestions(quiz.ID)
 			if err != nil || len(questions) == 0 {
 				fmt.Printf("  Warning: Quiz %d has no questions, skipping\n", quiz.ID)
 				continue
 			}
-			
+
 			// Create quiz attempt with random answers
 			attempt := &models.QuizAttempt{
 				UserID:          user.ID,
@@ -1200,9 +1200,9 @@ func seedQuizAttempts(db *database.SQLiteDB) error {
 				QuestionIDs:     make([]string, 0),
 				QuestionResults: make(map[string]bool),
 			}
-			
+
 			correctCount := 0
-			
+
 			// Answer each question with a slight bias toward correct answers
 			// This simulates students who are somewhat competent (not pure random guessing)
 			for _, question := range questions {
@@ -1211,7 +1211,7 @@ func seedQuizAttempts(db *database.SQLiteDB) error {
 				if err != nil || len(answers) == 0 {
 					continue
 				}
-				
+
 				// 60% chance to pick the correct answer, 40% chance to pick randomly
 				// This gives us expected ~60% accuracy which is above our 35% threshold
 				var selectedAnswer *models.Answer
@@ -1231,41 +1231,41 @@ func seedQuizAttempts(db *database.SQLiteDB) error {
 					// Pick a random answer
 					selectedAnswer = answers[rand.Intn(len(answers))]
 				}
-				
+
 				// Record the question
 				attempt.QuestionIDs = append(attempt.QuestionIDs, question.TopicQuestionID)
-				
+
 				// Check if correct
 				isCorrect := selectedAnswer.IsCorrect
 				attempt.QuestionResults[question.TopicQuestionID] = isCorrect
-				
+
 				if isCorrect {
 					correctCount++
 				}
 			}
-			
+
 			// Calculate percentage
 			percentage := float64(correctCount) / float64(len(questions)) * 100
-			
+
 			// Only save if percentage > 35% (lower threshold to get some data)
 			if percentage > 30.0 {
 				attempt.CorrectAnswers = correctCount
 				completedTime := attempt.StartTime.Add(time.Duration(5+rand.Intn(20)) * time.Minute)
 				attempt.CompletedTime = &completedTime
-				
+
 				// Create the quiz attempt
 				if err := db.CreateQuizAttempt(attempt); err != nil {
 					fmt.Printf("  Error creating quiz attempt: %v\n", err)
 					continue
 				}
-				
-				fmt.Printf("  ✓ Created attempt %d/%d: Quiz '%s', Score: %d/%d (%.1f%%)\n", 
+
+				fmt.Printf("  ✓ Created attempt %d/%d: Quiz '%s', Score: %d/%d (%.1f%%)\n",
 					successfulAttempts, attemptsNeeded, quiz.Name, correctCount, len(questions), percentage)
-				
+
 				// Also create question_attempts records for each question
 				for _, question := range questions {
 					isCorrect := attempt.QuestionResults[question.TopicQuestionID]
-					
+
 					// Create question attempt record
 					qa := &models.QuestionAttempt{
 						UserID:             user.ID,
@@ -1276,25 +1276,25 @@ func seedQuizAttempts(db *database.SQLiteDB) error {
 						LastAttemptTime:    completedTime,
 						LastAttemptCorrect: isCorrect,
 					}
-					
+
 					if isCorrect {
 						qa.CorrectAttempts = 1
 					} else {
 						qa.IncorrectAttempts = 1
 					}
-					
+
 					db.CreateQuestionAttempt(qa)
 				}
 			} else {
 				fmt.Printf("  ✗ Attempt failed (%.1f%% < 35%%), retrying...\n", percentage)
 			}
 		}
-		
+
 		if successfulAttempts < attemptsNeeded {
 			fmt.Printf("  Warning: Only created %d/%d attempts after %d tries\n", successfulAttempts, attemptsNeeded, maxTries)
 		}
 	}
-	
+
 	fmt.Println("\nQuiz attempts seeding complete!")
 	return nil
 }
