@@ -447,6 +447,46 @@ fmt.Println("Created admin user (username: admin, password: admin)")
 fmt.Println("Admin user already exists")
 }
 
+// Create Paul admin user
+paulPassword, err := hashPassword("zipcode0")
+if err != nil {
+return fmt.Errorf("failed to hash Paul password: %w", err)
+}
+
+_, err = db.GetUserByUsername("paul")
+if err == database.ErrNotFound {
+_, err = db.DB().Exec(
+"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+"paul", "paul@zipcodewilmington.com", paulPassword, true, 0, time.Now(),
+)
+if err != nil {
+return fmt.Errorf("failed to create Paul admin user: %w", err)
+}
+fmt.Println("Created Paul admin user (username: paul, password: zipcode0)")
+} else {
+fmt.Println("Paul admin user already exists")
+}
+
+// Create Kristofer admin user
+krisPassword, err := hashPassword("zipcode0")
+if err != nil {
+return fmt.Errorf("failed to hash Kristofer password: %w", err)
+}
+
+_, err = db.GetUserByUsername("kris")
+if err == database.ErrNotFound {
+_, err = db.DB().Exec(
+"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+"kris", "kris@zipcodewilmington.com", krisPassword, true, 0, time.Now(),
+)
+if err != nil {
+return fmt.Errorf("failed to create Kristofer admin user: %w", err)
+}
+fmt.Println("Created Kristofer admin user (username: kris, password: zipcode0)")
+} else {
+fmt.Println("Kristofer admin user already exists")
+}
+
 // Create regular user
 userPassword, err := hashPassword("user")
 if err != nil {

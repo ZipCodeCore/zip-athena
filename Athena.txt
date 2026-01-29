@@ -1,3 +1,5 @@
+This was the initial description of Athena. It is not used anymore and is here for historical pourposes.
+
 Athena is a specialized testing application for students who are learning how to develop software.  
 It is a web-based three-tier app with an API business logic middle-end with a relational database backend. 
 The front end is a JavaScript/json type front end application that allows the student 
