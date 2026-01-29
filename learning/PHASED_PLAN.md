@@ -43,16 +43,20 @@ learning/
 ├── README.md
 ├── PHASED_PLAN.md (this file)
 ├── java/
-│   ├── control-structures.md ✅
-│   ├── variables-and-data-types.md ✅
-│   ├── operators-and-expressions.md
-│   ├── methods.md
+│   ├── 2-variables-and-data-types.md ✅
+│   ├── 3-operators-and-expressions.md
+│   ├── 4-control-structures.md ✅
+│   ├── 5-methods.md
+│   ├── 6-arrays.md
+│   ├── 7-strings.md
 │   └── ... (other Java topics)
 └── python/
-    ├── control-structures.md ✅
-    ├── data-structures.md ✅
-    ├── variables-and-data-types.md
-    ├── strings.md
+    ├── 2-variables-and-data-types.md
+    ├── 3-operators-and-expressions.md
+    ├── 4-strings.md
+    ├── 5-control-structures.md ✅
+    ├── 6-data-structures.md ✅
+    ├── 10-functions.md
     └── ... (other Python topics)
 ```
 
@@ -63,56 +67,90 @@ learning/
 These are the foundational topics that students encounter first. Completing these early provides maximum value.
 
 ### Java Topics
-1. **Operators and Expressions** (from section 3)
-   - Arithmetic, assignment, comparison operators
-   - Logical and bitwise operators
-   - Operator precedence
-   - Expression evaluation
+1. **3. Operators and Expressions**
+   - 3.1 Arithmetic operators (`+`, `-`, `*`, `/`, `%`)
+   - 3.2 Assignment operators (`=`, `+=`, `-=`, `*=`, `/=`, `%=`)
+   - 3.3 Increment and decrement operators (`++`, `--`)
+   - 3.4 Comparison/Relational operators (`==`, `!=`, `>`, `<`, `>=`, `<=`)
+   - 3.5 Logical operators (`&&`, `||`, `!`)
+   - 3.6 Bitwise operators (`&`, `|`, `^`, `~`, `<<`, `>>`, `>>>`)
+   - 3.7 Ternary operator (`? :`)
+   - 3.8 Operator precedence and associativity
+   - 3.9 Expression evaluation
 
-2. **Methods/Functions** (from section 5)
-   - Method declaration and parameters
-   - Return types
-   - Method overloading
-   - Variable scope
-   - Recursion basics
+2. **5. Methods (Functions)**
+   - 5.1 Method declaration and definition
+   - 5.2 Method parameters and arguments
+   - 5.3 Return types and `return` statement
+   - 5.4 Method overloading
+   - 5.5 Variable scope (local vs. class level)
+   - 5.6 Method invocation and call stack
+   - 5.7 Passing arguments by value
+   - 5.8 Recursive methods
+   - 5.9 Variable arguments (varargs)
+   - 5.10 Method naming conventions
 
-3. **Arrays** (from section 6)
-   - One-dimensional arrays
-   - Multi-dimensional arrays
-   - Array operations and algorithms
-   - Arrays utility class
+3. **6. Arrays**
+   - 6.1 One-dimensional arrays (declaration, initialization, accessing elements, array length, iterating)
+   - 6.2 Multi-dimensional arrays (two-dimensional arrays, jagged arrays)
+   - 6.3 Arrays class and utility methods (sorting, searching, copying, comparing)
+   - 6.4 Common array operations and algorithms
 
-4. **Strings** (from section 7)
-   - String class and immutability
-   - String operations and methods
-   - StringBuilder/StringBuffer
-   - String formatting
+4. **7. Strings**
+   - 7.1 String class and string literals
+   - 7.2 String immutability
+   - 7.3 String operations (concatenation, comparison, searching, extraction, modification, splitting/joining)
+   - 7.4 StringBuilder and StringBuffer classes
+   - 7.5 String formatting
+   - 7.6 Regular expressions basics
 
 ### Python Topics
-1. **Variables and Data Types** (from section 2)
-   - Dynamic typing
-   - Basic data types (int, float, str, bool, None)
-   - Type conversion
-   - Variable naming conventions
+1. **2. Variables and Data Types**
+   - 2.1 Variables and dynamic typing
+   - 2.2 Variable naming conventions (snake_case)
+   - 2.3 Basic data types (integers, floats, strings, booleans, NoneType)
+   - 2.4 Type checking with `type()` function
+   - 2.5 Type conversion/casting (`int()`, `float()`, `str()`, `bool()`)
+   - 2.6 Variable reassignment and dynamic typing
+   - 2.7 Constants convention (UPPER_CASE)
+   - 2.8 Multiple assignment
+   - 2.9 Unpacking
 
-2. **Operators and Expressions** (from section 3)
-   - Arithmetic and comparison operators
-   - Logical operators (and, or, not)
-   - Identity and membership operators
-   - Operator precedence
+2. **3. Operators and Expressions**
+   - 3.1 Arithmetic operators (`+`, `-`, `*`, `/`, `//`, `%`, `**`)
+   - 3.2 Assignment operators (`=`, `+=`, `-=`, `*=`, `/=`, etc.)
+   - 3.3 Comparison operators (`==`, `!=`, `>`, `<`, `>=`, `<=`)
+   - 3.4 Logical operators (`and`, `or`, `not`)
+   - 3.5 Identity operators (`is`, `is not`)
+   - 3.6 Membership operators (`in`, `not in`)
+   - 3.7 Bitwise operators (`&`, `|`, `^`, `~`, `<<`, `>>`)
+   - 3.8 Operator precedence
+   - 3.9 Expression evaluation
+   - 3.10 Truthy and falsy values
 
-3. **Strings** (from section 4)
-   - String creation and literals
-   - String indexing and slicing
-   - String methods
-   - String formatting (%, .format(), f-strings)
+3. **4. Strings**
+   - 4.1 String creation and literals (single, double, triple quotes)
+   - 4.2 String indexing and slicing
+   - 4.3 String immutability
+   - 4.4 String methods (case conversion, searching, testing, modification)
+   - 4.5 String concatenation and repetition
+   - 4.6 String formatting (`%`, `.format()`, f-strings)
+   - 4.7 Raw strings
+   - 4.8 String encoding basics (Unicode, UTF-8)
 
-4. **Functions** (from section 10)
-   - Function definition and parameters
-   - Return values
-   - Default parameters and keyword arguments
-   - *args and **kwargs
-   - Lambda functions
+4. **10. Functions**
+   - 10.1 Defining functions with `def` keyword
+   - 10.2 Function parameters and arguments
+   - 10.3 Return values and `return` statement
+   - 10.4 Default parameter values
+   - 10.5 Keyword arguments
+   - 10.6 Variable-length arguments (`*args`, `**kwargs`)
+   - 10.7 Function documentation strings (docstrings)
+   - 10.8 Scope and namespaces (local, enclosing, global, built-in)
+   - 10.9 The `global` and `nonlocal` keywords
+   - 10.10 Lambda functions (anonymous functions)
+   - 10.11 Functions as first-class objects
+   - 10.12 Recursion
 
 ## Phase 2: Object-Oriented Programming (Priority: High)
 
@@ -121,205 +159,307 @@ These are the foundational topics that students encounter first. Completing thes
 OOP is critical for both languages and builds on the fundamentals.
 
 ### Java Topics
-1. **Classes and Objects** (from section 8)
-   - Class definition and object instantiation
-   - Instance variables and methods
-   - Constructors
-   - Access modifiers
-   - Encapsulation (getters/setters)
-   - Static members
+1. **8. Object-Oriented Programming - Classes and Objects**
+   - 8.1 Understanding object-oriented programming concepts
+   - 8.2 Classes and objects (definition, instantiation, instance variables, instance methods, constructors, constructor overloading, `this` keyword)
+   - 8.3 Access modifiers (`public`, `private`, `protected`, package-private)
+   - 8.4 Encapsulation (getters and setters, data hiding)
+   - 8.5 Static members (static variables, static methods, static blocks, static imports)
+   - 8.6 The `final` keyword with classes and methods
+   - 8.7 Nested and inner classes
 
-2. **Inheritance** (from section 9)
-   - Extending classes
-   - Method overriding
-   - The super keyword
-   - Abstract classes
-   - Object class methods
+2. **9. Object-Oriented Programming - Inheritance**
+   - 9.1 Concept of inheritance and code reuse
+   - 9.2 Extending classes with `extends` keyword
+   - 9.3 The `super` keyword
+   - 9.4 Method overriding
+   - 9.5 The `@Override` annotation
+   - 9.6 Constructor chaining in inheritance
+   - 9.7 The Object class and its methods (`toString()`, `equals()`, `hashCode()`, `getClass()`)
+   - 9.8 Abstract classes (abstract methods, when to use)
+   - 9.9 The `final` keyword with inheritance
+   - 9.10 Single inheritance in Java
+   - 9.11 IS-A relationship
 
-3. **Polymorphism** (from section 10)
-   - Compile-time vs runtime polymorphism
-   - Dynamic method dispatch
-   - Upcasting and downcasting
-   - instanceof operator
+3. **10. Object-Oriented Programming - Polymorphism**
+   - 10.1 Concept of polymorphism
+   - 10.2 Compile-time polymorphism (method overloading)
+   - 10.3 Runtime polymorphism (method overriding)
+   - 10.4 Dynamic method dispatch
+   - 10.5 Upcasting and downcasting
+   - 10.6 The `instanceof` operator
+   - 10.7 Reference type vs. object type
 
-4. **Interfaces** (from section 11)
-   - Defining and implementing interfaces
-   - Multiple interface implementation
-   - Default and static methods
-   - Functional interfaces
+4. **11. Interfaces**
+   - 11.1 Defining interfaces
+   - 11.2 Implementing interfaces with `implements` keyword
+   - 11.3 Multiple interface implementation
+   - 11.4 Interface inheritance (extending interfaces)
+   - 11.5 Default methods in interfaces
+   - 11.6 Static methods in interfaces
+   - 11.7 Functional interfaces
+   - 11.8 Marker interfaces
+   - 11.9 HAS-A relationship vs. IS-A relationship
 
 ### Python Topics
-1. **Classes and Objects** (from section 14)
-   - Class definition
-   - __init__ method
-   - Instance vs class attributes
-   - Instance, class, and static methods
-   - Property decorators
-   - Special methods (dunder methods)
+1. **14. Object-Oriented Programming - Classes and Objects**
+   - 14.1 Understanding object-oriented programming
+   - 14.2 Classes and objects (class definition, object instantiation, instance attributes, instance methods, `self` parameter, `__init__()` method)
+   - 14.3 Class attributes vs. instance attributes
+   - 14.4 Class methods with `@classmethod` decorator
+   - 14.5 Static methods with `@staticmethod` decorator
+   - 14.6 Encapsulation (name mangling, single underscore convention, property decorators)
+   - 14.7 Special methods (magic methods/dunder methods: `__str__()`, `__repr__()`, `__len__()`, `__getitem__()`, etc.)
+   - 14.8 Operator overloading
 
-2. **Inheritance** (from section 15)
-   - Single and multiple inheritance
-   - Method Resolution Order (MRO)
-   - super() function
-   - Abstract base classes
+2. **15. Object-Oriented Programming - Inheritance**
+   - 15.1 Concept of inheritance
+   - 15.2 Single inheritance (creating subclasses, `super()` function, method overriding)
+   - 15.3 The `isinstance()` and `issubclass()` functions
+   - 15.4 Multiple inheritance (defining classes with multiple parents, Method Resolution Order (MRO), the `__mro__` attribute, diamond problem)
+   - 15.5 Composition vs. inheritance
+   - 15.6 Abstract base classes (`abc` module, `@abstractmethod` decorator)
 
-3. **Polymorphism** (from section 16)
-   - Duck typing
-   - Method overriding
-   - Operator overloading
-   - Polymorphism through inheritance
+3. **16. Object-Oriented Programming - Polymorphism**
+   - 16.1 Concept of polymorphism
+   - 16.2 Duck typing ("If it walks like a duck...")
+   - 16.3 Method overriding
+   - 16.4 Operator overloading (revisited)
+   - 16.5 Polymorphism through inheritance
+   - 16.6 Polymorphism through interfaces (abstract classes)
 
 ## Phase 3: Advanced Data Handling (Priority: Medium)
 
 **Target Completion**: 8-10 weeks
 
 ### Java Topics
-1. **Packages** (from section 12)
-   - Creating and using packages
-   - Import statements
-   - Package naming conventions
-   - Built-in Java packages
+1. **12. Packages**
+   - 12.1 Understanding packages
+   - 12.2 Creating packages
+   - 12.3 Importing packages and classes (single type import, on-demand import, static import)
+   - 12.4 Package naming conventions
+   - 12.5 Access modifiers and packages
+   - 12.6 Built-in Java packages (`java.lang`, `java.util`, `java.io`, `java.math`)
 
-2. **Exception Handling** (from section 13)
-   - Try-catch-finally blocks
-   - Exception hierarchy
-   - Checked vs unchecked exceptions
-   - Custom exceptions
+2. **13. Exception Handling**
+   - 13.1 Understanding exceptions and errors
+   - 13.2 Exception hierarchy (`Throwable`, `Error`, `Exception`, checked vs unchecked)
+   - 13.3 Try-catch blocks
+   - 13.4 Multiple catch blocks
+   - 13.5 The `finally` block
+   - 13.6 Try-with-resources statement
+   - 13.7 Throwing exceptions with `throw` keyword
+   - 13.8 Declaring exceptions with `throws` keyword
+   - 13.9 Creating custom exceptions
+   - 13.10 Best practices in exception handling
+   - 13.11 Common exceptions
 
-3. **File I/O** (from section 14)
-   - File and directory operations
-   - Character and byte streams
-   - Buffered I/O
-   - Try-with-resources
+3. **14. File I/O**
+   - 14.1 File and directory operations (`File` class)
+   - 14.2 Character streams (`FileReader`, `FileWriter`, `BufferedReader`, `BufferedWriter`)
+   - 14.3 Byte streams (`FileInputStream`, `FileOutputStream`, `BufferedInputStream`, `BufferedOutputStream`)
+   - 14.4 Object serialization (`Serializable` interface, `ObjectInputStream`, `ObjectOutputStream`)
+   - 14.5 NIO (New I/O) basics (`Path`, `Paths`, `Files` class)
+   - 14.6 Reading and writing different file formats
 
-4. **Collections Framework** (from section 15)
-   - List, Set, Map interfaces
-   - ArrayList, LinkedList, HashSet, HashMap
-   - Collections utility class
-   - Iterators
+4. **15. Collections Framework**
+   - 15.1 Introduction to Collections Framework
+   - 15.2 Collection hierarchy
+   - 15.3 List interface (`ArrayList`, `LinkedList`)
+   - 15.4 Set interface (`HashSet`, `TreeSet`, `LinkedHashSet`)
+   - 15.5 Queue interface (`LinkedList` as Queue, `PriorityQueue`)
+   - 15.6 Map interface (`HashMap`, `TreeMap`, `LinkedHashMap`)
+   - 15.7 Collections utility class (sorting, searching, shuffling, reversing)
+   - 15.8 Iterators and enhanced for-loop
+   - 15.9 Comparable and Comparator interfaces
 
 ### Python Topics
-1. **Modules and Packages** (from section 11)
-   - Importing modules
-   - Creating modules
-   - Standard library modules
-   - Installing packages with pip
+1. **11. Modules and Packages**
+   - 11.1 What are modules
+   - 11.2 Importing modules (`import module`, `from module import name`, `import module as alias`, `from module import *`)
+   - 11.3 Creating your own modules
+   - 11.4 Module search path
+   - 11.5 The `__name__` variable and `if __name__ == "__main__":`
+   - 11.6 Standard library modules (`math`, `random`, `datetime`, `os`, `sys`, `json`, `re`)
+   - 11.7 Packages and `__init__.py`
+   - 11.8 Installing third-party packages with `pip`
 
-2. **File I/O** (from section 12)
-   - Opening and closing files
-   - Reading and writing
-   - Context managers (with statement)
-   - Working with CSV and JSON
+2. **12. File I/O**
+   - 12.1 Opening files with `open()` function
+   - 12.2 File modes (`r`, `w`, `a`, `r+`, `w+`, `a+`, `rb`, `wb`)
+   - 12.3 Reading files (`read()`, `readline()`, `readlines()`, iterating over file object)
+   - 12.4 Writing files (`write()`, `writelines()`)
+   - 12.5 Closing files and the `with` statement (context managers)
+   - 12.6 File positioning (`seek()`, `tell()`)
+   - 12.7 Working with file paths (`os.path` module, `pathlib` module)
+   - 12.8 Reading and writing different formats (text, CSV, JSON)
+   - 12.9 Exception handling with files
 
-3. **Exception Handling** (from section 13)
-   - Try-except-finally blocks
-   - Multiple except clauses
-   - Raising exceptions
-   - Custom exceptions
+3. **13. Exception Handling**
+   - 13.1 Understanding exceptions
+   - 13.2 Common built-in exceptions (`SyntaxError`, `TypeError`, `ValueError`, `KeyError`, `IndexError`, `FileNotFoundError`, etc.)
+   - 13.3 Try-except blocks
+   - 13.4 Multiple except clauses
+   - 13.5 The `else` clause with try-except
+   - 13.6 The `finally` clause
+   - 13.7 Raising exceptions with `raise`
+   - 13.8 Creating custom exceptions
+   - 13.9 Exception chaining
+   - 13.10 Best practices in exception handling
+   - 13.11 Assertions with `assert`
 
 ## Phase 4: Advanced Topics (Priority: Medium)
 
 **Target Completion**: 10-14 weeks
 
 ### Java Topics
-1. **Generics - Using Generics** (from section 16)
-   - Generic classes and methods
-   - Type parameters
-   - Bounded type parameters
-   - Wildcards
+1. **16. Generics - Using Generics**
+   - 16.1 What are generics and why use them
+   - 16.2 Type safety benefits
+   - 16.3 Using generic classes (`ArrayList<String>`, `HashMap<Integer, String>`)
+   - 16.4 Using generic methods
+   - 16.5 Type parameters and naming conventions (`T`, `E`, `K`, `V`)
+   - 16.6 Bounded type parameters in usage
+   - 16.7 Wildcards in usage (unbounded, upper bounded, lower bounded)
+   - 16.8 Generic type erasure concept
+   - 16.9 Using generics with collections
 
-2. **Basic Multithreading** (from section 17)
-   - Creating threads
-   - Thread lifecycle
-   - Synchronization basics
-   - Thread safety awareness
+2. **17. Basic Multithreading Concepts**
+   - 17.1 Introduction to concurrency
+   - 17.2 Processes vs. threads
+   - 17.3 Creating threads (extending `Thread` class, implementing `Runnable` interface)
+   - 17.4 Thread lifecycle
+   - 17.5 Basic thread methods (`start()`, `run()`, `sleep()`, `join()`)
+   - 17.6 Thread synchronization basics (the `synchronized` keyword, race conditions)
+   - 17.7 Thread safety awareness
 
-3. **Lambda Expressions and Streams** (from section 19)
-   - Lambda syntax
-   - Functional interfaces
-   - Stream API basics
-   - Common stream operations
+3. **19. Lambda Expressions and Streams - Basic Usage**
+   - 19.1 Introduction to lambda expressions
+   - 19.2 Lambda syntax
+   - 19.3 Functional interfaces and lambdas
+   - 19.4 Using lambda expressions with collections
+   - 19.5 Introduction to Stream API (creating streams, intermediate operations, terminal operations)
+   - 19.6 Using streams for basic data processing
 
-4. **Java Standard Library Essentials** (from section 18)
-   - Math and Random classes
-   - Date and time API
-   - Scanner class
-   - Wrapper classes and autoboxing
+4. **18. Java Standard Library Essentials**
+   - 18.1 Math class
+   - 18.2 Random class
+   - 18.3 Date and time basics (`LocalDate`, `LocalTime`, `LocalDateTime`, `DateTimeFormatter`)
+   - 18.4 Scanner class for input
+   - 18.5 System class (standard input/output, system properties)
+   - 18.6 Wrapper classes (Integer, Double, Boolean, autoboxing and unboxing)
+   - 18.7 Enum types
 
 ### Python Topics
-1. **Iterators and Generators** (from section 18)
-   - Iteration protocol
-   - Creating iterators
-   - Generator functions with yield
-   - Generator expressions
+1. **18. Iterators and Generators**
+   - 18.1 Understanding iteration protocol
+   - 18.2 Iterators (`__iter__()` and `__next__()` methods, `iter()` and `next()` functions, `StopIteration` exception)
+   - 18.3 Generators (generator functions with `yield`, generator expressions, benefits of generators)
+   - 18.4 The `itertools` module (basic usage)
 
-2. **Comprehensions and Functional Programming** (from section 19)
-   - List, dict, and set comprehensions
-   - map(), filter(), reduce()
-   - zip() and enumerate()
-   - Lambda functions in functional programming
+2. **19. Comprehensions and Functional Programming**
+   - 19.1 List comprehensions (revisited in depth)
+   - 19.2 Dictionary comprehensions
+   - 19.3 Set comprehensions
+   - 19.4 Generator expressions
+   - 19.5 Functional programming concepts (`map()`, `filter()`, `reduce()`, `zip()`, `enumerate()`, `sorted()`)
+   - 19.6 Lambda functions in functional programming
 
-3. **Working with Mixins - Using Mixins** (from section 17)
-   - Understanding mixin classes
-   - Using mixins for code reuse
-   - MRO considerations
-   - Common mixin patterns
+3. **17. Working with Mixins - Using Mixins**
+   - 17.1 What are mixins
+   - 17.2 Understanding mixin classes
+   - 17.3 Using mixins for code reuse
+   - 17.4 Combining mixins with inheritance
+   - 17.5 Common mixin patterns in Python
+   - 17.6 Examples of mixins in standard library
+   - 17.7 Best practices when using mixins (naming conventions, keeping mixins focused, MRO considerations)
 
-4. **Decorators - Using Decorators** (from section 20)
-   - What are decorators
-   - Common decorators (@property, @staticmethod, @classmethod)
-   - Decorator syntax
-   - Chaining decorators
+4. **20. Decorators - Using Decorators**
+   - 20.1 What are decorators
+   - 20.2 Function decorators
+   - 20.3 Using common decorators (`@property`, `@staticmethod`, `@classmethod`, `@functools.wraps`, `@functools.lru_cache`)
+   - 20.4 Decorator syntax and application
+   - 20.5 Chaining decorators
+   - 20.6 Class decorators (using)
 
 ## Phase 5: Specialized Topics (Priority: Lower)
 
 **Target Completion**: 14-18 weeks
 
 ### Java Topics
-1. **Best Practices and Code Quality** (from section 20)
-   - Code formatting and style
-   - Naming conventions
-   - Documentation with Javadoc
-   - Debugging techniques
-   - Common pitfalls
+1. **20. Best Practices and Code Quality**
+   - 20.1 Code formatting and style
+   - 20.2 Naming conventions
+   - 20.3 Writing readable code
+   - 20.4 Comments and documentation (Javadoc basics)
+   - 20.5 Debugging techniques
+   - 20.6 Common pitfalls and how to avoid them
+   - 20.7 Understanding compile-time vs. runtime errors
+   - 20.8 Code organization principles
 
 ### Python Topics
-1. **Context Managers - Using Context Managers** (from section 21)
-   - The with statement
-   - Common context managers
-   - contextlib module
+1. **21. Context Managers - Using Context Managers**
+   - 21.1 Understanding context managers
+   - 21.2 The `with` statement
+   - 21.3 Common context managers (file operations, thread locks, database connections)
+   - 21.4 The `contextlib` module (using)
 
-2. **Regular Expressions** (from section 22)
-   - re module basics
-   - Common patterns
-   - Match objects and groups
+2. **22. Regular Expressions**
+   - 22.1 Introduction to regular expressions
+   - 22.2 The `re` module
+   - 22.3 Basic patterns (literal characters, metacharacters, character classes, escape sequences)
+   - 22.4 `re` module functions (`search()`, `match()`, `fullmatch()`, `findall()`, `finditer()`, `sub()`, `split()`)
+   - 22.5 Match objects
+   - 22.6 Groups and capturing
+   - 22.7 Flags (case-insensitive, multiline, etc.)
+   - 22.8 Common regex patterns
 
-3. **Working with Dates and Times** (from section 23)
-   - datetime module
-   - Date and time objects
-   - Time zones
-   - Formatting and parsing
+3. **23. Working with Dates and Times**
+   - 23.1 The `datetime` module
+   - 23.2 Date objects: `date` class
+   - 23.3 Time objects: `time` class
+   - 23.4 Datetime objects: `datetime` class
+   - 23.5 Timedelta objects for time arithmetic
+   - 23.6 Formatting dates with `strftime()`
+   - 23.7 Parsing dates with `strptime()`
+   - 23.8 Time zones basics (using `timezone` class, timezone-aware datetime objects, UTC conversion)
+   - 23.9 The `time` module basics
 
-4. **Common Standard Library Modules** (from section 24)
-   - collections module
-   - math and random modules
-   - os and sys modules
+4. **24. Common Standard Library Modules**
+   - 24.1 `collections` module (`Counter`, `defaultdict`, `OrderedDict`, `deque`, `namedtuple`)
+   - 24.2 `math` module (mathematical functions and constants)
+   - 24.3 `random` module (random number generation, random selection from sequences)
+   - 24.4 `os` and `os.path` modules (operating system interface, file and directory operations)
+   - 24.5 `sys` module (system-specific parameters and functions, command-line arguments)
+   - 24.6 `copy` module (shallow and deep copying)
+   - 24.7 `pickle` module (object serialization)
 
-5. **Testing Basics** (from section 25)
-   - unittest module
-   - Writing test cases
-   - Test-driven development
+5. **25. Testing Basics**
+   - 25.1 Importance of testing
+   - 25.2 Using `assert` statements
+   - 25.3 Introduction to `unittest` module (test cases and test suites, `setUp()` and `tearDown()`, assertion methods)
+   - 25.4 Writing basic unit tests
+   - 25.5 Running tests
+   - 25.6 Test-driven development concept
 
-6. **Virtual Environments and Package Management** (from section 26)
-   - Creating virtual environments
-   - pip and requirements.txt
-   - Package versioning
+6. **26. Virtual Environments and Package Management**
+   - 26.1 Why use virtual environments
+   - 26.2 Creating virtual environments with `venv`
+   - 26.3 Activating and deactivating environments
+   - 26.4 Installing packages with `pip`
+   - 26.5 Requirements files (`requirements.txt`)
+   - 26.6 Listing installed packages
+   - 26.7 Package versioning
 
-7. **Best Practices and Code Quality** (from section 27)
-   - PEP 8 style guide
-   - Code readability
-   - Debugging with pdb
-   - Type hints
+7. **27. Best Practices and Code Quality**
+   - 27.1 PEP 8 style guide (naming conventions, indentation and whitespace, line length, imports organization)
+   - 27.2 Code readability
+   - 27.3 Comments and docstrings
+   - 27.4 The Zen of Python (`import this`)
+   - 27.5 Common pitfalls and how to avoid them
+   - 27.6 Debugging techniques (print debugging, using `pdb` basics)
+   - 27.7 Code organization and project structure
+   - 27.8 Type hints (annotations) - basic usage
 
 ## Integration with Athena
 
