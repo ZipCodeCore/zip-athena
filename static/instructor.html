@@ -346,55 +346,26 @@
             return div.innerHTML;
         }
 
-        // Get user ID from session storage or prompt
-        let userId = localStorage.getItem('userId');
-        if (!userId) {
-            const input = prompt('Enter your User ID (admin only):\n\nHint: Use "1" for the default admin user');
-            if (input) {
-                userId = input.trim();
-                localStorage.setItem('userId', userId);
+        // Check if user is logged in and is admin
+        let currentUser = null;
+        let userId = null;
+
+        const userData = localStorage.getItem('user');
+        if (!userData) {
+            window.location.href = '/index.html';
+        } else {
+            currentUser = JSON.parse(userData);
+            userId = String(currentUser.id);
+            
+            if (!currentUser.is_admin) {
+                window.location.href = '/403.html';
             } else {
-                alert('User ID is required to access the instructor dashboard');
-                window.location.href = '/';
-            }
-        }
-
-        // Validate authentication by trying to load data
-        async function validateAuth() {
-            try {
-                const response = await fetch('/admin/users', {
-                    headers: {'X-User-ID': userId}
-                });
-                
-                if (response.status === 401) {
-                    localStorage.removeItem('userId');
-                    alert('Invalid User ID. Please enter a valid admin user ID.');
-                    window.location.reload();
-                    return false;
-                } else if (response.status === 403) {
-                    localStorage.removeItem('userId');
-                    alert('Access denied. You must be an admin to access this page.');
-                    window.location.reload();
-                    return false;
-                } else if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return true;
-            } catch (error) {
-                console.error('Authentication validation failed:', error);
-                alert('Failed to validate authentication. Please check your connection.');
-                return false;
-            }
-        }
-
-        // Load initial data after validation
-        validateAuth().then(isValid => {
-            if (isValid) {
+                // User is authenticated and is admin, load the data
                 loadCohortAnalytics();
                 loadQuizzes();
                 loadStudentList();
             }
-        });
+        }
 
         function loadCohortAnalytics() {
             fetch('/instructor/cohort-analytics', {
