@@ -96,15 +96,18 @@ type UserQuestionState struct {
 	LastReview    time.Time `json:"last_review"`
 }
 
-// Test represents a formal assessment (Phase 3)
+// Test represents a formal assessment (Phase 3+4)
 type Test struct {
-	ID          int       `json:"id"`
-	Name        string    `json:"name"`
-	TopicID     int       `json:"topic_id"`
-	Description string    `json:"description"`
-	TimeLimit   int       `json:"time_limit"` // in minutes, 0 for unlimited
-	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	ID          int        `json:"id"`
+	Name        string     `json:"name"`
+	TopicID     int        `json:"topic_id"`
+	Description string     `json:"description"`
+	TimeLimit   int        `json:"time_limit"` // in minutes, 0 for unlimited
+	StartDate   *time.Time `json:"start_date,omitempty"` // Phase 4: availability window
+	EndDate     *time.Time `json:"end_date,omitempty"`   // Phase 4: availability window
+	IsPublished bool       `json:"is_published"`          // Phase 4: publish status
+	CreatedAt   time.Time  `json:"created_at"`
+	UpdatedAt   time.Time  `json:"updated_at"`
 }
 
 // QuizQuestion represents many-to-many relationship between Quiz and Question (Phase 3)
@@ -211,4 +214,64 @@ type TagWeakness struct {
 	Tag         string  `json:"tag"`
 	Accuracy    float64 `json:"accuracy"`
 	TotalAttempts int   `json:"total_attempts"`
+}
+
+// TestAttempt represents a student's attempt at taking a timed test (Phase 4)
+type TestAttempt struct {
+	ID              int                 `json:"id"`
+	UserID          int                 `json:"user_id"`
+	TestID          int                 `json:"test_id"`
+	StartTime       time.Time           `json:"start_time"`
+	SubmitTime      *time.Time          `json:"submit_time,omitempty"`
+	TimeRemaining   int                 `json:"time_remaining"` // seconds remaining when submitted
+	IsAutoSubmit    bool                `json:"is_auto_submit"` // true if auto-submitted when timer expired
+	TotalQuestions  int                 `json:"total_questions"`
+	CorrectAnswers  int                 `json:"correct_answers"`
+	Score           float64             `json:"score"` // percentage score
+	Answers         map[string]int      `json:"answers"` // question_id -> answer_id
+	QuestionResults map[string]bool     `json:"question_results"` // question_id -> correct/incorrect
+}
+
+// TagStats represents statistics for a specific tag (Phase 4)
+type TagStats struct {
+	Tag            string  `json:"tag"`
+	QuestionCount  int     `json:"question_count"`
+	TotalAttempts  int     `json:"total_attempts"`
+	CorrectAttempts int    `json:"correct_attempts"`
+	Accuracy       float64 `json:"accuracy"`
+}
+
+// QuestionAnalytics represents performance analytics for a question (Phase 4)
+type QuestionAnalytics struct {
+	QuestionID          int                `json:"question_id"`
+	TopicQuestionID     string             `json:"topic_question_id"`
+	QuestionText        string             `json:"question_text"`
+	TopicID             int                `json:"topic_id"`
+	TopicName           string             `json:"topic_name"`
+	Tags                []string           `json:"tags"`
+	CurrentDifficulty   int                `json:"current_difficulty"`
+	TotalAttempts       int                `json:"total_attempts"`
+	CorrectAttempts     int                `json:"correct_attempts"`
+	Accuracy            float64            `json:"accuracy"`
+	RecommendedDifficulty int              `json:"recommended_difficulty"`
+	FlagForReview       bool               `json:"flag_for_review"` // true if too easy/hard
+	AnswerDistribution  map[int]int        `json:"answer_distribution"` // answer_id -> count
+}
+
+// TestResult represents results for a test (Phase 4)
+type TestResult struct {
+	TestID         int                 `json:"test_id"`
+	TestName       string              `json:"test_name"`
+	StudentResults []StudentTestResult `json:"student_results"`
+}
+
+// StudentTestResult represents a single student's test result (Phase 4)
+type StudentTestResult struct {
+	UserID         int       `json:"user_id"`
+	Username       string    `json:"username"`
+	Score          float64   `json:"score"`
+	CorrectAnswers int       `json:"correct_answers"`
+	TotalQuestions int       `json:"total_questions"`
+	SubmitTime     time.Time `json:"submit_time"`
+	TimeTaken      int       `json:"time_taken"` // in seconds
 }

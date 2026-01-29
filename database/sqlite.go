@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/ZipCodeCore/zip-athena/models"
@@ -146,9 +147,29 @@ func (db *SQLiteDB) initSchema() error {
 		topic_id INTEGER NOT NULL,
 		description TEXT,
 		time_limit INTEGER DEFAULT 0,
+		start_date DATETIME,
+		end_date DATETIME,
+		is_published INTEGER DEFAULT 0,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		FOREIGN KEY (topic_id) REFERENCES topics(id)
+	);
+
+	CREATE TABLE IF NOT EXISTS test_attempts (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id INTEGER NOT NULL,
+		test_id INTEGER NOT NULL,
+		start_time DATETIME NOT NULL,
+		submit_time DATETIME,
+		time_remaining INTEGER DEFAULT 0,
+		is_auto_submit INTEGER DEFAULT 0,
+		total_questions INTEGER DEFAULT 0,
+		correct_answers INTEGER DEFAULT 0,
+		score REAL DEFAULT 0.0,
+		answers TEXT DEFAULT '{}',
+		question_results TEXT DEFAULT '{}',
+		FOREIGN KEY (user_id) REFERENCES users(id),
+		FOREIGN KEY (test_id) REFERENCES tests(id) ON DELETE CASCADE
 	);
 
 	CREATE TABLE IF NOT EXISTS quiz_questions (
@@ -1687,4 +1708,778 @@ func (db *SQLiteDB) ReorderTopics(topicIDs []int) error {
 		}
 	}
 	return nil
+}
+// Phase 4: SQLite implementations to append to sqlite.go
+
+// Phase 4: Quiz History Methods
+
+// GetQuizHistoryByUser retrieves quiz attempts for a user with pagination
+func (db *SQLiteDB) GetQuizHistoryByUser(userID int, page int, perPage int) ([]*models.QuizAttempt, error) {
+	offset := (page - 1) * perPage
+	query := `
+		SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake,
+			   start_time, completed_time, total_questions, correct_answers,
+			   question_ids, question_results
+		FROM quiz_attempts
+		WHERE user_id = ? AND completed_time IS NOT NULL
+		ORDER BY completed_time DESC
+		LIMIT ? OFFSET ?
+	`
+	
+	rows, err := db.db.Query(query, userID, perPage, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var attempts []*models.QuizAttempt
+	for rows.Next() {
+		attempt := &models.QuizAttempt{}
+		var quizID, parentAttemptID sql.NullInt64
+		var completedTime sql.NullTime
+		var questionIDs, questionResults string
+
+		err := rows.Scan(
+			&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID,
+			&attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime,
+			&attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDs, &questionResults,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if quizID.Valid {
+			id := int(quizID.Int64)
+			attempt.QuizID = &id
+		}
+		if parentAttemptID.Valid {
+			id := int(parentAttemptID.Int64)
+			attempt.ParentAttemptID = &id
+		}
+		if completedTime.Valid {
+			attempt.CompletedTime = &completedTime.Time
+		}
+
+		// Parse JSON fields
+		json.Unmarshal([]byte(questionIDs), &attempt.QuestionIDs)
+		json.Unmarshal([]byte(questionResults), &attempt.QuestionResults)
+
+		attempts = append(attempts, attempt)
+	}
+
+	return attempts, rows.Err()
+}
+
+// GetQuizHistoryByTopic retrieves quiz attempts for a user filtered by topic
+func (db *SQLiteDB) GetQuizHistoryByTopic(userID int, topicID int, page int, perPage int) ([]*models.QuizAttempt, error) {
+	offset := (page - 1) * perPage
+	query := `
+		SELECT DISTINCT qa.id, qa.user_id, qa.quiz_id, qa.parent_attempt_id, qa.attempt_number, qa.is_retake,
+			   qa.start_time, qa.completed_time, qa.total_questions, qa.correct_answers,
+			   qa.question_ids, qa.question_results
+		FROM quiz_attempts qa
+		JOIN questions q ON qa.question_ids LIKE '%' || q.topic_question_id || '%'
+		WHERE qa.user_id = ? AND qa.completed_time IS NOT NULL AND q.topic_id = ?
+		ORDER BY qa.completed_time DESC
+		LIMIT ? OFFSET ?
+	`
+	
+	rows, err := db.db.Query(query, userID, topicID, perPage, offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var attempts []*models.QuizAttempt
+	for rows.Next() {
+		attempt := &models.QuizAttempt{}
+		var quizID, parentAttemptID sql.NullInt64
+		var completedTime sql.NullTime
+		var questionIDs, questionResults string
+
+		err := rows.Scan(
+			&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID,
+			&attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime,
+			&attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDs, &questionResults,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if quizID.Valid {
+			id := int(quizID.Int64)
+			attempt.QuizID = &id
+		}
+		if parentAttemptID.Valid {
+			id := int(parentAttemptID.Int64)
+			attempt.ParentAttemptID = &id
+		}
+		if completedTime.Valid {
+			attempt.CompletedTime = &completedTime.Time
+		}
+
+		json.Unmarshal([]byte(questionIDs), &attempt.QuestionIDs)
+		json.Unmarshal([]byte(questionResults), &attempt.QuestionResults)
+
+		attempts = append(attempts, attempt)
+	}
+
+	return attempts, rows.Err()
+}
+
+// GetQuizAttemptWithDetails retrieves a quiz attempt with full details
+func (db *SQLiteDB) GetQuizAttemptWithDetails(attemptID int) (*models.QuizAttempt, error) {
+	return db.GetQuizAttempt(attemptID)
+}
+
+// Phase 4: Timed Test Taking Methods
+
+// CreateTestAttempt creates a new test attempt
+func (db *SQLiteDB) CreateTestAttempt(attempt *models.TestAttempt) error {
+	answersJSON, _ := json.Marshal(attempt.Answers)
+	questionResultsJSON, _ := json.Marshal(attempt.QuestionResults)
+
+	query := `
+		INSERT INTO test_attempts (user_id, test_id, start_time, submit_time, time_remaining,
+			is_auto_submit, total_questions, correct_answers, score, answers, question_results)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	`
+	
+	result, err := db.db.Exec(query, attempt.UserID, attempt.TestID, attempt.StartTime,
+		nil, 0, false, 0, 0, 0.0, string(answersJSON), string(questionResultsJSON))
+	if err != nil {
+		return err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	attempt.ID = int(id)
+	return nil
+}
+
+// GetTestAttempt retrieves a test attempt by ID
+func (db *SQLiteDB) GetTestAttempt(id int) (*models.TestAttempt, error) {
+	query := `
+		SELECT id, user_id, test_id, start_time, submit_time, time_remaining,
+			   is_auto_submit, total_questions, correct_answers, score, answers, question_results
+		FROM test_attempts
+		WHERE id = ?
+	`
+	
+	attempt := &models.TestAttempt{}
+	var submitTime sql.NullTime
+	var answersJSON, questionResultsJSON string
+
+	err := db.db.QueryRow(query, id).Scan(
+		&attempt.ID, &attempt.UserID, &attempt.TestID, &attempt.StartTime, &submitTime,
+		&attempt.TimeRemaining, &attempt.IsAutoSubmit, &attempt.TotalQuestions,
+		&attempt.CorrectAnswers, &attempt.Score, &answersJSON, &questionResultsJSON,
+	)
+	if err == sql.ErrNoRows {
+		return nil, ErrNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	if submitTime.Valid {
+		attempt.SubmitTime = &submitTime.Time
+	}
+
+	json.Unmarshal([]byte(answersJSON), &attempt.Answers)
+	json.Unmarshal([]byte(questionResultsJSON), &attempt.QuestionResults)
+
+	return attempt, nil
+}
+
+// UpdateTestAttemptAnswer updates an answer in a test attempt
+func (db *SQLiteDB) UpdateTestAttemptAnswer(attemptID int, questionID string, answerID int) error {
+	// Get current attempt
+	attempt, err := db.GetTestAttempt(attemptID)
+	if err != nil {
+		return err
+	}
+
+	// Update answers map
+	if attempt.Answers == nil {
+		attempt.Answers = make(map[string]int)
+	}
+	attempt.Answers[questionID] = answerID
+
+	// Save back to database
+	answersJSON, _ := json.Marshal(attempt.Answers)
+	_, err = db.db.Exec("UPDATE test_attempts SET answers = ? WHERE id = ?", string(answersJSON), attemptID)
+	return err
+}
+
+// SubmitTestAttempt submits a test attempt and calculates the score
+func (db *SQLiteDB) SubmitTestAttempt(attemptID int, isAutoSubmit bool) error {
+	attempt, err := db.GetTestAttempt(attemptID)
+	if err != nil {
+		return err
+	}
+
+	now := time.Now()
+	attempt.SubmitTime = &now
+	attempt.IsAutoSubmit = isAutoSubmit
+
+	// Get test details
+	test, err := db.GetTest(attempt.TestID)
+	if err != nil {
+		return err
+	}
+
+	// Calculate time remaining
+	timeLimitSeconds := test.TimeLimit * 60
+	elapsed := int(now.Sub(attempt.StartTime).Seconds())
+	attempt.TimeRemaining = timeLimitSeconds - elapsed
+	if attempt.TimeRemaining < 0 {
+		attempt.TimeRemaining = 0
+	}
+
+	// Get test questions
+	testQuestions, err := db.GetTestQuestions(attempt.TestID)
+	if err != nil {
+		return err
+	}
+
+	attempt.TotalQuestions = len(testQuestions)
+	attempt.CorrectAnswers = 0
+	attempt.QuestionResults = make(map[string]bool)
+
+	// Check each answer
+	for _, q := range testQuestions {
+		questionKey := fmt.Sprintf("%d", q.ID)
+		answerID, hasAnswer := attempt.Answers[questionKey]
+		
+		if hasAnswer {
+			answer, err := db.GetAnswer(answerID)
+			if err == nil && answer.QuestionID == q.ID && answer.IsCorrect {
+				attempt.CorrectAnswers++
+				attempt.QuestionResults[questionKey] = true
+			} else {
+				attempt.QuestionResults[questionKey] = false
+			}
+		} else {
+			attempt.QuestionResults[questionKey] = false
+		}
+	}
+
+	// Calculate score
+	if attempt.TotalQuestions > 0 {
+		attempt.Score = float64(attempt.CorrectAnswers) / float64(attempt.TotalQuestions) * 100
+	}
+
+	// Update database
+	questionResultsJSON, _ := json.Marshal(attempt.QuestionResults)
+	query := `
+		UPDATE test_attempts
+		SET submit_time = ?, time_remaining = ?, is_auto_submit = ?,
+			total_questions = ?, correct_answers = ?, score = ?, question_results = ?
+		WHERE id = ?
+	`
+	_, err = db.db.Exec(query, attempt.SubmitTime, attempt.TimeRemaining, attempt.IsAutoSubmit,
+		attempt.TotalQuestions, attempt.CorrectAnswers, attempt.Score,
+		string(questionResultsJSON), attemptID)
+	return err
+}
+
+// GetTestResults retrieves the results of a test attempt
+func (db *SQLiteDB) GetTestResults(attemptID int) (*models.TestAttempt, error) {
+	return db.GetTestAttempt(attemptID)
+}
+
+// GetAvailableTests retrieves available tests for a student
+func (db *SQLiteDB) GetAvailableTests(userID int) ([]*models.Test, error) {
+	now := time.Now()
+	query := `
+		SELECT id, name, topic_id, description, time_limit, start_date, end_date,
+			   is_published, created_at, updated_at
+		FROM tests
+		WHERE is_published = 1
+		  AND (start_date IS NULL OR start_date <= ?)
+		  AND (end_date IS NULL OR end_date >= ?)
+	`
+	
+	rows, err := db.db.Query(query, now, now)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tests []*models.Test
+	for rows.Next() {
+		test := &models.Test{}
+		var startDate, endDate sql.NullTime
+
+		err := rows.Scan(
+			&test.ID, &test.Name, &test.TopicID, &test.Description, &test.TimeLimit,
+			&startDate, &endDate, &test.IsPublished, &test.CreatedAt, &test.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if startDate.Valid {
+			test.StartDate = &startDate.Time
+		}
+		if endDate.Valid {
+			test.EndDate = &endDate.Time
+		}
+
+		tests = append(tests, test)
+	}
+
+	return tests, rows.Err()
+}
+
+// GetTestAttemptsByUser retrieves all test attempts for a user for a specific test
+func (db *SQLiteDB) GetTestAttemptsByUser(userID int, testID int) ([]*models.TestAttempt, error) {
+	query := `
+		SELECT id, user_id, test_id, start_time, submit_time, time_remaining,
+			   is_auto_submit, total_questions, correct_answers, score, answers, question_results
+		FROM test_attempts
+		WHERE user_id = ? AND test_id = ?
+		ORDER BY start_time DESC
+	`
+	
+	rows, err := db.db.Query(query, userID, testID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var attempts []*models.TestAttempt
+	for rows.Next() {
+		attempt := &models.TestAttempt{}
+		var submitTime sql.NullTime
+		var answersJSON, questionResultsJSON string
+
+		err := rows.Scan(
+			&attempt.ID, &attempt.UserID, &attempt.TestID, &attempt.StartTime, &submitTime,
+			&attempt.TimeRemaining, &attempt.IsAutoSubmit, &attempt.TotalQuestions,
+			&attempt.CorrectAnswers, &attempt.Score, &answersJSON, &questionResultsJSON,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		if submitTime.Valid {
+			attempt.SubmitTime = &submitTime.Time
+		}
+
+		json.Unmarshal([]byte(answersJSON), &attempt.Answers)
+		json.Unmarshal([]byte(questionResultsJSON), &attempt.QuestionResults)
+
+		attempts = append(attempts, attempt)
+	}
+
+	return attempts, rows.Err()
+}
+
+// Phase 4: Tag-Based Review Methods
+
+// GetAllTags retrieves all unique tags from all questions
+func (db *SQLiteDB) GetAllTags() ([]string, error) {
+	rows, err := db.db.Query("SELECT DISTINCT tags FROM questions WHERE tags IS NOT NULL AND tags != '[]'")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	tagSet := make(map[string]bool)
+	for rows.Next() {
+		var tagsJSON string
+		if err := rows.Scan(&tagsJSON); err != nil {
+			continue
+		}
+
+		var tags []string
+		if err := json.Unmarshal([]byte(tagsJSON), &tags); err != nil {
+			continue
+		}
+
+		for _, tag := range tags {
+			tagSet[tag] = true
+		}
+	}
+
+	tags := make([]string, 0, len(tagSet))
+	for tag := range tagSet {
+		tags = append(tags, tag)
+	}
+
+	return tags, rows.Err()
+}
+
+// GetTagsWithCounts retrieves all tags with their question counts
+func (db *SQLiteDB) GetTagsWithCounts() (map[string]int, error) {
+	rows, err := db.db.Query("SELECT tags FROM questions WHERE tags IS NOT NULL AND tags != '[]'")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	tagCounts := make(map[string]int)
+	for rows.Next() {
+		var tagsJSON string
+		if err := rows.Scan(&tagsJSON); err != nil {
+			continue
+		}
+
+		var tags []string
+		if err := json.Unmarshal([]byte(tagsJSON), &tags); err != nil {
+			continue
+		}
+
+		for _, tag := range tags {
+			tagCounts[tag]++
+		}
+	}
+
+	return tagCounts, rows.Err()
+}
+
+// GetTagStats retrieves accuracy statistics for each tag for a user
+func (db *SQLiteDB) GetTagStats(userID int) ([]*models.TagStats, error) {
+	query := `
+		SELECT q.tags, qa.correct_attempts, qa.incorrect_attempts
+		FROM question_attempts qa
+		JOIN questions q ON qa.question_id = q.id
+		WHERE qa.user_id = ? AND q.tags IS NOT NULL AND q.tags != '[]'
+	`
+	
+	rows, err := db.db.Query(query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	tagStats := make(map[string]*models.TagStats)
+	for rows.Next() {
+		var tagsJSON string
+		var correctAttempts, incorrectAttempts int
+
+		if err := rows.Scan(&tagsJSON, &correctAttempts, &incorrectAttempts); err != nil {
+			continue
+		}
+
+		var tags []string
+		if err := json.Unmarshal([]byte(tagsJSON), &tags); err != nil {
+			continue
+		}
+
+		for _, tag := range tags {
+			if _, exists := tagStats[tag]; !exists {
+				tagStats[tag] = &models.TagStats{Tag: tag}
+			}
+
+			stats := tagStats[tag]
+			stats.CorrectAttempts += correctAttempts
+			stats.TotalAttempts += correctAttempts + incorrectAttempts
+		}
+	}
+
+	// Get question counts
+	tagCounts, _ := db.GetTagsWithCounts()
+
+	// Calculate accuracy
+	result := make([]*models.TagStats, 0, len(tagStats))
+	for tag, stats := range tagStats {
+		stats.QuestionCount = tagCounts[tag]
+		if stats.TotalAttempts > 0 {
+			stats.Accuracy = float64(stats.CorrectAttempts) / float64(stats.TotalAttempts) * 100
+		}
+		result = append(result, stats)
+	}
+
+	return result, rows.Err()
+}
+
+// GetQuestionsByTags retrieves questions that match the given tags
+func (db *SQLiteDB) GetQuestionsByTags(tags []string, useAnd bool) ([]*models.Question, error) {
+	rows, err := db.db.Query("SELECT id, topic_id, question_text, difficulty, tags, topic_question_id, created_at FROM questions WHERE tags IS NOT NULL AND tags != '[]'")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var questions []*models.Question
+	for rows.Next() {
+		q := &models.Question{}
+		var tagsJSON string
+
+		err := rows.Scan(&q.ID, &q.TopicID, &q.QuestionText, &q.Difficulty, &tagsJSON, &q.TopicQuestionID, &q.CreatedAt)
+		if err != nil {
+			continue
+		}
+
+		json.Unmarshal([]byte(tagsJSON), &q.Tags)
+
+		// Check if question matches tags
+		if useAnd {
+			hasAllTags := true
+			for _, tag := range tags {
+				found := false
+				for _, qTag := range q.Tags {
+					if qTag == tag {
+						found = true
+						break
+					}
+				}
+				if !found {
+					hasAllTags = false
+					break
+				}
+			}
+			if hasAllTags {
+				questions = append(questions, q)
+			}
+		} else {
+			hasAnyTag := false
+			for _, tag := range tags {
+				for _, qTag := range q.Tags {
+					if qTag == tag {
+						hasAnyTag = true
+						break
+					}
+				}
+				if hasAnyTag {
+					break
+				}
+			}
+			if hasAnyTag {
+				questions = append(questions, q)
+			}
+		}
+	}
+
+	return questions, rows.Err()
+}
+
+// Phase 4: Test Management (Instructor) Methods
+
+// PublishTest sets a test as published
+func (db *SQLiteDB) PublishTest(testID int) error {
+	_, err := db.db.Exec("UPDATE tests SET is_published = 1, updated_at = ? WHERE id = ?", time.Now(), testID)
+	return err
+}
+
+// GetTestResultsByTest retrieves all test results for a specific test
+func (db *SQLiteDB) GetTestResultsByTest(testID int) (*models.TestResult, error) {
+	test, err := db.GetTest(testID)
+	if err != nil {
+		return nil, err
+	}
+
+	result := &models.TestResult{
+		TestID:         testID,
+		TestName:       test.Name,
+		StudentResults: make([]models.StudentTestResult, 0),
+	}
+
+	query := `
+		SELECT ta.user_id, u.username, ta.score, ta.correct_answers, ta.total_questions,
+			   ta.submit_time, ta.time_remaining
+		FROM test_attempts ta
+		JOIN users u ON ta.user_id = u.id
+		WHERE ta.test_id = ? AND ta.submit_time IS NOT NULL
+		ORDER BY ta.submit_time DESC
+	`
+	
+	rows, err := db.db.Query(query, testID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		sr := models.StudentTestResult{}
+		var submitTime time.Time
+		var timeRemaining int
+
+		err := rows.Scan(&sr.UserID, &sr.Username, &sr.Score, &sr.CorrectAnswers,
+			&sr.TotalQuestions, &submitTime, &timeRemaining)
+		if err != nil {
+			continue
+		}
+
+		sr.SubmitTime = submitTime
+		if test.TimeLimit > 0 {
+			sr.TimeTaken = (test.TimeLimit * 60) - timeRemaining
+		}
+
+		result.StudentResults = append(result.StudentResults, sr)
+	}
+
+	return result, rows.Err()
+}
+
+// ExportTestResults exports test results as CSV
+func (db *SQLiteDB) ExportTestResults(testID int) ([]byte, error) {
+	results, err := db.GetTestResultsByTest(testID)
+	if err != nil {
+		return nil, err
+	}
+
+	var csv strings.Builder
+	csv.WriteString("Username,Score,Correct Answers,Total Questions,Submit Time,Time Taken (seconds)\n")
+
+	for _, sr := range results.StudentResults {
+		csv.WriteString(fmt.Sprintf("%s,%.2f,%d,%d,%s,%d\n",
+			sr.Username,
+			sr.Score,
+			sr.CorrectAnswers,
+			sr.TotalQuestions,
+			sr.SubmitTime.Format(time.RFC3339),
+			sr.TimeTaken,
+		))
+	}
+
+	return []byte(csv.String()), nil
+}
+
+// Phase 4: Question Performance Analytics Methods
+
+// GetQuestionAnalytics retrieves analytics for all questions
+func (db *SQLiteDB) GetQuestionAnalytics() ([]*models.QuestionAnalytics, error) {
+	query := `
+		SELECT q.id, q.topic_question_id, q.question_text, q.topic_id, t.name,
+			   q.tags, q.difficulty,
+			   COALESCE(SUM(qa.correct_attempts + qa.incorrect_attempts), 0) as total_attempts,
+			   COALESCE(SUM(qa.correct_attempts), 0) as correct_attempts
+		FROM questions q
+		LEFT JOIN topics t ON q.topic_id = t.id
+		LEFT JOIN question_attempts qa ON q.id = qa.question_id
+		GROUP BY q.id
+	`
+	
+	rows, err := db.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var analytics []*models.QuestionAnalytics
+	for rows.Next() {
+		a := &models.QuestionAnalytics{
+			AnswerDistribution: make(map[int]int),
+		}
+		var tagsJSON string
+
+		err := rows.Scan(
+			&a.QuestionID, &a.TopicQuestionID, &a.QuestionText, &a.TopicID, &a.TopicName,
+			&tagsJSON, &a.CurrentDifficulty, &a.TotalAttempts, &a.CorrectAttempts,
+		)
+		if err != nil {
+			continue
+		}
+
+		json.Unmarshal([]byte(tagsJSON), &a.Tags)
+
+		// Calculate accuracy
+		if a.TotalAttempts > 0 {
+			a.Accuracy = float64(a.CorrectAttempts) / float64(a.TotalAttempts) * 100
+		}
+
+		// Calculate recommended difficulty
+		if a.Accuracy > 90 {
+			a.RecommendedDifficulty = a.CurrentDifficulty + 1
+			if a.RecommendedDifficulty > 7 {
+				a.RecommendedDifficulty = 7
+			}
+			a.FlagForReview = true
+		} else if a.Accuracy < 30 {
+			a.RecommendedDifficulty = a.CurrentDifficulty - 1
+			if a.RecommendedDifficulty < 1 {
+				a.RecommendedDifficulty = 1
+			}
+			a.FlagForReview = true
+		} else {
+			a.RecommendedDifficulty = a.CurrentDifficulty
+		}
+
+		analytics = append(analytics, a)
+	}
+
+	return analytics, rows.Err()
+}
+
+// GetQuestionDetailedAnalytics retrieves detailed analytics for a single question
+func (db *SQLiteDB) GetQuestionDetailedAnalytics(questionID int) (*models.QuestionAnalytics, error) {
+	query := `
+		SELECT q.id, q.topic_question_id, q.question_text, q.topic_id, t.name,
+			   q.tags, q.difficulty,
+			   COALESCE(SUM(qa.correct_attempts + qa.incorrect_attempts), 0) as total_attempts,
+			   COALESCE(SUM(qa.correct_attempts), 0) as correct_attempts
+		FROM questions q
+		LEFT JOIN topics t ON q.topic_id = t.id
+		LEFT JOIN question_attempts qa ON q.id = qa.question_id
+		WHERE q.id = ?
+		GROUP BY q.id
+	`
+	
+	a := &models.QuestionAnalytics{
+		AnswerDistribution: make(map[int]int),
+	}
+	var tagsJSON string
+
+	err := db.db.QueryRow(query, questionID).Scan(
+		&a.QuestionID, &a.TopicQuestionID, &a.QuestionText, &a.TopicID, &a.TopicName,
+		&tagsJSON, &a.CurrentDifficulty, &a.TotalAttempts, &a.CorrectAttempts,
+	)
+	if err == sql.ErrNoRows {
+		return nil, ErrNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	json.Unmarshal([]byte(tagsJSON), &a.Tags)
+
+	// Calculate accuracy
+	if a.TotalAttempts > 0 {
+		a.Accuracy = float64(a.CorrectAttempts) / float64(a.TotalAttempts) * 100
+	}
+
+	// Calculate recommended difficulty
+	if a.Accuracy > 90 {
+		a.RecommendedDifficulty = a.CurrentDifficulty + 1
+		if a.RecommendedDifficulty > 7 {
+			a.RecommendedDifficulty = 7
+		}
+		a.FlagForReview = true
+	} else if a.Accuracy < 30 {
+		a.RecommendedDifficulty = a.CurrentDifficulty - 1
+		if a.RecommendedDifficulty < 1 {
+			a.RecommendedDifficulty = 1
+		}
+		a.FlagForReview = true
+	} else {
+		a.RecommendedDifficulty = a.CurrentDifficulty
+	}
+
+	// Get answer distribution
+	a.AnswerDistribution, _ = db.GetAnswerDistribution(questionID)
+
+	return a, nil
+}
+
+// GetAnswerDistribution retrieves distribution of answers chosen for a question
+func (db *SQLiteDB) GetAnswerDistribution(questionID int) (map[int]int, error) {
+	// This would require tracking answer selections in quiz/test attempts
+	// For now, return empty distribution
+	return make(map[int]int), nil
+}
+
+// UpdateQuestionDifficultyFromAnalytics updates a question's difficulty
+func (db *SQLiteDB) UpdateQuestionDifficultyFromAnalytics(questionID int, newDifficulty int) error {
+	if newDifficulty < 1 || newDifficulty > 7 {
+		return fmt.Errorf("difficulty must be between 1 and 7")
+	}
+
+	_, err := db.db.Exec("UPDATE questions SET difficulty = ? WHERE id = ?", newDifficulty, questionID)
+	return err
 }
