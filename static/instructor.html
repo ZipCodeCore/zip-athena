@@ -349,22 +349,63 @@
         // Get user ID from session storage or prompt
         let userId = localStorage.getItem('userId');
         if (!userId) {
-            userId = prompt('Enter your User ID (admin only):');
-            if (userId) {
+            const input = prompt('Enter your User ID (admin only):\n\nHint: Use "1" for the default admin user');
+            if (input) {
+                userId = input.trim();
                 localStorage.setItem('userId', userId);
+            } else {
+                alert('User ID is required to access the instructor dashboard');
+                window.location.href = '/';
             }
         }
 
-        // Load initial data
-        loadCohortAnalytics();
-        loadQuizzes();
-        loadStudentList();
+        // Validate authentication by trying to load data
+        async function validateAuth() {
+            try {
+                const response = await fetch('/admin/users', {
+                    headers: {'X-User-ID': userId}
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('userId');
+                    alert('Invalid User ID. Please enter a valid admin user ID.');
+                    window.location.reload();
+                    return false;
+                } else if (response.status === 403) {
+                    localStorage.removeItem('userId');
+                    alert('Access denied. You must be an admin to access this page.');
+                    window.location.reload();
+                    return false;
+                } else if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return true;
+            } catch (error) {
+                console.error('Authentication validation failed:', error);
+                alert('Failed to validate authentication. Please check your connection.');
+                return false;
+            }
+        }
+
+        // Load initial data after validation
+        validateAuth().then(isValid => {
+            if (isValid) {
+                loadCohortAnalytics();
+                loadQuizzes();
+                loadStudentList();
+            }
+        });
 
         function loadCohortAnalytics() {
             fetch('/instructor/cohort-analytics', {
                 headers: {'X-User-ID': userId}
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 document.getElementById('total-students').textContent = data.total_students || 0;
                 document.getElementById('active-students').textContent = data.active_students || 0;
@@ -463,17 +504,34 @@
             fetch('/admin/users', {
                 headers: {'X-User-ID': userId}
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(users => {
                 const select = document.getElementById('student-select');
-                users.filter(u => !u.is_admin).forEach(user => {
+                // Clear existing options except the default
+                select.innerHTML = '<option value="">-- Select a student --</option>';
+                
+                const students = users.filter(u => !u.is_admin);
+                if (students.length === 0) {
+                    console.warn('No students found');
+                    return;
+                }
+                
+                students.forEach(user => {
                     const option = document.createElement('option');
                     option.value = user.id;
                     option.textContent = `${user.username} (${user.email})`;
                     select.appendChild(option);
                 });
             })
-            .catch(error => console.error('Error loading students:', error));
+            .catch(error => {
+                console.error('Error loading students:', error);
+                alert('Failed to load student list. Please check console for details.');
+            });
         }
 
         function loadStudentProgress() {
@@ -486,7 +544,12 @@
             fetch(`/instructor/student-progress?user_id=${studentId}`, {
                 headers: {'X-User-ID': userId}
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 document.getElementById('student-details').style.display = 'block';
                 document.getElementById('student-completed-quizzes').textContent = data.completed_quizzes || 0;
@@ -543,14 +606,22 @@
                     recentActivity.innerHTML = '<p class="text-muted">No recent activity</p>';
                 }
             })
-            .catch(error => console.error('Error loading student progress:', error));
+            .catch(error => {
+                console.error('Error loading student progress:', error);
+                alert('Failed to load student progress. Please check console for details.');
+            });
         }
 
         function loadQuizzes() {
             fetch('/admin/quizzes', {
                 headers: {'X-User-ID': userId}
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(quizzes => {
                 const select = document.getElementById('quiz-export-select');
                 quizzes.forEach(quiz => {
