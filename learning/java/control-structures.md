@@ -348,3 +348,238 @@ Control structures are fundamental to programming. They turn your code from a si
 Master these concepts, and you'll be able to solve a huge range of programming problems. Keep practicing, experiment with different combinations, and don't be afraid to make mistakes—that's how you learn!
 
 Ready to test your knowledge? Head over to the Athena quiz system and try some control structure questions!
+
+---
+
+## Quiz Questions
+
+This section contains quiz questions that test understanding of Java control structures. Each question is formatted for easy extraction and database import.
+
+### Question 1: if-else Statement - Basic Condition
+**Type**: code-output
+**Difficulty**: 2
+**Tags**: java, control-structures, if-else
+
+**Question Text**:
+What will be printed when this code is executed?
+
+```java
+int score = 75;
+
+if (score >= 80) {
+    System.out.println("Great!");
+} else if (score >= 60) {
+    System.out.println("Good!");
+} else {
+    System.out.println("Keep trying!");
+}
+```
+
+**Answer Choices**:
+- A) Great!
+- B) Good!
+- C) Keep trying!
+- D) Nothing will be printed
+
+**Correct Answer**: B
+
+**Explanation**:
+The score is 75, which is not >= 80, so the first condition is false. The second condition checks if score >= 60, which is true (75 >= 60), so "Good!" is printed. Once a condition in an if-else chain matches, the rest are skipped.
+
+---
+
+### Question 2: switch Statement - Fall-through Behavior
+**Type**: multiple-choice
+**Difficulty**: 4
+**Tags**: java, control-structures, switch
+
+**Question Text**:
+What happens if you forget to include a `break` statement in a switch case?
+
+**Answer Choices**:
+- A) The program will crash with a syntax error
+- B) Only that case will execute, then the switch will exit
+- C) Execution will "fall through" to the next case(s)
+- D) The default case will execute instead
+
+**Correct Answer**: C
+
+**Explanation**:
+Without a `break` statement, execution continues ("falls through") to the next case, executing its code as well. This is called fall-through behavior. It's not a syntax error, but it's usually unintended. The `break` statement is what tells Java to exit the switch block.
+
+---
+
+### Question 3: for Loop - Iteration Count
+**Type**: code-output
+**Difficulty**: 3
+**Tags**: java, control-structures, for-loop
+
+**Question Text**:
+How many times will "Hello" be printed?
+
+```java
+for (int i = 0; i < 5; i++) {
+    System.out.println("Hello");
+}
+```
+
+**Answer Choices**:
+- A) 4 times
+- B) 5 times
+- C) 6 times
+- D) Infinite times
+
+**Correct Answer**: B
+
+**Explanation**:
+The loop starts with i=0 and continues while i < 5. It will execute for i=0, 1, 2, 3, and 4 (five values), printing "Hello" 5 times. When i becomes 5, the condition (i < 5) is false, so the loop stops.
+
+---
+
+### Question 4: while Loop - Loop Control
+**Type**: multiple-choice
+**Difficulty**: 3
+**Tags**: java, control-structures, while-loop
+
+**Question Text**:
+What is the main difference between a `while` loop and a `do-while` loop?
+
+**Answer Choices**:
+- A) while loops are faster than do-while loops
+- B) A do-while loop always executes at least once, while a while loop may not execute at all
+- C) while loops can only iterate through arrays
+- D) do-while loops cannot use break statements
+
+**Correct Answer**: B
+
+**Explanation**:
+The key difference is that a `do-while` loop checks its condition AFTER executing the loop body, guaranteeing at least one execution. A `while` loop checks its condition BEFORE the first execution, so if the condition is initially false, the loop body never runs. Both have the same performance characteristics and can use break statements.
+
+---
+
+### Question 5: break Statement - Loop Termination
+**Type**: code-output
+**Difficulty**: 4
+**Tags**: java, control-structures, break, for-loop
+
+**Question Text**:
+What will be the final value of `sum` after this code executes?
+
+```java
+int sum = 0;
+for (int i = 1; i <= 10; i++) {
+    if (i == 5) {
+        break;
+    }
+    sum += i;
+}
+System.out.println(sum);
+```
+
+**Answer Choices**:
+- A) 10
+- B) 15
+- C) 55
+- D) 0
+
+**Correct Answer**: A
+
+**Explanation**:
+The loop adds i to sum for i=1, 2, 3, and 4, giving us sum = 1+2+3+4 = 10. When i becomes 5, the break statement is executed, immediately exiting the loop before adding 5 to sum. Therefore, sum remains 10.
+
+---
+
+### Question 6: Nested Loops - Pattern Output
+**Type**: code-output
+**Difficulty**: 5
+**Tags**: java, control-structures, nested-loops, for-loop
+
+**Question Text**:
+What pattern will this code print?
+
+```java
+for (int i = 1; i <= 3; i++) {
+    for (int j = 1; j <= i; j++) {
+        System.out.print("*");
+    }
+    System.out.println();
+}
+```
+
+**Answer Choices**:
+- A) *\n**\n***
+- B) ***\n**\n*
+- C) *\n*\n*
+- D) ***\n***\n***
+
+**Correct Answer**: A
+
+**Explanation**:
+The outer loop runs 3 times (i=1, 2, 3). For each iteration of the outer loop, the inner loop runs i times. When i=1, it prints one star. When i=2, it prints two stars. When i=3, it prints three stars. Each inner loop is followed by a println(), creating a new line. This creates a triangular pattern.
+
+---
+
+### Question 7: continue Statement - Loop Control
+**Type**: code-output
+**Difficulty**: 4
+**Tags**: java, control-structures, continue, for-loop
+
+**Question Text**:
+What numbers will be printed by this code?
+
+```java
+for (int i = 1; i <= 5; i++) {
+    if (i == 3) {
+        continue;
+    }
+    System.out.println(i);
+}
+```
+
+**Answer Choices**:
+- A) 1 2 4 5
+- B) 1 2 3 4 5
+- C) 1 2
+- D) 3
+
+**Correct Answer**: A
+
+**Explanation**:
+The `continue` statement skips the rest of the current iteration and moves to the next one. When i equals 3, the continue statement is executed, skipping the println() for that iteration. All other values (1, 2, 4, 5) are printed normally.
+
+---
+
+### Question 8: Nested if Statements - Logical Flow
+**Type**: multiple-choice
+**Difficulty**: 5
+**Tags**: java, control-structures, nested-if, logical-operators
+
+**Question Text**:
+Which of the following is better practice for checking multiple conditions?
+
+```java
+// Option 1
+if (age >= 18) {
+    if (hasLicense) {
+        if (hasInsurance) {
+            System.out.println("Can drive");
+        }
+    }
+}
+
+// Option 2
+if (age >= 18 && hasLicense && hasInsurance) {
+    System.out.println("Can drive");
+}
+```
+
+**Answer Choices**:
+- A) Option 1, because it's more readable
+- B) Option 2, because it's more concise and easier to read
+- C) They are exactly the same in all aspects
+- D) Option 1, because it performs better
+
+**Correct Answer**: B
+
+**Explanation**:
+Option 2 is generally preferred because it's more concise, easier to read, and expresses the intent more clearly: all three conditions must be true. Both options have the same logical behavior and performance (short-circuit evaluation), but Option 2 reduces nesting and is considered more maintainable. Excessive nesting (Option 1) can make code harder to follow.
