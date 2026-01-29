@@ -86,6 +86,17 @@ func (h *Handler) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Hash password if provided
+	if user.Password != "" {
+		hashedPassword, err := hashPassword(user.Password)
+		if err != nil {
+			log.Printf("ERROR: Failed to hash password for user %d: %v\n", id, err)
+			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+			return
+		}
+		user.Password = hashedPassword
+	}
+
 	user.ID = id
 	if err := h.db.UpdateUser(&user); err != nil {
 		if err == database.ErrNotFound {

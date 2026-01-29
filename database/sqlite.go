@@ -861,19 +861,38 @@ func (db *SQLiteDB) ListUsers() ([]*models.User, error) {
 }
 
 func (db *SQLiteDB) UpdateUser(user *models.User) error {
-	result, err := db.db.Exec(
-		"UPDATE users SET username = ?, email = ?, is_admin = ?, total_points = ? WHERE id = ?",
-		user.Username, user.Email, user.IsAdmin, user.TotalPoints, user.ID,
-	)
-	if err != nil {
-		return err
-	}
-	rows, err := result.RowsAffected()
-	if err != nil {
-		return err
-	}
-	if rows == 0 {
-		return ErrNotFound
+	// If password is provided, update it along with other fields
+	if user.Password != "" {
+		result, err := db.db.Exec(
+			"UPDATE users SET username = ?, email = ?, password = ?, is_admin = ?, total_points = ? WHERE id = ?",
+			user.Username, user.Email, user.Password, user.IsAdmin, user.TotalPoints, user.ID,
+		)
+		if err != nil {
+			return err
+		}
+		rows, err := result.RowsAffected()
+		if err != nil {
+			return err
+		}
+		if rows == 0 {
+			return ErrNotFound
+		}
+	} else {
+		// Don't update password if not provided
+		result, err := db.db.Exec(
+			"UPDATE users SET username = ?, email = ?, is_admin = ?, total_points = ? WHERE id = ?",
+			user.Username, user.Email, user.IsAdmin, user.TotalPoints, user.ID,
+		)
+		if err != nil {
+			return err
+		}
+		rows, err := result.RowsAffected()
+		if err != nil {
+			return err
+		}
+		if rows == 0 {
+			return ErrNotFound
+		}
 	}
 	return nil
 }
