@@ -17,7 +17,7 @@ The learning resources are organized by programming language, with each major to
 - **variables-and-data-types.md** - Understanding how Java stores and works with data
 
 ### Python
-- **control-structures.md** - Making decisions and repeating actions in Python  
+- **control-structures.md** ✅ - Making decisions and repeating actions in Python (includes 8 quiz questions)
 - **data-structures.md** - Working with lists, dictionaries, sets, and tuples (covers curriculum sections 6-9)
 
 ### Format

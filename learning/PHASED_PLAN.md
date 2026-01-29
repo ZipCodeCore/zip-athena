@@ -8,7 +8,7 @@ This document outlines the strategy for developing comprehensive learning resour
 - ✅ Java: Control Structures (with 8 quiz questions)
 - ✅ Java: Variables and Data Types
 - ✅ Python: Data Structures (Lists, Tuples, Dictionaries, Sets)
-- ✅ Python: Control Structures
+- ✅ Python: Control Structures (with 8 quiz questions)
 
 ### New Format Implemented
 - ✅ Learning Resource Format Specification (LEARNING_RESOURCE_FORMAT.md)
