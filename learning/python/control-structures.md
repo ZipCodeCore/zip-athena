@@ -630,3 +630,227 @@ Control structures are the backbone of programming logic. Python's clean syntax 
 - How to write clean, Pythonic code
 
 Practice these patterns, experiment with different combinations, and soon you'll be writing elegant, efficient Python code. When you're ready, head over to Athena and test your knowledge with some control structure quizzes!
+
+---
+
+## Quiz Questions
+
+This section contains quiz questions that test understanding of Python control structures. Each question is formatted for easy extraction and database import.
+
+### Question 1: if-elif-else - Basic Conditionals
+**Type**: code-output
+**Difficulty**: 2
+**Tags**: python, control-structures, if-elif-else
+
+**Question Text**:
+What will be printed by this Python code?
+
+```python
+age = 16
+
+if age >= 18:
+    print("Adult")
+elif age >= 13:
+    print("Teenager")
+else:
+    print("Child")
+```
+
+**Answer Choices**:
+- A) Adult
+- B) Teenager
+- C) Child
+- D) Nothing
+
+**Correct Answer**: B
+
+**Explanation**:
+The value of age is 16. The first condition (age >= 18) is false, so Python moves to the next condition. The second condition (age >= 13) is true because 16 >= 13, so "Teenager" is printed. Once a condition matches in an if-elif-else chain, the rest are skipped.
+
+---
+
+### Question 2: for Loop with range() - Iteration
+**Type**: code-output
+**Difficulty**: 2
+**Tags**: python, control-structures, for-loop, range
+
+**Question Text**:
+How many numbers will be printed by this code?
+
+```python
+for i in range(3, 8):
+    print(i)
+```
+
+**Answer Choices**:
+- A) 4
+- B) 5
+- C) 6
+- D) 8
+
+**Correct Answer**: B
+
+**Explanation**:
+The range(3, 8) function generates numbers starting from 3 up to (but not including) 8. So it generates: 3, 4, 5, 6, 7 - that's 5 numbers. The range() function's stop value is exclusive, meaning it stops before reaching that number.
+
+---
+
+### Question 3: while Loop - Loop Termination
+**Type**: multiple-choice
+**Difficulty**: 3
+**Tags**: python, control-structures, while-loop
+
+**Question Text**:
+What is the main difference between a `while` loop and a `for` loop in Python?
+
+**Answer Choices**:
+- A) while loops are faster than for loops
+- B) for loops iterate over sequences, while loops run while a condition is true
+- C) while loops can only iterate through lists
+- D) for loops cannot use break statements
+
+**Correct Answer**: B
+
+**Explanation**:
+The main difference is their purpose: `for` loops are designed to iterate over sequences (lists, strings, ranges, etc.), while `while` loops continue running as long as a condition remains true. Both have similar performance and both can use break statements. The choice between them depends on whether you're iterating over a known sequence (use for) or waiting for a condition to become false (use while).
+
+---
+
+### Question 4: break Statement - Early Exit
+**Type**: code-output
+**Difficulty**: 3
+**Tags**: python, control-structures, break
+
+**Question Text**:
+What is the final value of `total`?
+
+```python
+total = 0
+for num in [1, 2, 3, 4, 5]:
+    if num == 4:
+        break
+    total += num
+print(total)
+```
+
+**Answer Choices**:
+- A) 15
+- B) 10
+- C) 6
+- D) 0
+
+**Correct Answer**: C
+
+**Explanation**:
+The loop adds each number to total until it encounters 4. The iterations are: total=0+1=1, total=1+2=3, total=3+3=6. When num becomes 4, the break statement immediately exits the loop, so 4 and 5 are never added. The final value is 6.
+
+---
+
+### Question 5: continue Statement - Skipping Iterations
+**Type**: code-output
+**Difficulty**: 4
+**Tags**: python, control-structures, continue
+
+**Question Text**:
+What will this code print?
+
+```python
+for i in range(5):
+    if i == 2:
+        continue
+    print(i, end=' ')
+```
+
+**Answer Choices**:
+- A) 0 1 3 4
+- B) 0 1 2 3 4
+- C) 2
+- D) 0 1
+
+**Correct Answer**: A
+
+**Explanation**:
+The continue statement skips the rest of the current iteration and moves to the next one. The loop runs for i=0,1,2,3,4. When i equals 2, continue is executed, skipping the print statement for that iteration. All other values (0, 1, 3, 4) are printed with spaces between them due to `end=' '`.
+
+---
+
+### Question 6: else Clause with Loops - Completion Detection
+**Type**: multiple-choice
+**Difficulty**: 5
+**Tags**: python, control-structures, else-clause, loops
+
+**Question Text**:
+When does the `else` clause of a for loop execute?
+
+```python
+for item in items:
+    if condition:
+        break
+else:
+    print("Loop completed")
+```
+
+**Answer Choices**:
+- A) After every iteration of the loop
+- B) When the loop completes normally without hitting a break
+- C) When the break statement is executed
+- D) Only if the loop never executes
+
+**Correct Answer**: B
+
+**Explanation**:
+The else clause of a loop executes when the loop completes normally (iterates through all items) without encountering a break statement. If break is executed, the else clause is skipped. This is unique to Python and useful for search operations where you want to know if something was found (break) or not found (else executes).
+
+---
+
+### Question 7: List Comprehension - Filtering
+**Type**: code-output
+**Difficulty**: 4
+**Tags**: python, control-structures, list-comprehension
+
+**Question Text**:
+What will be the value of `evens`?
+
+```python
+numbers = [1, 2, 3, 4, 5, 6]
+evens = [num for num in numbers if num % 2 == 0]
+```
+
+**Answer Choices**:
+- A) [1, 3, 5]
+- B) [2, 4, 6]
+- C) [1, 2, 3, 4, 5, 6]
+- D) [0, 2, 4, 6]
+
+**Correct Answer**: B
+
+**Explanation**:
+This list comprehension creates a new list containing only the even numbers from the original list. The condition `if num % 2 == 0` filters for numbers where the remainder when divided by 2 is 0 (even numbers). From [1,2,3,4,5,6], the even numbers are [2,4,6].
+
+---
+
+### Question 8: Nested Loops - Loop Control
+**Type**: code-output
+**Difficulty**: 5
+**Tags**: python, control-structures, nested-loops
+
+**Question Text**:
+What shape will be printed by this code?
+
+```python
+for i in range(1, 4):
+    for j in range(i):
+        print("*", end="")
+    print()
+```
+
+**Answer Choices**:
+- A) A square (3x3)
+- B) A triangle: \n*\n**\n***
+- C) A single line of 6 stars
+- D) ***\n***\n***
+
+**Correct Answer**: B
+
+**Explanation**:
+The outer loop runs 3 times (i=1,2,3). For each value of i, the inner loop runs i times. When i=1, it prints 1 star. When i=2, it prints 2 stars. When i=3, it prints 3 stars. The `print()` after the inner loop adds a newline, creating a triangular pattern. This is a classic nested loop pattern for printing shapes.

@@ -32,7 +32,13 @@ See [LEARNING_RESOURCE_FORMAT.md](LEARNING_RESOURCE_FORMAT.md) for the complete 
 
 ## What's Coming Next
 
-This is just the beginning! We're building out comprehensive learning resources for all curriculum topics. See the [PHASED_PLAN.md](PHASED_PLAN.md) for our roadmap of upcoming content.
+This is just the beginning! We're building out comprehensive learning resources for all curriculum topics. 
+
+### For Contributors
+See the [CONTRIBUTOR_GUIDE.md](CONTRIBUTOR_GUIDE.md) for detailed instructions on creating new learning resources.
+
+### Roadmap
+See [PHASED_PLAN.md](PHASED_PLAN.md) for our complete roadmap of upcoming content and development priorities.
 
 ## Style Guide
 
