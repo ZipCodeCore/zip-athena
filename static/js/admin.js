@@ -12,8 +12,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     currentUser = JSON.parse(userData);
     if (!currentUser.is_admin) {
-        alert('Access denied. Admin privileges required.');
-        window.location.href = '/dashboard.html';
+        window.location.href = '/403.html';
         return;
     }
 
