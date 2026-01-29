@@ -34,12 +34,26 @@ func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Hash password if provided
+	if user.Password != "" {
+		hashedPassword, err := hashPassword(user.Password)
+		if err != nil {
+			log.Printf("ERROR: Failed to hash password for user %s: %v\n", user.Username, err)
+			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
+			return
+		}
+		user.Password = hashedPassword
+	}
+
 	user.CreatedAt = time.Now()
 	if err := h.db.CreateUser(&user); err != nil {
 		log.Printf("ERROR: Failed to create user: %v\n", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	// Don't send password back
+	user.Password = ""
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)

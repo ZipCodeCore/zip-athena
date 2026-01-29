@@ -239,3 +239,203 @@ func TestGetProgressHandlerIncludesInProgressQuizzes(t *testing.T) {
 		t.Errorf("Expected total_quizzes to be 2, got %d", totalQuizzes)
 	}
 }
+
+// TestCreateUserWithPasswordHashing tests that passwords are hashed when creating users via admin
+func TestCreateUserWithPasswordHashing(t *testing.T) {
+	// Create a temporary SQLite database for this test
+	tmpDir := t.TempDir()
+	dbPath := tmpDir + "/test_user_creation.db"
+
+	db, err := database.NewSQLiteDB(dbPath)
+	if err != nil {
+		t.Fatalf("Failed to create SQLite database: %v", err)
+	}
+	defer db.Close()
+
+	handler := NewHandler(db)
+
+	// Create a user with a plain text password (like admin panel does)
+	testPassword := "testpass123"
+	user := models.User{
+		Username: "testuser",
+		Email:    "test@example.com",
+		Password: testPassword,
+		IsAdmin:  false,
+	}
+
+	body, _ := json.Marshal(user)
+	req := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(body))
+	w := httptest.NewRecorder()
+
+	handler.CreateUserHandler(w, req)
+
+	if w.Code != http.StatusCreated {
+		t.Fatalf("Expected status %d, got %d. Body: %s", http.StatusCreated, w.Code, w.Body.String())
+	}
+
+	var created models.User
+	json.NewDecoder(w.Body).Decode(&created)
+
+	// Verify the returned user doesn't have password
+	if created.Password != "" {
+		t.Error("Expected password to be empty in response")
+	}
+
+	// Now try to login with the created user (correct password)
+	loginReq := LoginRequest{
+		Username: "testuser",
+		Password: testPassword,
+	}
+
+	loginBody, _ := json.Marshal(loginReq)
+	loginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(loginBody))
+	loginW := httptest.NewRecorder()
+
+	handler.LoginHandler(loginW, loginHTTPReq)
+
+	if loginW.Code != http.StatusOK {
+		t.Fatalf("Expected login to succeed with status %d, got %d. Body: %s", http.StatusOK, loginW.Code, loginW.Body.String())
+	}
+
+	var authResp AuthResponse
+	json.NewDecoder(loginW.Body).Decode(&authResp)
+
+	if authResp.User.Username != "testuser" {
+		t.Errorf("Expected username 'testuser', got '%s'", authResp.User.Username)
+	}
+
+	if authResp.Message != "Login successful" {
+		t.Errorf("Expected message 'Login successful', got '%s'", authResp.Message)
+	}
+
+	// Test that login fails with incorrect password
+	wrongLoginReq := LoginRequest{
+		Username: "testuser",
+		Password: "wrongpassword",
+	}
+
+	wrongLoginBody, _ := json.Marshal(wrongLoginReq)
+	wrongLoginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(wrongLoginBody))
+	wrongLoginW := httptest.NewRecorder()
+
+	handler.LoginHandler(wrongLoginW, wrongLoginHTTPReq)
+
+	if wrongLoginW.Code != http.StatusUnauthorized {
+		t.Errorf("Expected login to fail with status %d for wrong password, got %d", http.StatusUnauthorized, wrongLoginW.Code)
+	}
+}
+
+// TestUpdateUserPasswordHashing tests that passwords are hashed when updating users via admin
+func TestUpdateUserPasswordHashing(t *testing.T) {
+// Create a temporary SQLite database for this test
+tmpDir := t.TempDir()
+dbPath := tmpDir + "/test_user_update.db"
+
+db, err := database.NewSQLiteDB(dbPath)
+if err != nil {
+t.Fatalf("Failed to create SQLite database: %v", err)
+}
+defer db.Close()
+
+handler := NewHandler(db)
+
+// Create a user first
+initialPassword := "initial123"
+user := models.User{
+Username: "testuser",
+Email:    "test@example.com",
+Password: initialPassword,
+IsAdmin:  false,
+}
+
+createBody, _ := json.Marshal(user)
+createReq := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(createBody))
+createW := httptest.NewRecorder()
+
+handler.CreateUserHandler(createW, createReq)
+
+if createW.Code != http.StatusCreated {
+t.Fatalf("Expected status %d, got %d. Body: %s", http.StatusCreated, createW.Code, createW.Body.String())
+}
+
+var created models.User
+json.NewDecoder(createW.Body).Decode(&created)
+userID := created.ID
+
+// Verify initial login works
+loginReq := LoginRequest{
+Username: "testuser",
+Password: initialPassword,
+}
+loginBody, _ := json.Marshal(loginReq)
+loginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(loginBody))
+loginW := httptest.NewRecorder()
+
+handler.LoginHandler(loginW, loginHTTPReq)
+
+if loginW.Code != http.StatusOK {
+t.Fatalf("Expected initial login to succeed with status %d, got %d", http.StatusOK, loginW.Code)
+}
+
+// Now update the user's password via admin endpoint
+newPassword := "newpass456"
+updateUser := models.User{
+Username:    "testuser",
+Email:       "test@example.com",
+Password:    newPassword,
+IsAdmin:     false,
+TotalPoints: 0,
+}
+
+updateBody, _ := json.Marshal(updateUser)
+updateReq := httptest.NewRequest(http.MethodPut, "/admin/users?id="+strconv.Itoa(userID), bytes.NewBuffer(updateBody))
+updateReq.Header.Set("X-User-ID", "1") // Simulate admin user
+updateW := httptest.NewRecorder()
+
+handler.UpdateUserHandler(updateW, updateReq)
+
+if updateW.Code != http.StatusOK {
+t.Fatalf("Expected update status %d, got %d. Body: %s", http.StatusOK, updateW.Code, updateW.Body.String())
+}
+
+// Verify old password no longer works
+oldLoginReq := LoginRequest{
+Username: "testuser",
+Password: initialPassword,
+}
+oldLoginBody, _ := json.Marshal(oldLoginReq)
+oldLoginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(oldLoginBody))
+oldLoginW := httptest.NewRecorder()
+
+handler.LoginHandler(oldLoginW, oldLoginHTTPReq)
+
+if oldLoginW.Code != http.StatusUnauthorized {
+t.Errorf("Expected old password to fail with status %d, got %d", http.StatusUnauthorized, oldLoginW.Code)
+}
+
+// Verify new password works
+newLoginReq := LoginRequest{
+Username: "testuser",
+Password: newPassword,
+}
+newLoginBody, _ := json.Marshal(newLoginReq)
+newLoginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(newLoginBody))
+newLoginW := httptest.NewRecorder()
+
+handler.LoginHandler(newLoginW, newLoginHTTPReq)
+
+if newLoginW.Code != http.StatusOK {
+t.Fatalf("Expected login with new password to succeed with status %d, got %d. Body: %s", http.StatusOK, newLoginW.Code, newLoginW.Body.String())
+}
+
+var authResp AuthResponse
+json.NewDecoder(newLoginW.Body).Decode(&authResp)
+
+if authResp.User.Username != "testuser" {
+t.Errorf("Expected username 'testuser', got '%s'", authResp.User.Username)
+}
+
+if authResp.Message != "Login successful" {
+t.Errorf("Expected message 'Login successful', got '%s'", authResp.Message)
+}
+}
