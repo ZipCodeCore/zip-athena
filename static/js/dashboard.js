@@ -11,7 +11,7 @@ document.getElementById('userDisplay').textContent = `Welcome, ${user.username}!
 
 // Show admin button if user is admin
 if (user.is_admin) {
-    document.getElementById('adminButton').style.display = 'inline-block';
+    document.getElementById('instructorButton').style.display = 'inline-block';
 }
 
 // Logout function
@@ -101,7 +101,7 @@ function loadQuizAttempts(quizAttempts) {
             // Determine if retake button should be shown (completed quiz with score < 100%)
             const showRetake = isCompleted && score < 100;
             const retakeButton = showRetake 
-                ? `<button class="btn btn-sm btn-primary" onclick="retakeQuiz(${attempt.quiz_id})">Retake</button>`
+                ? `<button class="btn btn-sm btn-primary" onclick="retakeQuiz(${attempt.id})">Retake</button>`
                 : '';
 
             row.innerHTML = `
@@ -126,31 +126,37 @@ function loadQuizAttempts(quizAttempts) {
 }
 
 // Retake a quiz
-async function retakeQuiz(quizId) {
-    if (!quizId) {
-        alert('Unable to retake this quiz. Quiz information not available.');
+async function retakeQuiz(attemptId) {
+    if (!attemptId) {
+        alert('Unable to retake this quiz. Quiz attempt information not available.');
         return;
     }
     
     try {
-        // Fetch the quiz details to get the topic_id
-        const response = await fetch(`/quizzes/${quizId}`);
+        // Call the retake API endpoint
+        const response = await fetch('/quiz/retake', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                parent_attempt_id: attemptId,
+                user_id: user.id
+            })
+        });
+        
         if (!response.ok) {
-            throw new Error('Failed to fetch quiz details');
+            const errorText = await response.text();
+            throw new Error(errorText || 'Failed to create retake');
         }
         
-        const quiz = await response.json();
+        const retakeData = await response.json();
         
-        // Fetch the topic details to get the topic name
-        const topicResponse = await fetch(`/topics/${quiz.topic_id}`);
-        if (!topicResponse.ok) {
-            throw new Error('Failed to fetch topic details');
-        }
+        // Store the retake quiz data
+        localStorage.setItem('currentQuiz', JSON.stringify(retakeData));
         
-        const topic = await topicResponse.json();
-        
-        // Navigate to the quiz page with the topic information
-        window.location.href = `/quiz.html?topic_id=${quiz.topic_id}&topic_name=${encodeURIComponent(topic.name)}`;
+        // Navigate to the quiz page
+        window.location.href = '/quiz.html';
     } catch (error) {
         console.error('Error retaking quiz:', error);
         alert('Unable to retake this quiz. Please try again later.');
