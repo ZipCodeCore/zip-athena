@@ -49,6 +49,9 @@ if (resumeQuiz) {
     quizAttemptId = resumeData.attemptId;
     answeredQuestions = resumeData.questionResults || {};
     
+    // Initialize score with previously correct answers
+    score = Object.values(answeredQuestions).filter(result => result === true).length;
+    
     // Clear the resume data from localStorage
     localStorage.removeItem('resumeQuiz');
     
@@ -305,13 +308,17 @@ async function completeQuiz() {
         });
 
         if (response.ok) {
+            const completedQuiz = await response.json();
+            
             // Hide quiz content
             document.getElementById('quizContent').style.display = 'none';
             
-            // Show completion screen
-            const percentage = Math.round((score / quizData.questions.length) * 100);
+            // Show completion screen using the backend's correct count
+            const totalQuestions = completedQuiz.total_questions;
+            const correctAnswers = completedQuiz.correct_answers;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
             document.getElementById('finalScore').textContent = `${percentage}%`;
-            document.getElementById('finalResults').textContent = `${score} / ${quizData.questions.length}`;
+            document.getElementById('finalResults').textContent = `${correctAnswers} / ${totalQuestions}`;
             document.getElementById('quizComplete').style.display = 'block';
         }
     } catch (error) {
