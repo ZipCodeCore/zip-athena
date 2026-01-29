@@ -354,40 +354,35 @@
         if (!userData) {
             console.error('No user data in localStorage');
             window.location.href = '/index.html';
-            return;
+        } else {
+            try {
+                currentUser = JSON.parse(userData);
+                console.log('Current user:', {id: currentUser.id, username: currentUser.username, is_admin: currentUser.is_admin});
+                
+                if (!currentUser.id) {
+                    console.error('User ID is missing. Please log out and log back in.');
+                    alert('Session error: User ID missing. Please log in again.');
+                    localStorage.removeItem('user');
+                    window.location.href = '/index.html';
+                } else if (!currentUser.is_admin) {
+                    console.warn('User is not an admin');
+                    window.location.href = '/403.html';
+                } else {
+                    // User is authenticated and is admin
+                    userId = String(currentUser.id);
+                    console.log('Using userId for API calls:', userId);
+                    
+                    // Load the data
+                    loadCohortAnalytics();
+                    loadQuizzes();
+                    loadStudentList();
+                }
+            } catch (e) {
+                console.error('Failed to parse user data:', e);
+                localStorage.removeItem('user');
+                window.location.href = '/index.html';
+            }
         }
-        
-        try {
-            currentUser = JSON.parse(userData);
-            console.log('Current user:', {id: currentUser.id, username: currentUser.username, is_admin: currentUser.is_admin});
-        } catch (e) {
-            console.error('Failed to parse user data:', e);
-            localStorage.removeItem('user');
-            window.location.href = '/index.html';
-            return;
-        }
-        
-        if (!currentUser.id) {
-            console.error('User ID is missing. Please log out and log back in.');
-            alert('Session error: User ID missing. Please log in again.');
-            localStorage.removeItem('user');
-            window.location.href = '/index.html';
-            return;
-        }
-        
-        userId = String(currentUser.id);
-        console.log('Using userId for API calls:', userId);
-        
-        if (!currentUser.is_admin) {
-            console.warn('User is not an admin');
-            window.location.href = '/403.html';
-            return;
-        }
-        
-        // User is authenticated and is admin, load the data
-        loadCohortAnalytics();
-        loadQuizzes();
-        loadStudentList();
 
         function loadCohortAnalytics() {
             console.log('Loading cohort analytics with userId:', userId);
