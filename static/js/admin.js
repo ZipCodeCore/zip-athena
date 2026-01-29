@@ -6,12 +6,31 @@ let currentUser = null;
 window.addEventListener('DOMContentLoaded', async () => {
     const userData = localStorage.getItem('user');
     if (!userData) {
+        console.error('No user data in localStorage');
         window.location.href = '/index.html';
         return;
     }
 
-    currentUser = JSON.parse(userData);
+    try {
+        currentUser = JSON.parse(userData);
+        console.log('Current user:', {id: currentUser.id, username: currentUser.username, is_admin: currentUser.is_admin});
+    } catch (e) {
+        console.error('Failed to parse user data:', e);
+        localStorage.removeItem('user');
+        window.location.href = '/index.html';
+        return;
+    }
+    
+    if (!currentUser.id) {
+        console.error('User ID is missing. Please log out and log back in.');
+        alert('Session error: User ID missing. Please log in again.');
+        localStorage.removeItem('user');
+        window.location.href = '/index.html';
+        return;
+    }
+    
     if (!currentUser.is_admin) {
+        console.warn('User is not an admin');
         window.location.href = '/403.html';
         return;
     }
@@ -19,6 +38,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('username').textContent = currentUser.username;
 
     // Load initial data
+    console.log('Loading admin panel data with user ID:', currentUser.id);
     await loadUsers();
     await loadQuestions();
     await loadQuizzes();
@@ -33,15 +53,18 @@ function logout() {
 // User Management
 async function loadUsers() {
     try {
+        console.log('Loading users with X-User-ID:', currentUser.id.toString());
         const response = await fetch('/admin/users', {
             headers: {
                 'X-User-ID': currentUser.id.toString()
             }
         });
 
+        console.log('Users response status:', response.status);
         if (!response.ok) throw new Error('Failed to load users');
 
         const users = await response.json();
+        console.log('Loaded users:', users.length, 'users');
         const tbody = document.getElementById('usersTable');
         tbody.innerHTML = '';
 

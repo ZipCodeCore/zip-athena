@@ -352,14 +352,34 @@
 
         const userData = localStorage.getItem('user');
         if (!userData) {
+            console.error('No user data in localStorage');
             window.location.href = '/index.html';
             return;
         }
         
-        currentUser = JSON.parse(userData);
+        try {
+            currentUser = JSON.parse(userData);
+            console.log('Current user:', {id: currentUser.id, username: currentUser.username, is_admin: currentUser.is_admin});
+        } catch (e) {
+            console.error('Failed to parse user data:', e);
+            localStorage.removeItem('user');
+            window.location.href = '/index.html';
+            return;
+        }
+        
+        if (!currentUser.id) {
+            console.error('User ID is missing. Please log out and log back in.');
+            alert('Session error: User ID missing. Please log in again.');
+            localStorage.removeItem('user');
+            window.location.href = '/index.html';
+            return;
+        }
+        
         userId = String(currentUser.id);
+        console.log('Using userId for API calls:', userId);
         
         if (!currentUser.is_admin) {
+            console.warn('User is not an admin');
             window.location.href = '/403.html';
             return;
         }
@@ -370,16 +390,19 @@
         loadStudentList();
 
         function loadCohortAnalytics() {
+            console.log('Loading cohort analytics with userId:', userId);
             fetch('/instructor/cohort-analytics', {
                 headers: {'X-User-ID': userId}
             })
             .then(response => {
+                console.log('Cohort analytics response status:', response.status);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
+                console.log('Cohort analytics data received:', data);
                 document.getElementById('total-students').textContent = data.total_students || 0;
                 document.getElementById('active-students').textContent = data.active_students || 0;
                 document.getElementById('total-quizzes').textContent = data.total_quizzes_taken || 0;
