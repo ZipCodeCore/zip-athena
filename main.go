@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/ZipCodeCore/zip-athena/api"
 	"github.com/ZipCodeCore/zip-athena/database"
@@ -319,6 +320,69 @@ func main() {
 				handler.RemoveQuestionFromTestHandler(w, r)
 			} else {
 				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	// Phase 4: Quiz Attempt History routes
+	http.HandleFunc("/students/quiz-history", handler.GetQuizHistoryHandler)
+	http.HandleFunc("/students/quiz-history/", handler.GetQuizAttemptDetailsHandler)
+
+	// Phase 4: Timed Test Taking routes
+	http.HandleFunc("/tests/available", handler.GetAvailableTestsHandler)
+	http.HandleFunc("/tests/", func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "/start") {
+			handler.StartTestHandler(w, r)
+		} else {
+			handler.GetTestDetailsHandler(w, r)
+		}
+	})
+	http.HandleFunc("/test-attempts/", func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "/answer") {
+			handler.UpdateTestAnswerHandler(w, r)
+		} else if strings.Contains(r.URL.Path, "/submit") {
+			handler.SubmitTestHandler(w, r)
+		} else if strings.Contains(r.URL.Path, "/results") {
+			handler.GetTestResultsHandler(w, r)
+		} else {
+			http.Error(w, "Not found", http.StatusNotFound)
+		}
+	})
+
+	// Phase 4: Tag-Based Review routes
+	http.HandleFunc("/tags", handler.GetTagsHandler)
+	http.HandleFunc("/tags/stats", handler.GetTagStatsHandler)
+	http.HandleFunc("/quiz/generate/by-tags", handler.GenerateQuizByTagsHandler)
+
+	// Phase 4: Instructor Test Management routes
+	http.HandleFunc("/instructor/tests/", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if strings.Contains(r.URL.Path, "/publish") {
+				handler.PublishTestHandler(w, r)
+			} else if strings.Contains(r.URL.Path, "/results") {
+				handler.GetTestResultsInstructorHandler(w, r)
+			} else if strings.Contains(r.URL.Path, "/export") {
+				handler.ExportTestResultsHandler(w, r)
+			} else {
+				http.Error(w, "Not found", http.StatusNotFound)
+			}
+		})(w, r)
+	})
+
+	// Phase 4: Question Performance Analytics routes
+	http.HandleFunc("/instructor/questions/analytics", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(handler.GetQuestionAnalyticsHandler)(w, r)
+	})
+	http.HandleFunc("/instructor/questions/", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if strings.Contains(r.URL.Path, "/analytics") {
+				handler.GetQuestionDetailedAnalyticsHandler(w, r)
+			} else if strings.Contains(r.URL.Path, "/answer-distribution") {
+				handler.GetAnswerDistributionHandler(w, r)
+			} else if strings.Contains(r.URL.Path, "/difficulty") {
+				handler.UpdateQuestionDifficultyHandler(w, r)
+			} else {
+				http.Error(w, "Not found", http.StatusNotFound)
 			}
 		})(w, r)
 	})
