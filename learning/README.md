@@ -10,15 +10,18 @@ These resources are directly linked to the quiz questions you'll encounter in At
 
 ## Structure
 
-The learning resources are organized by programming language, with each major topic getting its own file:
+The learning resources are organized by programming language, with each major topic getting its own file. Each file contains both educational content and quiz questions to support comprehensive learning.
 
 ### Java
-- **control-structures.md** - Making decisions and repeating actions in Java
+- **control-structures.md** ✅ - Making decisions and repeating actions in Java (includes 8 quiz questions)
 - **variables-and-data-types.md** - Understanding how Java stores and works with data
 
 ### Python
-- **control-structures.md** - Making decisions and repeating actions in Python  
+- **control-structures.md** ✅ - Making decisions and repeating actions in Python (includes 8 quiz questions)
 - **data-structures.md** - Working with lists, dictionaries, sets, and tuples (covers curriculum sections 6-9)
+
+### Format
+See [LEARNING_RESOURCE_FORMAT.md](LEARNING_RESOURCE_FORMAT.md) for the complete specification of how learning resources are structured, including the integration of study guides with quiz questions.
 
 ## How to Use These Resources
 
@@ -29,7 +32,13 @@ The learning resources are organized by programming language, with each major to
 
 ## What's Coming Next
 
-This is just the beginning! We're building out comprehensive learning resources for all curriculum topics. See the [PHASED_PLAN.md](PHASED_PLAN.md) for our roadmap of upcoming content.
+This is just the beginning! We're building out comprehensive learning resources for all curriculum topics. 
+
+### For Contributors
+See the [CONTRIBUTOR_GUIDE.md](CONTRIBUTOR_GUIDE.md) for detailed instructions on creating new learning resources.
+
+### Roadmap
+See [PHASED_PLAN.md](PHASED_PLAN.md) for our complete roadmap of upcoming content and development priorities.
 
 ## Style Guide
 

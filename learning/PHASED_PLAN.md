@@ -5,10 +5,26 @@ This document outlines the strategy for developing comprehensive learning resour
 ## Current Status
 
 ### Completed Resources (Phase 0)
-- ✅ Java: Control Structures
+- ✅ Java: Control Structures (with 8 quiz questions)
 - ✅ Java: Variables and Data Types
 - ✅ Python: Data Structures (Lists, Tuples, Dictionaries, Sets)
-- ✅ Python: Control Structures
+- ✅ Python: Control Structures (with 8 quiz questions)
+
+### New Format Implemented
+- ✅ Learning Resource Format Specification (LEARNING_RESOURCE_FORMAT.md)
+- ✅ Contributor Guide (CONTRIBUTOR_GUIDE.md)
+- ✅ Example Template (java/operators-and-expressions-EXAMPLE.md)
+
+### Format Features
+Each learning resource now includes:
+- **Study Guide Section**: 2-4 paragraphs per sub-topic with working code examples
+- **Quiz Questions Section**: 6-8 questions covering all major concepts
+  - Multiple question types (multiple-choice, code-output, true-false, code-completion)
+  - Difficulty levels 1-7 (basic to advanced)
+  - Comprehensive explanations for all answers
+  - Tags for organization (language, topic, sub-topics)
+
+This dual-purpose structure ensures study materials and quiz questions stay synchronized and can be easily updated together.
 
 ## Development Strategy
 
@@ -307,12 +323,33 @@ OOP is critical for both languages and builds on the fundamentals.
 
 ## Integration with Athena
 
-### Quiz Question Generation
-Once learning resources are in place, quiz questions should be:
-1. **Linked to specific learning modules** - Each question references the relevant .md file
-2. **Tagged by topic and difficulty** - Use the curriculum structure for tags
-3. **Progressive in difficulty** - Range from basic (level 1-2) to intermediate (level 6-7)
-4. **Diverse in format** - Include multiple choice, code completion, debugging, and output prediction
+### Quiz Question Format
+
+Each learning resource includes a "Quiz Questions" section with structured questions that can be extracted and imported into the Athena database. The format includes:
+
+- **Question metadata**: Type, difficulty level (1-7), tags
+- **Question content**: Text, code snippets, answer choices
+- **Correct answer**: Clearly marked
+- **Explanation**: Thorough explanation of correct and incorrect answers
+
+### Current State (Phase 0)
+
+Learning resources are markdown files in the `learning/` folder with integrated quiz questions. The format supports:
+
+1. **Manual Question Import**: Instructors can copy quiz questions from learning resources into the database
+2. **Study-Quiz Workflow**: Students can study a topic, then take a quiz with questions from that topic
+3. **Synchronized Updates**: Study guides and quiz questions are in the same file, ensuring they stay synchronized
+
+### Future Integration (Planned)
+
+The structure is designed to support:
+
+1. **Automatic Parsing**: Future tools could parse the "Quiz Questions" section and import questions automatically into the database
+2. **Dynamic Linking**: Questions in the database could reference their source learning resource file
+3. **Personalized Learning**: Students could study a topic, then Athena generates a quiz specifically from that topic's questions
+4. **Spaced Repetition Integration**: Wrong answers could trigger review of specific sub-topics from the learning resource
+5. **AI-Assisted Generation**: An AI assistant could suggest quiz questions based on the study guide content
+6. **Progress Tracking**: Track which learning resources a student has studied and quiz performance on each
 
 ### Student Learning Flow
 1. Student selects a topic (e.g., "Java Control Structures")
