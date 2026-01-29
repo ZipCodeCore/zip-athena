@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strconv"
 	"testing"
 	"time"
@@ -238,4 +239,73 @@ func TestGetProgressHandlerIncludesInProgressQuizzes(t *testing.T) {
 	if totalQuizzes != 2 {
 		t.Errorf("Expected total_quizzes to be 2, got %d", totalQuizzes)
 	}
+}
+
+// TestCreateUserWithPasswordHashing tests that passwords are hashed when creating users via admin
+func TestCreateUserWithPasswordHashing(t *testing.T) {
+// Create a temporary SQLite database for this test
+dbPath := "/tmp/test_user_creation.db"
+defer os.Remove(dbPath)
+
+db, err := database.NewSQLiteDB(dbPath)
+if err != nil {
+t.Fatalf("Failed to create SQLite database: %v", err)
+}
+defer db.Close()
+
+handler := NewHandler(db)
+
+// Create a user with a plain text password (like admin panel does)
+testPassword := "testpass123"
+user := models.User{
+Username: "testuser",
+Email:    "test@example.com",
+Password: testPassword,
+IsAdmin:  false,
+}
+
+body, _ := json.Marshal(user)
+req := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(body))
+w := httptest.NewRecorder()
+
+handler.CreateUserHandler(w, req)
+
+if w.Code != http.StatusCreated {
+t.Fatalf("Expected status %d, got %d. Body: %s", http.StatusCreated, w.Code, w.Body.String())
+}
+
+var created models.User
+json.NewDecoder(w.Body).Decode(&created)
+
+// Verify the returned user doesn't have password
+if created.Password != "" {
+t.Error("Expected password to be empty in response")
+}
+
+// Now try to login with the created user
+loginReq := LoginRequest{
+Username: "testuser",
+Password: testPassword,
+}
+
+loginBody, _ := json.Marshal(loginReq)
+loginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(loginBody))
+loginW := httptest.NewRecorder()
+
+handler.LoginHandler(loginW, loginHTTPReq)
+
+if loginW.Code != http.StatusOK {
+t.Fatalf("Expected login to succeed with status %d, got %d. Body: %s", http.StatusOK, loginW.Code, loginW.Body.String())
+}
+
+var authResp AuthResponse
+json.NewDecoder(loginW.Body).Decode(&authResp)
+
+if authResp.User.Username != "testuser" {
+t.Errorf("Expected username 'testuser', got '%s'", authResp.User.Username)
+}
+
+if authResp.Message != "Login successful" {
+t.Errorf("Expected message 'Login successful', got '%s'", authResp.Message)
+}
 }
