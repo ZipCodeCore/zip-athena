@@ -353,19 +353,21 @@
         const userData = localStorage.getItem('user');
         if (!userData) {
             window.location.href = '/index.html';
-        } else {
-            currentUser = JSON.parse(userData);
-            userId = String(currentUser.id);
-            
-            if (!currentUser.is_admin) {
-                window.location.href = '/403.html';
-            } else {
-                // User is authenticated and is admin, load the data
-                loadCohortAnalytics();
-                loadQuizzes();
-                loadStudentList();
-            }
+            return;
         }
+        
+        currentUser = JSON.parse(userData);
+        userId = String(currentUser.id);
+        
+        if (!currentUser.is_admin) {
+            window.location.href = '/403.html';
+            return;
+        }
+        
+        // User is authenticated and is admin, load the data
+        loadCohortAnalytics();
+        loadQuizzes();
+        loadStudentList();
 
         function loadCohortAnalytics() {
             fetch('/instructor/cohort-analytics', {
