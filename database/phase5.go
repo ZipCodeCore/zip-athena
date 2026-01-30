@@ -77,20 +77,13 @@ func (db *SQLiteDB) ListQuestionsWithPagination(page int, perPage int, search st
 	return questions, total, rows.Err()
 }
 
-// DeactivateQuestion soft deletes a question
+// DeactivateQuestion deletes (currently hard-deletes) a question.
+// Once an is_active column is added to the questions table, this should be
+// updated to perform a true soft delete instead of a hard delete.
 func (db *SQLiteDB) DeactivateQuestion(questionID int) error {
-	// For now, we'll use the existing DeleteQuestion method
-	// In a real implementation, we'd add is_active column to questions table
-	// and update it here. For this implementation, we'll mark it as a comment
-	// TODO: Add is_active column to questions table in migration
-	
-	// Since we don't have is_active in questions table yet, we'll return success
-	// but note that full implementation requires schema migration
-	_, err := db.db.Exec("SELECT id FROM questions WHERE id = ?", questionID)
-	if err == sql.ErrNoRows {
-		return ErrNotFound
-	}
-	return err
+	// For now, delegate to the existing DeleteQuestion implementation so that
+	// calling this function has a real effect instead of being a no-op.
+	return db.DeleteQuestion(questionID)
 }
 
 // GetQuestionPreview returns a question with its answers for preview
