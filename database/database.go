@@ -139,6 +139,28 @@ type Database interface {
 	GetQuestionDetailedAnalytics(questionID int) (*models.QuestionAnalytics, error)
 	GetAnswerDistribution(questionID int) (map[int]int, error)
 	UpdateQuestionDifficultyFromAnalytics(questionID int, newDifficulty int) error
+
+	// Phase 5: Question Management
+	ListQuestionsWithPagination(page int, perPage int, search string, topicID int, difficulty int) ([]*models.Question, int, error)
+	DeactivateQuestion(questionID int) error
+	GetQuestionPreview(questionID int) (*models.QuestionPreview, error)
+	ValidateQuestionData(question *models.Question, answers []models.Answer) error
+
+	// Phase 5: Bulk CSV Import
+	ValidateCSVImport(rows []models.CSVImportRow) (*models.CSVImportResult, error)
+	BulkCreateQuestions(rows []models.CSVImportRow) (int, error)
+
+	// Phase 5: Tag Management
+	GetTagsWithMetadata() ([]*models.Tag, error)
+	MergeTags(sourceTags []string, targetTag string) error
+	DeleteTag(tagName string) error
+	GetQuestionsByTag(tagName string) ([]*models.Question, error)
+
+	// Phase 5: Quality Review
+	GetFlaggedQuestions() ([]*models.FlaggedQuestion, error)
+	FlagQuestion(questionID int, reason string) error
+	UnflagQuestion(questionID int) error
+	AutoFlagQuestions() error
 }
 
 // InMemoryDB implements the Database interface using in-memory storage
