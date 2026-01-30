@@ -2,7 +2,6 @@ package database
 
 import (
 	"database/sql"
-	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
