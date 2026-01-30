@@ -1,12 +1,14 @@
 package database
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
-	"github.com/ZipCodeCore/zip-athena/models"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/ZipCodeCore/zip-athena/models"
 )
 
 var (
@@ -16,6 +18,10 @@ var (
 
 // Database interface defines the contract for data operations
 type Database interface {
+	// Core database access
+	DB() *sql.DB
+	Close() error
+
 	// User operations
 	CreateUser(user *models.User) error
 	GetUser(id int) (*models.User, error)
@@ -1365,596 +1371,596 @@ func (db *InMemoryDB) ReorderTopics(topicIDs []int) error {
 
 // GetQuizHistoryByUser retrieves quiz attempts for a user with pagination
 func (db *InMemoryDB) GetQuizHistoryByUser(userID int, page int, perPage int) ([]*models.QuizAttempt, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var attempts []*models.QuizAttempt
-for _, attempt := range db.quizAttempts {
-if attempt.UserID == userID && attempt.CompletedTime != nil {
-attempts = append(attempts, attempt)
-}
-}
+	var attempts []*models.QuizAttempt
+	for _, attempt := range db.quizAttempts {
+		if attempt.UserID == userID && attempt.CompletedTime != nil {
+			attempts = append(attempts, attempt)
+		}
+	}
 
-// Sort by completed time descending (newest first)
-for i := 0; i < len(attempts); i++ {
-for j := i + 1; j < len(attempts); j++ {
-if attempts[i].CompletedTime.Before(*attempts[j].CompletedTime) {
-attempts[i], attempts[j] = attempts[j], attempts[i]
-}
-}
-}
+	// Sort by completed time descending (newest first)
+	for i := 0; i < len(attempts); i++ {
+		for j := i + 1; j < len(attempts); j++ {
+			if attempts[i].CompletedTime.Before(*attempts[j].CompletedTime) {
+				attempts[i], attempts[j] = attempts[j], attempts[i]
+			}
+		}
+	}
 
-// Apply pagination
-start := (page - 1) * perPage
-end := start + perPage
-if start >= len(attempts) {
-return []*models.QuizAttempt{}, nil
-}
-if end > len(attempts) {
-end = len(attempts)
-}
+	// Apply pagination
+	start := (page - 1) * perPage
+	end := start + perPage
+	if start >= len(attempts) {
+		return []*models.QuizAttempt{}, nil
+	}
+	if end > len(attempts) {
+		end = len(attempts)
+	}
 
-return attempts[start:end], nil
+	return attempts[start:end], nil
 }
 
 // GetQuizHistoryByTopic retrieves quiz attempts for a user filtered by topic
 func (db *InMemoryDB) GetQuizHistoryByTopic(userID int, topicID int, page int, perPage int) ([]*models.QuizAttempt, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var attempts []*models.QuizAttempt
-for _, attempt := range db.quizAttempts {
-if attempt.UserID == userID && attempt.CompletedTime != nil {
-// Check if any question in the attempt belongs to the topic
-hasTopicQuestion := false
-for qid := range attempt.QuestionResults {
-// Find question by topic_question_id
-for _, q := range db.questions {
-if q.TopicQuestionID == qid && q.TopicID == topicID {
-hasTopicQuestion = true
-break
-}
-}
-if hasTopicQuestion {
-break
-}
-}
-if hasTopicQuestion {
-attempts = append(attempts, attempt)
-}
-}
-}
+	var attempts []*models.QuizAttempt
+	for _, attempt := range db.quizAttempts {
+		if attempt.UserID == userID && attempt.CompletedTime != nil {
+			// Check if any question in the attempt belongs to the topic
+			hasTopicQuestion := false
+			for qid := range attempt.QuestionResults {
+				// Find question by topic_question_id
+				for _, q := range db.questions {
+					if q.TopicQuestionID == qid && q.TopicID == topicID {
+						hasTopicQuestion = true
+						break
+					}
+				}
+				if hasTopicQuestion {
+					break
+				}
+			}
+			if hasTopicQuestion {
+				attempts = append(attempts, attempt)
+			}
+		}
+	}
 
-// Sort by completed time descending
-for i := 0; i < len(attempts); i++ {
-for j := i + 1; j < len(attempts); j++ {
-if attempts[i].CompletedTime.Before(*attempts[j].CompletedTime) {
-attempts[i], attempts[j] = attempts[j], attempts[i]
-}
-}
-}
+	// Sort by completed time descending
+	for i := 0; i < len(attempts); i++ {
+		for j := i + 1; j < len(attempts); j++ {
+			if attempts[i].CompletedTime.Before(*attempts[j].CompletedTime) {
+				attempts[i], attempts[j] = attempts[j], attempts[i]
+			}
+		}
+	}
 
-// Apply pagination
-start := (page - 1) * perPage
-end := start + perPage
-if start >= len(attempts) {
-return []*models.QuizAttempt{}, nil
-}
-if end > len(attempts) {
-end = len(attempts)
-}
+	// Apply pagination
+	start := (page - 1) * perPage
+	end := start + perPage
+	if start >= len(attempts) {
+		return []*models.QuizAttempt{}, nil
+	}
+	if end > len(attempts) {
+		end = len(attempts)
+	}
 
-return attempts[start:end], nil
+	return attempts[start:end], nil
 }
 
 // GetQuizAttemptWithDetails retrieves a quiz attempt with full details
 func (db *InMemoryDB) GetQuizAttemptWithDetails(attemptID int) (*models.QuizAttempt, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-attempt, exists := db.quizAttempts[attemptID]
-if !exists {
-return nil, ErrNotFound
-}
+	attempt, exists := db.quizAttempts[attemptID]
+	if !exists {
+		return nil, ErrNotFound
+	}
 
-return attempt, nil
+	return attempt, nil
 }
 
 // Phase 4: Timed Test Taking Methods
 
 // CreateTestAttempt creates a new test attempt
 func (db *InMemoryDB) CreateTestAttempt(attempt *models.TestAttempt) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-db.nextTestAttemptID++
-attempt.ID = db.nextTestAttemptID
-db.testAttempts[attempt.ID] = attempt
-return nil
+	db.nextTestAttemptID++
+	attempt.ID = db.nextTestAttemptID
+	db.testAttempts[attempt.ID] = attempt
+	return nil
 }
 
 // GetTestAttempt retrieves a test attempt by ID
 func (db *InMemoryDB) GetTestAttempt(id int) (*models.TestAttempt, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-attempt, exists := db.testAttempts[id]
-if !exists {
-return nil, ErrNotFound
-}
-return attempt, nil
+	attempt, exists := db.testAttempts[id]
+	if !exists {
+		return nil, ErrNotFound
+	}
+	return attempt, nil
 }
 
 // UpdateTestAttemptAnswer updates an answer in a test attempt
 func (db *InMemoryDB) UpdateTestAttemptAnswer(attemptID int, questionID string, answerID int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-attempt, exists := db.testAttempts[attemptID]
-if !exists {
-return ErrNotFound
-}
+	attempt, exists := db.testAttempts[attemptID]
+	if !exists {
+		return ErrNotFound
+	}
 
-if attempt.Answers == nil {
-attempt.Answers = make(map[string]int)
-}
-attempt.Answers[questionID] = answerID
-return nil
+	if attempt.Answers == nil {
+		attempt.Answers = make(map[string]int)
+	}
+	attempt.Answers[questionID] = answerID
+	return nil
 }
 
 // SubmitTestAttempt submits a test attempt and calculates the score
 func (db *InMemoryDB) SubmitTestAttempt(attemptID int, isAutoSubmit bool) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-attempt, exists := db.testAttempts[attemptID]
-if !exists {
-return ErrNotFound
-}
+	attempt, exists := db.testAttempts[attemptID]
+	if !exists {
+		return ErrNotFound
+	}
 
-now := time.Now()
-attempt.SubmitTime = &now
-attempt.IsAutoSubmit = isAutoSubmit
+	now := time.Now()
+	attempt.SubmitTime = &now
+	attempt.IsAutoSubmit = isAutoSubmit
 
-// Calculate time remaining
-test, exists := db.tests[attempt.TestID]
-if !exists {
-return ErrNotFound
-}
+	// Calculate time remaining
+	test, exists := db.tests[attempt.TestID]
+	if !exists {
+		return ErrNotFound
+	}
 
-timeLimitSeconds := test.TimeLimit * 60
-elapsed := int(now.Sub(attempt.StartTime).Seconds())
-attempt.TimeRemaining = timeLimitSeconds - elapsed
-if attempt.TimeRemaining < 0 {
-attempt.TimeRemaining = 0
-}
+	timeLimitSeconds := test.TimeLimit * 60
+	elapsed := int(now.Sub(attempt.StartTime).Seconds())
+	attempt.TimeRemaining = timeLimitSeconds - elapsed
+	if attempt.TimeRemaining < 0 {
+		attempt.TimeRemaining = 0
+	}
 
-// Get test questions to calculate score
-testQuestions, err := db.GetTestQuestions(attempt.TestID)
-if err != nil {
-return err
-}
+	// Get test questions to calculate score
+	testQuestions, err := db.GetTestQuestions(attempt.TestID)
+	if err != nil {
+		return err
+	}
 
-attempt.TotalQuestions = len(testQuestions)
-attempt.CorrectAnswers = 0
-attempt.QuestionResults = make(map[string]bool)
+	attempt.TotalQuestions = len(testQuestions)
+	attempt.CorrectAnswers = 0
+	attempt.QuestionResults = make(map[string]bool)
 
-// Check each answer
-for _, q := range testQuestions {
-questionKey := fmt.Sprintf("%d", q.ID)
-answerID, hasAnswer := attempt.Answers[questionKey]
+	// Check each answer
+	for _, q := range testQuestions {
+		questionKey := fmt.Sprintf("%d", q.ID)
+		answerID, hasAnswer := attempt.Answers[questionKey]
 
-if hasAnswer {
-// Check if answer is correct
-answer, exists := db.answers[answerID]
-if exists && answer.QuestionID == q.ID && answer.IsCorrect {
-attempt.CorrectAnswers++
-attempt.QuestionResults[questionKey] = true
-} else {
-attempt.QuestionResults[questionKey] = false
-}
-} else {
-attempt.QuestionResults[questionKey] = false
-}
-}
+		if hasAnswer {
+			// Check if answer is correct
+			answer, exists := db.answers[answerID]
+			if exists && answer.QuestionID == q.ID && answer.IsCorrect {
+				attempt.CorrectAnswers++
+				attempt.QuestionResults[questionKey] = true
+			} else {
+				attempt.QuestionResults[questionKey] = false
+			}
+		} else {
+			attempt.QuestionResults[questionKey] = false
+		}
+	}
 
-// Calculate score
-if attempt.TotalQuestions > 0 {
-attempt.Score = float64(attempt.CorrectAnswers) / float64(attempt.TotalQuestions) * 100
-}
+	// Calculate score
+	if attempt.TotalQuestions > 0 {
+		attempt.Score = float64(attempt.CorrectAnswers) / float64(attempt.TotalQuestions) * 100
+	}
 
-return nil
+	return nil
 }
 
 // GetTestResults retrieves the results of a test attempt
 func (db *InMemoryDB) GetTestResults(attemptID int) (*models.TestAttempt, error) {
-return db.GetTestAttempt(attemptID)
+	return db.GetTestAttempt(attemptID)
 }
 
 // GetAvailableTests retrieves available tests for a student
 func (db *InMemoryDB) GetAvailableTests(userID int) ([]*models.Test, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-now := time.Now()
-var available []*models.Test
+	now := time.Now()
+	var available []*models.Test
 
-for _, test := range db.tests {
-// Only show published tests
-if !test.IsPublished {
-continue
-}
+	for _, test := range db.tests {
+		// Only show published tests
+		if !test.IsPublished {
+			continue
+		}
 
-// Check if within availability window
-if test.StartDate != nil && now.Before(*test.StartDate) {
-continue
-}
-if test.EndDate != nil && now.After(*test.EndDate) {
-continue
-}
+		// Check if within availability window
+		if test.StartDate != nil && now.Before(*test.StartDate) {
+			continue
+		}
+		if test.EndDate != nil && now.After(*test.EndDate) {
+			continue
+		}
 
-available = append(available, test)
-}
+		available = append(available, test)
+	}
 
-return available, nil
+	return available, nil
 }
 
 // GetTestAttemptsByUser retrieves all test attempts for a user for a specific test
 func (db *InMemoryDB) GetTestAttemptsByUser(userID int, testID int) ([]*models.TestAttempt, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var attempts []*models.TestAttempt
-for _, attempt := range db.testAttempts {
-if attempt.UserID == userID && attempt.TestID == testID {
-attempts = append(attempts, attempt)
-}
-}
+	var attempts []*models.TestAttempt
+	for _, attempt := range db.testAttempts {
+		if attempt.UserID == userID && attempt.TestID == testID {
+			attempts = append(attempts, attempt)
+		}
+	}
 
-return attempts, nil
+	return attempts, nil
 }
 
 // Phase 4: Tag-Based Review Methods
 
 // GetAllTags retrieves all unique tags from all questions
 func (db *InMemoryDB) GetAllTags() ([]string, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-tagSet := make(map[string]bool)
-for _, q := range db.questions {
-for _, tag := range q.Tags {
-tagSet[tag] = true
-}
-}
+	tagSet := make(map[string]bool)
+	for _, q := range db.questions {
+		for _, tag := range q.Tags {
+			tagSet[tag] = true
+		}
+	}
 
-tags := make([]string, 0, len(tagSet))
-for tag := range tagSet {
-tags = append(tags, tag)
-}
+	tags := make([]string, 0, len(tagSet))
+	for tag := range tagSet {
+		tags = append(tags, tag)
+	}
 
-return tags, nil
+	return tags, nil
 }
 
 // GetTagsWithCounts retrieves all tags with their question counts
 func (db *InMemoryDB) GetTagsWithCounts() (map[string]int, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-tagCounts := make(map[string]int)
-for _, q := range db.questions {
-for _, tag := range q.Tags {
-tagCounts[tag]++
-}
-}
+	tagCounts := make(map[string]int)
+	for _, q := range db.questions {
+		for _, tag := range q.Tags {
+			tagCounts[tag]++
+		}
+	}
 
-return tagCounts, nil
+	return tagCounts, nil
 }
 
 // GetTagStats retrieves accuracy statistics for each tag for a user
 func (db *InMemoryDB) GetTagStats(userID int) ([]*models.TagStats, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-tagStats := make(map[string]*models.TagStats)
+	tagStats := make(map[string]*models.TagStats)
 
-// Calculate stats from question attempts
-for _, qa := range db.questionAttempts {
-if qa.UserID == userID {
-question, exists := db.questions[qa.QuestionID]
-if !exists {
-continue
-}
+	// Calculate stats from question attempts
+	for _, qa := range db.questionAttempts {
+		if qa.UserID == userID {
+			question, exists := db.questions[qa.QuestionID]
+			if !exists {
+				continue
+			}
 
-for _, tag := range question.Tags {
-if _, exists := tagStats[tag]; !exists {
-tagStats[tag] = &models.TagStats{
-Tag: tag,
-}
-}
+			for _, tag := range question.Tags {
+				if _, exists := tagStats[tag]; !exists {
+					tagStats[tag] = &models.TagStats{
+						Tag: tag,
+					}
+				}
 
-stats := tagStats[tag]
-stats.CorrectAttempts += qa.CorrectAttempts
-stats.TotalAttempts += qa.CorrectAttempts + qa.IncorrectAttempts
-}
-}
-}
+				stats := tagStats[tag]
+				stats.CorrectAttempts += qa.CorrectAttempts
+				stats.TotalAttempts += qa.CorrectAttempts + qa.IncorrectAttempts
+			}
+		}
+	}
 
-// Calculate accuracy and question counts
-tagCounts, _ := db.GetTagsWithCounts()
-result := make([]*models.TagStats, 0, len(tagStats))
-for tag, stats := range tagStats {
-stats.QuestionCount = tagCounts[tag]
-if stats.TotalAttempts > 0 {
-stats.Accuracy = float64(stats.CorrectAttempts) / float64(stats.TotalAttempts) * 100
-}
-result = append(result, stats)
-}
+	// Calculate accuracy and question counts
+	tagCounts, _ := db.GetTagsWithCounts()
+	result := make([]*models.TagStats, 0, len(tagStats))
+	for tag, stats := range tagStats {
+		stats.QuestionCount = tagCounts[tag]
+		if stats.TotalAttempts > 0 {
+			stats.Accuracy = float64(stats.CorrectAttempts) / float64(stats.TotalAttempts) * 100
+		}
+		result = append(result, stats)
+	}
 
-return result, nil
+	return result, nil
 }
 
 // GetQuestionsByTags retrieves questions that match the given tags
 func (db *InMemoryDB) GetQuestionsByTags(tags []string, useAnd bool) ([]*models.Question, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var result []*models.Question
+	var result []*models.Question
 
-for _, q := range db.questions {
-if useAnd {
-// AND logic: question must have all tags
-hasAllTags := true
-for _, tag := range tags {
-found := false
-for _, qTag := range q.Tags {
-if qTag == tag {
-found = true
-break
-}
-}
-if !found {
-hasAllTags = false
-break
-}
-}
-if hasAllTags {
-result = append(result, q)
-}
-} else {
-// OR logic: question must have at least one tag
-hasAnyTag := false
-for _, tag := range tags {
-for _, qTag := range q.Tags {
-if qTag == tag {
-hasAnyTag = true
-break
-}
-}
-if hasAnyTag {
-break
-}
-}
-if hasAnyTag {
-result = append(result, q)
-}
-}
-}
+	for _, q := range db.questions {
+		if useAnd {
+			// AND logic: question must have all tags
+			hasAllTags := true
+			for _, tag := range tags {
+				found := false
+				for _, qTag := range q.Tags {
+					if qTag == tag {
+						found = true
+						break
+					}
+				}
+				if !found {
+					hasAllTags = false
+					break
+				}
+			}
+			if hasAllTags {
+				result = append(result, q)
+			}
+		} else {
+			// OR logic: question must have at least one tag
+			hasAnyTag := false
+			for _, tag := range tags {
+				for _, qTag := range q.Tags {
+					if qTag == tag {
+						hasAnyTag = true
+						break
+					}
+				}
+				if hasAnyTag {
+					break
+				}
+			}
+			if hasAnyTag {
+				result = append(result, q)
+			}
+		}
+	}
 
-return result, nil
+	return result, nil
 }
 
 // Phase 4: Test Management (Instructor) Methods
 
 // PublishTest sets a test as published
 func (db *InMemoryDB) PublishTest(testID int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-test, exists := db.tests[testID]
-if !exists {
-return ErrNotFound
-}
+	test, exists := db.tests[testID]
+	if !exists {
+		return ErrNotFound
+	}
 
-test.IsPublished = true
-test.UpdatedAt = time.Now()
-return nil
+	test.IsPublished = true
+	test.UpdatedAt = time.Now()
+	return nil
 }
 
 // GetTestResultsByTest retrieves all test results for a specific test
 func (db *InMemoryDB) GetTestResultsByTest(testID int) (*models.TestResult, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-test, exists := db.tests[testID]
-if !exists {
-return nil, ErrNotFound
-}
+	test, exists := db.tests[testID]
+	if !exists {
+		return nil, ErrNotFound
+	}
 
-result := &models.TestResult{
-TestID:         testID,
-TestName:       test.Name,
-StudentResults: make([]models.StudentTestResult, 0),
-}
+	result := &models.TestResult{
+		TestID:         testID,
+		TestName:       test.Name,
+		StudentResults: make([]models.StudentTestResult, 0),
+	}
 
-for _, attempt := range db.testAttempts {
-if attempt.TestID == testID && attempt.SubmitTime != nil {
-user, exists := db.users[attempt.UserID]
-if !exists {
-continue
-}
+	for _, attempt := range db.testAttempts {
+		if attempt.TestID == testID && attempt.SubmitTime != nil {
+			user, exists := db.users[attempt.UserID]
+			if !exists {
+				continue
+			}
 
-timeTaken := 0
-if test.TimeLimit > 0 {
-timeTaken = (test.TimeLimit * 60) - attempt.TimeRemaining
-}
+			timeTaken := 0
+			if test.TimeLimit > 0 {
+				timeTaken = (test.TimeLimit * 60) - attempt.TimeRemaining
+			}
 
-result.StudentResults = append(result.StudentResults, models.StudentTestResult{
-UserID:         attempt.UserID,
-Username:       user.Username,
-Score:          attempt.Score,
-CorrectAnswers: attempt.CorrectAnswers,
-TotalQuestions: attempt.TotalQuestions,
-SubmitTime:     *attempt.SubmitTime,
-TimeTaken:      timeTaken,
-})
-}
-}
+			result.StudentResults = append(result.StudentResults, models.StudentTestResult{
+				UserID:         attempt.UserID,
+				Username:       user.Username,
+				Score:          attempt.Score,
+				CorrectAnswers: attempt.CorrectAnswers,
+				TotalQuestions: attempt.TotalQuestions,
+				SubmitTime:     *attempt.SubmitTime,
+				TimeTaken:      timeTaken,
+			})
+		}
+	}
 
-return result, nil
+	return result, nil
 }
 
 // ExportTestResults exports test results as CSV
 func (db *InMemoryDB) ExportTestResults(testID int) ([]byte, error) {
-results, err := db.GetTestResultsByTest(testID)
-if err != nil {
-return nil, err
-}
+	results, err := db.GetTestResultsByTest(testID)
+	if err != nil {
+		return nil, err
+	}
 
-var csv strings.Builder
-csv.WriteString("Username,Score,Correct Answers,Total Questions,Submit Time,Time Taken (seconds)\n")
+	var csv strings.Builder
+	csv.WriteString("Username,Score,Correct Answers,Total Questions,Submit Time,Time Taken (seconds)\n")
 
-for _, sr := range results.StudentResults {
-csv.WriteString(fmt.Sprintf("%s,%.2f,%d,%d,%s,%d\n",
-sr.Username,
-sr.Score,
-sr.CorrectAnswers,
-sr.TotalQuestions,
-sr.SubmitTime.Format(time.RFC3339),
-sr.TimeTaken,
-))
-}
+	for _, sr := range results.StudentResults {
+		csv.WriteString(fmt.Sprintf("%s,%.2f,%d,%d,%s,%d\n",
+			sr.Username,
+			sr.Score,
+			sr.CorrectAnswers,
+			sr.TotalQuestions,
+			sr.SubmitTime.Format(time.RFC3339),
+			sr.TimeTaken,
+		))
+	}
 
-return []byte(csv.String()), nil
+	return []byte(csv.String()), nil
 }
 
 // Phase 4: Question Performance Analytics Methods
 
 // GetQuestionAnalytics retrieves analytics for all questions
 func (db *InMemoryDB) GetQuestionAnalytics() ([]*models.QuestionAnalytics, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-analytics := make([]*models.QuestionAnalytics, 0)
+	analytics := make([]*models.QuestionAnalytics, 0)
 
-for _, q := range db.questions {
-qa, err := db.getQuestionAnalyticsInternal(q.ID)
-if err != nil {
-continue
-}
-analytics = append(analytics, qa)
-}
+	for _, q := range db.questions {
+		qa, err := db.getQuestionAnalyticsInternal(q.ID)
+		if err != nil {
+			continue
+		}
+		analytics = append(analytics, qa)
+	}
 
-return analytics, nil
+	return analytics, nil
 }
 
 // GetQuestionDetailedAnalytics retrieves detailed analytics for a single question
 func (db *InMemoryDB) GetQuestionDetailedAnalytics(questionID int) (*models.QuestionAnalytics, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-return db.getQuestionAnalyticsInternal(questionID)
+	return db.getQuestionAnalyticsInternal(questionID)
 }
 
 // getQuestionAnalyticsInternal is an internal helper (must be called with lock held)
 func (db *InMemoryDB) getQuestionAnalyticsInternal(questionID int) (*models.QuestionAnalytics, error) {
-question, exists := db.questions[questionID]
-if !exists {
-return nil, ErrNotFound
-}
+	question, exists := db.questions[questionID]
+	if !exists {
+		return nil, ErrNotFound
+	}
 
-topic, _ := db.topics[question.TopicID]
-topicName := ""
-if topic != nil {
-topicName = topic.Name
-}
+	topic, _ := db.topics[question.TopicID]
+	topicName := ""
+	if topic != nil {
+		topicName = topic.Name
+	}
 
-analytics := &models.QuestionAnalytics{
-QuestionID:        questionID,
-TopicQuestionID:   question.TopicQuestionID,
-QuestionText:      question.QuestionText,
-TopicID:           question.TopicID,
-TopicName:         topicName,
-Tags:              question.Tags,
-CurrentDifficulty: question.Difficulty,
-AnswerDistribution: make(map[int]int),
-}
+	analytics := &models.QuestionAnalytics{
+		QuestionID:         questionID,
+		TopicQuestionID:    question.TopicQuestionID,
+		QuestionText:       question.QuestionText,
+		TopicID:            question.TopicID,
+		TopicName:          topicName,
+		Tags:               question.Tags,
+		CurrentDifficulty:  question.Difficulty,
+		AnswerDistribution: make(map[int]int),
+	}
 
-// Calculate attempts and accuracy
-totalAttempts := 0
-correctAttempts := 0
+	// Calculate attempts and accuracy
+	totalAttempts := 0
+	correctAttempts := 0
 
-for _, qa := range db.questionAttempts {
-if qa.QuestionID == questionID {
-totalAttempts += qa.CorrectAttempts + qa.IncorrectAttempts
-correctAttempts += qa.CorrectAttempts
-}
-}
+	for _, qa := range db.questionAttempts {
+		if qa.QuestionID == questionID {
+			totalAttempts += qa.CorrectAttempts + qa.IncorrectAttempts
+			correctAttempts += qa.CorrectAttempts
+		}
+	}
 
-analytics.TotalAttempts = totalAttempts
-analytics.CorrectAttempts = correctAttempts
+	analytics.TotalAttempts = totalAttempts
+	analytics.CorrectAttempts = correctAttempts
 
-if totalAttempts > 0 {
-analytics.Accuracy = float64(correctAttempts) / float64(totalAttempts) * 100
-}
+	if totalAttempts > 0 {
+		analytics.Accuracy = float64(correctAttempts) / float64(totalAttempts) * 100
+	}
 
-// Calculate recommended difficulty based on accuracy
-if analytics.Accuracy > 90 {
-analytics.RecommendedDifficulty = question.Difficulty + 1
-if analytics.RecommendedDifficulty > 7 {
-analytics.RecommendedDifficulty = 7
-}
-analytics.FlagForReview = true
-} else if analytics.Accuracy < 30 {
-analytics.RecommendedDifficulty = question.Difficulty - 1
-if analytics.RecommendedDifficulty < 1 {
-analytics.RecommendedDifficulty = 1
-}
-analytics.FlagForReview = true
-} else {
-analytics.RecommendedDifficulty = question.Difficulty
-}
+	// Calculate recommended difficulty based on accuracy
+	if analytics.Accuracy > 90 {
+		analytics.RecommendedDifficulty = question.Difficulty + 1
+		if analytics.RecommendedDifficulty > 7 {
+			analytics.RecommendedDifficulty = 7
+		}
+		analytics.FlagForReview = true
+	} else if analytics.Accuracy < 30 {
+		analytics.RecommendedDifficulty = question.Difficulty - 1
+		if analytics.RecommendedDifficulty < 1 {
+			analytics.RecommendedDifficulty = 1
+		}
+		analytics.FlagForReview = true
+	} else {
+		analytics.RecommendedDifficulty = question.Difficulty
+	}
 
-// Get answer distribution from quiz/test attempts
-answerDistribution, _ := db.getAnswerDistributionInternal(questionID)
-analytics.AnswerDistribution = answerDistribution
+	// Get answer distribution from quiz/test attempts
+	answerDistribution, _ := db.getAnswerDistributionInternal(questionID)
+	analytics.AnswerDistribution = answerDistribution
 
-return analytics, nil
+	return analytics, nil
 }
 
 // GetAnswerDistribution retrieves distribution of answers chosen for a question
 func (db *InMemoryDB) GetAnswerDistribution(questionID int) (map[int]int, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-return db.getAnswerDistributionInternal(questionID)
+	return db.getAnswerDistributionInternal(questionID)
 }
 
 // getAnswerDistributionInternal is an internal helper (must be called with lock held)
 func (db *InMemoryDB) getAnswerDistributionInternal(questionID int) (map[int]int, error) {
-distribution := make(map[int]int)
+	distribution := make(map[int]int)
 
-// This would require tracking individual answer selections
-// For now, we'll return empty distribution as we don't track this in quiz attempts
-// In a real implementation, you'd need to track answer_id in QuizAttempt
+	// This would require tracking individual answer selections
+	// For now, we'll return empty distribution as we don't track this in quiz attempts
+	// In a real implementation, you'd need to track answer_id in QuizAttempt
 
-return distribution, nil
+	return distribution, nil
 }
 
 // UpdateQuestionDifficultyFromAnalytics updates a question's difficulty
 func (db *InMemoryDB) UpdateQuestionDifficultyFromAnalytics(questionID int, newDifficulty int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-question, exists := db.questions[questionID]
-if !exists {
-return ErrNotFound
-}
+	question, exists := db.questions[questionID]
+	if !exists {
+		return ErrNotFound
+	}
 
-if newDifficulty < 1 || newDifficulty > 7 {
-return fmt.Errorf("difficulty must be between 1 and 7")
-}
+	if newDifficulty < 1 || newDifficulty > 7 {
+		return fmt.Errorf("difficulty must be between 1 and 7")
+	}
 
-question.Difficulty = newDifficulty
-return nil
+	question.Difficulty = newDifficulty
+	return nil
 }

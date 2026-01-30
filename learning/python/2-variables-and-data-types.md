@@ -36,7 +36,9 @@ x = 3.14        # Now x is a float!
 print(x)        # 3.14
 ```
 
-This flexibility is powerful, but it also means you need to keep track of what type your variables are. **Pro tip**: Use descriptive variable names to help remember what they contain!
+This flexibility is powerful, but it also means you need to keep track of what type your variables are. 
+**Pro tip**: Use descriptive variable names to help remember what they contain!
+**Even More Pro tip**: Don't use this! It's generally leads to difficult to understand code!
 
 ## Basic Data Types
 
@@ -157,6 +159,8 @@ Sometimes you need to convert one type to another. Python provides built-in func
 
 ### Converting to Integer: `int()`
 
+There is a built-in function `int()` that converts values to integers.
+
 ```python
 # From float (decimal part is truncated, not rounded!)
 x = int(3.9)  # x is 3, not 4!
@@ -179,6 +183,8 @@ number = int("hello")  # ERROR! ValueError
 
 ### Converting to Float: `float()`
 
+Sometimes you need a decimal number. Use `float()` to convert values to floats.
+
 ```python
 # From integer
 x = float(5)  # x is 5.0
@@ -193,6 +199,8 @@ num2 = float(False)  # 0.0
 ```
 
 ### Converting to String: `str()`
+
+If you have numbers, booleans, or other types and want to convert them to strings, use `str()`.
 
 ```python
 # From integer
@@ -211,6 +219,8 @@ none_str = str(None)  # none_str is "None"
 ```
 
 ### Converting to Boolean: `bool()`
+
+You can convert values to booleans using `bool()`. In Python, certain values are considered "falsy" (convert to `False`), while others are "truthy" (convert to `True`).
 
 ```python
 # Non-zero numbers are True

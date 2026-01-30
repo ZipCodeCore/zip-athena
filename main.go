@@ -188,19 +188,19 @@ func main() {
 			handler.ListStudentsHandler(w, r)
 		})(w, r)
 	})
-	
+
 	http.HandleFunc("/instructor/students/analytics", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			handler.GetStudentAnalyticsHandler(w, r)
 		})(w, r)
 	})
-	
+
 	http.HandleFunc("/instructor/students/quiz-history", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			handler.GetStudentQuizHistoryHandler(w, r)
 		})(w, r)
 	})
-	
+
 	http.HandleFunc("/instructor/students/weak-areas", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			handler.GetStudentWeakAreasHandler(w, r)
@@ -266,7 +266,7 @@ func main() {
 			}
 		})(w, r)
 	})
-	
+
 	http.HandleFunc("/instructor/topics/reorder", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			if r.Method == http.MethodPut {
@@ -353,6 +353,26 @@ func main() {
 	http.HandleFunc("/tags", handler.GetTagsHandler)
 	http.HandleFunc("/tags/stats", handler.GetTagStatsHandler)
 	http.HandleFunc("/quiz/generate/by-tags", handler.GenerateQuizByTagsHandler)
+
+	// Learning Resources routes
+	http.HandleFunc("/learning/outline", handler.GetCurriculumOutlineHandler)
+	http.HandleFunc("/learning/phase/", handler.GetPhaseResourcesHandler)
+	http.HandleFunc("/learning/resource/", func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "/content") {
+			handler.GetLearningResourceContentHandler(w, r)
+		} else {
+			handler.GetLearningResourceHandler(w, r)
+		}
+	})
+	http.HandleFunc("/learning/search", handler.SearchLearningResourcesHandler)
+	http.HandleFunc("/learning/track-view", handler.TrackLearningViewHandler)
+	http.HandleFunc("/quiz/question/", func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "/learning") {
+			handler.GetQuestionLearningLinksHandler(w, r)
+		} else {
+			http.Error(w, "Not found", http.StatusNotFound)
+		}
+	})
 
 	// Phase 4: Instructor Test Management routes
 	http.HandleFunc("/instructor/tests/", func(w http.ResponseWriter, r *http.Request) {

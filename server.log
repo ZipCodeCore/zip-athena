@@ -1,0 +1,4 @@
+Athena API server starting on port :9206
+Database: ./athena.db
+2026/01/30 11:44:20 listen tcp :9206: bind: address already in use
+exit status 1

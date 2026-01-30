@@ -270,6 +270,9 @@ async function submitAnswer() {
                 if (correctAnswer) {
                     document.querySelector(`input[value="${correctAnswer.id}"]`).closest('.answer-option').classList.add('correct');
                 }
+                
+                // Load and display related learning materials
+                loadLearningResources(questionId, feedbackAlert);
             }
 
             feedbackContainer.style.display = 'block';
@@ -323,6 +326,49 @@ async function completeQuiz() {
         }
     } catch (error) {
         console.error('Error completing quiz:', error);
+    }
+}
+
+// Load and display related learning resources for a question
+async function loadLearningResources(questionId, feedbackElement) {
+    try {
+        const response = await fetch(`/quiz/question/${questionId}/learning`);
+        if (!response.ok) {
+            return; // Silently fail if no resources found
+        }
+
+        const data = await response.json();
+        if (!data.resources || data.resources.length === 0) {
+            return; // No resources to display
+        }
+
+        // Build learning resources HTML
+        let resourcesHtml = '<div class="mt-3 p-3 bg-light rounded"><strong>📚 Review These Topics:</strong><ul class="mt-2 mb-0">';
+        
+        data.resources.forEach(resource => {
+            const languageBadge = resource.language === 'java' 
+                ? '<span class="badge bg-warning text-dark">Java</span>' 
+                : '<span class="badge bg-primary">Python</span>';
+            
+            resourcesHtml += `
+                <li class="mb-2">
+                    ${languageBadge}
+                    <a href="/learning.html?resource=${resource.id}" target="_blank" class="ms-2">
+                        ${resource.section_number}. ${resource.section_title}
+                    </a>
+                    <small class="text-muted">(Phase ${resource.phase})</small>
+                </li>
+            `;
+        });
+        
+        resourcesHtml += '</ul></div>';
+        
+        // Append to feedback
+        feedbackElement.innerHTML += resourcesHtml;
+        
+    } catch (error) {
+        console.error('Error loading learning resources:', error);
+        // Silently fail - don't disrupt quiz flow
     }
 }
 
