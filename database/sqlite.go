@@ -73,6 +73,7 @@ func (db *SQLiteDB) initSchema() error {
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 		FOREIGN KEY (topic_id) REFERENCES topics(id)
 	);
+	-- Note: is_active column for Phase 5 soft deletes to be added via migration
 
 	CREATE TABLE IF NOT EXISTS answers (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -241,6 +242,21 @@ func (db *SQLiteDB) runMigrations() error {
 		if err != nil {
 			return fmt.Errorf("failed to add display_order column: %w", err)
 		}
+	}
+
+	// Phase 5: Create flagged_questions table if it doesn't exist
+	_, err = db.db.Exec(`
+		CREATE TABLE IF NOT EXISTS flagged_questions (
+			question_id INTEGER PRIMARY KEY,
+			flag_reason TEXT NOT NULL,
+			flagged_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+			accuracy REAL,
+			total_attempts INTEGER,
+			FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
+		)
+	`)
+	if err != nil {
+		return fmt.Errorf("failed to create flagged_questions table: %w", err)
 	}
 
 	return nil

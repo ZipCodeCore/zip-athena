@@ -31,6 +31,7 @@ type Question struct {
 	Difficulty      int       `json:"difficulty"` // 1-7, 1 being easiest
 	Tags            []string  `json:"tags"`
 	TopicQuestionID string    `json:"topic_question_id"` // e.g., "3.17"
+	IsActive        bool      `json:"is_active"`         // For soft delete (Phase 5)
 	CreatedAt       time.Time `json:"created_at"`
 }
 
@@ -324,3 +325,73 @@ type LearningResourceWithProgress struct {
 	LastViewedAt         *time.Time `json:"last_viewed_at,omitempty"`
 	CompletionPercentage float64    `json:"completion_percentage"`
 }
+
+// Phase 5: Content Management & Quality
+
+// QuestionPreview represents a question in preview mode (Phase 5)
+type QuestionPreview struct {
+	Question Question `json:"question"`
+	Answers  []Answer `json:"answers"`
+}
+
+// CSVImportRow represents a single row from CSV import (Phase 5)
+type CSVImportRow struct {
+	Topic         string `json:"topic"`
+	Question      string `json:"question"`
+	Answer1       string `json:"answer1"`
+	Answer2       string `json:"answer2"`
+	Answer3       string `json:"answer3"`
+	Answer4       string `json:"answer4"`
+	CorrectAnswer string `json:"correct_answer"`
+	Difficulty    string `json:"difficulty"`
+	Tags          string `json:"tags"`
+}
+
+// CSVImportResult represents the result of CSV import validation (Phase 5)
+type CSVImportResult struct {
+	ValidRows   []CSVImportRow    `json:"valid_rows"`
+	InvalidRows []CSVImportError  `json:"invalid_rows"`
+	Summary     CSVImportSummary  `json:"summary"`
+}
+
+// CSVImportError represents an error in a CSV row (Phase 5)
+type CSVImportError struct {
+	Row     int            `json:"row"`
+	Data    CSVImportRow   `json:"data"`
+	Errors  []string       `json:"errors"`
+}
+
+// CSVImportSummary represents summary of import operation (Phase 5)
+type CSVImportSummary struct {
+	TotalRows    int `json:"total_rows"`
+	ValidRows    int `json:"valid_rows"`
+	InvalidRows  int `json:"invalid_rows"`
+	ImportedRows int `json:"imported_rows"`
+}
+
+// Tag represents a tag with metadata (Phase 5)
+type Tag struct {
+	Name          string `json:"name"`
+	Description   string `json:"description,omitempty"`
+	QuestionCount int    `json:"question_count"`
+}
+
+// FlaggedQuestion represents a question flagged for quality review (Phase 5)
+type FlaggedQuestion struct {
+	QuestionID      int       `json:"question_id"`
+	TopicQuestionID string    `json:"topic_question_id"`
+	QuestionText    string    `json:"question_text"`
+	FlagReason      string    `json:"flag_reason"`
+	FlaggedAt       time.Time `json:"flagged_at"`
+	Accuracy        float64   `json:"accuracy,omitempty"`
+	TotalAttempts   int       `json:"total_attempts,omitempty"`
+}
+
+// FlagReason constants (Phase 5)
+const (
+	FlagReasonTooHard         = "TOO_HARD"         // <30% accuracy
+	FlagReasonTooEasy         = "TOO_EASY"         // >90% accuracy
+	FlagReasonAmbiguous       = "AMBIGUOUS"        // Mixed feedback
+	FlagReasonPoorDistractors = "POOR_DISTRACTORS" // Skewed distribution
+	FlagReasonManual          = "MANUAL"           // Instructor flagged
+)
