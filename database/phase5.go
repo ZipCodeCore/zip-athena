@@ -516,22 +516,6 @@ func (db *SQLiteDB) GetQuestionsByTag(tagName string) ([]*models.Question, error
 
 // GetFlaggedQuestions returns all flagged questions
 func (db *SQLiteDB) GetFlaggedQuestions() ([]*models.FlaggedQuestion, error) {
-	// For this implementation, we'll create a flagged_questions table
-	// First, ensure table exists
-	_, err := db.db.Exec(`
-		CREATE TABLE IF NOT EXISTS flagged_questions (
-			question_id INTEGER PRIMARY KEY,
-			flag_reason TEXT NOT NULL,
-			flagged_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-			accuracy REAL,
-			total_attempts INTEGER,
-			FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
-		)
-	`)
-	if err != nil {
-		return nil, err
-	}
-
 	rows, err := db.db.Query(`
 		SELECT fq.question_id, q.topic_question_id, q.question_text, fq.flag_reason, fq.flagged_at, fq.accuracy, fq.total_attempts
 		FROM flagged_questions fq
@@ -557,25 +541,10 @@ func (db *SQLiteDB) GetFlaggedQuestions() ([]*models.FlaggedQuestion, error) {
 
 // FlagQuestion flags a question for review
 func (db *SQLiteDB) FlagQuestion(questionID int, reason string) error {
-	// Ensure table exists
-	_, err := db.db.Exec(`
-		CREATE TABLE IF NOT EXISTS flagged_questions (
-			question_id INTEGER PRIMARY KEY,
-			flag_reason TEXT NOT NULL,
-			flagged_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-			accuracy REAL,
-			total_attempts INTEGER,
-			FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
-		)
-	`)
-	if err != nil {
-		return err
-	}
-
 	// Get question analytics if available
 	var accuracy float64
 	var totalAttempts int
-	err = db.db.QueryRow(`
+	err := db.db.QueryRow(`
 		SELECT 
 			CAST(SUM(CASE WHEN last_attempt_correct = 1 THEN 1 ELSE 0 END) AS REAL) / COUNT(*) * 100,
 			COUNT(*)
@@ -617,21 +586,6 @@ func (db *SQLiteDB) UnflagQuestion(questionID int) error {
 
 // AutoFlagQuestions automatically flags questions based on performance criteria
 func (db *SQLiteDB) AutoFlagQuestions() error {
-	// Ensure table exists
-	_, err := db.db.Exec(`
-		CREATE TABLE IF NOT EXISTS flagged_questions (
-			question_id INTEGER PRIMARY KEY,
-			flag_reason TEXT NOT NULL,
-			flagged_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-			accuracy REAL,
-			total_attempts INTEGER,
-			FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
-		)
-	`)
-	if err != nil {
-		return err
-	}
-
 	// Find questions that are too hard (<30% accuracy) or too easy (>90% accuracy)
 	rows, err := db.db.Query(`
 		SELECT 

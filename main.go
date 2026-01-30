@@ -393,6 +393,24 @@ func main() {
 	http.HandleFunc("/instructor/questions/analytics", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(handler.GetQuestionAnalyticsHandler)(w, r)
 	})
+
+	// Phase 5: Instructor Question Management routes (must come before the path-based matcher)
+	http.HandleFunc("/instructor/questions", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.ListInstructorQuestionsHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.CreateInstructorQuestionHandler(w, r)
+			} else if r.Method == http.MethodPut {
+				handler.UpdateInstructorQuestionHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeactivateInstructorQuestionHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
 	http.HandleFunc("/instructor/questions/", func(w http.ResponseWriter, r *http.Request) {
 		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
 			if strings.Contains(r.URL.Path, "/analytics") {
@@ -406,23 +424,6 @@ func main() {
 				handler.PreviewInstructorQuestionHandler(w, r)
 			} else {
 				http.Error(w, "Not found", http.StatusNotFound)
-			}
-		})(w, r)
-	})
-
-	// Phase 5: Instructor Question Management routes
-	http.HandleFunc("/instructor/questions", func(w http.ResponseWriter, r *http.Request) {
-		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
-			if r.Method == http.MethodGet {
-				handler.ListInstructorQuestionsHandler(w, r)
-			} else if r.Method == http.MethodPost {
-				handler.CreateInstructorQuestionHandler(w, r)
-			} else if r.Method == http.MethodPut {
-				handler.UpdateInstructorQuestionHandler(w, r)
-			} else if r.Method == http.MethodDelete {
-				handler.DeactivateInstructorQuestionHandler(w, r)
-			} else {
-				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			}
 		})(w, r)
 	})
