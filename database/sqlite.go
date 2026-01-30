@@ -504,8 +504,8 @@ func (db *SQLiteDB) CreateQuizAttempt(attempt *models.QuizAttempt) error {
 	}
 
 	result, err := db.db.Exec(
-		"INSERT INTO quiz_attempts (user_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results) VALUES (?, ?, ?, ?, ?, ?, ?)",
-		attempt.UserID, attempt.StartTime, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON),
+		"INSERT INTO quiz_attempts (user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, question_ids, question_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		attempt.UserID, attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.StartTime, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON),
 	)
 	if err != nil {
 		return err
@@ -522,11 +522,12 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 	attempt := &models.QuizAttempt{}
 	var questionIDsJSON, questionResultsJSON string
 	var completedTime sql.NullTime
+	var quizID, parentAttemptID sql.NullInt64
 
 	err := db.db.QueryRow(
-		"SELECT id, user_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE id = ?",
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE id = ?",
 		id,
-	).Scan(&attempt.ID, &attempt.UserID, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON)
+	).Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -536,6 +537,16 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 
 	if completedTime.Valid {
 		attempt.CompletedTime = &completedTime.Time
+	}
+
+	if quizID.Valid {
+		qid := int(quizID.Int64)
+		attempt.QuizID = &qid
+	}
+
+	if parentAttemptID.Valid {
+		paid := int(parentAttemptID.Int64)
+		attempt.ParentAttemptID = &paid
 	}
 
 	if err := json.Unmarshal([]byte(questionIDsJSON), &attempt.QuestionIDs); err != nil {
@@ -550,7 +561,7 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 
 func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, error) {
 	rows, err := db.db.Query(
-		"SELECT id, user_id, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE user_id = ?",
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE user_id = ?",
 		userID,
 	)
 	if err != nil {
@@ -563,13 +574,24 @@ func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, er
 		attempt := &models.QuizAttempt{}
 		var questionIDsJSON, questionResultsJSON string
 		var completedTime sql.NullTime
+		var quizID, parentAttemptID sql.NullInt64
 
-		if err := rows.Scan(&attempt.ID, &attempt.UserID, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON); err != nil {
+		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON); err != nil {
 			return nil, err
 		}
 
 		if completedTime.Valid {
 			attempt.CompletedTime = &completedTime.Time
+		}
+
+		if quizID.Valid {
+			qid := int(quizID.Int64)
+			attempt.QuizID = &qid
+		}
+
+		if parentAttemptID.Valid {
+			paid := int(parentAttemptID.Int64)
+			attempt.ParentAttemptID = &paid
 		}
 
 		if err := json.Unmarshal([]byte(questionIDsJSON), &attempt.QuestionIDs); err != nil {
