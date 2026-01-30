@@ -236,7 +236,11 @@ func (h *Handler) ImportQuestionsCSVHandler(w http.ResponseWriter, r *http.Reque
 	var rows []models.CSVImportRow
 	for i, record := range records[1:] { // Skip header
 		if len(record) < 9 {
-			continue // Skip invalid rows
+			// Treat rows with too few columns as a client error to avoid silent data loss.
+			// i is zero-based over records[1:], so add 2 to get the actual CSV line number.
+			lineNum := i + 2
+			http.Error(w, "Malformed CSV: row "+strconv.Itoa(lineNum)+" has fewer than 9 columns", http.StatusBadRequest)
+			return
 		}
 
 		rows = append(rows, models.CSVImportRow{
