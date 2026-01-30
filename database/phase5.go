@@ -264,7 +264,11 @@ func (db *SQLiteDB) BulkCreateQuestions(rows []models.CSVImportRow) (int, error)
 		topicQuestionID := fmt.Sprintf("%d.%d", topicID, time.Now().UnixNano()%10000)
 
 		// Create question
-		tagsJSON, _ := json.Marshal(tags)
+		tagsJSON, err := json.Marshal(tags)
+		if err != nil {
+			// Fallback to an empty JSON array if tags cannot be marshaled
+			tagsJSON = []byte("[]")
+		}
 		result, err := tx.Exec(
 			"INSERT INTO questions (topic_id, question_text, difficulty, tags, topic_question_id, created_at) VALUES (?, ?, ?, ?, ?, ?)",
 			topicID, row.Question, difficulty, string(tagsJSON), topicQuestionID, time.Now(),
