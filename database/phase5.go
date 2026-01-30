@@ -106,9 +106,15 @@ func (db *SQLiteDB) GetQuestionPreview(questionID int) (*models.QuestionPreview,
 		return nil, err
 	}
 
+	// Convert from []*models.Answer to []models.Answer
+	answerList := make([]models.Answer, len(answers))
+	for i, ans := range answers {
+		answerList[i] = *ans
+	}
+
 	return &models.QuestionPreview{
 		Question: *question,
-		Answers:  make([]models.Answer, len(answers)),
+		Answers:  answerList,
 	}, nil
 }
 

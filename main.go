@@ -401,8 +401,128 @@ func main() {
 				handler.GetAnswerDistributionHandler(w, r)
 			} else if strings.Contains(r.URL.Path, "/difficulty") {
 				handler.UpdateQuestionDifficultyHandler(w, r)
+			} else if strings.Contains(r.URL.Path, "/preview") {
+				// Phase 5: Question preview
+				handler.PreviewInstructorQuestionHandler(w, r)
 			} else {
 				http.Error(w, "Not found", http.StatusNotFound)
+			}
+		})(w, r)
+	})
+
+	// Phase 5: Instructor Question Management routes
+	http.HandleFunc("/instructor/questions", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.ListInstructorQuestionsHandler(w, r)
+			} else if r.Method == http.MethodPost {
+				handler.CreateInstructorQuestionHandler(w, r)
+			} else if r.Method == http.MethodPut {
+				handler.UpdateInstructorQuestionHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeactivateInstructorQuestionHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	// Phase 5: Admin CSV Import routes
+	http.HandleFunc("/admin/questions/import", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.ImportQuestionsCSVHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	http.HandleFunc("/admin/questions/import/validate", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.ValidateQuestionsCSVHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	http.HandleFunc("/admin/questions/import/confirm", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.ConfirmImportQuestionsCSVHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	// Phase 5: Admin Tag Management routes
+	http.HandleFunc("/admin/tags", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.ListTagsHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.DeleteTagHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	http.HandleFunc("/admin/tags/merge", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.MergeTagsHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	http.HandleFunc("/admin/tags/questions", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.GetQuestionsByTagHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+
+	// Phase 5: Admin Quality Review routes
+	http.HandleFunc("/admin/questions/flagged", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodGet {
+				handler.GetFlaggedQuestionsHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	http.HandleFunc("/admin/questions/auto-flag", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.AutoFlagQuestionsHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	http.HandleFunc("/admin/questions/flag", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPost {
+				handler.FlagQuestionHandler(w, r)
+			} else if r.Method == http.MethodDelete {
+				handler.UnflagQuestionHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			}
+		})(w, r)
+	})
+	http.HandleFunc("/admin/questions/resolve", func(w http.ResponseWriter, r *http.Request) {
+		handler.AdminMiddleware(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == http.MethodPut {
+				handler.ResolveQuestionHandler(w, r)
+			} else {
+				http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			}
 		})(w, r)
 	})
