@@ -13,12 +13,33 @@ These resources are directly linked to the quiz questions you'll encounter in At
 The learning resources are organized by programming language, with each major topic getting its own file. Each file contains both educational content and quiz questions to support comprehensive learning.
 
 ### Java
-- **control-structures.md** ✅ - Making decisions and repeating actions in Java (includes 8 quiz questions)
-- **variables-and-data-types.md** - Understanding how Java stores and works with data
+#### Phase 1 - Core Fundamentals
+- **2-variables-and-data-types.md** - Understanding how Java stores and works with data
+- **3-operators-and-expressions.md** - (Coming soon)
+- **4-control-structures.md** ✅ - Making decisions and repeating actions in Java (includes 8 quiz questions)
+- **5-methods.md** - (Coming soon)
+- **6-arrays.md** - (Coming soon)
+- **7-strings.md** - (Coming soon)
+
+#### Phase 2 - Object-Oriented Programming ✅
+- **8-oop-classes-and-objects.md** ✅ - Classes, objects, encapsulation, static members, final keyword (includes 8 quiz questions)
+- **9-oop-inheritance.md** ✅ - Inheritance, super keyword, method overriding, abstract classes (includes 8 quiz questions)
+- **10-oop-polymorphism.md** ✅ - Polymorphism, method overloading/overriding, dynamic dispatch (includes 8 quiz questions)
+- **11-interfaces.md** ✅ - Interfaces, multiple implementation, default/static methods (includes 8 quiz questions)
 
 ### Python
-- **control-structures.md** ✅ - Making decisions and repeating actions in Python (includes 8 quiz questions)
-- **data-structures.md** - Working with lists, dictionaries, sets, and tuples (covers curriculum sections 6-9)
+#### Phase 1 - Core Fundamentals
+- **2-variables-and-data-types.md** - (Coming soon)
+- **3-operators-and-expressions.md** - (Coming soon)
+- **4-strings.md** - (Coming soon)
+- **5-control-structures.md** ✅ - Making decisions and repeating actions in Python (includes 8 quiz questions)
+- **6-data-structures.md** ✅ - Working with lists, dictionaries, sets, and tuples (covers curriculum sections 6-9)
+- **10-functions.md** - (Coming soon)
+
+#### Phase 2 - Object-Oriented Programming ✅
+- **14-oop-classes-and-objects.md** ✅ - Classes, objects, self, __init__, properties, special methods (includes 8 quiz questions)
+- **15-oop-inheritance.md** ✅ - Single/multiple inheritance, super(), MRO, abstract base classes (includes 8 quiz questions)
+- **16-oop-polymorphism.md** ✅ - Duck typing, method overriding, operator overloading (includes 8 quiz questions)
 
 ### Format
 See [LEARNING_RESOURCE_FORMAT.md](LEARNING_RESOURCE_FORMAT.md) for the complete specification of how learning resources are structured, including the integration of study guides with quiz questions.
@@ -32,7 +53,14 @@ See [LEARNING_RESOURCE_FORMAT.md](LEARNING_RESOURCE_FORMAT.md) for the complete 
 
 ## What's Coming Next
 
-This is just the beginning! We're building out comprehensive learning resources for all curriculum topics. 
+This is just the beginning! We're building out comprehensive learning resources for all curriculum topics.
+
+### Completed Phases
+- **Phase 2: Object-Oriented Programming** ✅ - Complete for both Java and Python (7 topics, 56 quiz questions)
+
+### Next Priorities
+- **Phase 1: Core Fundamentals** - Completing operators, methods/functions, arrays, strings
+- **Phase 3: Advanced Data Handling** - Packages/Modules, Exception Handling, File I/O, Collections 
 
 ### For Contributors
 See the [CONTRIBUTOR_GUIDE.md](CONTRIBUTOR_GUIDE.md) for detailed instructions on creating new learning resources.
