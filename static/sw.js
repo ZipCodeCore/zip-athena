@@ -1,13 +1,6 @@
-const CACHE_NAME = 'athena-v3';
+const CACHE_NAME = 'athena-v4';
 
 const SHELL_FILES = [
-    '/',
-    '/index.html',
-    '/dashboard.html',
-    '/quiz.html',
-    '/learning.html',
-    '/admin.html',
-    '/instructor.html',
     '/css/style.css',
     '/js/auth.js',
     '/js/dashboard.js',
@@ -36,14 +29,16 @@ self.addEventListener('fetch', (event) => {
     // Skip all cross-origin requests (e.g. Bootstrap CDN) — let the browser handle them
     if (url.origin !== self.location.origin) return;
 
-    // Cache same-origin static assets — HTML pages, CSS, JS
-    if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js') ||
-        url.pathname === '/' || url.pathname.endsWith('.html')) {
+    // Skip navigation requests (page loads) - let browser handle redirects naturally
+    if (event.request.mode === 'navigate') return;
+
+    // Cache same-origin static assets — CSS, JS only (not HTML)
+    if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
         event.respondWith(
             caches.match(event.request).then((cached) => {
                 const network = fetch(event.request).then((response) => {
-                    // Don't cache redirects or error responses
-                    if (response.ok && response.type !== 'opaqueredirect' && !response.redirected) {
+                    // Only cache successful responses
+                    if (response.ok) {
                         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, response.clone()));
                     }
                     return response;
@@ -53,5 +48,5 @@ self.addEventListener('fetch', (event) => {
             })
         );
     }
-    // All other requests (API, health, etc.) use default network behavior
+    // All other requests (API, health, HTML, etc.) use default network behavior
 });
