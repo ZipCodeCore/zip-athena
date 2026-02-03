@@ -214,8 +214,8 @@ async function loadResource(resourceId) {
         // Track the view
         trackView(resourceId);
 
-        // Update outline to highlight current resource
-        loadOutline();
+        // Update outline to highlight current resource (without re-rendering)
+        updateOutlineHighlight(resourceId);
 
     } catch (error) {
         console.error('Error loading resource:', error);
@@ -282,6 +282,30 @@ async function trackView(resourceId) {
     } catch (error) {
         console.error('Error tracking view:', error);
     }
+}
+
+function updateOutlineHighlight(resourceId) {
+    // Remove 'active' class from all resource items
+    document.querySelectorAll('.resource-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Add 'active' class to current resource and mark as viewed
+    const resourceItems = document.querySelectorAll('.resource-item');
+    resourceItems.forEach(item => {
+        const onclick = item.getAttribute('onclick');
+        if (onclick && onclick.includes(`loadResource(${resourceId})`)) {
+            item.classList.add('active');
+            // Add viewed class and checkmark if not already present
+            if (!item.classList.contains('viewed')) {
+                item.classList.add('viewed');
+                // Add checkmark if not present
+                if (!item.querySelector('.text-success')) {
+                    item.innerHTML += '<span class="text-success">✓</span>';
+                }
+            }
+        }
+    });
 }
 
 async function searchResources(query) {
