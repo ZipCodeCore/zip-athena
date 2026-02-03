@@ -130,9 +130,9 @@ type RateLimiter struct {
 
 // Visitor represents a rate-limited client
 type Visitor struct {
-	tokens     int
-	lastSeen   time.Time
-	mu         sync.Mutex
+	tokens   int
+	lastSeen time.Time
+	mu       sync.Mutex
 }
 
 // NewRateLimiter creates a new rate limiter
