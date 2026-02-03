@@ -1,6 +1,6 @@
 // Learning Wizard JavaScript
 
-let currentLanguage = 'both'; // 'both', 'java', 'python'
+let currentLanguage = 'java'; // 'java' or 'python'
 let currentResourceId = null;
 let allPhases = [];
 
@@ -45,12 +45,11 @@ function setupEventListeners() {
     
     toggle.addEventListener('change', function() {
         if (toggle.checked) {
-            currentLanguage = 'both';
-            label.textContent = 'Both Languages';
+            currentLanguage = 'python';
+            label.textContent = 'Python';
         } else {
-            // Cycle through java and python
-            currentLanguage = currentLanguage === 'java' ? 'python' : 'java';
-            label.textContent = currentLanguage === 'java' ? 'Java Only' : 'Python Only';
+            currentLanguage = 'java';
+            label.textContent = 'Java';
         }
         loadOutline();
     });
@@ -81,8 +80,7 @@ async function loadOutline() {
     `;
 
     try {
-        const langParam = currentLanguage === 'both' ? '' : `?language=${currentLanguage}`;
-        const response = await fetch(`/learning/outline${langParam}`);
+        const response = await fetch(`/learning/outline?language=${currentLanguage}`);
         
         if (!response.ok) {
             throw new Error('Failed to load curriculum outline');
