@@ -81,7 +81,7 @@ go run main.go
 ## Architecture
 
 - **Backend**: Go API server with comprehensive error logging
-- **Database**: SQLite3 (ready for PostgreSQL/MySQL migration)
+- **Database**: SQLite3
 - **Frontend**: HTML/JavaScript with Bootstrap CSS framework
 - **Algorithm**: FSRS-4.5 spaced repetition system
 
@@ -233,7 +233,6 @@ All errors that prevent users from completing operations are logged to stderr wi
 
 ## Future Enhancements
 
-- PostgreSQL/MySQL support for larger deployments
 - Real-time progress notifications
 - Question difficulty auto-adjustment
 - Gamification features (achievements, leaderboards)

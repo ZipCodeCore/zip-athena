@@ -111,10 +111,24 @@ function renderOutline(phases) {
         return;
     }
 
+    // Save current expansion states before re-rendering
+    const expandedPhases = new Set();
+    phases.forEach((phase) => {
+        const collapseElement = document.getElementById(`phase${phase.phase}`);
+        if (collapseElement && collapseElement.classList.contains('show')) {
+            expandedPhases.add(phase.phase);
+        }
+    });
+    
+    // If no phases are expanded, expand the first one by default
+    if (expandedPhases.size === 0) {
+        expandedPhases.add(phases[0].phase);
+    }
+
     let html = '';
     
     phases.forEach((phase, index) => {
-        const isExpanded = index === 0; // Expand first phase by default
+        const isExpanded = expandedPhases.has(phase.phase);
         const collapseId = `phase${phase.phase}`;
         
         html += `

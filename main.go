@@ -39,16 +39,16 @@ func main() {
 	}
 
 	log.WithFields(map[string]interface{}{
-		"port":     cfg.Server.Port,
-		"db_type":  cfg.Database.Type,
-		"db_path":  cfg.Database.Path,
+		"port":      cfg.Server.Port,
+		"db_type":   cfg.Database.Type,
+		"db_path":   cfg.Database.Path,
 		"log_level": cfg.Logging.Level,
 	}).Info("Starting Athena API server")
 
 	// Initialize database
 	var db database.Database
-	if cfg.Database.Type == "postgres" {
-		log.Fatal("PostgreSQL support not yet implemented")
+	if cfg.Database.Type != "sqlite" {
+		log.Fatal("Only SQLite is supported. Set DB_TYPE=sqlite")
 	} else {
 		db, err = database.NewSQLiteDB(cfg.Database.Path)
 		if err != nil {

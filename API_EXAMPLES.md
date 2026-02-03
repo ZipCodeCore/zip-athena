@@ -258,6 +258,5 @@ Internal server error message
 2. Implement rate limiting
 3. Add request validation
 4. Implement CORS for frontend
-5. Add database persistence (PostgreSQL/MySQL)
-6. Implement spaced repetition algorithm
-7. Add more endpoints for answers, question attempts, etc.
+5. Implement spaced repetition algorithm
+6. Add more endpoints for answers, question attempts, etc.
