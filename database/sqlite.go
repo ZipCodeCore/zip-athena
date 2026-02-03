@@ -192,6 +192,53 @@ func (db *SQLiteDB) initSchema() error {
 		FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE,
 		UNIQUE(test_id, question_id)
 	);
+
+	CREATE TABLE IF NOT EXISTS learning_resources (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		language TEXT NOT NULL CHECK(language IN ('java', 'python')),
+		phase INTEGER NOT NULL CHECK(phase BETWEEN 1 AND 5),
+		section_number TEXT NOT NULL,
+		section_title TEXT NOT NULL,
+		file_path TEXT NOT NULL,
+		display_order INTEGER NOT NULL,
+		is_active BOOLEAN DEFAULT 1,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		UNIQUE(language, section_number)
+	);
+
+	CREATE INDEX IF NOT EXISTS idx_learning_resources_language ON learning_resources(language);
+	CREATE INDEX IF NOT EXISTS idx_learning_resources_phase ON learning_resources(phase);
+	CREATE INDEX IF NOT EXISTS idx_learning_resources_active ON learning_resources(is_active);
+
+	CREATE TABLE IF NOT EXISTS user_learning_progress (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		user_id INTEGER NOT NULL,
+		learning_resource_id INTEGER NOT NULL,
+		first_viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		last_viewed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		view_count INTEGER DEFAULT 1,
+		completion_percentage REAL DEFAULT 0 CHECK(completion_percentage >= 0 AND completion_percentage <= 100),
+		FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+		FOREIGN KEY (learning_resource_id) REFERENCES learning_resources(id) ON DELETE CASCADE,
+		UNIQUE(user_id, learning_resource_id)
+	);
+
+	CREATE INDEX IF NOT EXISTS idx_user_learning_progress_user ON user_learning_progress(user_id);
+	CREATE INDEX IF NOT EXISTS idx_user_learning_progress_resource ON user_learning_progress(learning_resource_id);
+
+	CREATE TABLE IF NOT EXISTS question_learning_links (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		question_id INTEGER NOT NULL,
+		learning_resource_id INTEGER NOT NULL,
+		relevance_score REAL DEFAULT 1.0 CHECK(relevance_score >= 0 AND relevance_score <= 1),
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE,
+		FOREIGN KEY (learning_resource_id) REFERENCES learning_resources(id) ON DELETE CASCADE,
+		UNIQUE(question_id, learning_resource_id)
+	);
+
+	CREATE INDEX IF NOT EXISTS idx_question_learning_links_question ON question_learning_links(question_id);
+	CREATE INDEX IF NOT EXISTS idx_question_learning_links_resource ON question_learning_links(learning_resource_id);
 	`
 
 	_, err := db.db.Exec(schema)
@@ -257,6 +304,33 @@ func (db *SQLiteDB) runMigrations() error {
 	`)
 	if err != nil {
 		return fmt.Errorf("failed to create flagged_questions table: %w", err)
+	}
+
+	// Migration: Activate phases 2 and 3 in learning_resources
+	// Only runs if learning_resources table exists (safe no-op otherwise)
+	_, err = db.db.Exec(`
+		UPDATE learning_resources SET is_active = 1 WHERE phase IN (2, 3) AND is_active = 0
+	`)
+	if err != nil {
+		return fmt.Errorf("failed to activate phases 2 and 3: %w", err)
+	}
+
+	// Migration: Fix file_path values that don't match actual filenames on disk
+	filePathFixes := map[string]string{
+		"java/8-classes-and-objects.md":    "java/8-oop-classes-and-objects.md",
+		"java/9-inheritance.md":           "java/9-oop-inheritance.md",
+		"java/10-polymorphism.md":         "java/10-oop-polymorphism.md",
+		"java/15-collections.md":          "java/15-collections-framework.md",
+		"python/11-modules-packages.md":   "python/11-modules-and-packages.md",
+		"python/14-classes-and-objects.md": "python/14-oop-classes-and-objects.md",
+		"python/15-inheritance.md":        "python/15-oop-inheritance.md",
+		"python/16-polymorphism.md":       "python/16-oop-polymorphism.md",
+	}
+	for oldPath, newPath := range filePathFixes {
+		_, err = db.db.Exec(`UPDATE learning_resources SET file_path = ? WHERE file_path = ?`, newPath, oldPath)
+		if err != nil {
+			return fmt.Errorf("failed to fix file_path %s -> %s: %w", oldPath, newPath, err)
+		}
 	}
 
 	return nil

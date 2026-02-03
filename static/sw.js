@@ -1,4 +1,4 @@
-const CACHE_NAME = 'athena-v1';
+const CACHE_NAME = 'athena-v2';
 
 const SHELL_FILES = [
     '/',
@@ -33,7 +33,10 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // Only cache static assets — HTML pages, CSS, JS
+    // Skip all cross-origin requests (e.g. Bootstrap CDN) — let the browser handle them
+    if (url.origin !== self.location.origin) return;
+
+    // Cache same-origin static assets — HTML pages, CSS, JS
     if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js') ||
         url.pathname === '/' || url.pathname.endsWith('.html')) {
         event.respondWith(
