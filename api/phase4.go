@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -59,14 +58,14 @@ func (h *Handler) GetQuizHistoryHandler(w http.ResponseWriter, r *http.Request) 
 		}
 		attempts, err = h.db.GetQuizHistoryByTopic(userID, topicID, page, perPage)
 		if err != nil {
-			log.Printf("ERROR: Failed to get quiz history by topic: %v\n", err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get quiz history by topic")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 	} else {
 		attempts, err = h.db.GetQuizHistoryByUser(userID, page, perPage)
 		if err != nil {
-			log.Printf("ERROR: Failed to get quiz history: %v\n", err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get quiz history")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -99,7 +98,7 @@ func (h *Handler) GetQuizAttemptDetailsHandler(w http.ResponseWriter, r *http.Re
 
 	attempt, err := h.db.GetQuizAttemptWithDetails(attemptID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get quiz attempt details: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get quiz attempt details")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -110,7 +109,7 @@ func (h *Handler) GetQuizAttemptDetailsHandler(w http.ResponseWriter, r *http.Re
 		// Get all questions
 		allQuestions, err := h.db.ListQuestions()
 		if err != nil {
-			log.Printf("ERROR: Failed to list questions: %v\n", err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list questions")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -127,7 +126,7 @@ func (h *Handler) GetQuizAttemptDetailsHandler(w http.ResponseWriter, r *http.Re
 				// Get answers for this question
 				answers, err := h.db.GetAnswersByQuestion(q.ID)
 				if err != nil {
-					log.Printf("ERROR: Failed to get answers for question %d: %v\n", q.ID, err)
+					h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get answers for question")
 					continue
 				}
 
@@ -174,7 +173,7 @@ func (h *Handler) GetAvailableTestsHandler(w http.ResponseWriter, r *http.Reques
 
 	tests, err := h.db.GetAvailableTests(userID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get available tests: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get available tests")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -205,7 +204,7 @@ func (h *Handler) GetTestDetailsHandler(w http.ResponseWriter, r *http.Request) 
 
 	test, err := h.db.GetTest(testID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get test: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get test")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -213,7 +212,7 @@ func (h *Handler) GetTestDetailsHandler(w http.ResponseWriter, r *http.Request) 
 	// Get test questions
 	questions, err := h.db.GetTestQuestions(testID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get test questions: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get test questions")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -258,7 +257,7 @@ func (h *Handler) StartTestHandler(w http.ResponseWriter, r *http.Request) {
 	// Check if user already has an attempt for this test
 	existingAttempts, err := h.db.GetTestAttemptsByUser(req.UserID, testID)
 	if err != nil {
-		log.Printf("ERROR: Failed to check existing attempts: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to check existing attempts")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -281,7 +280,7 @@ func (h *Handler) StartTestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.db.CreateTestAttempt(attempt); err != nil {
-		log.Printf("ERROR: Failed to create test attempt: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create test attempt")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -321,7 +320,7 @@ func (h *Handler) UpdateTestAnswerHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	if err := h.db.UpdateTestAttemptAnswer(attemptID, req.QuestionID, req.AnswerID); err != nil {
-		log.Printf("ERROR: Failed to update test answer: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update test answer")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -356,7 +355,7 @@ func (h *Handler) SubmitTestHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&req)
 
 	if err := h.db.SubmitTestAttempt(attemptID, req.IsAutoSubmit); err != nil {
-		log.Printf("ERROR: Failed to submit test: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to submit test")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -364,7 +363,7 @@ func (h *Handler) SubmitTestHandler(w http.ResponseWriter, r *http.Request) {
 	// Get results
 	results, err := h.db.GetTestResults(attemptID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get test results: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get test results")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -395,7 +394,7 @@ func (h *Handler) GetTestResultsHandler(w http.ResponseWriter, r *http.Request) 
 
 	results, err := h.db.GetTestResults(attemptID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get test results: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get test results")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -415,7 +414,7 @@ func (h *Handler) GetTagsHandler(w http.ResponseWriter, r *http.Request) {
 
 	tagCounts, err := h.db.GetTagsWithCounts()
 	if err != nil {
-		log.Printf("ERROR: Failed to get tags: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get tags")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -444,7 +443,7 @@ func (h *Handler) GetTagStatsHandler(w http.ResponseWriter, r *http.Request) {
 
 	stats, err := h.db.GetTagStats(userID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get tag stats: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get tag stats")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -482,7 +481,7 @@ func (h *Handler) GenerateQuizByTagsHandler(w http.ResponseWriter, r *http.Reque
 
 	questions, err := h.db.GetQuestionsByTags(req.Tags, req.UseAnd)
 	if err != nil {
-		log.Printf("ERROR: Failed to get questions by tags: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get questions by tags")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -512,7 +511,7 @@ func (h *Handler) GenerateQuizByTagsHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	if err := h.db.CreateQuizAttempt(attempt); err != nil {
-		log.Printf("ERROR: Failed to create quiz attempt: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create quiz attempt")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -550,7 +549,7 @@ func (h *Handler) PublishTestHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.db.PublishTest(testID); err != nil {
-		log.Printf("ERROR: Failed to publish test: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to publish test")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -581,7 +580,7 @@ func (h *Handler) GetTestResultsInstructorHandler(w http.ResponseWriter, r *http
 
 	results, err := h.db.GetTestResultsByTest(testID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get test results: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get test results")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -612,7 +611,7 @@ func (h *Handler) ExportTestResultsHandler(w http.ResponseWriter, r *http.Reques
 
 	csvData, err := h.db.ExportTestResults(testID)
 	if err != nil {
-		log.Printf("ERROR: Failed to export test results: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to export test results")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -633,7 +632,7 @@ func (h *Handler) GetQuestionAnalyticsHandler(w http.ResponseWriter, r *http.Req
 
 	analytics, err := h.db.GetQuestionAnalytics()
 	if err != nil {
-		log.Printf("ERROR: Failed to get question analytics: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get question analytics")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -664,7 +663,7 @@ func (h *Handler) GetQuestionDetailedAnalyticsHandler(w http.ResponseWriter, r *
 
 	analytics, err := h.db.GetQuestionDetailedAnalytics(questionID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get question analytics: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get question analytics")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -695,7 +694,7 @@ func (h *Handler) GetAnswerDistributionHandler(w http.ResponseWriter, r *http.Re
 
 	distribution, err := h.db.GetAnswerDistribution(questionID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get answer distribution: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get answer distribution")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -733,7 +732,7 @@ func (h *Handler) UpdateQuestionDifficultyHandler(w http.ResponseWriter, r *http
 	}
 
 	if err := h.db.UpdateQuestionDifficultyFromAnalytics(questionID, req.Difficulty); err != nil {
-		log.Printf("ERROR: Failed to update question difficulty: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update question difficulty")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

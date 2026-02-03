@@ -1,0 +1,10 @@
+{
+  "name": "Athena Quiz Platform",
+  "short_name": "Athena",
+  "description": "Master software development through adaptive quizzing",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "theme_color": "#0d6efd",
+  "background_color": "#f8f9fa",
+  "icons": []
+}

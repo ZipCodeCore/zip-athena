@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"path/filepath"
 	"strconv"
@@ -213,20 +212,20 @@ func (h *Handler) GetLearningResourceHandler(w http.ResponseWriter, r *http.Requ
 
 	// Extract resource ID from URL
 	pathParts := strings.Split(r.URL.Path, "/")
-	log.Printf("GetLearningResourceHandler: URL=%s, pathParts=%v", r.URL.Path, pathParts)
+	h.logger.WithContext(r.Context()).Debugf("GetLearningResourceHandler: URL=%s, pathParts=%v", r.URL.Path, pathParts)
 	if len(pathParts) < 4 {
-		log.Printf("GetLearningResourceHandler: Path too short, len=%d", len(pathParts))
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceHandler: Path too short, len=%d", len(pathParts))
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
 		return
 	}
 
 	resourceID, err := strconv.Atoi(pathParts[3])
 	if err != nil {
-		log.Printf("GetLearningResourceHandler: Failed to parse ID from '%s': %v", pathParts[3], err)
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceHandler: Failed to parse ID from '%s': %v", pathParts[3], err)
 		http.Error(w, "Invalid resource ID", http.StatusBadRequest)
 		return
 	}
-	log.Printf("GetLearningResourceHandler: Fetching resource ID=%d", resourceID)
+	h.logger.WithContext(r.Context()).Debugf("GetLearningResourceHandler: Fetching resource ID=%d", resourceID)
 
 	userID := getUserIDFromContext(r)
 
@@ -249,15 +248,15 @@ func (h *Handler) GetLearningResourceHandler(w http.ResponseWriter, r *http.Requ
 	)
 
 	if err == sql.ErrNoRows {
-		log.Printf("GetLearningResourceHandler: Resource ID=%d not found", resourceID)
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceHandler: Resource ID=%d not found", resourceID)
 		http.Error(w, "Resource not found", http.StatusNotFound)
 		return
 	} else if err != nil {
-		log.Printf("GetLearningResourceHandler: Database error: %v", err)
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceHandler: Database error: %v", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
-	log.Printf("GetLearningResourceHandler: Found resource: %+v", resource)
+	h.logger.WithContext(r.Context()).Debugf("GetLearningResourceHandler: Found resource: %+v", resource)
 
 	// Build response with progress
 	response := models.LearningResourceWithProgress{
@@ -297,20 +296,20 @@ func (h *Handler) GetLearningResourceContentHandler(w http.ResponseWriter, r *ht
 
 	// Extract resource ID from URL
 	pathParts := strings.Split(r.URL.Path, "/")
-	log.Printf("GetLearningResourceContentHandler: URL=%s, pathParts=%v", r.URL.Path, pathParts)
+	h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: URL=%s, pathParts=%v", r.URL.Path, pathParts)
 	if len(pathParts) < 4 {
-		log.Printf("GetLearningResourceContentHandler: Path too short, len=%d", len(pathParts))
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: Path too short, len=%d", len(pathParts))
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
 		return
 	}
 
 	resourceID, err := strconv.Atoi(pathParts[3])
 	if err != nil {
-		log.Printf("GetLearningResourceContentHandler: Failed to parse ID from '%s': %v", pathParts[3], err)
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: Failed to parse ID from '%s': %v", pathParts[3], err)
 		http.Error(w, "Invalid resource ID", http.StatusBadRequest)
 		return
 	}
-	log.Printf("GetLearningResourceContentHandler: Fetching content for resource ID=%d", resourceID)
+	h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: Fetching content for resource ID=%d", resourceID)
 
 	var filePath string
 	err = h.db.DB().QueryRow(`
@@ -320,26 +319,26 @@ func (h *Handler) GetLearningResourceContentHandler(w http.ResponseWriter, r *ht
 	`, resourceID).Scan(&filePath)
 
 	if err == sql.ErrNoRows {
-		log.Printf("GetLearningResourceContentHandler: Resource ID=%d not found", resourceID)
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: Resource ID=%d not found", resourceID)
 		http.Error(w, "Resource not found", http.StatusNotFound)
 		return
 	} else if err != nil {
-		log.Printf("GetLearningResourceContentHandler: Database error: %v", err)
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: Database error: %v", err)
 		http.Error(w, "Database error", http.StatusInternalServerError)
 		return
 	}
-	log.Printf("GetLearningResourceContentHandler: Found file_path: %s", filePath)
+	h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: Found file_path: %s", filePath)
 
 	// Read the markdown file
 	fullPath := filepath.Join("learning", filePath)
-	log.Printf("GetLearningResourceContentHandler: Reading file: %s", fullPath)
+	h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: Reading file: %s", fullPath)
 	content, err := ioutil.ReadFile(fullPath)
 	if err != nil {
-		log.Printf("GetLearningResourceContentHandler: File read error: %v", err)
+		h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: File read error: %v", err)
 		http.Error(w, "File not found", http.StatusNotFound)
 		return
 	}
-	log.Printf("GetLearningResourceContentHandler: Successfully read %d bytes", len(content))
+	h.logger.WithContext(r.Context()).Debugf("GetLearningResourceContentHandler: Successfully read %d bytes", len(content))
 
 	w.Header().Set("Content-Type", "text/markdown")
 	w.Write(content)

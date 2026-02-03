@@ -1,20 +1,123 @@
+version: '3.8'
+
 services:
-  athena:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: athena-postgres
+    environment:
+      POSTGRES_USER: athena
+      POSTGRES_PASSWORD: athena_password
+      POSTGRES_DB: athena
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U athena"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - athena-network
+    restart: unless-stopped
+
+  # Athena Application (SQLite mode)
+  athena-sqlite:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: athena-app
+    container_name: athena-app-sqlite
     ports:
       - "9206:9206"
     volumes:
-      # Mount the data directory to persist SQLite database on host
       - ./data:/data
     environment:
+      - PORT=9206
+      - DB_TYPE=sqlite
       - DB_PATH=/data/athena.db
+      - LOG_LEVEL=info
+      - LOG_FORMAT=json
+      - CORS_ENABLED=true
+      - CORS_ALLOWED_ORIGINS=*
+    depends_on:
+      - postgres
+    networks:
+      - athena-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9206/"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9206/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+    profiles:
+      - sqlite
+
+  # Athena Application (PostgreSQL mode)
+  athena-postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: athena-app-postgres
+    ports:
+      - "9207:9206"
+    environment:
+      - PORT=9206
+      - DB_TYPE=postgres
+      - DATABASE_URL=postgresql://athena:athena_password@postgres:5432/athena?sslmode=disable
+      - LOG_LEVEL=info
+      - LOG_FORMAT=json
+      - JWT_SECRET=change-this-to-a-strong-random-secret
+      - CORS_ENABLED=true
+      - CORS_ALLOWED_ORIGINS=http://localhost:*,http://127.0.0.1:*
+      - CORS_ALLOWED_METHODS=GET,POST,PUT,DELETE,OPTIONS
+      - CORS_ALLOWED_HEADERS=Content-Type,Authorization,X-User-ID
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - athena-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9206/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    profiles:
+      - postgres
+
+  # Development mode (hot reload)
+  athena-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: athena-dev
+    ports:
+      - "9206:9206"
+    volumes:
+      - .:/app
+      - go-modules:/go/pkg/mod
+    environment:
+      - PORT=9206
+      - DB_TYPE=sqlite
+      - DB_PATH=/data/athena.db
+      - LOG_LEVEL=debug
+      - LOG_FORMAT=text
+    networks:
+      - athena-network
+    restart: unless-stopped
+    profiles:
+      - dev
+
+networks:
+  athena-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  go-modules:
+    driver: local

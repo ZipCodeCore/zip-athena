@@ -7,7 +7,7 @@ RUN apk add --no-cache gcc musl-dev sqlite-dev
 # Set working directory
 WORKDIR /app
 
-# Copy go mod files
+# Copy go mod files first for better caching
 COPY go.mod go.sum ./
 
 # Download dependencies
@@ -16,14 +16,23 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Build the application
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o athena .
+# Build the application with optimizations
+RUN CGO_ENABLED=1 GOOS=linux go build \
+    -a \
+    -installsuffix cgo \
+    -ldflags="-w -s" \
+    -o athena .
 
 # Runtime stage
 FROM alpine:latest
 
 # Install runtime dependencies
-RUN apk add --no-cache sqlite-libs ca-certificates
+RUN apk add --no-cache \
+    sqlite-libs \
+    ca-certificates \
+    tzdata \
+    && addgroup -g 1000 athena \
+    && adduser -D -u 1000 -G athena athena
 
 # Create app directory
 WORKDIR /app
@@ -38,13 +47,24 @@ COPY --from=builder /app/static ./static
 COPY --from=builder /app/learning ./learning
 
 # Create data directory for SQLite database
-RUN mkdir -p /data
+RUN mkdir -p /data && chown -R athena:athena /data /app
 
-# Set environment variable for database path
-ENV DB_PATH=/data/athena.db
+# Switch to non-root user
+USER athena
+
+# Default environment variables (can be overridden)
+ENV PORT=9206 \
+    DB_TYPE=sqlite \
+    DB_PATH=/data/athena.db \
+    LOG_LEVEL=info \
+    LOG_FORMAT=json
 
 # Expose port
 EXPOSE 9206
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:${PORT}/health || exit 1
 
 # Run the application
 CMD ["./athena"]

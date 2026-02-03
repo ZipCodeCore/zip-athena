@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"time"
 
@@ -26,8 +25,17 @@ type LoginRequest struct {
 
 // AuthResponse represents the response for authentication
 type AuthResponse struct {
-	User    *models.User `json:"user"`
-	Message string       `json:"message"`
+	User         *models.User `json:"user"`
+	Message      string       `json:"message"`
+	AccessToken  string       `json:"access_token,omitempty"`
+	RefreshToken string       `json:"refresh_token,omitempty"`
+	ExpiresIn    int64        `json:"expires_in,omitempty"`
+	TokenType    string       `json:"token_type,omitempty"`
+}
+
+// RefreshRequest represents the request body for token refresh
+type RefreshRequest struct {
+	RefreshToken string `json:"refresh_token"`
 }
 
 // hashPassword creates a bcrypt hash of the password
@@ -64,7 +72,10 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// Hash password
 	hashedPassword, err := hashPassword(req.Password)
 	if err != nil {
-		log.Printf("ERROR: Failed to hash password for user %s: %v\n", req.Username, err)
+		h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+			"username": req.Username,
+			"error":    err.Error(),
+		}).Error("Failed to hash password during registration")
 		http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 		return
 	}
@@ -86,7 +97,11 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			user.Username, user.Email, user.Password, user.IsAdmin, user.TotalPoints, user.CreatedAt,
 		)
 		if err != nil {
-			log.Printf("ERROR: Failed to create user %s: %v\n", user.Username, err)
+			h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+				"username": user.Username,
+				"email":    user.Email,
+				"error":    err.Error(),
+			}).Error("Failed to create user in database")
 			http.Error(w, "Username or email already exists", http.StatusConflict)
 			return
 		}
@@ -95,7 +110,10 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// Fallback for in-memory DB
 		if err := h.db.CreateUser(user); err != nil {
-			log.Printf("ERROR: Failed to create user %s in in-memory DB: %v\n", user.Username, err)
+			h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+				"username": user.Username,
+				"error":    err.Error(),
+			}).Error("Failed to create user in in-memory database")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -104,12 +122,23 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// Don't send password back
 	user.Password = ""
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(AuthResponse{
+	response := AuthResponse{
 		User:    user,
 		Message: "Registration successful",
-	})
+	}
+
+	if h.jwtManager != nil {
+		if tokenPair, err := h.jwtManager.GenerateTokenPair(user.ID, user.Username, user.IsAdmin); err == nil {
+			response.AccessToken = tokenPair.AccessToken
+			response.RefreshToken = tokenPair.RefreshToken
+			response.ExpiresIn = tokenPair.ExpiresIn
+			response.TokenType = tokenPair.TokenType
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(response)
 }
 
 // LoginHandler handles POST /auth/login
@@ -144,27 +173,97 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if err == database.ErrNotFound {
-			// Don't log "not found" as it could be username enumeration attempts
+			// Log failed authentication attempt but don't reveal if username exists
+			h.logger.LogAuthentication(r.Context(), req.Username, false, "user not found")
 			http.Error(w, "Invalid username or password", http.StatusUnauthorized)
 			return
 		}
-		log.Printf("ERROR: Failed to get user %s during login: %v\n", req.Username, err)
+		h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+			"username": req.Username,
+			"error":    err.Error(),
+		}).Error("Database error during login")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	// Verify password
 	if !checkPasswordHash(req.Password, user.Password) {
+		h.logger.LogAuthentication(r.Context(), req.Username, false, "invalid password")
 		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
 		return
 	}
 
+	// Log successful authentication
+	h.logger.LogAuthentication(r.Context(), req.Username, true, "")
+
 	// Don't send password back
 	user.Password = ""
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(AuthResponse{
+	response := AuthResponse{
 		User:    user,
 		Message: "Login successful",
-	})
+	}
+
+	if h.jwtManager != nil {
+		if tokenPair, err := h.jwtManager.GenerateTokenPair(user.ID, user.Username, user.IsAdmin); err == nil {
+			response.AccessToken = tokenPair.AccessToken
+			response.RefreshToken = tokenPair.RefreshToken
+			response.ExpiresIn = tokenPair.ExpiresIn
+			response.TokenType = tokenPair.TokenType
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+// LogoutHandler handles POST /auth/logout
+func (h *Handler) LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	if h.jwtManager != nil {
+		tokenString := ExtractToken(r)
+		if tokenString != "" {
+			h.jwtManager.RevokeToken(tokenString)
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Logged out successfully"})
+}
+
+// RefreshTokenHandler handles POST /auth/refresh
+func (h *Handler) RefreshTokenHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	if h.jwtManager == nil {
+		http.Error(w, "Authentication not configured", http.StatusInternalServerError)
+		return
+	}
+
+	var req RefreshRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if req.RefreshToken == "" {
+		http.Error(w, "Refresh token is required", http.StatusBadRequest)
+		return
+	}
+
+	tokenPair, err := h.jwtManager.RefreshToken(req.RefreshToken)
+	if err != nil {
+		http.Error(w, "Invalid or expired refresh token", http.StatusUnauthorized)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(tokenPair)
 }

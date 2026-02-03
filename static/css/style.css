@@ -66,3 +66,22 @@ body {
     cursor: pointer;
     margin-right: 10px;
 }
+
+/* Mobile responsive adjustments */
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .answer-option {
+        padding: 14px 12px;
+    }
+
+    .topic-card:hover {
+        transform: none;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+}

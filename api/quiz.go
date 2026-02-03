@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -121,7 +120,7 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 	if err := h.db.CreateQuiz(quiz); err != nil {
 		// If quiz creation fails, it might already exist, but continue anyway
 		// We'll just not set the quiz_id
-		log.Printf("ERROR: Failed to create quiz for topic %d: %v\n", req.TopicID, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create quiz for topic")
 	}
 
 	// Create quiz attempt
@@ -269,7 +268,7 @@ func (h *Handler) SubmitAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		// Update existing attempt in database
 		if err := h.db.UpdateQuestionAttempt(existingAttempt); err != nil {
 			// Log error but don't fail the request
-			log.Printf("ERROR: Failed to update question attempt: %v\n", err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update question attempt")
 		}
 	} else {
 		newAttempt := &models.QuestionAttempt{
@@ -287,7 +286,10 @@ func (h *Handler) SubmitAnswerHandler(w http.ResponseWriter, r *http.Request) {
 			newAttempt.IncorrectAttempts = 1
 		}
 		if err := h.db.CreateQuestionAttempt(newAttempt); err != nil {
-			log.Printf("ERROR: Failed to create question attempt for user %d, question %d: %v\n", req.UserID, req.QuestionID, err)
+			h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+				"user_id":     req.UserID,
+				"question_id": req.QuestionID,
+			}).WithError(err).Error("Failed to create question attempt")
 		}
 	}
 
@@ -337,10 +339,12 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		user.TotalPoints += quizAttempt.CorrectAnswers
 		if err := h.db.UpdateUserPoints(user.ID, user.TotalPoints); err != nil {
-			log.Printf("ERROR: Failed to update user points for user %d: %v\n", user.ID, err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update user points for user")
 		}
 	} else {
-		log.Printf("ERROR: Failed to get user %d for points update: %v\n", quizAttempt.UserID, err)
+		h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+			"user_id": quizAttempt.UserID,
+		}).WithError(err).Error("Failed to get user for points update")
 	}
 
 	// Update FSRS state for each question in the quiz
@@ -356,7 +360,7 @@ func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
 	allQuestions, err := h.db.ListQuestions()
 	if err != nil {
 		// Log error but don't block quiz completion
-		log.Printf("ERROR: Failed to load questions for FSRS update: %v\n", err)
+		h.logger.WithError(err).Error("Failed to load questions for FSRS update")
 		return
 	}
 
@@ -448,10 +452,11 @@ func (h *Handler) updateFSRSStatesForQuiz(quizAttempt *models.QuizAttempt) {
 
 	// Log any failures
 	if len(failedUpdates) > 0 {
-		log.Printf("ERROR: Failed to update FSRS for %d question(s) in quiz attempt %d:\n", len(failedUpdates), quizAttempt.ID)
-		for _, failure := range failedUpdates {
-			log.Printf("  - %s\n", failure)
-		}
+		h.logger.WithFields(map[string]interface{}{
+			"quiz_attempt_id": quizAttempt.ID,
+			"failed_count":    len(failedUpdates),
+			"failures":        failedUpdates,
+		}).Warn("Failed to update FSRS for some questions")
 	}
 }
 
@@ -597,7 +602,7 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 	// Get quiz attempts
 	quizAttempts, err := h.db.GetQuizAttemptsByUser(userID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get quiz attempts for user %d: %v\n", userID, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get quiz attempts for user")
 		quizAttempts = []*models.QuizAttempt{}
 	}
 
@@ -621,7 +626,9 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 				enriched.QuizName = quiz.Name
 				enriched.QuizDescription = quiz.Description
 			} else {
-				log.Printf("ERROR: Failed to get quiz %d for enrichment: %v\n", *qa.QuizID, err)
+				h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+					"quiz_id": *qa.QuizID,
+				}).WithError(err).Error("Failed to get quiz for enrichment")
 			}
 		}
 		
@@ -631,7 +638,7 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 	// Get question attempts
 	questionAttempts, err := h.db.GetQuestionAttemptsByUser(userID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get question attempts for user %d: %v\n", userID, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get question attempts for user")
 		questionAttempts = []*models.QuestionAttempt{}
 	}
 

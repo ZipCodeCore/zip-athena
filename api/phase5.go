@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/csv"
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -36,7 +35,7 @@ func (h *Handler) ListInstructorQuestionsHandler(w http.ResponseWriter, r *http.
 
 	questions, total, err := h.db.ListQuestionsWithPagination(page, perPage, search, topicID, difficulty)
 	if err != nil {
-		log.Printf("ERROR: Failed to list questions: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list questions")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -73,7 +72,7 @@ func (h *Handler) CreateInstructorQuestionHandler(w http.ResponseWriter, r *http
 
 	// Create question
 	if err := h.db.CreateQuestion(&req.Question); err != nil {
-		log.Printf("ERROR: Failed to create question: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -82,7 +81,7 @@ func (h *Handler) CreateInstructorQuestionHandler(w http.ResponseWriter, r *http
 	for i := range req.Answers {
 		req.Answers[i].QuestionID = req.Question.ID
 		if err := h.db.CreateAnswer(&req.Answers[i]); err != nil {
-			log.Printf("ERROR: Failed to create answer: %v\n", err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create answer")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -126,7 +125,7 @@ func (h *Handler) UpdateInstructorQuestionHandler(w http.ResponseWriter, r *http
 
 	// Update question
 	if err := h.db.UpdateQuestion(&req.Question); err != nil {
-		log.Printf("ERROR: Failed to update question: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -134,7 +133,7 @@ func (h *Handler) UpdateInstructorQuestionHandler(w http.ResponseWriter, r *http
 	// Get existing answers
 	existingAnswers, err := h.db.GetAnswersByQuestion(id)
 	if err != nil {
-		log.Printf("ERROR: Failed to get existing answers: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get existing answers")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -142,7 +141,7 @@ func (h *Handler) UpdateInstructorQuestionHandler(w http.ResponseWriter, r *http
 	// Delete old answers
 	for _, answer := range existingAnswers {
 		if err := h.db.DeleteAnswer(answer.ID); err != nil {
-			log.Printf("ERROR: Failed to delete answer: %v\n", err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to delete answer")
 		}
 	}
 
@@ -150,7 +149,7 @@ func (h *Handler) UpdateInstructorQuestionHandler(w http.ResponseWriter, r *http
 	for i := range req.Answers {
 		req.Answers[i].QuestionID = id
 		if err := h.db.CreateAnswer(&req.Answers[i]); err != nil {
-			log.Printf("ERROR: Failed to create answer: %v\n", err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create answer")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -174,7 +173,7 @@ func (h *Handler) DeactivateInstructorQuestionHandler(w http.ResponseWriter, r *
 
 	// Deactivate question (soft delete)
 	if err := h.db.DeactivateQuestion(id); err != nil {
-		log.Printf("ERROR: Failed to deactivate question: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to deactivate question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -193,7 +192,7 @@ func (h *Handler) PreviewInstructorQuestionHandler(w http.ResponseWriter, r *htt
 
 	preview, err := h.db.GetQuestionPreview(id)
 	if err != nil {
-		log.Printf("ERROR: Failed to get question preview: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get question preview")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -264,7 +263,7 @@ func (h *Handler) ImportQuestionsCSVHandler(w http.ResponseWriter, r *http.Reque
 	// Validate
 	result, err := h.db.ValidateCSVImport(rows)
 	if err != nil {
-		log.Printf("ERROR: Failed to validate CSV import: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to validate CSV import")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -272,7 +271,7 @@ func (h *Handler) ImportQuestionsCSVHandler(w http.ResponseWriter, r *http.Reque
 	// Import valid rows
 	imported, err := h.db.BulkCreateQuestions(result.ValidRows)
 	if err != nil {
-		log.Printf("ERROR: Failed to bulk create questions: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to bulk create questions")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -339,7 +338,7 @@ func (h *Handler) ValidateQuestionsCSVHandler(w http.ResponseWriter, r *http.Req
 	// Validate only (don't import)
 	result, err := h.db.ValidateCSVImport(rows)
 	if err != nil {
-		log.Printf("ERROR: Failed to validate CSV import: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to validate CSV import")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -359,7 +358,7 @@ func (h *Handler) ConfirmImportQuestionsCSVHandler(w http.ResponseWriter, r *htt
 	// Import confirmed rows
 	imported, err := h.db.BulkCreateQuestions(rows)
 	if err != nil {
-		log.Printf("ERROR: Failed to bulk create questions: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to bulk create questions")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -376,7 +375,7 @@ func (h *Handler) ConfirmImportQuestionsCSVHandler(w http.ResponseWriter, r *htt
 func (h *Handler) ListTagsHandler(w http.ResponseWriter, r *http.Request) {
 	tags, err := h.db.GetTagsWithMetadata()
 	if err != nil {
-		log.Printf("ERROR: Failed to list tags: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list tags")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -408,7 +407,7 @@ func (h *Handler) MergeTagsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.db.MergeTags(req.SourceTags, req.TargetTag); err != nil {
-		log.Printf("ERROR: Failed to merge tags: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to merge tags")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -428,7 +427,7 @@ func (h *Handler) DeleteTagHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.db.DeleteTag(tagName); err != nil {
-		log.Printf("ERROR: Failed to delete tag: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to delete tag")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -446,7 +445,7 @@ func (h *Handler) GetQuestionsByTagHandler(w http.ResponseWriter, r *http.Reques
 
 	questions, err := h.db.GetQuestionsByTag(tagName)
 	if err != nil {
-		log.Printf("ERROR: Failed to get questions by tag: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get questions by tag")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -461,7 +460,7 @@ func (h *Handler) GetQuestionsByTagHandler(w http.ResponseWriter, r *http.Reques
 func (h *Handler) GetFlaggedQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 	flagged, err := h.db.GetFlaggedQuestions()
 	if err != nil {
-		log.Printf("ERROR: Failed to get flagged questions: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get flagged questions")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -493,7 +492,7 @@ func (h *Handler) FlagQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.db.FlagQuestion(id, req.Reason); err != nil {
-		log.Printf("ERROR: Failed to flag question: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to flag question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -514,7 +513,7 @@ func (h *Handler) UnflagQuestionHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	if err := h.db.UnflagQuestion(id); err != nil {
-		log.Printf("ERROR: Failed to unflag question: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to unflag question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -533,7 +532,7 @@ func (h *Handler) ResolveQuestionHandler(w http.ResponseWriter, r *http.Request)
 
 	// Resolve is same as unflag
 	if err := h.db.UnflagQuestion(id); err != nil {
-		log.Printf("ERROR: Failed to resolve question: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to resolve question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -544,7 +543,7 @@ func (h *Handler) ResolveQuestionHandler(w http.ResponseWriter, r *http.Request)
 // AutoFlagQuestionsHandler handles POST /admin/questions/auto-flag
 func (h *Handler) AutoFlagQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 	if err := h.db.AutoFlagQuestions(); err != nil {
-		log.Printf("ERROR: Failed to auto-flag questions: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to auto-flag questions")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

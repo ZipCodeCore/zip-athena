@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -52,7 +51,7 @@ func (h *Handler) ListUsersHandler(w http.ResponseWriter, r *http.Request) {
 
 	users, err := h.db.ListUsers()
 	if err != nil {
-		log.Printf("ERROR: Failed to list users: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list users")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -90,7 +89,7 @@ func (h *Handler) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 	if user.Password != "" {
 		hashedPassword, err := hashPassword(user.Password)
 		if err != nil {
-			log.Printf("ERROR: Failed to hash password for user %d: %v\n", id, err)
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to hash password for user")
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 			return
 		}
@@ -103,7 +102,7 @@ func (h *Handler) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "User not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to update user (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update user")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -132,7 +131,7 @@ func (h *Handler) DeleteUserHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "User not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to delete user (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to delete user")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -149,7 +148,7 @@ func (h *Handler) ListQuestionsHandler(w http.ResponseWriter, r *http.Request) {
 
 	questions, err := h.db.ListQuestions()
 	if err != nil {
-		log.Printf("ERROR: Failed to list questions: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list questions")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -184,7 +183,7 @@ func (h *Handler) UpdateQuestionHandler(w http.ResponseWriter, r *http.Request) 
 			http.Error(w, "Question not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to update question (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -212,7 +211,7 @@ func (h *Handler) DeleteQuestionHandler(w http.ResponseWriter, r *http.Request) 
 			http.Error(w, "Question not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to delete question (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to delete question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -230,7 +229,7 @@ func (h *Handler) ListQuizzesHandler(w http.ResponseWriter, r *http.Request) {
 
 	quizzes, err := h.db.ListQuizzes()
 	if err != nil {
-		log.Printf("ERROR: Failed to list quizzes: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list quizzes")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -259,7 +258,7 @@ func (h *Handler) GetQuizHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Quiz not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to get quiz (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get quiz")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -284,7 +283,7 @@ func (h *Handler) CreateQuizHandler(w http.ResponseWriter, r *http.Request) {
 	quiz.CreatedAt = time.Now()
 	quiz.UpdatedAt = time.Now()
 	if err := h.db.CreateQuiz(&quiz); err != nil {
-		log.Printf("ERROR: Failed to create quiz: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create quiz")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -321,7 +320,7 @@ func (h *Handler) UpdateQuizHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Quiz not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to update quiz (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update quiz")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -349,7 +348,7 @@ func (h *Handler) DeleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Quiz not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to delete quiz (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to delete quiz")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -384,7 +383,7 @@ func (h *Handler) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Topic not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to update topic (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update topic")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -412,7 +411,7 @@ func (h *Handler) DeleteTopicHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Topic not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to delete topic (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to delete topic")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -442,7 +441,9 @@ func (h *Handler) ListAnswersHandler(w http.ResponseWriter, r *http.Request) {
 
 	answers, err := h.db.GetAnswersByQuestion(questionID)
 	if err != nil {
-		log.Printf("ERROR: Failed to get answers for question (question_id: %d): %v\n", questionID, err)
+		h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+			"question_id": questionID,
+		}).WithError(err).Error("Failed to get answers for question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -475,7 +476,9 @@ func (h *Handler) CreateAnswerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.db.CreateAnswer(&answer); err != nil {
-		log.Printf("ERROR: Failed to create answer (question_id: %d): %v\n", answer.QuestionID, err)
+		h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+			"question_id": answer.QuestionID,
+		}).WithError(err).Error("Failed to create answer")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -511,7 +514,7 @@ func (h *Handler) UpdateAnswerHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Answer not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to update answer (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to update answer")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -539,7 +542,7 @@ func (h *Handler) DeleteAnswerHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Answer not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to delete answer (ID: %d): %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to delete answer")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

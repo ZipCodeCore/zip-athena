@@ -2,23 +2,41 @@ package api
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/ZipCodeCore/zip-athena/database"
+	"github.com/ZipCodeCore/zip-athena/logger"
 	"github.com/ZipCodeCore/zip-athena/models"
 )
 
 // Handler contains the API handlers for the application
 type Handler struct {
-	db database.Database
+	db         database.Database
+	logger     *logger.Logger
+	jwtManager *JWTManager
+}
+
+// SetJWTManager sets the JWT manager for token generation and validation
+func (h *Handler) SetJWTManager(jm *JWTManager) {
+	h.jwtManager = jm
 }
 
 // NewHandler creates a new API handler
 func NewHandler(db database.Database) *Handler {
-	return &Handler{db: db}
+	return &Handler{
+		db:     db,
+		logger: logger.GetDefault(),
+	}
+}
+
+// NewHandlerWithLogger creates a new API handler with a custom logger
+func NewHandlerWithLogger(db database.Database, log *logger.Logger) *Handler {
+	return &Handler{
+		db:     db,
+		logger: log,
+	}
 }
 
 // CreateUserHandler handles POST /users
@@ -38,7 +56,9 @@ func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	if user.Password != "" {
 		hashedPassword, err := hashPassword(user.Password)
 		if err != nil {
-			log.Printf("ERROR: Failed to hash password for user %s: %v\n", user.Username, err)
+			h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+				"username": user.Username,
+			}).WithError(err).Error("Failed to hash password")
 			http.Error(w, "Failed to hash password", http.StatusInternalServerError)
 			return
 		}
@@ -47,7 +67,7 @@ func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	user.CreatedAt = time.Now()
 	if err := h.db.CreateUser(&user); err != nil {
-		log.Printf("ERROR: Failed to create user: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create user")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -80,7 +100,7 @@ func (h *Handler) GetUserHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "User not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to get user %d: %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get user")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -104,7 +124,7 @@ func (h *Handler) CreateTopicHandler(w http.ResponseWriter, r *http.Request) {
 
 	topic.CreatedAt = time.Now()
 	if err := h.db.CreateTopic(&topic); err != nil {
-		log.Printf("ERROR: Failed to create topic: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create topic")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -123,7 +143,7 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 
 	topics, err := h.db.ListTopics()
 	if err != nil {
-		log.Printf("ERROR: Failed to list topics: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list topics")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -152,7 +172,7 @@ func (h *Handler) GetTopicHandler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Topic not found", http.StatusNotFound)
 			return
 		}
-		log.Printf("ERROR: Failed to get topic %d: %v\n", id, err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get topic")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -176,7 +196,7 @@ func (h *Handler) CreateQuestionHandler(w http.ResponseWriter, r *http.Request) 
 
 	question.CreatedAt = time.Now()
 	if err := h.db.CreateQuestion(&question); err != nil {
-		log.Printf("ERROR: Failed to create question: %v\n", err)
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create question")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
