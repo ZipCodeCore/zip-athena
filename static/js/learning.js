@@ -243,9 +243,11 @@ function renderResourceContent(metadata, markdownContent) {
     `;
 
     // Apply syntax highlighting to code blocks
-    contentContainer.querySelectorAll('pre code').forEach((block) => {
-        hljs.highlightElement(block);
-    });
+    if (typeof hljs !== 'undefined') {
+        contentContainer.querySelectorAll('pre code').forEach((block) => {
+            hljs.highlightElement(block);
+        });
+    }
 
     // Scroll to top
     contentContainer.scrollTop = 0;
