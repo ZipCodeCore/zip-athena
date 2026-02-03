@@ -1,4 +1,4 @@
-const CACHE_NAME = 'athena-v2';
+const CACHE_NAME = 'athena-v3';
 
 const SHELL_FILES = [
     '/',
@@ -42,7 +42,8 @@ self.addEventListener('fetch', (event) => {
         event.respondWith(
             caches.match(event.request).then((cached) => {
                 const network = fetch(event.request).then((response) => {
-                    if (response.ok) {
+                    // Don't cache redirects or error responses
+                    if (response.ok && response.type !== 'opaqueredirect' && !response.redirected) {
                         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, response.clone()));
                     }
                     return response;
