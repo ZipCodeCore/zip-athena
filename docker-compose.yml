@@ -10,7 +10,7 @@ services:
     ports:
       - "9206:9206"
     volumes:
-      - ./data:/data
+      - athena-data:/data
     environment:
       - PORT=9206
       - DB_TYPE=sqlite
@@ -58,4 +58,6 @@ networks:
 
 volumes:
   go-modules:
+    driver: local
+  athena-data:
     driver: local
