@@ -148,6 +148,36 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Filter topics based on user category if user_id is provided
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr != "" {
+		userID, err := strconv.Atoi(userIDStr)
+		if err == nil {
+			user, err := h.db.GetUser(userID)
+			if err == nil {
+				// Filter topics based on user category
+				filteredTopics := []*models.Topic{}
+				for _, topic := range topics {
+					// Admins see all topics
+					if user.IsAdmin {
+						filteredTopics = append(filteredTopics, topic)
+					} else if user.Category == "java" {
+						// Java students see Java and SQL topics
+						if topic.Category == "java" || topic.Category == "sql" {
+							filteredTopics = append(filteredTopics, topic)
+						}
+					} else if user.Category == "data" {
+						// Data students see Python and SQL topics
+						if topic.Category == "python" || topic.Category == "sql" {
+							filteredTopics = append(filteredTopics, topic)
+						}
+					}
+				}
+				topics = filteredTopics
+			}
+		}
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(topics)
 }
