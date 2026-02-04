@@ -28,12 +28,13 @@ func (h *Handler) GetCurriculumOutlineHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	// Get user_id from query parameter for filtering (optional)
+	// If not provided or invalid, user will be nil and no category filtering is applied
 	userIDStr := r.URL.Query().Get("user_id")
 	var user *models.User
 	if userIDStr != "" {
 		userID, err := strconv.Atoi(userIDStr)
 		if err == nil {
-			user, _ = h.db.GetUser(userID)
+			user, _ = h.db.GetUser(userID) // Silently ignore error - user stays nil if not found
 		}
 	}
 
@@ -523,12 +524,13 @@ func (h *Handler) SearchLearningResourcesHandler(w http.ResponseWriter, r *http.
 	language := r.URL.Query().Get("language")
 
 	// Get user_id from query parameter for filtering (optional)
+	// If not provided or invalid, user will be nil and no category filtering is applied
 	userIDStr := r.URL.Query().Get("user_id")
 	var user *models.User
 	if userIDStr != "" {
 		userID, err := strconv.Atoi(userIDStr)
 		if err == nil {
-			user, _ = h.db.GetUser(userID)
+			user, _ = h.db.GetUser(userID) // Silently ignore error - user stays nil if not found
 		}
 	}
 
