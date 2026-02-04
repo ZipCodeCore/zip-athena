@@ -173,7 +173,6 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Filter topics based on user category
 	filteredTopics := []*models.Topic{}
-	
 	// Admins see all topics - no filtering needed
 	if user.IsAdmin {
 		filteredTopics = topics
