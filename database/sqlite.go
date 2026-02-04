@@ -50,6 +50,7 @@ func (db *SQLiteDB) initSchema() error {
 		email TEXT NOT NULL UNIQUE,
 		password TEXT NOT NULL,
 		is_admin BOOLEAN DEFAULT 0,
+		category TEXT DEFAULT 'java',
 		total_points INTEGER DEFAULT 0,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);
@@ -58,6 +59,7 @@ func (db *SQLiteDB) initSchema() error {
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
 		description TEXT,
+		category TEXT DEFAULT 'java',
 		is_active BOOLEAN DEFAULT 1,
 		display_order INTEGER DEFAULT 0,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -94,6 +96,7 @@ func (db *SQLiteDB) initSchema() error {
 		completed_time DATETIME,
 		total_questions INTEGER DEFAULT 0,
 		correct_answers INTEGER DEFAULT 0,
+		difficulty_average REAL DEFAULT 0,
 		question_ids TEXT,
 		question_results TEXT,
 		FOREIGN KEY (user_id) REFERENCES users(id),
@@ -339,8 +342,8 @@ func (db *SQLiteDB) runMigrations() error {
 // User operations
 func (db *SQLiteDB) CreateUser(user *models.User) error {
 	result, err := db.db.Exec(
-		"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-		user.Username, user.Email, user.Password, user.IsAdmin, user.TotalPoints, user.CreatedAt,
+		"INSERT INTO users (username, email, password, is_admin, category, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+		user.Username, user.Email, user.Password, user.IsAdmin, user.Category, user.TotalPoints, user.CreatedAt,
 	)
 	if err != nil {
 		return err
@@ -356,9 +359,9 @@ func (db *SQLiteDB) CreateUser(user *models.User) error {
 func (db *SQLiteDB) GetUser(id int) (*models.User, error) {
 	user := &models.User{}
 	err := db.db.QueryRow(
-		"SELECT id, username, email, is_admin, total_points, created_at FROM users WHERE id = ?",
+		"SELECT id, username, email, is_admin, category, total_points, created_at FROM users WHERE id = ?",
 		id,
-	).Scan(&user.ID, &user.Username, &user.Email, &user.IsAdmin, &user.TotalPoints, &user.CreatedAt)
+	).Scan(&user.ID, &user.Username, &user.Email, &user.IsAdmin, &user.Category, &user.TotalPoints, &user.CreatedAt)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -371,9 +374,9 @@ func (db *SQLiteDB) GetUser(id int) (*models.User, error) {
 func (db *SQLiteDB) GetUserByUsername(username string) (*models.User, error) {
 	user := &models.User{}
 	err := db.db.QueryRow(
-		"SELECT id, username, email, password, is_admin, total_points, created_at FROM users WHERE username = ?",
+		"SELECT id, username, email, password, is_admin, category, total_points, created_at FROM users WHERE username = ?",
 		username,
-	).Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.IsAdmin, &user.TotalPoints, &user.CreatedAt)
+	).Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.IsAdmin, &user.Category, &user.TotalPoints, &user.CreatedAt)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -415,8 +418,8 @@ func (db *SQLiteDB) CreateTopic(topic *models.Topic) error {
 	}
 
 	result, err := db.db.Exec(
-		"INSERT INTO topics (name, description, is_active, display_order, created_at) VALUES (?, ?, ?, ?, ?)",
-		topic.Name, topic.Description, topic.IsActive, topic.DisplayOrder, topic.CreatedAt,
+		"INSERT INTO topics (name, description, category, is_active, display_order, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+		topic.Name, topic.Description, topic.Category, topic.IsActive, topic.DisplayOrder, topic.CreatedAt,
 	)
 	if err != nil {
 		return err
@@ -432,9 +435,9 @@ func (db *SQLiteDB) CreateTopic(topic *models.Topic) error {
 func (db *SQLiteDB) GetTopic(id int) (*models.Topic, error) {
 	topic := &models.Topic{}
 	err := db.db.QueryRow(
-		"SELECT id, name, description, is_active, display_order, created_at FROM topics WHERE id = ?",
+		"SELECT id, name, description, category, is_active, display_order, created_at FROM topics WHERE id = ?",
 		id,
-	).Scan(&topic.ID, &topic.Name, &topic.Description, &topic.IsActive, &topic.DisplayOrder, &topic.CreatedAt)
+	).Scan(&topic.ID, &topic.Name, &topic.Description, &topic.Category, &topic.IsActive, &topic.DisplayOrder, &topic.CreatedAt)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -445,7 +448,7 @@ func (db *SQLiteDB) GetTopic(id int) (*models.Topic, error) {
 }
 
 func (db *SQLiteDB) ListTopics() ([]*models.Topic, error) {
-	rows, err := db.db.Query("SELECT id, name, description, is_active, display_order, created_at FROM topics ORDER BY display_order ASC")
+	rows, err := db.db.Query("SELECT id, name, description, category, is_active, display_order, created_at FROM topics ORDER BY display_order ASC")
 	if err != nil {
 		return nil, err
 	}
@@ -454,7 +457,7 @@ func (db *SQLiteDB) ListTopics() ([]*models.Topic, error) {
 	var topics []*models.Topic
 	for rows.Next() {
 		topic := &models.Topic{}
-		if err := rows.Scan(&topic.ID, &topic.Name, &topic.Description, &topic.IsActive, &topic.DisplayOrder, &topic.CreatedAt); err != nil {
+		if err := rows.Scan(&topic.ID, &topic.Name, &topic.Description, &topic.Category, &topic.IsActive, &topic.DisplayOrder, &topic.CreatedAt); err != nil {
 			return nil, err
 		}
 		topics = append(topics, topic)
@@ -578,8 +581,8 @@ func (db *SQLiteDB) CreateQuizAttempt(attempt *models.QuizAttempt) error {
 	}
 
 	result, err := db.db.Exec(
-		"INSERT INTO quiz_attempts (user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, question_ids, question_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		attempt.UserID, attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.StartTime, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON),
+		"INSERT INTO quiz_attempts (user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		attempt.UserID, attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.StartTime, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, attempt.DifficultyAverage, string(questionIDsJSON), string(questionResultsJSON),
 	)
 	if err != nil {
 		return err
@@ -599,9 +602,9 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 	var quizID, parentAttemptID sql.NullInt64
 
 	err := db.db.QueryRow(
-		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE id = ?",
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results FROM quiz_attempts WHERE id = ?",
 		id,
-	).Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON)
+	).Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &questionIDsJSON, &questionResultsJSON)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -635,7 +638,7 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 
 func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, error) {
 	rows, err := db.db.Query(
-		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, question_ids, question_results FROM quiz_attempts WHERE user_id = ?",
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results FROM quiz_attempts WHERE user_id = ?",
 		userID,
 	)
 	if err != nil {
@@ -650,7 +653,7 @@ func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, er
 		var completedTime sql.NullTime
 		var quizID, parentAttemptID sql.NullInt64
 
-		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &questionIDsJSON, &questionResultsJSON); err != nil {
+		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &questionIDsJSON, &questionResultsJSON); err != nil {
 			return nil, err
 		}
 
@@ -691,8 +694,8 @@ func (db *SQLiteDB) UpdateQuizAttempt(attempt *models.QuizAttempt) error {
 	}
 
 	result, err := db.db.Exec(
-		"UPDATE quiz_attempts SET quiz_id = ?, parent_attempt_id = ?, attempt_number = ?, is_retake = ?, completed_time = ?, total_questions = ?, correct_answers = ?, question_ids = ?, question_results = ? WHERE id = ?",
-		attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, string(questionIDsJSON), string(questionResultsJSON), attempt.ID,
+		"UPDATE quiz_attempts SET quiz_id = ?, parent_attempt_id = ?, attempt_number = ?, is_retake = ?, completed_time = ?, total_questions = ?, correct_answers = ?, difficulty_average = ?, question_ids = ?, question_results = ? WHERE id = ?",
+		attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, attempt.DifficultyAverage, string(questionIDsJSON), string(questionResultsJSON), attempt.ID,
 	)
 	if err != nil {
 		return err

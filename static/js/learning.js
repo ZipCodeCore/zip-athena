@@ -3,6 +3,7 @@
 let currentLanguage = 'java'; // 'java' or 'python'
 let currentResourceId = null;
 let allPhases = [];
+let currentUser = null;
 
 // Check authentication
 function checkAuth() {
@@ -12,10 +13,23 @@ function checkAuth() {
         return false;
     }
     
+    currentUser = user;
+    
     // Display user info
     const userDisplay = document.getElementById('userDisplay');
     if (userDisplay) {
         userDisplay.textContent = `Welcome, ${user.username}!`;
+    }
+    
+    // Set initial language based on user category
+    if (!user.is_admin) {
+        // Non-admin users are restricted to their category
+        if (user.category === 'data') {
+            currentLanguage = 'python';
+        } else {
+            // Default to java for 'java' category or any other value
+            currentLanguage = 'java';
+        }
     }
     
     return true;
@@ -43,16 +57,31 @@ function setupEventListeners() {
     const toggle = document.getElementById('languageToggle');
     const label = document.getElementById('languageLabel');
     
-    toggle.addEventListener('change', function() {
-        if (toggle.checked) {
-            currentLanguage = 'python';
+    // For non-admin users, hide the toggle or disable it based on category
+    if (!currentUser.is_admin) {
+        // Disable toggle for non-admin users
+        toggle.disabled = true;
+        // Set the toggle state based on user category
+        if (currentUser.category === 'data') {
+            toggle.checked = true;
             label.textContent = 'Python';
         } else {
-            currentLanguage = 'java';
+            toggle.checked = false;
             label.textContent = 'Java';
         }
-        loadOutline();
-    });
+    } else {
+        // Admin users can toggle
+        toggle.addEventListener('change', function() {
+            if (toggle.checked) {
+                currentLanguage = 'python';
+                label.textContent = 'Python';
+            } else {
+                currentLanguage = 'java';
+                label.textContent = 'Java';
+            }
+            loadOutline();
+        });
+    }
 
     // Search functionality
     const searchInput = document.getElementById('searchInput');

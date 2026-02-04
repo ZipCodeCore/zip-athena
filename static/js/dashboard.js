@@ -46,7 +46,7 @@ async function loadDashboard() {
 // Load topics
 async function loadTopics() {
     try {
-        const response = await fetch('/topics');
+        const response = await fetch(`/topics?user_id=${user.id}`);
         const topics = await response.json();
 
         const topicsList = document.getElementById('topicsList');
@@ -98,6 +98,14 @@ function loadQuizAttempts(quizAttempts) {
             // Get quiz description (fallback to Quiz ID if not available)
             const quizDescription = attempt.quiz_description || attempt.quiz_name || `Quiz #${attempt.id}`;
             
+            // Format correct answers as "6/10"
+            const correctDisplay = `${attempt.correct_answers}/${attempt.total_questions}`;
+            
+            // Format difficulty average (round to 1 decimal place)
+            const difficultyDisplay = attempt.difficulty_average 
+                ? attempt.difficulty_average.toFixed(1) 
+                : 'N/A';
+            
             // Determine action button based on status
             let actionButton = '';
             if (!isCompleted) {
@@ -113,8 +121,8 @@ function loadQuizAttempts(quizAttempts) {
                 <td>${quizDescription}</td>
                 <td>${startTime}</td>
                 <td><span class="badge ${statusBadgeClass}">${status}</span></td>
-                <td>${attempt.total_questions}</td>
-                <td>${attempt.correct_answers}</td>
+                <td>${correctDisplay}</td>
+                <td>${difficultyDisplay}</td>
                 <td>
                     <span class="badge ${score >= 80 ? 'bg-success' : score >= 60 ? 'bg-warning' : 'bg-danger'}">
                         ${score}%

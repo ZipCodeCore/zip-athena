@@ -9,6 +9,7 @@ type User struct {
 	Email       string    `json:"email"`
 	Password    string    `json:"password,omitempty"` // Only used for auth, not returned in API
 	IsAdmin     bool      `json:"is_admin"`
+	Category    string    `json:"category"`    // "java" or "data" - determines accessible topics and resources
 	TotalPoints int       `json:"total_points"`
 	CreatedAt   time.Time `json:"created_at"`
 }
@@ -18,6 +19,7 @@ type Topic struct {
 	ID           int       `json:"id"`
 	Name         string    `json:"name"`
 	Description  string    `json:"description"`
+	Category     string    `json:"category"`      // "java", "python", "sql" - determines which user categories can access
 	IsActive     bool      `json:"is_active"`     // For soft delete (Phase 3)
 	DisplayOrder int       `json:"display_order"` // For reordering (Phase 3)
 	CreatedAt    time.Time `json:"created_at"`
@@ -45,18 +47,19 @@ type Answer struct {
 
 // QuizAttempt represents a student's attempt at taking a quiz
 type QuizAttempt struct {
-	ID              int             `json:"id"`
-	UserID          int             `json:"user_id"`
-	QuizID          *int            `json:"quiz_id,omitempty"`
-	ParentAttemptID *int            `json:"parent_attempt_id,omitempty"` // Reference to original attempt if this is a retake
-	AttemptNumber   int             `json:"attempt_number"`              // 1 for first attempt, 2 for first retake, etc.
-	IsRetake        bool            `json:"is_retake"`                   // True if this is a retake attempt
-	StartTime       time.Time       `json:"start_time"`
-	CompletedTime   *time.Time      `json:"completed_time,omitempty"`
-	TotalQuestions  int             `json:"total_questions"`
-	CorrectAnswers  int             `json:"correct_answers"`
-	QuestionIDs     []string        `json:"question_ids"`     // List of topic_question_id
-	QuestionResults map[string]bool `json:"question_results"` // topic_question_id -> correct/incorrect
+	ID                int             `json:"id"`
+	UserID            int             `json:"user_id"`
+	QuizID            *int            `json:"quiz_id,omitempty"`
+	ParentAttemptID   *int            `json:"parent_attempt_id,omitempty"` // Reference to original attempt if this is a retake
+	AttemptNumber     int             `json:"attempt_number"`              // 1 for first attempt, 2 for first retake, etc.
+	IsRetake          bool            `json:"is_retake"`                   // True if this is a retake attempt
+	StartTime         time.Time       `json:"start_time"`
+	CompletedTime     *time.Time      `json:"completed_time,omitempty"`
+	TotalQuestions    int             `json:"total_questions"`
+	CorrectAnswers    int             `json:"correct_answers"`
+	DifficultyAverage float64         `json:"difficulty_average"` // Average difficulty of all questions in quiz (1-7 scale)
+	QuestionIDs       []string        `json:"question_ids"`       // List of topic_question_id
+	QuestionResults   map[string]bool `json:"question_results"`   // topic_question_id -> correct/incorrect
 }
 
 // QuestionAttempt tracks individual question attempts by a student

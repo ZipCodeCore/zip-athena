@@ -328,6 +328,30 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 	now := time.Now()
 	quizAttempt.CompletedTime = &now
 	
+	// Calculate average difficulty from questions in the quiz
+	allQuestions, err := h.db.ListQuestions()
+	if err == nil {
+		questionMap := make(map[string]*models.Question)
+		for _, q := range allQuestions {
+			questionMap[q.TopicQuestionID] = q
+		}
+		
+		totalDifficulty := 0.0
+		questionCount := 0
+		for _, topicQuestionID := range quizAttempt.QuestionIDs {
+			if question, exists := questionMap[topicQuestionID]; exists {
+				totalDifficulty += float64(question.Difficulty)
+				questionCount++
+			}
+		}
+		
+		if questionCount > 0 {
+			quizAttempt.DifficultyAverage = totalDifficulty / float64(questionCount)
+		}
+	} else {
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to calculate difficulty average")
+	}
+	
 	// Save the updated quiz attempt
 	if err := h.db.UpdateQuizAttempt(quizAttempt); err != nil {
 		http.Error(w, "Failed to update quiz attempt", http.StatusInternalServerError)

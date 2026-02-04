@@ -59,9 +59,9 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 
 	// Create topics
 	topics := []models.Topic{
-		{Name: "Java Fundamentals", Description: "Core Java programming concepts", CreatedAt: time.Now()},
-		{Name: "Python Basics", Description: "Introduction to Python programming", CreatedAt: time.Now()},
-		{Name: "SQL Database", Description: "Structured Query Language basics", CreatedAt: time.Now()},
+		{Name: "Java Fundamentals", Description: "Core Java programming concepts", Category: "java", CreatedAt: time.Now()},
+		{Name: "Python Basics", Description: "Introduction to Python programming", Category: "python", CreatedAt: time.Now()},
+		{Name: "SQL Database", Description: "Structured Query Language basics", Category: "sql", CreatedAt: time.Now()},
 	}
 
 	// Get existing topics once before the loop
@@ -442,8 +442,8 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 	if err == database.ErrNotFound {
 		// Create admin user
 		_, err = db.DB().Exec(
-			"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-			"admin", "admin@athena.com", adminPassword, true, 0, time.Now(),
+			"INSERT INTO users (username, email, password, is_admin, category, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			"admin", "admin@athena.com", adminPassword, true, "java", 0, time.Now(),
 		)
 		if err != nil {
 			return fmt.Errorf("failed to create admin user: %w", err)
@@ -462,8 +462,8 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 	_, err = db.GetUserByUsername("paul")
 	if err == database.ErrNotFound {
 		_, err = db.DB().Exec(
-			"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-			"paul", "paul@zipcodewilmington.com", paulPassword, true, 0, time.Now(),
+			"INSERT INTO users (username, email, password, is_admin, category, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			"paul", "paul@zipcodewilmington.com", paulPassword, true, "java", 0, time.Now(),
 		)
 		if err != nil {
 			return fmt.Errorf("failed to create Paul admin user: %w", err)
@@ -482,8 +482,8 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 	_, err = db.GetUserByUsername("kris")
 	if err == database.ErrNotFound {
 		_, err = db.DB().Exec(
-			"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-			"kris", "kris@zipcodewilmington.com", krisPassword, true, 0, time.Now(),
+			"INSERT INTO users (username, email, password, is_admin, category, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			"kris", "kris@zipcodewilmington.com", krisPassword, true, "java", 0, time.Now(),
 		)
 		if err != nil {
 			return fmt.Errorf("failed to create Kristofer admin user: %w", err)
@@ -493,7 +493,7 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 		fmt.Println("Kristofer admin user already exists")
 	}
 
-	// Create regular user
+	// Create regular java student user
 	userPassword, err := hashPassword("user")
 	if err != nil {
 		return fmt.Errorf("failed to hash user password: %w", err)
@@ -502,17 +502,38 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 	// Check if regular user already exists
 	_, err = db.GetUserByUsername("user")
 	if err == database.ErrNotFound {
-		// Create regular user
+		// Create regular user (Java category)
 		_, err = db.DB().Exec(
-			"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-			"user", "user@zipcodewilmington.com", userPassword, false, 0, time.Now(),
+			"INSERT INTO users (username, email, password, is_admin, category, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			"user", "user@zipcodewilmington.com", userPassword, false, "java", 0, time.Now(),
 		)
 		if err != nil {
 			return fmt.Errorf("failed to create regular user: %w", err)
 		}
-		fmt.Println("Created regular user (username: user, password: user)")
+		fmt.Println("Created regular user (username: user, password: user, category: java)")
 	} else {
 		fmt.Println("Regular user already exists")
+	}
+
+	// Create data student user
+	dataPassword, err := hashPassword("data")
+	if err != nil {
+		return fmt.Errorf("failed to hash data user password: %w", err)
+	}
+
+	_, err = db.GetUserByUsername("data")
+	if err == database.ErrNotFound {
+		// Create data user (Data category)
+		_, err = db.DB().Exec(
+			"INSERT INTO users (username, email, password, is_admin, category, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			"data", "data@zipcodewilmington.com", dataPassword, false, "data", 0, time.Now(),
+		)
+		if err != nil {
+			return fmt.Errorf("failed to create data user: %w", err)
+		}
+		fmt.Println("Created data user (username: data, password: data, category: data)")
+	} else {
+		fmt.Println("Data user already exists")
 	}
 
 	// Create quizzes
