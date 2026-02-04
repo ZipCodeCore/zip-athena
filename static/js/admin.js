@@ -508,7 +508,7 @@ async function deleteQuiz(quizId) {
 // Topic Management
 async function loadTopics() {
     try {
-        const response = await fetch('/topics');
+        const response = await fetch(`/topics?user_id=${currentUser.id}`);
 
         if (!response.ok) throw new Error('Failed to load topics');
 
@@ -545,7 +545,7 @@ function showCreateTopicModal() {
 }
 
 async function editTopic(topicId) {
-    const topics = await (await fetch('/topics')).json();
+    const topics = await (await fetch(`/topics?user_id=${currentUser.id}`)).json();
     const topic = topics.find(t => t.id === topicId);
     if (!topic) return;
 

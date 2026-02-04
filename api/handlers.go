@@ -141,6 +141,29 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Require user_id parameter for topic filtering
+	userIDStr := r.URL.Query().Get("user_id")
+	if userIDStr == "" {
+		http.Error(w, "user_id parameter is required", http.StatusBadRequest)
+		return
+	}
+
+	// Parse and validate user_id
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil {
+		http.Error(w, "invalid user_id parameter", http.StatusBadRequest)
+		return
+	}
+
+	// Get user to determine category and admin status
+	user, err := h.db.GetUser(userID)
+	if err != nil {
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get user")
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	// Get all topics from database
 	topics, err := h.db.ListTopics()
 	if err != nil {
 		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list topics")
@@ -148,35 +171,25 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Filter topics based on user category if user_id is provided
-	userIDStr := r.URL.Query().Get("user_id")
-	if userIDStr != "" {
-		userID, err := strconv.Atoi(userIDStr)
-		if err == nil {
-			user, err := h.db.GetUser(userID)
-			if err == nil {
-				// Filter topics based on user category
-				filteredTopics := []*models.Topic{}
-				for _, topic := range topics {
-					// Admins see all topics
-					if user.IsAdmin {
-						filteredTopics = append(filteredTopics, topic)
-					} else if user.Category == "java" {
-						// Java students see Java and SQL topics
-						if topic.Category == "java" || topic.Category == "sql" {
-							filteredTopics = append(filteredTopics, topic)
-						}
-					} else if user.Category == "data" {
-						// Data students see Python and SQL topics
-						if topic.Category == "python" || topic.Category == "sql" {
-							filteredTopics = append(filteredTopics, topic)
-						}
-					}
-				}
-				topics = filteredTopics
+	// Filter topics based on user category
+	filteredTopics := []*models.Topic{}
+	for _, topic := range topics {
+		// Admins see all topics
+		if user.IsAdmin {
+			filteredTopics = append(filteredTopics, topic)
+		} else if user.Category == "java" {
+			// Java students see Java and SQL topics
+			if topic.Category == "java" || topic.Category == "sql" {
+				filteredTopics = append(filteredTopics, topic)
+			}
+		} else if user.Category == "data" {
+			// Data students see Python and SQL topics
+			if topic.Category == "python" || topic.Category == "sql" {
+				filteredTopics = append(filteredTopics, topic)
 			}
 		}
 	}
+	topics = filteredTopics
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(topics)
