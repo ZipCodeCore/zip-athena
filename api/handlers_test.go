@@ -117,9 +117,9 @@ func TestListTopicsHandler(t *testing.T) {
 	}
 	db.CreateUser(user)
 
-	// Create some topics
-	db.CreateTopic(&models.Topic{Name: "JavaScript", Description: "JS basics", Category: "java"})
-	db.CreateTopic(&models.Topic{Name: "Python", Description: "Python basics", Category: "python"})
+	// Create some topics with correct naming
+	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java"})
+	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python"})
 
 	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
 	w := httptest.NewRecorder()
