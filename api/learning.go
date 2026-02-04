@@ -27,6 +27,25 @@ func (h *Handler) GetCurriculumOutlineHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	// Get user_id from query parameter for filtering (optional)
+	userIDStr := r.URL.Query().Get("user_id")
+	var user *models.User
+	if userIDStr != "" {
+		userID, err := strconv.Atoi(userIDStr)
+		if err == nil {
+			user, _ = h.db.GetUser(userID)
+		}
+	}
+
+	// Filter language based on user category for non-admins
+	if user != nil && !user.IsAdmin {
+		if user.Category == "java" {
+			language = "java"
+		} else if user.Category == "data" {
+			language = "python"
+		}
+	}
+
 	// Define phase metadata
 	phaseInfo := map[int]struct {
 		Title       string
@@ -502,6 +521,25 @@ func (h *Handler) SearchLearningResourcesHandler(w http.ResponseWriter, r *http.
 	}
 
 	language := r.URL.Query().Get("language")
+
+	// Get user_id from query parameter for filtering (optional)
+	userIDStr := r.URL.Query().Get("user_id")
+	var user *models.User
+	if userIDStr != "" {
+		userID, err := strconv.Atoi(userIDStr)
+		if err == nil {
+			user, _ = h.db.GetUser(userID)
+		}
+	}
+
+	// Filter language based on user category for non-admins
+	if user != nil && !user.IsAdmin {
+		if user.Category == "java" {
+			language = "java"
+		} else if user.Category == "data" {
+			language = "python"
+		}
+	}
 
 	sqlQuery := `
 		SELECT id, language, phase, section_number, section_title, 

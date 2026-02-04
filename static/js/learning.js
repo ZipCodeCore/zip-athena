@@ -109,7 +109,7 @@ async function loadOutline() {
     `;
 
     try {
-        const response = await fetch(`/learning/outline?language=${currentLanguage}`);
+        const response = await fetch(`/learning/outline?language=${currentLanguage}&user_id=${currentUser.id}`);
         
         if (!response.ok) {
             throw new Error('Failed to load curriculum outline');
@@ -349,7 +349,7 @@ async function searchResources(query) {
 
     try {
         const langParam = currentLanguage === 'both' ? '' : `&language=${currentLanguage}`;
-        const response = await fetch(`/learning/search?q=${encodeURIComponent(query)}${langParam}`);
+        const response = await fetch(`/learning/search?q=${encodeURIComponent(query)}${langParam}&user_id=${currentUser.id}`);
         
         if (!response.ok) {
             throw new Error('Search failed');
