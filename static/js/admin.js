@@ -508,6 +508,10 @@ async function deleteQuiz(quizId) {
 // Topic Management
 async function loadTopics() {
     try {
+        if (!currentUser || !currentUser.id) {
+            console.error('User not loaded yet');
+            return;
+        }
         const response = await fetch(`/topics?user_id=${currentUser.id}`);
 
         if (!response.ok) throw new Error('Failed to load topics');
@@ -545,6 +549,10 @@ function showCreateTopicModal() {
 }
 
 async function editTopic(topicId) {
+    if (!currentUser || !currentUser.id) {
+        console.error('User not loaded yet');
+        return;
+    }
     const topics = await (await fetch(`/topics?user_id=${currentUser.id}`)).json();
     const topic = topics.find(t => t.id === topicId);
     if (!topic) return;
