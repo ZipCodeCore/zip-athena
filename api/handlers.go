@@ -179,7 +179,6 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 		filteredTopics = topics
 	} else {
 		// Non-admin users: filter based on category
-		filteredTopics = []*models.Topic{}
 		for _, topic := range topics {
 			if user.Category == "java" {
 				// Java students see Java and SQL topics
@@ -194,10 +193,9 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	topics = filteredTopics
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(topics)
+	json.NewEncoder(w).Encode(filteredTopics)
 }
 
 // GetTopicHandler handles GET /topics/{id}
