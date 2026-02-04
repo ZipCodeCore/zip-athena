@@ -976,6 +976,11 @@ func (db *SQLiteDB) ListUsers() ([]*models.User, error) {
 }
 
 func (db *SQLiteDB) UpdateUser(user *models.User) error {
+	// Validate category
+	if user.Category != "" && user.Category != "java" && user.Category != "data" {
+		return fmt.Errorf("invalid category: must be 'java' or 'data'")
+	}
+	
 	// If password is provided, update it along with other fields
 	if user.Password != "" {
 		result, err := db.db.Exec(
