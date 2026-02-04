@@ -55,6 +55,7 @@
                                 <th>ID</th>
                                 <th>Username</th>
                                 <th>Email</th>
+                                <th>Category</th>
                                 <th>Is Admin</th>
                                 <th>Total Points</th>
                                 <th>Created At</th>
@@ -251,6 +252,13 @@
                         <div class="mb-3">
                             <label for="userTotalPoints" class="form-label">Total Points</label>
                             <input type="number" class="form-control" id="userTotalPoints" min="0" value="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="userCategory" class="form-label">Category</label>
+                            <select class="form-select" id="userCategory" required>
+                                <option value="java">Java</option>
+                                <option value="data">Data</option>
+                            </select>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="userIsAdmin">

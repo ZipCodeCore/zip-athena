@@ -74,6 +74,7 @@ async function loadUsers() {
                 <td>${user.id}</td>
                 <td>${user.username}</td>
                 <td>${user.email}</td>
+                <td>${user.category || 'java'}</td>
                 <td>${user.is_admin ? 'Yes' : 'No'}</td>
                 <td>${user.total_points}</td>
                 <td>${new Date(user.created_at).toLocaleDateString()}</td>
@@ -128,6 +129,7 @@ async function editUser(userId) {
     document.getElementById('userPassword').value = '';
     document.getElementById('userPassword').required = false;
     document.getElementById('userTotalPoints').value = user.total_points;
+    document.getElementById('userCategory').value = user.category || 'java';
     document.getElementById('userIsAdmin').checked = user.is_admin;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
@@ -140,6 +142,7 @@ function showCreateUserModal() {
     document.getElementById('userPassword').value = '';
     document.getElementById('userPassword').required = true;
     document.getElementById('userTotalPoints').value = '0';
+    document.getElementById('userCategory').value = 'java';
     document.getElementById('userIsAdmin').checked = false;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
@@ -158,6 +161,7 @@ async function saveUser() {
         username: document.getElementById('userUsername').value,
         email: document.getElementById('userEmail').value,
         total_points: totalPoints,
+        category: document.getElementById('userCategory').value,
         is_admin: document.getElementById('userIsAdmin').checked
     };
 
