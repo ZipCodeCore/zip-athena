@@ -172,20 +172,25 @@ func (h *Handler) ListTopicsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Filter topics based on user category
-	filteredTopics := []*models.Topic{}
-	for _, topic := range topics {
-		// Admins see all topics
-		if user.IsAdmin {
-			filteredTopics = append(filteredTopics, topic)
-		} else if user.Category == "java" {
-			// Java students see Java and SQL topics
-			if topic.Category == "java" || topic.Category == "sql" {
-				filteredTopics = append(filteredTopics, topic)
-			}
-		} else if user.Category == "data" {
-			// Data students see Python and SQL topics
-			if topic.Category == "python" || topic.Category == "sql" {
-				filteredTopics = append(filteredTopics, topic)
+	var filteredTopics []*models.Topic
+	
+	// Admins see all topics - no filtering needed
+	if user.IsAdmin {
+		filteredTopics = topics
+	} else {
+		// Non-admin users: filter based on category
+		filteredTopics = []*models.Topic{}
+		for _, topic := range topics {
+			if user.Category == "java" {
+				// Java students see Java and SQL topics
+				if topic.Category == "java" || topic.Category == "sql" {
+					filteredTopics = append(filteredTopics, topic)
+				}
+			} else if user.Category == "data" {
+				// Data students see Python and SQL topics
+				if topic.Category == "python" || topic.Category == "sql" {
+					filteredTopics = append(filteredTopics, topic)
+				}
 			}
 		}
 	}
