@@ -255,6 +255,15 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 	if w.Code != http.StatusBadRequest {
 		t.Errorf("Expected status %d for invalid user_id, got %d", http.StatusBadRequest, w.Code)
 	}
+
+	// Test 6: Non-existent user_id should return 404
+	req = httptest.NewRequest(http.MethodGet, "/topics?user_id=999", nil)
+	w = httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusNotFound {
+		t.Errorf("Expected status %d for non-existent user_id, got %d", http.StatusNotFound, w.Code)
+	}
 }
 
 // Test 20: Create quiz attempt via API
