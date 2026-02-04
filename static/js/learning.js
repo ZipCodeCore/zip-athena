@@ -419,10 +419,30 @@ function showOutline() {
     loadOutline();
 }
 
-function takeQuiz(language, phase) {
-    // Navigate to quiz page with topic filter
-    // This is a placeholder - you'll need to implement based on your quiz system
-    window.location.href = `/quiz.html?language=${language}&phase=${phase}`;
+async function takeQuiz(language, phase) {
+    try {
+        // Fetch topics for the current user to find the appropriate topic for this language
+        const response = await fetch(`/topics?user_id=${currentUser.id}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch topics');
+        }
+        
+        const topics = await response.json();
+        
+        // Find the topic that matches the current language
+        // For learning resources, we want the main language topic (java/python)
+        const matchingTopic = topics.find(topic => topic.category === language);
+        
+        if (matchingTopic) {
+            // Navigate to quiz page with the topic ID
+            window.location.href = `/quiz.html?topic_id=${matchingTopic.id}&topic_name=${encodeURIComponent(matchingTopic.name)}`;
+        } else {
+            alert(`No ${language.toUpperCase()} topic available. Please contact your instructor.`);
+        }
+    } catch (error) {
+        console.error('Error loading topics for quiz:', error);
+        alert('Unable to start quiz. Please try again later.');
+    }
 }
 
 function logout() {
