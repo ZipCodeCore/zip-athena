@@ -56,10 +56,25 @@ async function loadTopics() {
             topics.forEach(topic => {
                 const topicCard = document.createElement('div');
                 topicCard.className = 'col-md-4';
+                
+                // Determine badge color based on category
+                let badgeColor = 'secondary';
+                let badgeText = topic.category ? topic.category.toUpperCase() : 'GENERAL';
+                if (topic.category === 'java') {
+                    badgeColor = 'primary';
+                } else if (topic.category === 'python') {
+                    badgeColor = 'success';
+                } else if (topic.category === 'sql') {
+                    badgeColor = 'warning';
+                }
+                
                 topicCard.innerHTML = `
                     <div class="card topic-card h-100" onclick="startQuiz(${topic.id}, '${topic.name}')">
                         <div class="card-body">
-                            <h5 class="card-title">${topic.name}</h5>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title">${topic.name}</h5>
+                                <span class="badge bg-${badgeColor}">${badgeText}</span>
+                            </div>
                             <p class="card-text">${topic.description || 'Click to start a quiz'}</p>
                             <button class="btn btn-primary btn-sm">Start Quiz</button>
                         </div>
