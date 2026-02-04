@@ -336,17 +336,17 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 			questionMap[q.TopicQuestionID] = q
 		}
 		
-		totalDifficulty := 0
+		totalDifficulty := 0.0
 		questionCount := 0
 		for _, topicQuestionID := range quizAttempt.QuestionIDs {
 			if question, exists := questionMap[topicQuestionID]; exists {
-				totalDifficulty += question.Difficulty
+				totalDifficulty += float64(question.Difficulty)
 				questionCount++
 			}
 		}
 		
 		if questionCount > 0 {
-			quizAttempt.DifficultyAverage = float64(totalDifficulty) / float64(questionCount)
+			quizAttempt.DifficultyAverage = totalDifficulty / float64(questionCount)
 		}
 	} else {
 		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to calculate difficulty average")

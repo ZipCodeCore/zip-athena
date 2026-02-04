@@ -27,6 +27,7 @@ function checkAuth() {
         if (user.category === 'data') {
             currentLanguage = 'python';
         } else {
+            // Default to java for 'java' category or any other value
             currentLanguage = 'java';
         }
     }
