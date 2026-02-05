@@ -118,8 +118,8 @@ func TestListTopicsHandler(t *testing.T) {
 	db.CreateUser(user)
 
 	// Create some topics with correct naming
-	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java"})
-	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python"})
+	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python", IsActive: true})
 
 	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
 	w := httptest.NewRecorder()
@@ -172,9 +172,9 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 	db.CreateUser(adminUser)
 
 	// Create topics with different categories
-	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java"})
-	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python"})
-	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "sql"})
+	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "sql", IsActive: true})
 
 	// Test 1: Java student should only see Java and SQL topics
 	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
@@ -263,6 +263,68 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 
 	if w.Code != http.StatusNotFound {
 		t.Errorf("Expected status %d for non-existent user_id, got %d", http.StatusNotFound, w.Code)
+	}
+}
+
+// Test: Inactive topics should not be returned
+func TestListTopicsHandlerInactiveFiltering(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Create a test user
+	user := &models.User{
+		Username: "testuser",
+		Email:    "test@example.com",
+		Password: "password",
+		IsAdmin:  true,
+		Category: "java",
+	}
+	db.CreateUser(user)
+
+	// Create active and inactive topics
+	activeTopic := &models.Topic{
+		Name:        "Active Java Topic",
+		Description: "Active topic",
+		Category:    "java",
+		IsActive:    true,
+	}
+	db.CreateTopic(activeTopic)
+
+	inactiveTopic := &models.Topic{
+		Name:        "Inactive Python Topic",
+		Description: "Inactive topic",
+		Category:    "python",
+		IsActive:    false,
+	}
+	db.CreateTopic(inactiveTopic)
+
+	// List topics - should only return active ones
+	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
+	w := httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
+	}
+
+	var topics []*models.Topic
+	json.NewDecoder(w.Body).Decode(&topics)
+
+	// Should only return 1 active topic
+	if len(topics) != 1 {
+		t.Errorf("Expected 1 active topic, got %d", len(topics))
+	}
+
+	// Verify it's the active one
+	if len(topics) > 0 && !topics[0].IsActive {
+		t.Errorf("Expected topic to be active")
+	}
+
+	// Verify inactive topic is not in the list
+	for _, topic := range topics {
+		if topic.Name == "Inactive Python Topic" {
+			t.Errorf("Inactive topic should not be returned")
+		}
 	}
 }
 
@@ -375,6 +437,99 @@ func TestGetProgressHandlerIncludesInProgressQuizzes(t *testing.T) {
 	totalQuizzes := int(progress["total_quizzes"].(float64))
 	if totalQuizzes != 2 {
 		t.Errorf("Expected total_quizzes to be 2, got %d", totalQuizzes)
+	}
+}
+
+// Test: GetProgressHandler should only return stats for the specific user, not aggregate
+func TestGetProgressHandlerUserSpecificStats(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Create two users
+	user1 := &models.User{
+		Username: "user1",
+		Email:    "user1@example.com",
+		Category: "data",
+	}
+	if err := db.CreateUser(user1); err != nil {
+		t.Fatalf("Failed to create user1: %v", err)
+	}
+
+	user2 := &models.User{
+		Username: "user2",
+		Email:    "user2@example.com",
+		Category: "java",
+	}
+	if err := db.CreateUser(user2); err != nil {
+		t.Fatalf("Failed to create user2: %v", err)
+	}
+
+	// Create quiz attempts for user1
+	completedTime := time.Now()
+	user1Attempt := &models.QuizAttempt{
+		UserID:          user1.ID,
+		StartTime:       time.Now().Add(-1 * time.Hour),
+		CompletedTime:   &completedTime,
+		TotalQuestions:  10,
+		CorrectAnswers:  7,
+		QuestionIDs:     []string{"1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8", "1.9", "1.10"},
+		QuestionResults: make(map[string]bool),
+	}
+	if err := db.CreateQuizAttempt(user1Attempt); err != nil {
+		t.Fatalf("Failed to create user1 quiz attempt: %v", err)
+	}
+
+	// Create many quiz attempts for user2 (to make sure they don't leak into user1's stats)
+	for i := 0; i < 5; i++ {
+		completedTime2 := time.Now()
+		user2Attempt := &models.QuizAttempt{
+			UserID:          user2.ID,
+			StartTime:       time.Now().Add(-1 * time.Hour),
+			CompletedTime:   &completedTime2,
+			TotalQuestions:  20,
+			CorrectAnswers:  15,
+			QuestionIDs:     []string{},
+			QuestionResults: make(map[string]bool),
+		}
+		if err := db.CreateQuizAttempt(user2Attempt); err != nil {
+			t.Fatalf("Failed to create user2 quiz attempt: %v", err)
+		}
+	}
+
+	// Get progress for user1
+	req := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(user1.ID), nil)
+	w := httptest.NewRecorder()
+	handler.GetProgressHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
+	}
+
+	var progress map[string]interface{}
+	if err := json.NewDecoder(w.Body).Decode(&progress); err != nil {
+		t.Fatalf("Failed to decode response: %v", err)
+	}
+
+	// Verify user1's stats - should NOT include user2's data
+	totalQuizzes := int(progress["total_quizzes"].(float64))
+	if totalQuizzes != 1 {
+		t.Errorf("Expected user1 to have 1 quiz, got %d (should not include user2's 5 quizzes)", totalQuizzes)
+	}
+
+	totalQuestions := int(progress["total_questions"].(float64))
+	if totalQuestions != 10 {
+		t.Errorf("Expected user1 to have answered 10 questions, got %d (should not include user2's 100 questions)", totalQuestions)
+	}
+
+	totalCorrect := int(progress["total_correct"].(float64))
+	if totalCorrect != 7 {
+		t.Errorf("Expected user1 to have 7 correct answers, got %d (should not include user2's 75 correct)", totalCorrect)
+	}
+
+	// Verify quiz_attempts array only contains user1's attempts
+	quizAttempts := progress["quiz_attempts"].([]interface{})
+	if len(quizAttempts) != 1 {
+		t.Errorf("Expected user1 to have 1 quiz attempt in list, got %d", len(quizAttempts))
 	}
 }
 

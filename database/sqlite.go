@@ -448,7 +448,7 @@ func (db *SQLiteDB) GetTopic(id int) (*models.Topic, error) {
 }
 
 func (db *SQLiteDB) ListTopics() ([]*models.Topic, error) {
-	rows, err := db.db.Query("SELECT id, name, description, category, is_active, display_order, created_at FROM topics ORDER BY display_order ASC")
+	rows, err := db.db.Query("SELECT id, name, description, category, is_active, display_order, created_at FROM topics WHERE is_active = 1 ORDER BY display_order ASC")
 	if err != nil {
 		return nil, err
 	}

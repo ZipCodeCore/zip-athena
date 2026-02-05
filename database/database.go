@@ -274,9 +274,6 @@ func (db *InMemoryDB) CreateTopic(topic *models.Topic) error {
 	topic.ID = db.nextTopicID
 	db.nextTopicID++
 
-	// Default to active for new topics
-	topic.IsActive = true
-
 	// Get max display_order and increment
 	if topic.DisplayOrder == 0 {
 		maxOrder := 0
@@ -309,7 +306,10 @@ func (db *InMemoryDB) ListTopics() ([]*models.Topic, error) {
 
 	topics := make([]*models.Topic, 0, len(db.topics))
 	for _, topic := range db.topics {
-		topics = append(topics, topic)
+		// Only include active topics
+		if topic.IsActive {
+			topics = append(topics, topic)
+		}
 	}
 
 	// Sort by display_order
