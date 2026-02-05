@@ -118,8 +118,8 @@ func TestListTopicsHandler(t *testing.T) {
 	db.CreateUser(user)
 
 	// Create some topics with correct naming
-	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java"})
-	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python"})
+	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python", IsActive: true})
 
 	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
 	w := httptest.NewRecorder()
@@ -172,9 +172,9 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 	db.CreateUser(adminUser)
 
 	// Create topics with different categories
-	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java"})
-	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python"})
-	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "sql"})
+	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "sql", IsActive: true})
 
 	// Test 1: Java student should only see Java and SQL topics
 	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
@@ -263,6 +263,68 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 
 	if w.Code != http.StatusNotFound {
 		t.Errorf("Expected status %d for non-existent user_id, got %d", http.StatusNotFound, w.Code)
+	}
+}
+
+// Test: Inactive topics should not be returned
+func TestListTopicsHandlerInactiveFiltering(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Create a test user
+	user := &models.User{
+		Username: "testuser",
+		Email:    "test@example.com",
+		Password: "password",
+		IsAdmin:  true,
+		Category: "java",
+	}
+	db.CreateUser(user)
+
+	// Create active and inactive topics
+	activeTopic := &models.Topic{
+		Name:        "Active Java Topic",
+		Description: "Active topic",
+		Category:    "java",
+		IsActive:    true,
+	}
+	db.CreateTopic(activeTopic)
+
+	inactiveTopic := &models.Topic{
+		Name:        "Inactive Python Topic",
+		Description: "Inactive topic",
+		Category:    "python",
+		IsActive:    false,
+	}
+	db.CreateTopic(inactiveTopic)
+
+	// List topics - should only return active ones
+	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
+	w := httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
+	}
+
+	var topics []*models.Topic
+	json.NewDecoder(w.Body).Decode(&topics)
+
+	// Should only return 1 active topic
+	if len(topics) != 1 {
+		t.Errorf("Expected 1 active topic, got %d", len(topics))
+	}
+
+	// Verify it's the active one
+	if len(topics) > 0 && !topics[0].IsActive {
+		t.Errorf("Expected topic to be active")
+	}
+
+	// Verify inactive topic is not in the list
+	for _, topic := range topics {
+		if topic.Name == "Inactive Python Topic" {
+			t.Errorf("Inactive topic should not be returned")
+		}
 	}
 }
 
