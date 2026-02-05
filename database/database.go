@@ -309,7 +309,10 @@ func (db *InMemoryDB) ListTopics() ([]*models.Topic, error) {
 
 	topics := make([]*models.Topic, 0, len(db.topics))
 	for _, topic := range db.topics {
-		topics = append(topics, topic)
+		// Only include active topics
+		if topic.IsActive {
+			topics = append(topics, topic)
+		}
 	}
 
 	// Sort by display_order
