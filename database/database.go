@@ -178,6 +178,7 @@ type InMemoryDB struct {
 	quizQuestions      map[string]*models.QuizQuestion      // key: "quizID-questionID" Phase 3
 	testQuestions      map[string]*models.TestQuestion      // key: "testID-questionID" Phase 3
 	testAttempts       map[int]*models.TestAttempt          // Phase 4
+	flaggedQuestions   map[int]*models.FlaggedQuestion      // Phase 5
 	nextUserID         int
 	nextTopicID        int
 	nextQuestionID     int
@@ -208,6 +209,7 @@ func NewInMemoryDB() *InMemoryDB {
 		quizQuestions:      make(map[string]*models.QuizQuestion),
 		testQuestions:      make(map[string]*models.TestQuestion),
 		testAttempts:       make(map[int]*models.TestAttempt),
+		flaggedQuestions:   make(map[int]*models.FlaggedQuestion),
 		nextUserID:         1,
 		nextTopicID:        1,
 		nextQuestionID:     1,
@@ -1939,23 +1941,28 @@ func (db *InMemoryDB) getQuestionAnalyticsInternal(questionID int) (*models.Ques
 
 	if totalAttempts > 0 {
 		analytics.Accuracy = float64(correctAttempts) / float64(totalAttempts) * 100
-	}
 
-	// Calculate recommended difficulty based on accuracy
-	if analytics.Accuracy > 90 {
-		analytics.RecommendedDifficulty = question.Difficulty + 1
-		if analytics.RecommendedDifficulty > 7 {
-			analytics.RecommendedDifficulty = 7
+		// Calculate recommended difficulty based on accuracy
+		// Only flag questions that have been attempted
+		if analytics.Accuracy > 90 {
+			analytics.RecommendedDifficulty = question.Difficulty + 1
+			if analytics.RecommendedDifficulty > 7 {
+				analytics.RecommendedDifficulty = 7
+			}
+			analytics.FlagForReview = true
+		} else if analytics.Accuracy < 30 {
+			analytics.RecommendedDifficulty = question.Difficulty - 1
+			if analytics.RecommendedDifficulty < 1 {
+				analytics.RecommendedDifficulty = 1
+			}
+			analytics.FlagForReview = true
+		} else {
+			analytics.RecommendedDifficulty = question.Difficulty
 		}
-		analytics.FlagForReview = true
-	} else if analytics.Accuracy < 30 {
-		analytics.RecommendedDifficulty = question.Difficulty - 1
-		if analytics.RecommendedDifficulty < 1 {
-			analytics.RecommendedDifficulty = 1
-		}
-		analytics.FlagForReview = true
 	} else {
+		// No attempts - keep current difficulty, don't flag
 		analytics.RecommendedDifficulty = question.Difficulty
+		analytics.FlagForReview = false
 	}
 
 	// Get answer distribution from quiz/test attempts
@@ -2364,26 +2371,39 @@ return questions, nil
 // Phase 5: Quality Review - InMemoryDB implementations
 
 func (db *InMemoryDB) GetFlaggedQuestions() ([]*models.FlaggedQuestion, error) {
-// In-memory implementation would need a flagged questions map
-// For now, return empty list
-return []*models.FlaggedQuestion{}, nil
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	flagged := make([]*models.FlaggedQuestion, 0, len(db.flaggedQuestions))
+	for _, fq := range db.flaggedQuestions {
+		flagged = append(flagged, fq)
+	}
+	return flagged, nil
 }
 
 func (db *InMemoryDB) FlagQuestion(questionID int, reason string) error {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-if _, exists := db.questions[questionID]; !exists {
-return ErrNotFound
-}
+	if _, exists := db.questions[questionID]; !exists {
+		return ErrNotFound
+	}
 
-// In-memory implementation would store in flagged questions map
-return nil
+	// Store flagged question
+	db.flaggedQuestions[questionID] = &models.FlaggedQuestion{
+		QuestionID: questionID,
+		FlagReason: reason,
+		FlaggedAt:  time.Now(),
+	}
+	return nil
 }
 
 func (db *InMemoryDB) UnflagQuestion(questionID int) error {
-// In-memory implementation would remove from flagged questions map
-return nil
+	db.mu.Lock()
+	defer db.mu.Unlock()
+
+	delete(db.flaggedQuestions, questionID)
+	return nil
 }
 
 func (db *InMemoryDB) AutoFlagQuestions() error {
