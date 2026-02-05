@@ -2436,9 +2436,9 @@ func (db *InMemoryDB) UnflagQuestion(questionID int) error {
 }
 
 func (db *InMemoryDB) AutoFlagQuestions() error {
+	// First phase: collect statistics with read lock
 	db.mu.RLock()
-	defer db.mu.RUnlock()
-
+	
 	// Count attempts and correct answers per question
 	questionStats := make(map[int]struct {
 		totalAttempts int
@@ -2453,8 +2453,10 @@ func (db *InMemoryDB) AutoFlagQuestions() error {
 		}
 		questionStats[qa.QuestionID] = stats
 	}
+	
+	db.mu.RUnlock()
 
-	// Flag questions with enough attempts that are too hard or too easy
+	// Second phase: flag questions (requires write lock in FlagQuestion)
 	for questionID, stats := range questionStats {
 		if stats.totalAttempts < 10 {
 			continue
@@ -2471,7 +2473,7 @@ func (db *InMemoryDB) AutoFlagQuestions() error {
 			continue
 		}
 
-		// Use FlagQuestion to set the flag
+		// FlagQuestion will acquire its own write lock
 		db.FlagQuestion(questionID, reason)
 	}
 
