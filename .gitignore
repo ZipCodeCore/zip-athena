@@ -38,3 +38,7 @@ go.work.sum
 *.db-shm
 *.db-wal
 athena-test*
+athena-test*
+athena-clean
+athena-opt
+athena-orig
