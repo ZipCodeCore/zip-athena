@@ -315,9 +315,14 @@ func TestListTopicsHandlerInactiveFiltering(t *testing.T) {
 		t.Errorf("Expected 1 active topic, got %d", len(topics))
 	}
 
-	// Verify it's the active one
-	if len(topics) > 0 && !topics[0].IsActive {
-		t.Errorf("Expected topic to be active")
+	// Verify it's the correct active topic (Active Java Topic)
+	if len(topics) > 0 {
+		if topics[0].Name != "Active Java Topic" {
+			t.Errorf("Expected 'Active Java Topic', got %s", topics[0].Name)
+		}
+		if !topics[0].IsActive {
+			t.Errorf("Expected topic to be active")
+		}
 	}
 
 	// Verify inactive topic is not in the list

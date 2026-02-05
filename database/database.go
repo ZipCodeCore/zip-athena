@@ -274,6 +274,11 @@ func (db *InMemoryDB) CreateTopic(topic *models.Topic) error {
 	topic.ID = db.nextTopicID
 	db.nextTopicID++
 
+	// NOTE: IsActive is not set by default here to allow tests to create inactive topics.
+	// In production, the SQLite schema has DEFAULT 1 for is_active column.
+	// API handlers (CreateTopicHandler, CreateInstructorTopicHandler) explicitly set IsActive = true.
+	// Direct callers of this method must set IsActive explicitly.
+
 	// Get max display_order and increment
 	if topic.DisplayOrder == 0 {
 		maxOrder := 0
