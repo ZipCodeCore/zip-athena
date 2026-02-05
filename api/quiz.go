@@ -660,34 +660,9 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 		quizAttempts = []*models.QuizAttempt{}
 	}
 
-	// Enrich quiz attempts with quiz information
-	type QuizAttemptWithQuiz struct {
-		*models.QuizAttempt
-		QuizName        string `json:"quiz_name,omitempty"`
-		QuizDescription string `json:"quiz_description,omitempty"`
-	}
-
-	enrichedAttempts := make([]QuizAttemptWithQuiz, 0, len(quizAttempts))
-	for _, qa := range quizAttempts {
-		enriched := QuizAttemptWithQuiz{
-			QuizAttempt: qa,
-		}
-		
-		// If the attempt has a quiz_id, fetch the quiz details
-		if qa.QuizID != nil {
-			quiz, err := h.db.GetQuiz(*qa.QuizID)
-			if err == nil {
-				enriched.QuizName = quiz.Name
-				enriched.QuizDescription = quiz.Description
-			} else {
-				h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
-					"quiz_id": *qa.QuizID,
-				}).WithError(err).Error("Failed to get quiz for enrichment")
-			}
-		}
-		
-		enrichedAttempts = append(enrichedAttempts, enriched)
-	}
+	// Note: We skip quiz enrichment to avoid N+1 query problem
+	// The frontend falls back to showing Quiz #{id} if name is not available
+	// This prevents database deadlocks when there are many quiz attempts
 
 	// Get question attempts
 	questionAttempts, err := h.db.GetQuestionAttemptsByUser(userID)
@@ -721,7 +696,7 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 		"total_quizzes":     len(quizAttempts),
 		"total_questions":   totalQuestions,
 		"total_correct":     totalCorrect,
-		"quiz_attempts":     enrichedAttempts,
+		"quiz_attempts":     quizAttempts,
 		"question_attempts": questionAttempts,
 	}
 
