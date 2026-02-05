@@ -1,5 +1,8 @@
 // Admin panel JavaScript
 
+// Constants
+const DEFAULT_CATEGORY = 'java';
+
 let currentUser = null;
 
 // Check if user is logged in and is admin
@@ -74,6 +77,7 @@ async function loadUsers() {
                 <td>${user.id}</td>
                 <td>${user.username}</td>
                 <td>${user.email}</td>
+                <td>${user.category || DEFAULT_CATEGORY}</td>
                 <td>${user.is_admin ? 'Yes' : 'No'}</td>
                 <td>${user.total_points}</td>
                 <td>${new Date(user.created_at).toLocaleDateString()}</td>
@@ -128,6 +132,7 @@ async function editUser(userId) {
     document.getElementById('userPassword').value = '';
     document.getElementById('userPassword').required = false;
     document.getElementById('userTotalPoints').value = user.total_points;
+    document.getElementById('userCategory').value = user.category || DEFAULT_CATEGORY;
     document.getElementById('userIsAdmin').checked = user.is_admin;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
@@ -140,6 +145,7 @@ function showCreateUserModal() {
     document.getElementById('userPassword').value = '';
     document.getElementById('userPassword').required = true;
     document.getElementById('userTotalPoints').value = '0';
+    document.getElementById('userCategory').value = DEFAULT_CATEGORY;
     document.getElementById('userIsAdmin').checked = false;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
@@ -158,6 +164,7 @@ async function saveUser() {
         username: document.getElementById('userUsername').value,
         email: document.getElementById('userEmail').value,
         total_points: totalPoints,
+        category: document.getElementById('userCategory').value,
         is_admin: document.getElementById('userIsAdmin').checked
     };
 
@@ -508,7 +515,11 @@ async function deleteQuiz(quizId) {
 // Topic Management
 async function loadTopics() {
     try {
-        const response = await fetch('/topics');
+        if (!currentUser || !currentUser.id) {
+            console.error('User not loaded yet');
+            return;
+        }
+        const response = await fetch(`/topics?user_id=${currentUser.id}`);
 
         if (!response.ok) throw new Error('Failed to load topics');
 
@@ -545,7 +556,11 @@ function showCreateTopicModal() {
 }
 
 async function editTopic(topicId) {
-    const topics = await (await fetch('/topics')).json();
+    if (!currentUser || !currentUser.id) {
+        console.error('User not loaded yet');
+        return;
+    }
+    const topics = await (await fetch(`/topics?user_id=${currentUser.id}`)).json();
     const topic = topics.find(t => t.id === topicId);
     if (!topic) return;
 

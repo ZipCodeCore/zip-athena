@@ -107,11 +107,21 @@ func TestListTopicsHandler(t *testing.T) {
 	db := database.NewInMemoryDB()
 	handler := NewHandler(db)
 
-	// Create some topics
-	db.CreateTopic(&models.Topic{Name: "JavaScript", Description: "JS basics"})
-	db.CreateTopic(&models.Topic{Name: "Python", Description: "Python basics"})
+	// Create a test user
+	user := &models.User{
+		Username: "testuser",
+		Email:    "test@example.com",
+		Password: "password",
+		IsAdmin:  true, // Admin can see all topics
+		Category: "java",
+	}
+	db.CreateUser(user)
 
-	req := httptest.NewRequest(http.MethodGet, "/topics", nil)
+	// Create some topics with correct naming
+	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java"})
+	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python"})
+
+	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
 	w := httptest.NewRecorder()
 
 	handler.ListTopicsHandler(w, req)
@@ -125,6 +135,134 @@ func TestListTopicsHandler(t *testing.T) {
 
 	if len(topics) != 2 {
 		t.Errorf("Expected 2 topics, got %d", len(topics))
+	}
+}
+
+// Test category-based topic filtering
+func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Create test users with different categories
+	javaUser := &models.User{
+		Username: "javastudent",
+		Email:    "java@example.com",
+		Password: "password",
+		IsAdmin:  false,
+		Category: "java",
+	}
+	db.CreateUser(javaUser)
+
+	dataUser := &models.User{
+		Username: "datastudent",
+		Email:    "data@example.com",
+		Password: "password",
+		IsAdmin:  false,
+		Category: "data",
+	}
+	db.CreateUser(dataUser)
+
+	adminUser := &models.User{
+		Username: "admin",
+		Email:    "admin@example.com",
+		Password: "password",
+		IsAdmin:  true,
+		Category: "java",
+	}
+	db.CreateUser(adminUser)
+
+	// Create topics with different categories
+	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java"})
+	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python"})
+	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "sql"})
+
+	// Test 1: Java student should only see Java and SQL topics
+	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
+	w := httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d for Java student, got %d", http.StatusOK, w.Code)
+	}
+
+	var javaTopics []*models.Topic
+	json.NewDecoder(w.Body).Decode(&javaTopics)
+
+	if len(javaTopics) != 2 {
+		t.Errorf("Java student should see 2 topics (Java, SQL), got %d", len(javaTopics))
+	}
+
+	// Verify no Python topics are returned
+	for _, topic := range javaTopics {
+		if topic.Category == "python" {
+			t.Errorf("Java student should not see Python topics, but got: %s", topic.Name)
+		}
+	}
+
+	// Test 2: Data student should only see Python and SQL topics
+	req = httptest.NewRequest(http.MethodGet, "/topics?user_id=2", nil)
+	w = httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d for Data student, got %d", http.StatusOK, w.Code)
+	}
+
+	var dataTopics []*models.Topic
+	json.NewDecoder(w.Body).Decode(&dataTopics)
+
+	if len(dataTopics) != 2 {
+		t.Errorf("Data student should see 2 topics (Python, SQL), got %d", len(dataTopics))
+	}
+
+	// Verify no Java topics are returned
+	for _, topic := range dataTopics {
+		if topic.Category == "java" {
+			t.Errorf("Data student should not see Java topics, but got: %s", topic.Name)
+		}
+	}
+
+	// Test 3: Admin should see all topics
+	req = httptest.NewRequest(http.MethodGet, "/topics?user_id=3", nil)
+	w = httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d for Admin, got %d", http.StatusOK, w.Code)
+	}
+
+	var adminTopics []*models.Topic
+	json.NewDecoder(w.Body).Decode(&adminTopics)
+
+	if len(adminTopics) != 3 {
+		t.Errorf("Admin should see all 3 topics, got %d", len(adminTopics))
+	}
+
+	// Test 4: Missing user_id should return error
+	req = httptest.NewRequest(http.MethodGet, "/topics", nil)
+	w = httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("Expected status %d for missing user_id, got %d", http.StatusBadRequest, w.Code)
+	}
+
+	// Test 5: Invalid user_id should return error
+	req = httptest.NewRequest(http.MethodGet, "/topics?user_id=invalid", nil)
+	w = httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusBadRequest {
+		t.Errorf("Expected status %d for invalid user_id, got %d", http.StatusBadRequest, w.Code)
+	}
+
+	// Test 6: Non-existent user_id should return 404
+	req = httptest.NewRequest(http.MethodGet, "/topics?user_id=999", nil)
+	w = httptest.NewRecorder()
+	handler.ListTopicsHandler(w, req)
+
+	if w.Code != http.StatusNotFound {
+		t.Errorf("Expected status %d for non-existent user_id, got %d", http.StatusNotFound, w.Code)
 	}
 }
 

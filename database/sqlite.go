@@ -976,11 +976,16 @@ func (db *SQLiteDB) ListUsers() ([]*models.User, error) {
 }
 
 func (db *SQLiteDB) UpdateUser(user *models.User) error {
+	// Validate category
+	if user.Category != "" && user.Category != "java" && user.Category != "data" {
+		return fmt.Errorf("invalid category: must be 'java' or 'data'")
+	}
+	
 	// If password is provided, update it along with other fields
 	if user.Password != "" {
 		result, err := db.db.Exec(
-			"UPDATE users SET username = ?, email = ?, password = ?, is_admin = ?, total_points = ? WHERE id = ?",
-			user.Username, user.Email, user.Password, user.IsAdmin, user.TotalPoints, user.ID,
+			"UPDATE users SET username = ?, email = ?, password = ?, is_admin = ?, category = ?, total_points = ? WHERE id = ?",
+			user.Username, user.Email, user.Password, user.IsAdmin, user.Category, user.TotalPoints, user.ID,
 		)
 		if err != nil {
 			return err
@@ -995,8 +1000,8 @@ func (db *SQLiteDB) UpdateUser(user *models.User) error {
 	} else {
 		// Don't update password if not provided
 		result, err := db.db.Exec(
-			"UPDATE users SET username = ?, email = ?, is_admin = ?, total_points = ? WHERE id = ?",
-			user.Username, user.Email, user.IsAdmin, user.TotalPoints, user.ID,
+			"UPDATE users SET username = ?, email = ?, is_admin = ?, category = ?, total_points = ? WHERE id = ?",
+			user.Username, user.Email, user.IsAdmin, user.Category, user.TotalPoints, user.ID,
 		)
 		if err != nil {
 			return err
