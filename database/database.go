@@ -885,10 +885,8 @@ func (db *InMemoryDB) RemoveQuestionFromTest(testID, questionID int) error {
 	return nil
 }
 
-func (db *InMemoryDB) GetTestQuestions(testID int) ([]*models.Question, error) {
-	db.mu.RLock()
-	defer db.mu.RUnlock()
-
+// getTestQuestionsUnlocked is an internal helper that assumes the caller already holds a lock
+func (db *InMemoryDB) getTestQuestionsUnlocked(testID int) ([]*models.Question, error) {
 	// Collect test questions with their order
 	type orderedQuestion struct {
 		question *models.Question
@@ -919,6 +917,12 @@ func (db *InMemoryDB) GetTestQuestions(testID int) ([]*models.Question, error) {
 	}
 
 	return questions, nil
+}
+
+func (db *InMemoryDB) GetTestQuestions(testID int) ([]*models.Question, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+	return db.getTestQuestionsUnlocked(testID)
 }
 
 // Phase 3: Analytics operations
@@ -1568,8 +1572,8 @@ func (db *InMemoryDB) SubmitTestAttempt(attemptID int, isAutoSubmit bool) error 
 		attempt.TimeRemaining = 0
 	}
 
-	// Get test questions to calculate score
-	testQuestions, err := db.GetTestQuestions(attempt.TestID)
+	// Get test questions to calculate score (use unlocked version since we already hold the lock)
+	testQuestions, err := db.getTestQuestionsUnlocked(attempt.TestID)
 	if err != nil {
 		return err
 	}
