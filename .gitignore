@@ -37,7 +37,8 @@ go.work.sum
 *.db
 *.db-shm
 *.db-wal
-athena-test*
+
+# Test binaries
 athena-test*
 athena-clean
 athena-opt
