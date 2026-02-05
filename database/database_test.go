@@ -79,11 +79,13 @@ func TestCreateAndListTopics(t *testing.T) {
 	topic1 := &models.Topic{
 		Name:        "JavaScript",
 		Description: "Learn JavaScript fundamentals",
+		IsActive:    true,
 		CreatedAt:   time.Now(),
 	}
 	topic2 := &models.Topic{
 		Name:        "Python",
 		Description: "Learn Python basics",
+		IsActive:    true,
 		CreatedAt:   time.Now(),
 	}
 

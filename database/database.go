@@ -178,6 +178,7 @@ type InMemoryDB struct {
 	quizQuestions      map[string]*models.QuizQuestion      // key: "quizID-questionID" Phase 3
 	testQuestions      map[string]*models.TestQuestion      // key: "testID-questionID" Phase 3
 	testAttempts       map[int]*models.TestAttempt          // Phase 4
+	flaggedQuestions   map[int]*models.FlaggedQuestion      // Phase 5
 	nextUserID         int
 	nextTopicID        int
 	nextQuestionID     int
@@ -208,6 +209,7 @@ func NewInMemoryDB() *InMemoryDB {
 		quizQuestions:      make(map[string]*models.QuizQuestion),
 		testQuestions:      make(map[string]*models.TestQuestion),
 		testAttempts:       make(map[int]*models.TestAttempt),
+		flaggedQuestions:   make(map[int]*models.FlaggedQuestion),
 		nextUserID:         1,
 		nextTopicID:        1,
 		nextQuestionID:     1,
@@ -1942,19 +1944,25 @@ func (db *InMemoryDB) getQuestionAnalyticsInternal(questionID int) (*models.Ques
 	}
 
 	// Calculate recommended difficulty based on accuracy
-	if analytics.Accuracy > 90 {
-		analytics.RecommendedDifficulty = question.Difficulty + 1
-		if analytics.RecommendedDifficulty > 7 {
-			analytics.RecommendedDifficulty = 7
+	// Only flag for review if there are enough attempts (at least 10)
+	if totalAttempts >= 10 {
+		if analytics.Accuracy > 90 {
+			analytics.RecommendedDifficulty = question.Difficulty + 1
+			if analytics.RecommendedDifficulty > 7 {
+				analytics.RecommendedDifficulty = 7
+			}
+			analytics.FlagForReview = true
+		} else if analytics.Accuracy < 30 {
+			analytics.RecommendedDifficulty = question.Difficulty - 1
+			if analytics.RecommendedDifficulty < 1 {
+				analytics.RecommendedDifficulty = 1
+			}
+			analytics.FlagForReview = true
+		} else {
+			analytics.RecommendedDifficulty = question.Difficulty
 		}
-		analytics.FlagForReview = true
-	} else if analytics.Accuracy < 30 {
-		analytics.RecommendedDifficulty = question.Difficulty - 1
-		if analytics.RecommendedDifficulty < 1 {
-			analytics.RecommendedDifficulty = 1
-		}
-		analytics.FlagForReview = true
 	} else {
+		// Not enough data to make a recommendation
 		analytics.RecommendedDifficulty = question.Difficulty
 	}
 
@@ -2364,29 +2372,108 @@ return questions, nil
 // Phase 5: Quality Review - InMemoryDB implementations
 
 func (db *InMemoryDB) GetFlaggedQuestions() ([]*models.FlaggedQuestion, error) {
-// In-memory implementation would need a flagged questions map
-// For now, return empty list
-return []*models.FlaggedQuestion{}, nil
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	flagged := make([]*models.FlaggedQuestion, 0, len(db.flaggedQuestions))
+	for _, fq := range db.flaggedQuestions {
+		flagged = append(flagged, fq)
+	}
+
+	return flagged, nil
 }
 
 func (db *InMemoryDB) FlagQuestion(questionID int, reason string) error {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-if _, exists := db.questions[questionID]; !exists {
-return ErrNotFound
-}
+	question, exists := db.questions[questionID]
+	if !exists {
+		return ErrNotFound
+	}
 
-// In-memory implementation would store in flagged questions map
-return nil
+	// Calculate accuracy and total attempts
+	var accuracy float64
+	var totalAttempts int
+	correctCount := 0
+	for _, qa := range db.questionAttempts {
+		if qa.QuestionID == questionID {
+			totalAttempts++
+			if qa.LastAttemptCorrect {
+				correctCount++
+			}
+		}
+	}
+
+	if totalAttempts > 0 {
+		accuracy = (float64(correctCount) / float64(totalAttempts)) * 100
+	}
+
+	// Store in flagged questions map
+	db.flaggedQuestions[questionID] = &models.FlaggedQuestion{
+		QuestionID:      questionID,
+		TopicQuestionID: question.TopicQuestionID,
+		QuestionText:    question.QuestionText,
+		FlagReason:      reason,
+		FlaggedAt:       time.Now(),
+		Accuracy:        accuracy,
+		TotalAttempts:   totalAttempts,
+	}
+
+	return nil
 }
 
 func (db *InMemoryDB) UnflagQuestion(questionID int) error {
-// In-memory implementation would remove from flagged questions map
-return nil
+	db.mu.Lock()
+	defer db.mu.Unlock()
+
+	if _, exists := db.flaggedQuestions[questionID]; !exists {
+		return ErrNotFound
+	}
+
+	delete(db.flaggedQuestions, questionID)
+	return nil
 }
 
 func (db *InMemoryDB) AutoFlagQuestions() error {
-// In-memory implementation would analyze question attempts
-return nil
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	// Count attempts and correct answers per question
+	questionStats := make(map[int]struct {
+		totalAttempts int
+		correctCount  int
+	})
+
+	for _, qa := range db.questionAttempts {
+		stats := questionStats[qa.QuestionID]
+		stats.totalAttempts++
+		if qa.LastAttemptCorrect {
+			stats.correctCount++
+		}
+		questionStats[qa.QuestionID] = stats
+	}
+
+	// Flag questions with enough attempts that are too hard or too easy
+	for questionID, stats := range questionStats {
+		if stats.totalAttempts < 10 {
+			continue
+		}
+
+		accuracy := (float64(stats.correctCount) / float64(stats.totalAttempts)) * 100
+
+		var reason string
+		if accuracy < 30 {
+			reason = models.FlagReasonTooHard
+		} else if accuracy > 90 {
+			reason = models.FlagReasonTooEasy
+		} else {
+			continue
+		}
+
+		// Use FlagQuestion to set the flag
+		db.FlagQuestion(questionID, reason)
+	}
+
+	return nil
 }
