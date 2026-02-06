@@ -491,6 +491,20 @@ func (h *Handler) GenerateQuizByTagsHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	// Remove duplicate questions based on TopicQuestionID
+	uniqueQuestions := make(map[string]*models.Question)
+	for _, q := range questions {
+		if _, exists := uniqueQuestions[q.TopicQuestionID]; !exists {
+			uniqueQuestions[q.TopicQuestionID] = q
+		}
+	}
+	
+	// Convert map back to slice
+	questions = make([]*models.Question, 0, len(uniqueQuestions))
+	for _, q := range uniqueQuestions {
+		questions = append(questions, q)
+	}
+
 	// Limit to requested count
 	if len(questions) > req.Count {
 		questions = questions[:req.Count]
