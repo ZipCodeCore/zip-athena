@@ -21,9 +21,10 @@ type QuizQuestion struct {
 
 // GenerateQuizRequest represents the request to generate a quiz
 type GenerateQuizRequest struct {
-	UserID       int `json:"user_id"`
-	TopicID      int `json:"topic_id"`
-	NumQuestions int `json:"num_questions"`
+	UserID          int `json:"user_id"`
+	TopicID         int `json:"topic_id"`
+	NumQuestions    int `json:"num_questions"`
+	DifficultyLevel int `json:"difficulty_level,omitempty"` // 1-3 (1=easiest), questions with difficulty <= this level will be included
 }
 
 // GenerateQuizResponse represents the response containing quiz questions
@@ -143,6 +144,24 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 	questions = make([]*models.Question, 0, len(uniqueQuestions))
 	for _, q := range uniqueQuestions {
 		questions = append(questions, q)
+	}
+
+	// Filter by difficulty level if specified
+	// If difficulty level is set, include only questions with difficulty <= requested level
+	if req.DifficultyLevel > 0 {
+		filteredQuestions := make([]*models.Question, 0)
+		for _, q := range questions {
+			if q.Difficulty <= req.DifficultyLevel {
+				filteredQuestions = append(filteredQuestions, q)
+			}
+		}
+		questions = filteredQuestions
+
+		// Check if we have enough questions after filtering
+		if len(questions) == 0 {
+			http.Error(w, "No questions found for the selected difficulty level", http.StatusNotFound)
+			return
+		}
 	}
 
 	// Shuffle and limit questions

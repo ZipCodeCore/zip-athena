@@ -40,6 +40,7 @@ let currentQuestionIndex = 0;
 let quizAttemptId = null;
 let score = 0;
 let answeredQuestions = {}; // Track which questions have been answered
+let selectedDifficulty = 3; // Default to level 3 (all difficulties)
 
 // Set topic title and initialize
 if (resumeQuiz) {
@@ -69,9 +70,31 @@ if (resumeQuiz) {
     displayQuestion();
 } else {
     document.getElementById('topicTitle').textContent = `${decodeURIComponent(topicName)} Quiz`;
-    // Generate new quiz
-    generateQuiz();
+    // Show difficulty selection modal for new quiz
+    showDifficultyModal();
 }
+
+// Show difficulty selection modal
+function showDifficultyModal() {
+    const modal = document.getElementById('difficultyModal');
+    modal.style.display = 'flex';
+}
+
+// Handle start quiz button click - set up once on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const startQuizBtn = document.getElementById('startQuizBtn');
+    if (startQuizBtn) {
+        startQuizBtn.addEventListener('click', function() {
+            const selected = document.querySelector('input[name="difficulty"]:checked');
+            if (selected) {
+                selectedDifficulty = parseInt(selected.value);
+                const modal = document.getElementById('difficultyModal');
+                modal.style.display = 'none';
+                generateQuiz();
+            }
+        });
+    }
+});
 
 // Load and resume a quiz
 async function loadAndResumeQuiz(resumeData) {
@@ -123,7 +146,8 @@ async function generateQuiz() {
             body: JSON.stringify({
                 user_id: user.id,
                 topic_id: parseInt(topicId),
-                num_questions: 10
+                num_questions: 10,
+                difficulty_level: selectedDifficulty
             }),
         });
 
