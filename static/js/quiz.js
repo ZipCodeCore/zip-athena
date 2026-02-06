@@ -76,15 +76,15 @@ if (resumeQuiz) {
 
 // Show difficulty selection modal
 function showDifficultyModal() {
-    const modal = new bootstrap.Modal(document.getElementById('difficultyModal'));
-    modal.show();
+    const modal = document.getElementById('difficultyModal');
+    modal.style.display = 'flex';
     
     // Handle start quiz button click
     document.getElementById('startQuizBtn').addEventListener('click', function() {
         const selected = document.querySelector('input[name="difficulty"]:checked');
         if (selected) {
             selectedDifficulty = parseInt(selected.value);
-            modal.hide();
+            modal.style.display = 'none';
             generateQuiz();
         }
     }, { once: true }); // Use once to avoid multiple event listeners
