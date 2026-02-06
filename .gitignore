@@ -43,3 +43,4 @@ athena-test*
 athena-clean
 athena-opt
 athena-orig
+/main

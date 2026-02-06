@@ -912,12 +912,12 @@ func TestMultipleFSRSReviews(t *testing.T) {
 	if resp2.State.Reps != 2 {
 		t.Errorf("Expected 2 reps, got %d", resp2.State.Reps)
 	}
-	
+
 	// State should be tracked correctly
 	if resp2.State.UserID != user.ID || resp2.State.QuestionID != question.ID {
 		t.Error("State should track correct user and question IDs")
 	}
-	
+
 	// Stability should be positive
 	if resp2.State.Stability <= 0 {
 		t.Errorf("Stability should be positive, got %v", resp2.State.Stability)

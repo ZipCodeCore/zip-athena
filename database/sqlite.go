@@ -321,13 +321,13 @@ func (db *SQLiteDB) runMigrations() error {
 	// Migration: Fix file_path values that don't match actual filenames on disk
 	filePathFixes := map[string]string{
 		"java/8-classes-and-objects.md":    "java/8-oop-classes-and-objects.md",
-		"java/9-inheritance.md":           "java/9-oop-inheritance.md",
-		"java/10-polymorphism.md":         "java/10-oop-polymorphism.md",
-		"java/15-collections.md":          "java/15-collections-framework.md",
-		"python/11-modules-packages.md":   "python/11-modules-and-packages.md",
+		"java/9-inheritance.md":            "java/9-oop-inheritance.md",
+		"java/10-polymorphism.md":          "java/10-oop-polymorphism.md",
+		"java/15-collections.md":           "java/15-collections-framework.md",
+		"python/11-modules-packages.md":    "python/11-modules-and-packages.md",
 		"python/14-classes-and-objects.md": "python/14-oop-classes-and-objects.md",
-		"python/15-inheritance.md":        "python/15-oop-inheritance.md",
-		"python/16-polymorphism.md":       "python/16-oop-polymorphism.md",
+		"python/15-inheritance.md":         "python/15-oop-inheritance.md",
+		"python/16-polymorphism.md":        "python/16-oop-polymorphism.md",
 	}
 	for oldPath, newPath := range filePathFixes {
 		_, err = db.db.Exec(`UPDATE learning_resources SET file_path = ? WHERE file_path = ?`, newPath, oldPath)
@@ -683,6 +683,52 @@ func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, er
 	return attempts, rows.Err()
 }
 
+func (db *SQLiteDB) GetAllQuizAttempts() ([]*models.QuizAttempt, error) {
+	rows, err := db.db.Query(
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results FROM quiz_attempts",
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var attempts []*models.QuizAttempt
+	for rows.Next() {
+		attempt := &models.QuizAttempt{}
+		var questionIDsJSON, questionResultsJSON string
+		var completedTime sql.NullTime
+		var quizID, parentAttemptID sql.NullInt64
+
+		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &questionIDsJSON, &questionResultsJSON); err != nil {
+			return nil, err
+		}
+
+		if completedTime.Valid {
+			attempt.CompletedTime = &completedTime.Time
+		}
+
+		if quizID.Valid {
+			qid := int(quizID.Int64)
+			attempt.QuizID = &qid
+		}
+
+		if parentAttemptID.Valid {
+			paid := int(parentAttemptID.Int64)
+			attempt.ParentAttemptID = &paid
+		}
+
+		if err := json.Unmarshal([]byte(questionIDsJSON), &attempt.QuestionIDs); err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal([]byte(questionResultsJSON), &attempt.QuestionResults); err != nil {
+			return nil, err
+		}
+
+		attempts = append(attempts, attempt)
+	}
+	return attempts, rows.Err()
+}
+
 func (db *SQLiteDB) UpdateQuizAttempt(attempt *models.QuizAttempt) error {
 	questionIDsJSON, err := json.Marshal(attempt.QuestionIDs)
 	if err != nil {
@@ -980,7 +1026,7 @@ func (db *SQLiteDB) UpdateUser(user *models.User) error {
 	if user.Category != "" && user.Category != "java" && user.Category != "data" {
 		return fmt.Errorf("invalid category: must be 'java' or 'data'")
 	}
-	
+
 	// If password is provided, update it along with other fields
 	if user.Password != "" {
 		result, err := db.db.Exec(

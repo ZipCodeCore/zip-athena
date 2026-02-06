@@ -121,14 +121,17 @@ function loadQuizAttempts(quizAttempts) {
                 ? attempt.difficulty_average.toFixed(1) 
                 : 'N/A';
             
-            // Determine action button based on status
+            // Determine action button based on status and user role
             let actionButton = '';
-            if (!isCompleted) {
-                // In progress - show Resume button
-                actionButton = `<button class="btn btn-sm btn-success" onclick="resumeQuiz(${attempt.id})">Resume</button>`;
-            } else if (score < 100) {
-                // Completed but not perfect - show Retake button
-                actionButton = `<button class="btn btn-sm btn-primary" onclick="retakeQuiz(${attempt.id})">Retake</button>`;
+            // Only show action buttons if user is NOT an admin
+            if (!user.is_admin) {
+                if (!isCompleted) {
+                    // In progress - show Resume button
+                    actionButton = `<button class="btn btn-sm btn-success" onclick="resumeQuiz(${attempt.id})">Resume</button>`;
+                } else if (score < 100) {
+                    // Completed but not perfect - show Retake button
+                    actionButton = `<button class="btn btn-sm btn-primary" onclick="retakeQuiz(${attempt.id})">Retake</button>`;
+                }
             }
 
             row.innerHTML = `

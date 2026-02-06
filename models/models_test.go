@@ -88,7 +88,7 @@ func TestAnswerModel(t *testing.T) {
 func TestQuizAttemptModel(t *testing.T) {
 	now := time.Now()
 	completed := now.Add(30 * time.Minute)
-	
+
 	quizAttempt := QuizAttempt{
 		ID:              1,
 		UserID:          1,

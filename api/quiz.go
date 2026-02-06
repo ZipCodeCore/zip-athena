@@ -21,8 +21,8 @@ type QuizQuestion struct {
 
 // GenerateQuizRequest represents the request to generate a quiz
 type GenerateQuizRequest struct {
-	UserID      int `json:"user_id"`
-	TopicID     int `json:"topic_id"`
+	UserID       int `json:"user_id"`
+	TopicID      int `json:"topic_id"`
 	NumQuestions int `json:"num_questions"`
 }
 
@@ -162,7 +162,7 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
-	
+
 	if err := h.db.CreateQuiz(quiz); err != nil {
 		// If quiz creation fails, it might already exist, but continue anyway
 		// We'll just not set the quiz_id
@@ -310,7 +310,7 @@ func (h *Handler) SubmitAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		existingAttempt.LastAttemptTime = time.Now()
 		existingAttempt.LastAttemptCorrect = correct
-		
+
 		// Update existing attempt in database
 		if err := h.db.UpdateQuestionAttempt(existingAttempt); err != nil {
 			// Log error but don't fail the request
@@ -373,7 +373,7 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 	// Mark as completed
 	now := time.Now()
 	quizAttempt.CompletedTime = &now
-	
+
 	// Calculate average difficulty from questions in the quiz
 	allQuestions, err := h.db.ListQuestions()
 	if err == nil {
@@ -381,7 +381,7 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 		for _, q := range allQuestions {
 			questionMap[q.TopicQuestionID] = q
 		}
-		
+
 		totalDifficulty := 0.0
 		questionCount := 0
 		for _, topicQuestionID := range quizAttempt.QuestionIDs {
@@ -390,14 +390,14 @@ func (h *Handler) CompleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 				questionCount++
 			}
 		}
-		
+
 		if questionCount > 0 {
 			quizAttempt.DifficultyAverage = totalDifficulty / float64(questionCount)
 		}
 	} else {
 		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to calculate difficulty average")
 	}
-	
+
 	// Save the updated quiz attempt
 	if err := h.db.UpdateQuizAttempt(quizAttempt); err != nil {
 		http.Error(w, "Failed to update quiz attempt", http.StatusInternalServerError)
@@ -669,8 +669,13 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get quiz attempts
-	quizAttempts, err := h.db.GetQuizAttemptsByUser(userID)
+	// Get quiz attempts - if user is admin, get all attempts; otherwise get only user's attempts
+	var quizAttempts []*models.QuizAttempt
+	if user.IsAdmin {
+		quizAttempts, err = h.db.GetAllQuizAttempts()
+	} else {
+		quizAttempts, err = h.db.GetQuizAttemptsByUser(userID)
+	}
 	if err != nil {
 		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get quiz attempts for user")
 		quizAttempts = []*models.QuizAttempt{}

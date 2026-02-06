@@ -200,7 +200,7 @@ func (h *Handler) ExportQuizHandler(w http.ResponseWriter, r *http.Request) {
 	questionsWithAnswers := make([]models.QuestionWithAnswers, 0, len(questions))
 	for _, q := range questions {
 		answers, err := h.db.GetAnswersByQuestion(q.ID)
-		if err != nil{
+		if err != nil {
 			h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
 				"quiz_id":     quizID,
 				"question_id": q.ID,

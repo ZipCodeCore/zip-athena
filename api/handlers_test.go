@@ -533,6 +533,104 @@ func TestGetProgressHandlerUserSpecificStats(t *testing.T) {
 	}
 }
 
+// TestGetProgressHandlerAdminViewsAllAttempts tests that admin users can see all quiz attempts
+func TestGetProgressHandlerAdminViewsAllAttempts(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Create an admin user
+	adminUser := &models.User{
+		Username: "admin",
+		Email:    "admin@example.com",
+		Category: "admin",
+		IsAdmin:  true,
+	}
+	if err := db.CreateUser(adminUser); err != nil {
+		t.Fatalf("Failed to create admin user: %v", err)
+	}
+
+	// Create a regular user
+	regularUser := &models.User{
+		Username: "student",
+		Email:    "student@example.com",
+		Category: "java",
+		IsAdmin:  false,
+	}
+	if err := db.CreateUser(regularUser); err != nil {
+		t.Fatalf("Failed to create regular user: %v", err)
+	}
+
+	// Create quiz attempts for admin
+	completedTime := time.Now()
+	adminAttempt := &models.QuizAttempt{
+		UserID:          adminUser.ID,
+		StartTime:       time.Now().Add(-2 * time.Hour),
+		CompletedTime:   &completedTime,
+		TotalQuestions:  5,
+		CorrectAnswers:  4,
+		QuestionIDs:     []string{"1.1", "1.2", "1.3", "1.4", "1.5"},
+		QuestionResults: make(map[string]bool),
+	}
+	if err := db.CreateQuizAttempt(adminAttempt); err != nil {
+		t.Fatalf("Failed to create admin quiz attempt: %v", err)
+	}
+
+	// Create quiz attempts for regular user
+	completedTime2 := time.Now()
+	regularAttempt := &models.QuizAttempt{
+		UserID:          regularUser.ID,
+		StartTime:       time.Now().Add(-1 * time.Hour),
+		CompletedTime:   &completedTime2,
+		TotalQuestions:  10,
+		CorrectAnswers:  7,
+		QuestionIDs:     []string{"2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9", "2.10"},
+		QuestionResults: make(map[string]bool),
+	}
+	if err := db.CreateQuizAttempt(regularAttempt); err != nil {
+		t.Fatalf("Failed to create regular user quiz attempt: %v", err)
+	}
+
+	// Get progress for admin user - should see ALL attempts
+	req := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(adminUser.ID), nil)
+	w := httptest.NewRecorder()
+	handler.GetProgressHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
+	}
+
+	var adminProgress map[string]interface{}
+	if err := json.NewDecoder(w.Body).Decode(&adminProgress); err != nil {
+		t.Fatalf("Failed to decode admin response: %v", err)
+	}
+
+	// Admin should see all quiz attempts (both their own and regular user's)
+	adminQuizAttempts := adminProgress["quiz_attempts"].([]interface{})
+	if len(adminQuizAttempts) != 2 {
+		t.Errorf("Expected admin to see 2 quiz attempts (all attempts), got %d", len(adminQuizAttempts))
+	}
+
+	// Get progress for regular user - should see only their own attempts
+	req2 := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(regularUser.ID), nil)
+	w2 := httptest.NewRecorder()
+	handler.GetProgressHandler(w2, req2)
+
+	if w2.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w2.Code)
+	}
+
+	var regularProgress map[string]interface{}
+	if err := json.NewDecoder(w2.Body).Decode(&regularProgress); err != nil {
+		t.Fatalf("Failed to decode regular user response: %v", err)
+	}
+
+	// Regular user should see only their own attempts
+	regularQuizAttempts := regularProgress["quiz_attempts"].([]interface{})
+	if len(regularQuizAttempts) != 1 {
+		t.Errorf("Expected regular user to see 1 quiz attempt (only their own), got %d", len(regularQuizAttempts))
+	}
+}
+
 // TestCreateUserWithPasswordHashing tests that passwords are hashed when creating users via admin
 func TestCreateUserWithPasswordHashing(t *testing.T) {
 	// Create a temporary SQLite database for this test
@@ -620,117 +718,117 @@ func TestCreateUserWithPasswordHashing(t *testing.T) {
 
 // TestUpdateUserPasswordHashing tests that passwords are hashed when updating users via admin
 func TestUpdateUserPasswordHashing(t *testing.T) {
-// Create a temporary SQLite database for this test
-tmpDir := t.TempDir()
-dbPath := tmpDir + "/test_user_update.db"
+	// Create a temporary SQLite database for this test
+	tmpDir := t.TempDir()
+	dbPath := tmpDir + "/test_user_update.db"
 
-db, err := database.NewSQLiteDB(dbPath)
-if err != nil {
-t.Fatalf("Failed to create SQLite database: %v", err)
-}
-defer db.Close()
+	db, err := database.NewSQLiteDB(dbPath)
+	if err != nil {
+		t.Fatalf("Failed to create SQLite database: %v", err)
+	}
+	defer db.Close()
 
-handler := NewHandler(db)
+	handler := NewHandler(db)
 
-// Create a user first
-initialPassword := "initial123"
-user := models.User{
-Username: "testuser",
-Email:    "test@example.com",
-Password: initialPassword,
-IsAdmin:  false,
-}
+	// Create a user first
+	initialPassword := "initial123"
+	user := models.User{
+		Username: "testuser",
+		Email:    "test@example.com",
+		Password: initialPassword,
+		IsAdmin:  false,
+	}
 
-createBody, _ := json.Marshal(user)
-createReq := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(createBody))
-createW := httptest.NewRecorder()
+	createBody, _ := json.Marshal(user)
+	createReq := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(createBody))
+	createW := httptest.NewRecorder()
 
-handler.CreateUserHandler(createW, createReq)
+	handler.CreateUserHandler(createW, createReq)
 
-if createW.Code != http.StatusCreated {
-t.Fatalf("Expected status %d, got %d. Body: %s", http.StatusCreated, createW.Code, createW.Body.String())
-}
+	if createW.Code != http.StatusCreated {
+		t.Fatalf("Expected status %d, got %d. Body: %s", http.StatusCreated, createW.Code, createW.Body.String())
+	}
 
-var created models.User
-json.NewDecoder(createW.Body).Decode(&created)
-userID := created.ID
+	var created models.User
+	json.NewDecoder(createW.Body).Decode(&created)
+	userID := created.ID
 
-// Verify initial login works
-loginReq := LoginRequest{
-Username: "testuser",
-Password: initialPassword,
-}
-loginBody, _ := json.Marshal(loginReq)
-loginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(loginBody))
-loginW := httptest.NewRecorder()
+	// Verify initial login works
+	loginReq := LoginRequest{
+		Username: "testuser",
+		Password: initialPassword,
+	}
+	loginBody, _ := json.Marshal(loginReq)
+	loginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(loginBody))
+	loginW := httptest.NewRecorder()
 
-handler.LoginHandler(loginW, loginHTTPReq)
+	handler.LoginHandler(loginW, loginHTTPReq)
 
-if loginW.Code != http.StatusOK {
-t.Fatalf("Expected initial login to succeed with status %d, got %d", http.StatusOK, loginW.Code)
-}
+	if loginW.Code != http.StatusOK {
+		t.Fatalf("Expected initial login to succeed with status %d, got %d", http.StatusOK, loginW.Code)
+	}
 
-// Now update the user's password via admin endpoint
-newPassword := "newpass456"
-updateUser := models.User{
-Username:    "testuser",
-Email:       "test@example.com",
-Password:    newPassword,
-IsAdmin:     false,
-TotalPoints: 0,
-}
+	// Now update the user's password via admin endpoint
+	newPassword := "newpass456"
+	updateUser := models.User{
+		Username:    "testuser",
+		Email:       "test@example.com",
+		Password:    newPassword,
+		IsAdmin:     false,
+		TotalPoints: 0,
+	}
 
-updateBody, _ := json.Marshal(updateUser)
-updateReq := httptest.NewRequest(http.MethodPut, "/admin/users?id="+strconv.Itoa(userID), bytes.NewBuffer(updateBody))
-updateReq.Header.Set("X-User-ID", "1") // Simulate admin user
-updateW := httptest.NewRecorder()
+	updateBody, _ := json.Marshal(updateUser)
+	updateReq := httptest.NewRequest(http.MethodPut, "/admin/users?id="+strconv.Itoa(userID), bytes.NewBuffer(updateBody))
+	updateReq.Header.Set("X-User-ID", "1") // Simulate admin user
+	updateW := httptest.NewRecorder()
 
-handler.UpdateUserHandler(updateW, updateReq)
+	handler.UpdateUserHandler(updateW, updateReq)
 
-if updateW.Code != http.StatusOK {
-t.Fatalf("Expected update status %d, got %d. Body: %s", http.StatusOK, updateW.Code, updateW.Body.String())
-}
+	if updateW.Code != http.StatusOK {
+		t.Fatalf("Expected update status %d, got %d. Body: %s", http.StatusOK, updateW.Code, updateW.Body.String())
+	}
 
-// Verify old password no longer works
-oldLoginReq := LoginRequest{
-Username: "testuser",
-Password: initialPassword,
-}
-oldLoginBody, _ := json.Marshal(oldLoginReq)
-oldLoginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(oldLoginBody))
-oldLoginW := httptest.NewRecorder()
+	// Verify old password no longer works
+	oldLoginReq := LoginRequest{
+		Username: "testuser",
+		Password: initialPassword,
+	}
+	oldLoginBody, _ := json.Marshal(oldLoginReq)
+	oldLoginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(oldLoginBody))
+	oldLoginW := httptest.NewRecorder()
 
-handler.LoginHandler(oldLoginW, oldLoginHTTPReq)
+	handler.LoginHandler(oldLoginW, oldLoginHTTPReq)
 
-if oldLoginW.Code != http.StatusUnauthorized {
-t.Errorf("Expected old password to fail with status %d, got %d", http.StatusUnauthorized, oldLoginW.Code)
-}
+	if oldLoginW.Code != http.StatusUnauthorized {
+		t.Errorf("Expected old password to fail with status %d, got %d", http.StatusUnauthorized, oldLoginW.Code)
+	}
 
-// Verify new password works
-newLoginReq := LoginRequest{
-Username: "testuser",
-Password: newPassword,
-}
-newLoginBody, _ := json.Marshal(newLoginReq)
-newLoginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(newLoginBody))
-newLoginW := httptest.NewRecorder()
+	// Verify new password works
+	newLoginReq := LoginRequest{
+		Username: "testuser",
+		Password: newPassword,
+	}
+	newLoginBody, _ := json.Marshal(newLoginReq)
+	newLoginHTTPReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(newLoginBody))
+	newLoginW := httptest.NewRecorder()
 
-handler.LoginHandler(newLoginW, newLoginHTTPReq)
+	handler.LoginHandler(newLoginW, newLoginHTTPReq)
 
-if newLoginW.Code != http.StatusOK {
-t.Fatalf("Expected login with new password to succeed with status %d, got %d. Body: %s", http.StatusOK, newLoginW.Code, newLoginW.Body.String())
-}
+	if newLoginW.Code != http.StatusOK {
+		t.Fatalf("Expected login with new password to succeed with status %d, got %d. Body: %s", http.StatusOK, newLoginW.Code, newLoginW.Body.String())
+	}
 
-var authResp AuthResponse
-json.NewDecoder(newLoginW.Body).Decode(&authResp)
+	var authResp AuthResponse
+	json.NewDecoder(newLoginW.Body).Decode(&authResp)
 
-if authResp.User.Username != "testuser" {
-t.Errorf("Expected username 'testuser', got '%s'", authResp.User.Username)
-}
+	if authResp.User.Username != "testuser" {
+		t.Errorf("Expected username 'testuser', got '%s'", authResp.User.Username)
+	}
 
-if authResp.Message != "Login successful" {
-t.Errorf("Expected message 'Login successful', got '%s'", authResp.Message)
-}
+	if authResp.Message != "Login successful" {
+		t.Errorf("Expected message 'Login successful', got '%s'", authResp.Message)
+	}
 }
 
 // Test: Verify dashboard stats are per-user, not aggregate (GitHub Issue #74)

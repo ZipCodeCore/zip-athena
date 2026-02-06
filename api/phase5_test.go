@@ -35,12 +35,12 @@ func TestCreateQuestionWithValidation(t *testing.T) {
 	// Create question with answers
 	reqBody := map[string]interface{}{
 		"question": map[string]interface{}{
-			"topic_id":      topic.ID,
-			"question_text": "What is a goroutine?",
-			"difficulty":    3,
-			"tags":          []string{"concurrency", "basics"},
+			"topic_id":          topic.ID,
+			"question_text":     "What is a goroutine?",
+			"difficulty":        3,
+			"tags":              []string{"concurrency", "basics"},
 			"topic_question_id": "1.1",
-			"created_at":    time.Now(),
+			"created_at":        time.Now(),
 		},
 		"answers": []map[string]interface{}{
 			{"answer_text": "A lightweight thread", "is_correct": true},
@@ -196,11 +196,11 @@ func TestQuestionUpdate(t *testing.T) {
 	// Update the question
 	updateReq := map[string]interface{}{
 		"question": map[string]interface{}{
-			"id":            question.ID,
-			"topic_id":      topic.ID,
-			"question_text": "Updated question",
-			"difficulty":    5,
-			"tags":          []string{"updated"},
+			"id":                question.ID,
+			"topic_id":          topic.ID,
+			"question_text":     "Updated question",
+			"difficulty":        5,
+			"tags":              []string{"updated"},
 			"topic_question_id": "1.1",
 		},
 		"answers": []map[string]interface{}{

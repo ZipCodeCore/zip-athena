@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"runtime"
 	"time"
-
 )
 
 // HealthResponse represents the health check response
@@ -31,14 +30,14 @@ type CheckState struct {
 
 // MetricsResponse represents Prometheus-style metrics
 type MetricsResponse struct {
-	GoVersion      string  `json:"go_version"`
-	GoRoutines     int     `json:"goroutines"`
-	MemoryAlloc    uint64  `json:"memory_alloc_bytes"`
-	MemorySys      uint64  `json:"memory_sys_bytes"`
-	MemoryTotal    uint64  `json:"memory_total_alloc_bytes"`
-	GCCycles       uint32  `json:"gc_cycles"`
-	LastGC         uint64  `json:"last_gc_ns"`
-	Uptime         float64 `json:"uptime_seconds"`
+	GoVersion   string  `json:"go_version"`
+	GoRoutines  int     `json:"goroutines"`
+	MemoryAlloc uint64  `json:"memory_alloc_bytes"`
+	MemorySys   uint64  `json:"memory_sys_bytes"`
+	MemoryTotal uint64  `json:"memory_total_alloc_bytes"`
+	GCCycles    uint32  `json:"gc_cycles"`
+	LastGC      uint64  `json:"last_gc_ns"`
+	Uptime      float64 `json:"uptime_seconds"`
 }
 
 var (
@@ -145,14 +144,14 @@ func (h *Handler) MetricsHandler(w http.ResponseWriter, r *http.Request) {
 	// For JSON response
 	if r.Header.Get("Accept") == "application/json" {
 		response := MetricsResponse{
-			GoVersion:      runtime.Version(),
-			GoRoutines:     runtime.NumGoroutine(),
-			MemoryAlloc:    m.Alloc,
-			MemorySys:      m.Sys,
-			MemoryTotal:    m.TotalAlloc,
-			GCCycles:       m.NumGC,
-			LastGC:         m.LastGC,
-			Uptime:         uptime,
+			GoVersion:   runtime.Version(),
+			GoRoutines:  runtime.NumGoroutine(),
+			MemoryAlloc: m.Alloc,
+			MemorySys:   m.Sys,
+			MemoryTotal: m.TotalAlloc,
+			GCCycles:    m.NumGC,
+			LastGC:      m.LastGC,
+			Uptime:      uptime,
 		}
 
 		w.Header().Set("Content-Type", "application/json")
