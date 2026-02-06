@@ -160,22 +160,72 @@
             margin-left: 15px;
             margin-bottom: 10px;
         }
+        
+        /* Mobile Responsive Styles for Learning Center */
+        @media (max-width: 768px) {
+            .learning-container {
+                height: auto;
+                overflow: visible;
+            }
+            
+            .outline-pane {
+                height: auto;
+                border-right: none;
+                border-bottom: 2px solid #dee2e6;
+                padding: 15px;
+            }
+            
+            .content-pane {
+                height: auto;
+                padding: 15px;
+            }
+            
+            .markdown-content {
+                max-width: 100%;
+            }
+            
+            .markdown-content h1 {
+                font-size: 1.5rem;
+            }
+            
+            .markdown-content h2 {
+                font-size: 1.25rem;
+                margin-top: 20px;
+            }
+            
+            .markdown-content h3 {
+                font-size: 1.1rem;
+                margin-top: 15px;
+            }
+            
+            .markdown-content pre {
+                padding: 12px;
+                font-size: 0.875rem;
+            }
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="/dashboard.html">
-                <strong>Athena</strong> <span class="badge bg-danger">(Beta-1)</span> Learning Center
+                <strong>Athena</strong> <span class="badge bg-danger">(Beta-1)</span>
             </a>
-            <div class="navbar-text text-white d-flex align-items-center gap-3">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="languageToggle">
-                    <label class="form-check-label" for="languageToggle" id="languageLabel">Java</label>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto align-items-lg-center">
+                    <div class="form-check form-switch me-3">
+                        <input class="form-check-input" type="checkbox" id="languageToggle">
+                        <label class="form-check-label text-white" for="languageToggle" id="languageLabel">Java</label>
+                    </div>
+                    <span class="navbar-text text-white me-3">
+                        <span id="userDisplay"></span>
+                    </span>
+                    <a href="/dashboard.html" class="btn btn-sm btn-outline-light me-2">Dashboard</a>
+                    <button class="btn btn-sm btn-outline-light" onclick="logout()">Logout</button>
                 </div>
-                <span id="userDisplay"></span>
-                <a href="/dashboard.html" class="btn btn-sm btn-outline-light">Dashboard</a>
-                <button class="btn btn-sm btn-outline-light" onclick="logout()">Logout</button>
             </div>
         </div>
     </nav>

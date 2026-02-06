@@ -1,4 +1,10 @@
-Athena API server starting on port :9206
-Database: ./athena.db
-2026/01/29 11:42:54 ERROR: Failed to get quiz attempt details: no such column: quiz_id
-2026/01/29 11:43:00 ERROR: Failed to get quiz attempt details: no such column: quiz_id
+nohup: ignoring input
+WARNING: Using insecure default JWT secret. Set JWT_SECRET environment variable.
+time="2026-02-06T16:38:53Z" level=info msg="Starting Athena API server" db_path=./athena.db db_type=sqlite log_level=info port=":9206"
+time="2026-02-06T16:38:53Z" level=info msg="Database initialized successfully"
+time="2026-02-06T16:38:53Z" level=info msg="Athena API server listening on :9206"
+time="2026-02-06T16:38:53Z" level=info msg="Database: ./athena.db"
+time="2026-02-06T16:39:53Z" level=warning msg="Authentication failed" reason="user not found" success=false username=kris
+time="2026-02-06T16:39:58Z" level=warning msg="Authentication failed" reason="user not found" success=false username=student
+time="2026-02-06T16:40:16Z" level=info msg="Authentication successful" success=true username=kris
+time="2026-02-06T16:41:28Z" level=info msg="Authentication successful" success=true username=paul
