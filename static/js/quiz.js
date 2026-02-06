@@ -78,17 +78,23 @@ if (resumeQuiz) {
 function showDifficultyModal() {
     const modal = document.getElementById('difficultyModal');
     modal.style.display = 'flex';
-    
-    // Handle start quiz button click
-    document.getElementById('startQuizBtn').addEventListener('click', function() {
-        const selected = document.querySelector('input[name="difficulty"]:checked');
-        if (selected) {
-            selectedDifficulty = parseInt(selected.value);
-            modal.style.display = 'none';
-            generateQuiz();
-        }
-    }, { once: true }); // Use once to avoid multiple event listeners
 }
+
+// Handle start quiz button click - set up once on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const startQuizBtn = document.getElementById('startQuizBtn');
+    if (startQuizBtn) {
+        startQuizBtn.addEventListener('click', function() {
+            const selected = document.querySelector('input[name="difficulty"]:checked');
+            if (selected) {
+                selectedDifficulty = parseInt(selected.value);
+                const modal = document.getElementById('difficultyModal');
+                modal.style.display = 'none';
+                generateQuiz();
+            }
+        });
+    }
+});
 
 // Load and resume a quiz
 async function loadAndResumeQuiz(resumeData) {
