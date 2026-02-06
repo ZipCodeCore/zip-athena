@@ -77,7 +77,7 @@ async function loadUsers() {
                 <td>${user.id}</td>
                 <td>${user.username}</td>
                 <td>${user.email}</td>
-                <td>${user.category || DEFAULT_CATEGORY}</td>
+                <td>${(user.category || DEFAULT_CATEGORY).toLowerCase()}</td>
                 <td>${user.is_admin ? 'Yes' : 'No'}</td>
                 <td>${user.total_points}</td>
                 <td>${new Date(user.created_at).toLocaleDateString()}</td>
@@ -132,7 +132,7 @@ async function editUser(userId) {
     document.getElementById('userPassword').value = '';
     document.getElementById('userPassword').required = false;
     document.getElementById('userTotalPoints').value = user.total_points;
-    document.getElementById('userCategory').value = user.category || DEFAULT_CATEGORY;
+    document.getElementById('userCategory').value = (user.category || DEFAULT_CATEGORY).toLowerCase();
     document.getElementById('userIsAdmin').checked = user.is_admin;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }

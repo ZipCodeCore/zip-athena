@@ -341,6 +341,9 @@ func (db *SQLiteDB) runMigrations() error {
 
 // User operations
 func (db *SQLiteDB) CreateUser(user *models.User) error {
+	// Normalize category to lowercase for storage
+	user.Category = strings.ToLower(user.Category)
+	
 	result, err := db.db.Exec(
 		"INSERT INTO users (username, email, password, is_admin, category, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
 		user.Username, user.Email, user.Password, user.IsAdmin, user.Category, user.TotalPoints, user.CreatedAt,
@@ -1004,7 +1007,7 @@ func (db *SQLiteDB) UpdateUserQuestionState(state *models.UserQuestionState) err
 
 // Admin operations - Users
 func (db *SQLiteDB) ListUsers() ([]*models.User, error) {
-	rows, err := db.db.Query("SELECT id, username, email, is_admin, total_points, created_at FROM users")
+	rows, err := db.db.Query("SELECT id, username, email, is_admin, category, total_points, created_at FROM users")
 	if err != nil {
 		return nil, err
 	}
@@ -1013,7 +1016,7 @@ func (db *SQLiteDB) ListUsers() ([]*models.User, error) {
 	var users []*models.User
 	for rows.Next() {
 		user := &models.User{}
-		if err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.IsAdmin, &user.TotalPoints, &user.CreatedAt); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.IsAdmin, &user.Category, &user.TotalPoints, &user.CreatedAt); err != nil {
 			return nil, err
 		}
 		users = append(users, user)
@@ -1022,6 +1025,9 @@ func (db *SQLiteDB) ListUsers() ([]*models.User, error) {
 }
 
 func (db *SQLiteDB) UpdateUser(user *models.User) error {
+	// Normalize category to lowercase for comparison and storage
+	user.Category = strings.ToLower(user.Category)
+	
 	// Validate category
 	if user.Category != "" && user.Category != "java" && user.Category != "data" {
 		return fmt.Errorf("invalid category: must be 'java' or 'data'")
