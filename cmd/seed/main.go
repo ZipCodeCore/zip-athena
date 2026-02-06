@@ -884,10 +884,10 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 					text      string
 					isCorrect bool
 				}{
-					{"<class 'list'>", true},
-					{"<class 'array'>", false},
-					{"<class 'tuple'>", false},
-					{"<class 'dict'>", false},
+					{"&lt;class 'list'&gt;", true},
+					{"&lt;class 'array'&gt;", false},
+					{"&lt;class 'tuple'&gt;", false},
+					{"&lt;class 'dict'&gt;", false},
 				},
 			},
 			{
