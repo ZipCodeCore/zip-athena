@@ -1,0 +1,335 @@
+{
+  "topic": "Java Fundamentals",
+  "questions": [
+    {
+      "text": "What is the difference between '==' and '.equals()' for comparing Strings?",
+      "difficulty": 3,
+      "tags": ["strings", "comparison", "operators"],
+      "answers": [
+        {"text": "'==' compares references, '.equals()' compares content", "is_correct": true},
+        {"text": "They are identical in functionality", "is_correct": false},
+        {"text": "'==' compares content, '.equals()' compares references", "is_correct": false},
+        {"text": "'==' is faster but less accurate", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is autoboxing in Java?",
+      "difficulty": 3,
+      "tags": ["primitives", "wrapper-classes", "autoboxing"],
+      "answers": [
+        {"text": "Automatic conversion between primitive types and their wrapper classes", "is_correct": true},
+        {"text": "Automatic memory management", "is_correct": false},
+        {"text": "Automatic type casting between numeric types", "is_correct": false},
+        {"text": "Automatic packaging of classes into JAR files", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which statement about Java interfaces is correct?",
+      "difficulty": 3,
+      "tags": ["interfaces", "oop"],
+      "answers": [
+        {"text": "A class can implement multiple interfaces", "is_correct": true},
+        {"text": "A class can extend multiple interfaces", "is_correct": false},
+        {"text": "Interfaces can have constructors", "is_correct": false},
+        {"text": "Interface methods must be private", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: String s = null; System.out.println(s + \"test\");",
+      "difficulty": 4,
+      "tags": ["strings", "null", "concatenation"],
+      "answers": [
+        {"text": "nulltest", "is_correct": true},
+        {"text": "NullPointerException", "is_correct": false},
+        {"text": "test", "is_correct": false},
+        {"text": "Compilation error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is method overloading?",
+      "difficulty": 2,
+      "tags": ["methods", "oop", "overloading"],
+      "answers": [
+        {"text": "Defining multiple methods with the same name but different parameters", "is_correct": true},
+        {"text": "Defining a method in a subclass with the same signature as the parent", "is_correct": false},
+        {"text": "Making a method run faster", "is_correct": false},
+        {"text": "Calling a method multiple times", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the 'transient' keyword?",
+      "difficulty": 4,
+      "tags": ["keywords", "serialization"],
+      "answers": [
+        {"text": "To exclude a field from serialization", "is_correct": true},
+        {"text": "To make a field thread-safe", "is_correct": false},
+        {"text": "To make a field immutable", "is_correct": false},
+        {"text": "To allow a field to be garbage collected", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between ArrayList and LinkedList?",
+      "difficulty": 3,
+      "tags": ["collections", "data-structures"],
+      "answers": [
+        {"text": "ArrayList uses array, LinkedList uses doubly-linked list", "is_correct": true},
+        {"text": "ArrayList is thread-safe, LinkedList is not", "is_correct": false},
+        {"text": "LinkedList allows duplicates, ArrayList does not", "is_correct": false},
+        {"text": "They are identical in implementation", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What happens when you try to add a duplicate to a HashSet?",
+      "difficulty": 2,
+      "tags": ["collections", "set"],
+      "answers": [
+        {"text": "The duplicate is ignored, set remains unchanged", "is_correct": true},
+        {"text": "An exception is thrown", "is_correct": false},
+        {"text": "Both elements are kept", "is_correct": false},
+        {"text": "The old element is replaced", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct syntax for a try-with-resources statement?",
+      "difficulty": 3,
+      "tags": ["exceptions", "resources"],
+      "answers": [
+        {"text": "try (Resource r = new Resource()) { }", "is_correct": true},
+        {"text": "try { Resource r = new Resource() }", "is_correct": false},
+        {"text": "try using (Resource r) { }", "is_correct": false},
+        {"text": "try with Resource r { }", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the 'volatile' keyword?",
+      "difficulty": 5,
+      "tags": ["keywords", "multithreading", "concurrency"],
+      "answers": [
+        {"text": "Ensures visibility of changes across threads", "is_correct": true},
+        {"text": "Makes a variable immutable", "is_correct": false},
+        {"text": "Prevents garbage collection", "is_correct": false},
+        {"text": "Speeds up variable access", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of these is NOT a valid way to create a String?",
+      "difficulty": 2,
+      "tags": ["strings", "syntax"],
+      "answers": [
+        {"text": "String s = String();", "is_correct": true},
+        {"text": "String s = \"hello\";", "is_correct": false},
+        {"text": "String s = new String(\"hello\");", "is_correct": false},
+        {"text": "String s = new String();", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the StringBuilder class used for?",
+      "difficulty": 2,
+      "tags": ["strings", "performance"],
+      "answers": [
+        {"text": "Efficient string manipulation without creating new objects", "is_correct": true},
+        {"text": "Building SQL queries safely", "is_correct": false},
+        {"text": "Creating immutable strings", "is_correct": false},
+        {"text": "Parsing strings into numbers", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(1 + 2 + \"3\");",
+      "difficulty": 2,
+      "tags": ["operators", "strings", "concatenation"],
+      "answers": [
+        {"text": "33", "is_correct": true},
+        {"text": "123", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "15", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is an abstract class?",
+      "difficulty": 3,
+      "tags": ["oop", "abstract"],
+      "answers": [
+        {"text": "A class that cannot be instantiated and may contain abstract methods", "is_correct": true},
+        {"text": "A class with no methods", "is_correct": false},
+        {"text": "A class that can only have static methods", "is_correct": false},
+        {"text": "A class without a constructor", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'static' keyword mean for a method?",
+      "difficulty": 2,
+      "tags": ["keywords", "methods", "static"],
+      "answers": [
+        {"text": "The method belongs to the class, not instances", "is_correct": true},
+        {"text": "The method cannot be changed", "is_correct": false},
+        {"text": "The method runs faster", "is_correct": false},
+        {"text": "The method is thread-safe", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of a constructor?",
+      "difficulty": 1,
+      "tags": ["oop", "constructors"],
+      "answers": [
+        {"text": "To initialize an object when it is created", "is_correct": true},
+        {"text": "To destroy an object", "is_correct": false},
+        {"text": "To declare class variables", "is_correct": false},
+        {"text": "To import packages", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a NullPointerException?",
+      "difficulty": 2,
+      "tags": ["exceptions", "null"],
+      "answers": [
+        {"text": "An exception thrown when trying to use a null reference", "is_correct": true},
+        {"text": "An exception for invalid array index", "is_correct": false},
+        {"text": "An exception for arithmetic errors", "is_correct": false},
+        {"text": "An exception for file not found", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between 'throw' and 'throws'?",
+      "difficulty": 3,
+      "tags": ["exceptions", "keywords"],
+      "answers": [
+        {"text": "'throw' raises an exception, 'throws' declares possible exceptions", "is_correct": true},
+        {"text": "They are identical in functionality", "is_correct": false},
+        {"text": "'throws' raises an exception, 'throw' declares possible exceptions", "is_correct": false},
+        {"text": "'throw' is for checked exceptions, 'throws' for unchecked", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the HashMap used for?",
+      "difficulty": 2,
+      "tags": ["collections", "map"],
+      "answers": [
+        {"text": "Storing key-value pairs with fast lookup", "is_correct": true},
+        {"text": "Storing ordered lists of elements", "is_correct": false},
+        {"text": "Creating hash codes for objects", "is_correct": false},
+        {"text": "Mapping files to memory", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'instanceof' operator do?",
+      "difficulty": 2,
+      "tags": ["operators", "type-checking"],
+      "answers": [
+        {"text": "Checks if an object is an instance of a specific class or interface", "is_correct": true},
+        {"text": "Creates a new instance of a class", "is_correct": false},
+        {"text": "Counts the number of instances", "is_correct": false},
+        {"text": "Compares two objects for equality", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between checked and unchecked exceptions?",
+      "difficulty": 4,
+      "tags": ["exceptions"],
+      "answers": [
+        {"text": "Checked must be declared or caught, unchecked are runtime errors", "is_correct": true},
+        {"text": "Checked are more severe than unchecked", "is_correct": false},
+        {"text": "Unchecked must be declared, checked do not", "is_correct": false},
+        {"text": "There is no difference", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the 'break' statement in a loop?",
+      "difficulty": 1,
+      "tags": ["loops", "control-structures"],
+      "answers": [
+        {"text": "To exit the loop immediately", "is_correct": true},
+        {"text": "To pause the loop temporarily", "is_correct": false},
+        {"text": "To skip the current iteration", "is_correct": false},
+        {"text": "To restart the loop", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the 'continue' statement?",
+      "difficulty": 2,
+      "tags": ["loops", "control-structures"],
+      "answers": [
+        {"text": "To skip the current iteration and continue with the next", "is_correct": true},
+        {"text": "To exit the loop", "is_correct": false},
+        {"text": "To repeat the current iteration", "is_correct": false},
+        {"text": "To pause the loop", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a package in Java?",
+      "difficulty": 1,
+      "tags": ["packages", "organization"],
+      "answers": [
+        {"text": "A namespace for organizing related classes and interfaces", "is_correct": true},
+        {"text": "A compressed file format", "is_correct": false},
+        {"text": "A type of class", "is_correct": false},
+        {"text": "A build tool", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the 'this' keyword used for?",
+      "difficulty": 2,
+      "tags": ["keywords", "oop"],
+      "answers": [
+        {"text": "To refer to the current object instance", "is_correct": true},
+        {"text": "To create a new object", "is_correct": false},
+        {"text": "To refer to the parent class", "is_correct": false},
+        {"text": "To call a static method", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: int[] arr = {1, 2, 3}; System.out.println(arr.length);",
+      "difficulty": 1,
+      "tags": ["arrays"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "Compilation error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is method overriding?",
+      "difficulty": 3,
+      "tags": ["oop", "inheritance", "overriding"],
+      "answers": [
+        {"text": "Providing a new implementation of a method in a subclass", "is_correct": true},
+        {"text": "Calling a parent class method", "is_correct": false},
+        {"text": "Creating multiple methods with the same name", "is_correct": false},
+        {"text": "Making a method private", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What annotation is used to indicate method overriding?",
+      "difficulty": 2,
+      "tags": ["annotations", "overriding"],
+      "answers": [
+        {"text": "@Override", "is_correct": true},
+        {"text": "@Overwrite", "is_correct": false},
+        {"text": "@Replace", "is_correct": false},
+        {"text": "@Extend", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is garbage collection in Java?",
+      "difficulty": 2,
+      "tags": ["memory", "garbage-collection"],
+      "answers": [
+        {"text": "Automatic memory management that reclaims unused objects", "is_correct": true},
+        {"text": "Cleaning up temporary files", "is_correct": false},
+        {"text": "Removing unused code", "is_correct": false},
+        {"text": "Deleting log files", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the default value of an int array element?",
+      "difficulty": 1,
+      "tags": ["arrays", "primitives"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "null", "is_correct": false},
+        {"text": "-1", "is_correct": false},
+        {"text": "undefined", "is_correct": false}
+      ]
+    }
+  ]
+}

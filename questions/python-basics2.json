@@ -1,0 +1,1105 @@
+{
+  "topic": "Python Basics",
+  "questions": [
+    {
+      "text": "What is the correct file extension for Python files?",
+      "difficulty": 1,
+      "tags": ["basics", "files"],
+      "answers": [
+        {"text": ".py", "is_correct": true},
+        {"text": ".python", "is_correct": false},
+        {"text": ".pt", "is_correct": false},
+        {"text": ".pyt", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of the following is a valid variable name in Python?",
+      "difficulty": 1,
+      "tags": ["variables", "syntax"],
+      "answers": [
+        {"text": "my_variable", "is_correct": true},
+        {"text": "2variable", "is_correct": false},
+        {"text": "my-variable", "is_correct": false},
+        {"text": "class", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(5 + 3)",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "8", "is_correct": true},
+        {"text": "53", "is_correct": false},
+        {"text": "5 + 3", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you create a comment in Python?",
+      "difficulty": 1,
+      "tags": ["syntax", "comments"],
+      "answers": [
+        {"text": "# This is a comment", "is_correct": true},
+        {"text": "// This is a comment", "is_correct": false},
+        {"text": "/* This is a comment */", "is_correct": false},
+        {"text": "-- This is a comment", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What data type is the value 3.14?",
+      "difficulty": 1,
+      "tags": ["data-types", "float"],
+      "answers": [
+        {"text": "float", "is_correct": true},
+        {"text": "int", "is_correct": false},
+        {"text": "str", "is_correct": false},
+        {"text": "double", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(type(42))",
+      "difficulty": 1,
+      "tags": ["data-types", "int"],
+      "answers": [
+        {"text": "<class 'int'>", "is_correct": true},
+        {"text": "<class 'float'>", "is_correct": false},
+        {"text": "<class 'str'>", "is_correct": false},
+        {"text": "int", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you convert the string '123' to an integer?",
+      "difficulty": 1,
+      "tags": ["data-types", "conversion"],
+      "answers": [
+        {"text": "int('123')", "is_correct": true},
+        {"text": "integer('123')", "is_correct": false},
+        {"text": "toInt('123')", "is_correct": false},
+        {"text": "str.toInt('123')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('Hello' + ' ' + 'World')",
+      "difficulty": 1,
+      "tags": ["strings", "concatenation"],
+      "answers": [
+        {"text": "Hello World", "is_correct": true},
+        {"text": "HelloWorld", "is_correct": false},
+        {"text": "Hello + World", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which operator is used for exponentiation in Python?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "**", "is_correct": true},
+        {"text": "^", "is_correct": false},
+        {"text": "^^", "is_correct": false},
+        {"text": "exp", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(10 / 4)",
+      "difficulty": 1,
+      "tags": ["operators", "division"],
+      "answers": [
+        {"text": "2.5", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "2.0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(10 // 4)",
+      "difficulty": 2,
+      "tags": ["operators", "floor-division"],
+      "answers": [
+        {"text": "2", "is_correct": true},
+        {"text": "2.5", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "2.0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you get input from the user in Python?",
+      "difficulty": 1,
+      "tags": ["input", "functions"],
+      "answers": [
+        {"text": "input()", "is_correct": true},
+        {"text": "get()", "is_correct": false},
+        {"text": "read()", "is_correct": false},
+        {"text": "scan()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(len('Python'))",
+      "difficulty": 1,
+      "tags": ["strings", "functions"],
+      "answers": [
+        {"text": "6", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "7", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of the following creates an empty list?",
+      "difficulty": 1,
+      "tags": ["lists", "syntax"],
+      "answers": [
+        {"text": "my_list = []", "is_correct": true},
+        {"text": "my_list = ()", "is_correct": false},
+        {"text": "my_list = {}", "is_correct": false},
+        {"text": "my_list = list[]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([1, 2, 3][0])",
+      "difficulty": 1,
+      "tags": ["lists", "indexing"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "0", "is_correct": false},
+        {"text": "[1]", "is_correct": false},
+        {"text": "2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([1, 2, 3][-1])",
+      "difficulty": 2,
+      "tags": ["lists", "indexing"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "1", "is_correct": false},
+        {"text": "-1", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you add an item to the end of a list?",
+      "difficulty": 1,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "list.append(item)", "is_correct": true},
+        {"text": "list.add(item)", "is_correct": false},
+        {"text": "list.insert(item)", "is_correct": false},
+        {"text": "list.push(item)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to start an if statement?",
+      "difficulty": 1,
+      "tags": ["control-flow", "conditionals"],
+      "answers": [
+        {"text": "if", "is_correct": true},
+        {"text": "If", "is_correct": false},
+        {"text": "IF", "is_correct": false},
+        {"text": "when", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct syntax for an if statement in Python?",
+      "difficulty": 1,
+      "tags": ["control-flow", "syntax"],
+      "answers": [
+        {"text": "if x > 5:", "is_correct": true},
+        {"text": "if (x > 5)", "is_correct": false},
+        {"text": "if x > 5 then:", "is_correct": false},
+        {"text": "if x > 5 {}", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which keyword is used for the else-if condition in Python?",
+      "difficulty": 1,
+      "tags": ["control-flow", "conditionals"],
+      "answers": [
+        {"text": "elif", "is_correct": true},
+        {"text": "elseif", "is_correct": false},
+        {"text": "else if", "is_correct": false},
+        {"text": "elsif", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(5 > 3)",
+      "difficulty": 1,
+      "tags": ["operators", "comparison"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "true", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "Yes", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which operator checks for equality in Python?",
+      "difficulty": 1,
+      "tags": ["operators", "comparison"],
+      "answers": [
+        {"text": "==", "is_correct": true},
+        {"text": "=", "is_correct": false},
+        {"text": "===", "is_correct": false},
+        {"text": "equals", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(5 != 3)",
+      "difficulty": 1,
+      "tags": ["operators", "comparison"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which keyword is used to create a loop that iterates over a sequence?",
+      "difficulty": 1,
+      "tags": ["loops", "for"],
+      "answers": [
+        {"text": "for", "is_correct": true},
+        {"text": "foreach", "is_correct": false},
+        {"text": "loop", "is_correct": false},
+        {"text": "iterate", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct syntax for a for loop?",
+      "difficulty": 1,
+      "tags": ["loops", "syntax"],
+      "answers": [
+        {"text": "for i in range(5):", "is_correct": true},
+        {"text": "for (i = 0; i < 5; i++):", "is_correct": false},
+        {"text": "for i to 5:", "is_correct": false},
+        {"text": "for each i in 5:", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does range(3) return?",
+      "difficulty": 1,
+      "tags": ["functions", "range"],
+      "answers": [
+        {"text": "A sequence of 0, 1, 2", "is_correct": true},
+        {"text": "A sequence of 1, 2, 3", "is_correct": false},
+        {"text": "A sequence of 0, 1, 2, 3", "is_correct": false},
+        {"text": "The number 3", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which keyword creates a loop that runs while a condition is true?",
+      "difficulty": 1,
+      "tags": ["loops", "while"],
+      "answers": [
+        {"text": "while", "is_correct": true},
+        {"text": "during", "is_correct": false},
+        {"text": "loop", "is_correct": false},
+        {"text": "repeat", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword exits a loop immediately?",
+      "difficulty": 1,
+      "tags": ["loops", "control-flow"],
+      "answers": [
+        {"text": "break", "is_correct": true},
+        {"text": "exit", "is_correct": false},
+        {"text": "stop", "is_correct": false},
+        {"text": "end", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword skips the current iteration of a loop?",
+      "difficulty": 2,
+      "tags": ["loops", "control-flow"],
+      "answers": [
+        {"text": "continue", "is_correct": true},
+        {"text": "skip", "is_correct": false},
+        {"text": "next", "is_correct": false},
+        {"text": "pass", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('hello'.capitalize())",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "Hello", "is_correct": true},
+        {"text": "HELLO", "is_correct": false},
+        {"text": "hello", "is_correct": false},
+        {"text": "hELLO", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('HELLO'.lower())",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "hello", "is_correct": true},
+        {"text": "HELLO", "is_correct": false},
+        {"text": "Hello", "is_correct": false},
+        {"text": "hELLO", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you check if a string contains a substring?",
+      "difficulty": 1,
+      "tags": ["strings", "operators"],
+      "answers": [
+        {"text": "'sub' in 'substring'", "is_correct": true},
+        {"text": "'substring'.has('sub')", "is_correct": false},
+        {"text": "'substring'.includes('sub')", "is_correct": false},
+        {"text": "contains('sub', 'substring')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('hello'.replace('l', 'x'))",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "hexxo", "is_correct": true},
+        {"text": "hexlo", "is_correct": false},
+        {"text": "hello", "is_correct": false},
+        {"text": "hexoo", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What method splits a string into a list?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "split()", "is_correct": true},
+        {"text": "divide()", "is_correct": false},
+        {"text": "separate()", "is_correct": false},
+        {"text": "break()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('a,b,c'.split(','))",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "['a', 'b', 'c']", "is_correct": true},
+        {"text": "('a', 'b', 'c')", "is_correct": false},
+        {"text": "'a' 'b' 'c'", "is_correct": false},
+        {"text": "a b c", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you create a dictionary with key 'name' and value 'John'?",
+      "difficulty": 1,
+      "tags": ["dictionaries", "syntax"],
+      "answers": [
+        {"text": "{'name': 'John'}", "is_correct": true},
+        {"text": "['name': 'John']", "is_correct": false},
+        {"text": "('name', 'John')", "is_correct": false},
+        {"text": "dict('name', 'John')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you access the value for key 'name' in a dictionary d?",
+      "difficulty": 1,
+      "tags": ["dictionaries", "access"],
+      "answers": [
+        {"text": "d['name']", "is_correct": true},
+        {"text": "d.name", "is_correct": false},
+        {"text": "d(name)", "is_correct": false},
+        {"text": "d.get['name']", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you add a new key-value pair to a dictionary?",
+      "difficulty": 1,
+      "tags": ["dictionaries", "modification"],
+      "answers": [
+        {"text": "d['new_key'] = 'value'", "is_correct": true},
+        {"text": "d.add('new_key', 'value')", "is_correct": false},
+        {"text": "d.insert('new_key', 'value')", "is_correct": false},
+        {"text": "d.append('new_key': 'value')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What method returns all keys from a dictionary?",
+      "difficulty": 1,
+      "tags": ["dictionaries", "methods"],
+      "answers": [
+        {"text": "keys()", "is_correct": true},
+        {"text": "getKeys()", "is_correct": false},
+        {"text": "allKeys()", "is_correct": false},
+        {"text": "keySet()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What method returns all values from a dictionary?",
+      "difficulty": 1,
+      "tags": ["dictionaries", "methods"],
+      "answers": [
+        {"text": "values()", "is_correct": true},
+        {"text": "getValues()", "is_correct": false},
+        {"text": "allValues()", "is_correct": false},
+        {"text": "valueSet()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(bool(0))",
+      "difficulty": 2,
+      "tags": ["boolean", "conversion"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(bool('hello'))",
+      "difficulty": 2,
+      "tags": ["boolean", "conversion"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "'hello'", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(bool(''))",
+      "difficulty": 2,
+      "tags": ["boolean", "conversion"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "''", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which logical operator returns True if both conditions are true?",
+      "difficulty": 1,
+      "tags": ["operators", "logical"],
+      "answers": [
+        {"text": "and", "is_correct": true},
+        {"text": "&&", "is_correct": false},
+        {"text": "&", "is_correct": false},
+        {"text": "both", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which logical operator returns True if at least one condition is true?",
+      "difficulty": 1,
+      "tags": ["operators", "logical"],
+      "answers": [
+        {"text": "or", "is_correct": true},
+        {"text": "||", "is_correct": false},
+        {"text": "|", "is_correct": false},
+        {"text": "either", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which logical operator inverts a boolean value?",
+      "difficulty": 1,
+      "tags": ["operators", "logical"],
+      "answers": [
+        {"text": "not", "is_correct": true},
+        {"text": "!", "is_correct": false},
+        {"text": "~", "is_correct": false},
+        {"text": "inverse", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(not True)",
+      "difficulty": 1,
+      "tags": ["operators", "logical"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "None", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you remove an item from a list by index?",
+      "difficulty": 2,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "del list[index] or list.pop(index)", "is_correct": true},
+        {"text": "list.delete(index)", "is_correct": false},
+        {"text": "list.removeAt(index)", "is_correct": false},
+        {"text": "remove(list, index)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(list(range(1, 4)))",
+      "difficulty": 2,
+      "tags": ["functions", "range"],
+      "answers": [
+        {"text": "[1, 2, 3]", "is_correct": true},
+        {"text": "[1, 2, 3, 4]", "is_correct": false},
+        {"text": "[0, 1, 2, 3]", "is_correct": false},
+        {"text": "[1, 4]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you sort a list in place?",
+      "difficulty": 2,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "list.sort()", "is_correct": true},
+        {"text": "sort(list)", "is_correct": false},
+        {"text": "list.order()", "is_correct": false},
+        {"text": "list.sorted()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What function returns a sorted copy of a list without modifying the original?",
+      "difficulty": 2,
+      "tags": ["lists", "functions"],
+      "answers": [
+        {"text": "sorted(list)", "is_correct": true},
+        {"text": "list.sorted()", "is_correct": false},
+        {"text": "copy.sort(list)", "is_correct": false},
+        {"text": "list.copy().sort()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you reverse a list in place?",
+      "difficulty": 2,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "list.reverse()", "is_correct": true},
+        {"text": "reverse(list)", "is_correct": false},
+        {"text": "list.flip()", "is_correct": false},
+        {"text": "list[::-1]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([1, 2, 3][::-1])",
+      "difficulty": 2,
+      "tags": ["lists", "slicing"],
+      "answers": [
+        {"text": "[3, 2, 1]", "is_correct": true},
+        {"text": "[1, 2, 3]", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "[1]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([1, 2, 3, 4, 5][1:4])",
+      "difficulty": 2,
+      "tags": ["lists", "slicing"],
+      "answers": [
+        {"text": "[2, 3, 4]", "is_correct": true},
+        {"text": "[1, 2, 3, 4]", "is_correct": false},
+        {"text": "[2, 3, 4, 5]", "is_correct": false},
+        {"text": "[1, 2, 3]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a tuple in Python?",
+      "difficulty": 1,
+      "tags": ["tuples", "data-structures"],
+      "answers": [
+        {"text": "An immutable ordered collection", "is_correct": true},
+        {"text": "A mutable ordered collection", "is_correct": false},
+        {"text": "An unordered collection of unique elements", "is_correct": false},
+        {"text": "A key-value pair collection", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you create a tuple with values 1, 2, 3?",
+      "difficulty": 1,
+      "tags": ["tuples", "syntax"],
+      "answers": [
+        {"text": "(1, 2, 3)", "is_correct": true},
+        {"text": "[1, 2, 3]", "is_correct": false},
+        {"text": "{1, 2, 3}", "is_correct": false},
+        {"text": "tuple[1, 2, 3]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(min([3, 1, 4, 1, 5]))",
+      "difficulty": 1,
+      "tags": ["functions", "lists"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(max([3, 1, 4, 1, 5]))",
+      "difficulty": 1,
+      "tags": ["functions", "lists"],
+      "answers": [
+        {"text": "5", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "4", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(sum([1, 2, 3, 4]))",
+      "difficulty": 1,
+      "tags": ["functions", "lists"],
+      "answers": [
+        {"text": "10", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "[1, 2, 3, 4]", "is_correct": false},
+        {"text": "24", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(abs(-5))",
+      "difficulty": 1,
+      "tags": ["functions", "math"],
+      "answers": [
+        {"text": "5", "is_correct": true},
+        {"text": "-5", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(round(3.7))",
+      "difficulty": 1,
+      "tags": ["functions", "math"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "3.7", "is_correct": false},
+        {"text": "4.0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(round(3.14159, 2))",
+      "difficulty": 2,
+      "tags": ["functions", "math"],
+      "answers": [
+        {"text": "3.14", "is_correct": true},
+        {"text": "3.1", "is_correct": false},
+        {"text": "3.142", "is_correct": false},
+        {"text": "3", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you convert a number to a string?",
+      "difficulty": 1,
+      "tags": ["conversion", "data-types"],
+      "answers": [
+        {"text": "str(number)", "is_correct": true},
+        {"text": "string(number)", "is_correct": false},
+        {"text": "number.toString()", "is_correct": false},
+        {"text": "toString(number)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(str(123) + '456')",
+      "difficulty": 2,
+      "tags": ["conversion", "strings"],
+      "answers": [
+        {"text": "123456", "is_correct": true},
+        {"text": "579", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "123 456", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('python'.find('th'))",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "2", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "-1", "is_correct": false},
+        {"text": "True", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the find() method return if substring is not found?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "-1", "is_correct": true},
+        {"text": "0", "is_correct": false},
+        {"text": "None", "is_correct": false},
+        {"text": "False", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('hello world'.count('o'))",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "2", "is_correct": true},
+        {"text": "1", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you check if a string starts with a specific prefix?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "string.startswith('prefix')", "is_correct": true},
+        {"text": "string.beginsWith('prefix')", "is_correct": false},
+        {"text": "string.start('prefix')", "is_correct": false},
+        {"text": "startswith(string, 'prefix')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you check if a string ends with a specific suffix?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "string.endswith('suffix')", "is_correct": true},
+        {"text": "string.ends('suffix')", "is_correct": false},
+        {"text": "string.endWith('suffix')", "is_correct": false},
+        {"text": "endswith(string, 'suffix')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('  hello  '.strip())",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "hello", "is_correct": true},
+        {"text": "  hello  ", "is_correct": false},
+        {"text": "hello  ", "is_correct": false},
+        {"text": "  hello", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('hello'.isalpha())",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "hello", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('123'.isdigit())",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "123", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to open a file for reading?",
+      "difficulty": 2,
+      "tags": ["files", "io"],
+      "answers": [
+        {"text": "open('file.txt', 'r')", "is_correct": true},
+        {"text": "open('file.txt', 'read')", "is_correct": false},
+        {"text": "read('file.txt')", "is_correct": false},
+        {"text": "file.open('file.txt')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to open a file for writing?",
+      "difficulty": 2,
+      "tags": ["files", "io"],
+      "answers": [
+        {"text": "open('file.txt', 'w')", "is_correct": true},
+        {"text": "open('file.txt', 'write')", "is_correct": false},
+        {"text": "write('file.txt')", "is_correct": false},
+        {"text": "file.write('file.txt')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What mode appends to a file instead of overwriting?",
+      "difficulty": 2,
+      "tags": ["files", "io"],
+      "answers": [
+        {"text": "'a'", "is_correct": true},
+        {"text": "'w'", "is_correct": false},
+        {"text": "'append'", "is_correct": false},
+        {"text": "'+'", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the recommended way to work with files in Python?",
+      "difficulty": 2,
+      "tags": ["files", "best-practices"],
+      "answers": [
+        {"text": "Using the 'with' statement", "is_correct": true},
+        {"text": "Using try/finally", "is_correct": false},
+        {"text": "Using global file handles", "is_correct": false},
+        {"text": "Leaving files open", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the None type in Python?",
+      "difficulty": 1,
+      "tags": ["data-types", "none"],
+      "answers": [
+        {"text": "A special type representing the absence of a value", "is_correct": true},
+        {"text": "The same as 0", "is_correct": false},
+        {"text": "The same as an empty string", "is_correct": false},
+        {"text": "An error type", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(None == False)",
+      "difficulty": 2,
+      "tags": ["none", "comparison"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "None", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you check if a variable is None?",
+      "difficulty": 2,
+      "tags": ["none", "comparison"],
+      "answers": [
+        {"text": "variable is None", "is_correct": true},
+        {"text": "variable == None", "is_correct": false},
+        {"text": "variable.isNone()", "is_correct": false},
+        {"text": "isNone(variable)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([1, 2, 3].index(2))",
+      "difficulty": 2,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "-1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What happens when you call index() on a list for an element that doesn't exist?",
+      "difficulty": 2,
+      "tags": ["lists", "exceptions"],
+      "answers": [
+        {"text": "ValueError is raised", "is_correct": true},
+        {"text": "-1 is returned", "is_correct": false},
+        {"text": "None is returned", "is_correct": false},
+        {"text": "False is returned", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([1, 2, 2, 3].count(2))",
+      "difficulty": 2,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "2", "is_correct": true},
+        {"text": "1", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "[2, 2]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you insert an element at a specific position in a list?",
+      "difficulty": 2,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "list.insert(index, element)", "is_correct": true},
+        {"text": "list.add(index, element)", "is_correct": false},
+        {"text": "list[index] = element", "is_correct": false},
+        {"text": "list.put(index, element)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(list('abc'))",
+      "difficulty": 2,
+      "tags": ["lists", "conversion"],
+      "answers": [
+        {"text": "['a', 'b', 'c']", "is_correct": true},
+        {"text": "['abc']", "is_correct": false},
+        {"text": "'abc'", "is_correct": false},
+        {"text": "('a', 'b', 'c')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('-'.join(['a', 'b', 'c']))",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "a-b-c", "is_correct": true},
+        {"text": "-a-b-c-", "is_correct": false},
+        {"text": "['a-b-c']", "is_correct": false},
+        {"text": "abc", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(2 in [1, 2, 3])",
+      "difficulty": 1,
+      "tags": ["lists", "operators"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(5 not in [1, 2, 3])",
+      "difficulty": 2,
+      "tags": ["lists", "operators"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('key' in {'key': 'value'})",
+      "difficulty": 2,
+      "tags": ["dictionaries", "operators"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "'value'", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What method safely gets a value from a dictionary with a default?",
+      "difficulty": 2,
+      "tags": ["dictionaries", "methods"],
+      "answers": [
+        {"text": "dict.get('key', default)", "is_correct": true},
+        {"text": "dict['key'] or default", "is_correct": false},
+        {"text": "dict.getOrDefault('key', default)", "is_correct": false},
+        {"text": "dict.fetch('key', default)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print({}.get('key', 'default'))",
+      "difficulty": 2,
+      "tags": ["dictionaries", "methods"],
+      "answers": [
+        {"text": "default", "is_correct": true},
+        {"text": "None", "is_correct": false},
+        {"text": "KeyError", "is_correct": false},
+        {"text": "'key'", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you remove a key-value pair from a dictionary?",
+      "difficulty": 2,
+      "tags": ["dictionaries", "methods"],
+      "answers": [
+        {"text": "del dict['key'] or dict.pop('key')", "is_correct": true},
+        {"text": "dict.remove('key')", "is_correct": false},
+        {"text": "dict.delete('key')", "is_correct": false},
+        {"text": "remove(dict, 'key')", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(len({'a': 1, 'b': 2, 'c': 3}))",
+      "difficulty": 1,
+      "tags": ["dictionaries", "functions"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "2", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the items() method return from a dictionary?",
+      "difficulty": 2,
+      "tags": ["dictionaries", "methods"],
+      "answers": [
+        {"text": "A view of key-value pairs as tuples", "is_correct": true},
+        {"text": "A list of keys", "is_correct": false},
+        {"text": "A list of values", "is_correct": false},
+        {"text": "The number of items", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a f-string in Python?",
+      "difficulty": 2,
+      "tags": ["strings", "formatting"],
+      "answers": [
+        {"text": "A formatted string literal for embedding expressions", "is_correct": true},
+        {"text": "A function string", "is_correct": false},
+        {"text": "A file string", "is_correct": false},
+        {"text": "A final string", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: name = 'Alice'; print(f'Hello, {name}!')",
+      "difficulty": 2,
+      "tags": ["strings", "formatting"],
+      "answers": [
+        {"text": "Hello, Alice!", "is_correct": true},
+        {"text": "Hello, {name}!", "is_correct": false},
+        {"text": "Hello, name!", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(type(lambda x: x))",
+      "difficulty": 3,
+      "tags": ["lambda", "functions"],
+      "answers": [
+        {"text": "<class 'function'>", "is_correct": true},
+        {"text": "<class 'lambda'>", "is_correct": false},
+        {"text": "<class 'method'>", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([x for x in range(3)])",
+      "difficulty": 2,
+      "tags": ["list-comprehension", "loops"],
+      "answers": [
+        {"text": "[0, 1, 2]", "is_correct": true},
+        {"text": "[1, 2, 3]", "is_correct": false},
+        {"text": "[0, 1, 2, 3]", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([x * 2 for x in [1, 2, 3]])",
+      "difficulty": 2,
+      "tags": ["list-comprehension"],
+      "answers": [
+        {"text": "[2, 4, 6]", "is_correct": true},
+        {"text": "[1, 2, 3, 1, 2, 3]", "is_correct": false},
+        {"text": "[2, 2, 2]", "is_correct": false},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(all([True, True, False]))",
+      "difficulty": 2,
+      "tags": ["functions", "boolean"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "[True, True, False]", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(any([False, False, True]))",
+      "difficulty": 2,
+      "tags": ["functions", "boolean"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "[False, False, True]", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    }
+  ]
+}

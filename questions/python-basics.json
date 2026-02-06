@@ -1,0 +1,335 @@
+{
+  "topic": "Python Basics",
+  "questions": [
+    {
+      "text": "What is the difference between a list and a tuple in Python?",
+      "difficulty": 2,
+      "tags": ["data-structures", "lists", "tuples"],
+      "answers": [
+        {"text": "Lists are mutable, tuples are immutable", "is_correct": true},
+        {"text": "Tuples are mutable, lists are immutable", "is_correct": false},
+        {"text": "Lists can only store numbers", "is_correct": false},
+        {"text": "There is no difference", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a dictionary comprehension?",
+      "difficulty": 3,
+      "tags": ["dictionaries", "comprehension"],
+      "answers": [
+        {"text": "A concise way to create dictionaries using an expression", "is_correct": true},
+        {"text": "A method to compress dictionaries", "is_correct": false},
+        {"text": "A way to sort dictionaries", "is_correct": false},
+        {"text": "A function to merge dictionaries", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does *args do in a function definition?",
+      "difficulty": 3,
+      "tags": ["functions", "arguments"],
+      "answers": [
+        {"text": "Allows passing a variable number of positional arguments", "is_correct": true},
+        {"text": "Multiplies all arguments together", "is_correct": false},
+        {"text": "Makes arguments optional", "is_correct": false},
+        {"text": "Unpacks a list into arguments", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does **kwargs do in a function definition?",
+      "difficulty": 3,
+      "tags": ["functions", "arguments"],
+      "answers": [
+        {"text": "Allows passing a variable number of keyword arguments", "is_correct": true},
+        {"text": "Makes all arguments required", "is_correct": false},
+        {"text": "Creates keyword-only arguments", "is_correct": false},
+        {"text": "Exponents keyword arguments", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([1, 2, 3] + [4, 5])",
+      "difficulty": 1,
+      "tags": ["lists", "operators"],
+      "answers": [
+        {"text": "[1, 2, 3, 4, 5]", "is_correct": true},
+        {"text": "[5, 7, 3]", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the 'with' statement?",
+      "difficulty": 3,
+      "tags": ["context-managers", "files"],
+      "answers": [
+        {"text": "To ensure resources are properly cleaned up after use", "is_correct": true},
+        {"text": "To import modules", "is_correct": false},
+        {"text": "To define a class", "is_correct": false},
+        {"text": "To create a loop", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a generator in Python?",
+      "difficulty": 4,
+      "tags": ["generators", "iterators"],
+      "answers": [
+        {"text": "A function that yields values one at a time using 'yield'", "is_correct": true},
+        {"text": "A function that generates random numbers", "is_correct": false},
+        {"text": "A class that creates other classes", "is_correct": false},
+        {"text": "A tool for generating documentation", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('hello'[1:4])",
+      "difficulty": 2,
+      "tags": ["strings", "slicing"],
+      "answers": [
+        {"text": "ell", "is_correct": true},
+        {"text": "hell", "is_correct": false},
+        {"text": "ello", "is_correct": false},
+        {"text": "hel", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'global' keyword do?",
+      "difficulty": 3,
+      "tags": ["keywords", "scope"],
+      "answers": [
+        {"text": "Declares that a variable inside a function refers to a global variable", "is_correct": true},
+        {"text": "Makes a variable accessible from any file", "is_correct": false},
+        {"text": "Creates a constant", "is_correct": false},
+        {"text": "Imports global modules", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between 'is' and '==' in Python?",
+      "difficulty": 3,
+      "tags": ["operators", "comparison"],
+      "answers": [
+        {"text": "'is' compares identity, '==' compares equality", "is_correct": true},
+        {"text": "They are identical", "is_correct": false},
+        {"text": "'==' compares identity, 'is' compares equality", "is_correct": false},
+        {"text": "'is' is faster but less accurate", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a decorator in Python?",
+      "difficulty": 4,
+      "tags": ["decorators", "functions"],
+      "answers": [
+        {"text": "A function that modifies the behavior of another function", "is_correct": true},
+        {"text": "A way to add comments to code", "is_correct": false},
+        {"text": "A design pattern for UI", "is_correct": false},
+        {"text": "A tool for code formatting", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(bool([]))",
+      "difficulty": 2,
+      "tags": ["boolean", "lists"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "None", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you get the number of items in a list?",
+      "difficulty": 1,
+      "tags": ["lists", "functions"],
+      "answers": [
+        {"text": "len(my_list)", "is_correct": true},
+        {"text": "my_list.length()", "is_correct": false},
+        {"text": "my_list.size()", "is_correct": false},
+        {"text": "count(my_list)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(3 * 'ab')",
+      "difficulty": 1,
+      "tags": ["strings", "operators"],
+      "answers": [
+        {"text": "ababab", "is_correct": true},
+        {"text": "3ab", "is_correct": false},
+        {"text": "ab3", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of __name__ == '__main__'?",
+      "difficulty": 3,
+      "tags": ["modules", "main"],
+      "answers": [
+        {"text": "To check if the script is being run directly or imported", "is_correct": true},
+        {"text": "To set the name of the program", "is_correct": false},
+        {"text": "To define the main function", "is_correct": false},
+        {"text": "To import the main module", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a set in Python?",
+      "difficulty": 2,
+      "tags": ["data-structures", "sets"],
+      "answers": [
+        {"text": "An unordered collection of unique elements", "is_correct": true},
+        {"text": "An ordered collection of elements", "is_correct": false},
+        {"text": "A key-value pair collection", "is_correct": false},
+        {"text": "A fixed-size array", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'in' keyword do?",
+      "difficulty": 1,
+      "tags": ["keywords", "operators"],
+      "answers": [
+        {"text": "Checks if an element exists in a sequence", "is_correct": true},
+        {"text": "Imports a module", "is_correct": false},
+        {"text": "Creates a variable inside a function", "is_correct": false},
+        {"text": "Defines an input parameter", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(type({}))",
+      "difficulty": 2,
+      "tags": ["types", "dictionaries"],
+      "answers": [
+        {"text": "<class 'dict'>", "is_correct": true},
+        {"text": "<class 'set'>", "is_correct": false},
+        {"text": "<class 'list'>", "is_correct": false},
+        {"text": "<class 'tuple'>", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you create an empty set in Python?",
+      "difficulty": 2,
+      "tags": ["sets", "syntax"],
+      "answers": [
+        {"text": "set()", "is_correct": true},
+        {"text": "{}", "is_correct": false},
+        {"text": "[]", "is_correct": false},
+        {"text": "new Set()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between pop() and remove() for lists?",
+      "difficulty": 3,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "pop() removes by index and returns it, remove() removes by value", "is_correct": true},
+        {"text": "remove() removes by index, pop() removes by value", "is_correct": false},
+        {"text": "pop() is faster than remove()", "is_correct": false},
+        {"text": "There is no difference", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the strip() method do for strings?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "Removes leading and trailing whitespace", "is_correct": true},
+        {"text": "Removes all spaces from the string", "is_correct": false},
+        {"text": "Splits the string into parts", "is_correct": false},
+        {"text": "Reverses the string", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(10 % 3)",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "3.33", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a module in Python?",
+      "difficulty": 1,
+      "tags": ["modules", "organization"],
+      "answers": [
+        {"text": "A file containing Python code that can be imported", "is_correct": true},
+        {"text": "A class definition", "is_correct": false},
+        {"text": "A function definition", "is_correct": false},
+        {"text": "A package manager", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the enumerate() function?",
+      "difficulty": 2,
+      "tags": ["functions", "iteration"],
+      "answers": [
+        {"text": "Returns both the index and value when iterating", "is_correct": true},
+        {"text": "Counts the number of items", "is_correct": false},
+        {"text": "Sorts the items", "is_correct": false},
+        {"text": "Filters the items", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('abc'.upper())",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "ABC", "is_correct": true},
+        {"text": "abc", "is_correct": false},
+        {"text": "Abc", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a class method in Python?",
+      "difficulty": 4,
+      "tags": ["oop", "methods"],
+      "answers": [
+        {"text": "A method that receives the class as first argument instead of instance", "is_correct": true},
+        {"text": "Any method defined inside a class", "is_correct": false},
+        {"text": "A method that cannot be overridden", "is_correct": false},
+        {"text": "A private method", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the @staticmethod decorator used for?",
+      "difficulty": 4,
+      "tags": ["decorators", "oop"],
+      "answers": [
+        {"text": "To define a method that doesn't need access to instance or class", "is_correct": true},
+        {"text": "To make a method faster", "is_correct": false},
+        {"text": "To make a method private", "is_correct": false},
+        {"text": "To prevent method overriding", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(list(range(0, 10, 2)))",
+      "difficulty": 2,
+      "tags": ["functions", "lists"],
+      "answers": [
+        {"text": "[0, 2, 4, 6, 8]", "is_correct": true},
+        {"text": "[0, 2, 4, 6, 8, 10]", "is_correct": false},
+        {"text": "[2, 4, 6, 8, 10]", "is_correct": false},
+        {"text": "[0, 1, 2, 3, 4]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the join() method?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "Joins a list of strings into one string with a separator", "is_correct": true},
+        {"text": "Joins two lists together", "is_correct": false},
+        {"text": "Concatenates two strings", "is_correct": false},
+        {"text": "Merges two dictionaries", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What happens when you access a key that doesn't exist in a dictionary?",
+      "difficulty": 2,
+      "tags": ["dictionaries", "exceptions"],
+      "answers": [
+        {"text": "KeyError is raised", "is_correct": true},
+        {"text": "None is returned", "is_correct": false},
+        {"text": "0 is returned", "is_correct": false},
+        {"text": "An empty string is returned", "is_correct": false}
+      ]
+    }
+  ]
+}

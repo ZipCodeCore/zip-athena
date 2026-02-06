@@ -1,0 +1,1105 @@
+{
+  "topic": "Java Fundamentals",
+  "questions": [
+    {
+      "text": "What is the correct file extension for Java source files?",
+      "difficulty": 1,
+      "tags": ["basics", "files"],
+      "answers": [
+        {"text": ".java", "is_correct": true},
+        {"text": ".jav", "is_correct": false},
+        {"text": ".class", "is_correct": false},
+        {"text": ".j", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the compiled Java file extension?",
+      "difficulty": 1,
+      "tags": ["basics", "compilation"],
+      "answers": [
+        {"text": ".class", "is_correct": true},
+        {"text": ".java", "is_correct": false},
+        {"text": ".exe", "is_correct": false},
+        {"text": ".jar", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of the following is a valid variable name in Java?",
+      "difficulty": 1,
+      "tags": ["variables", "syntax"],
+      "answers": [
+        {"text": "myVariable", "is_correct": true},
+        {"text": "2variable", "is_correct": false},
+        {"text": "my-variable", "is_correct": false},
+        {"text": "class", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(5 + 3);",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "8", "is_correct": true},
+        {"text": "53", "is_correct": false},
+        {"text": "5 + 3", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you create a single-line comment in Java?",
+      "difficulty": 1,
+      "tags": ["syntax", "comments"],
+      "answers": [
+        {"text": "// This is a comment", "is_correct": true},
+        {"text": "# This is a comment", "is_correct": false},
+        {"text": "-- This is a comment", "is_correct": false},
+        {"text": "' This is a comment", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you create a multi-line comment in Java?",
+      "difficulty": 1,
+      "tags": ["syntax", "comments"],
+      "answers": [
+        {"text": "/* This is a comment */", "is_correct": true},
+        {"text": "// This is a comment //", "is_correct": false},
+        {"text": "<!-- This is a comment -->", "is_correct": false},
+        {"text": "''' This is a comment '''", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What data type would you use to store 3.14?",
+      "difficulty": 1,
+      "tags": ["data-types", "primitives"],
+      "answers": [
+        {"text": "double", "is_correct": true},
+        {"text": "int", "is_correct": false},
+        {"text": "String", "is_correct": false},
+        {"text": "char", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What data type would you use to store a single character?",
+      "difficulty": 1,
+      "tags": ["data-types", "primitives"],
+      "answers": [
+        {"text": "char", "is_correct": true},
+        {"text": "String", "is_correct": false},
+        {"text": "int", "is_correct": false},
+        {"text": "character", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to declare an integer variable?",
+      "difficulty": 1,
+      "tags": ["variables", "syntax"],
+      "answers": [
+        {"text": "int x = 5;", "is_correct": true},
+        {"text": "integer x = 5;", "is_correct": false},
+        {"text": "x = 5;", "is_correct": false},
+        {"text": "var int x = 5;", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to declare a String variable?",
+      "difficulty": 1,
+      "tags": ["strings", "syntax"],
+      "answers": [
+        {"text": "String name = \"John\";", "is_correct": true},
+        {"text": "string name = \"John\";", "is_correct": false},
+        {"text": "String name = 'John';", "is_correct": false},
+        {"text": "str name = \"John\";", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"Hello\" + \" \" + \"World\");",
+      "difficulty": 1,
+      "tags": ["strings", "concatenation"],
+      "answers": [
+        {"text": "Hello World", "is_correct": true},
+        {"text": "HelloWorld", "is_correct": false},
+        {"text": "Hello + World", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(10 / 4);",
+      "difficulty": 1,
+      "tags": ["operators", "division"],
+      "answers": [
+        {"text": "2", "is_correct": true},
+        {"text": "2.5", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "2.0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(10.0 / 4);",
+      "difficulty": 2,
+      "tags": ["operators", "division"],
+      "answers": [
+        {"text": "2.5", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "2.0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the modulus operator in Java?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "%", "is_correct": true},
+        {"text": "mod", "is_correct": false},
+        {"text": "//", "is_correct": false},
+        {"text": "\\", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(10 % 3);",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "3.33", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you get input from the user using Scanner?",
+      "difficulty": 2,
+      "tags": ["input", "scanner"],
+      "answers": [
+        {"text": "scanner.nextLine()", "is_correct": true},
+        {"text": "scanner.input()", "is_correct": false},
+        {"text": "scanner.read()", "is_correct": false},
+        {"text": "scanner.get()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to create a Scanner object for keyboard input?",
+      "difficulty": 2,
+      "tags": ["input", "scanner"],
+      "answers": [
+        {"text": "Scanner scanner = new Scanner(System.in);", "is_correct": true},
+        {"text": "Scanner scanner = Scanner(System.in);", "is_correct": false},
+        {"text": "Scanner scanner = new Scanner();", "is_correct": false},
+        {"text": "Scanner scanner = Scanner.create();", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"Hello\".length());",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "5", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of the following creates an array of integers?",
+      "difficulty": 1,
+      "tags": ["arrays", "syntax"],
+      "answers": [
+        {"text": "int[] arr = new int[5];", "is_correct": true},
+        {"text": "int arr[] = int[5];", "is_correct": false},
+        {"text": "array int arr = new array(5);", "is_correct": false},
+        {"text": "int arr = new int[5];", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the index of the first element in a Java array?",
+      "difficulty": 1,
+      "tags": ["arrays", "indexing"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "1", "is_correct": false},
+        {"text": "-1", "is_correct": false},
+        {"text": "first", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you get the length of an array named arr?",
+      "difficulty": 1,
+      "tags": ["arrays", "properties"],
+      "answers": [
+        {"text": "arr.length", "is_correct": true},
+        {"text": "arr.length()", "is_correct": false},
+        {"text": "arr.size()", "is_correct": false},
+        {"text": "length(arr)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct syntax for an if statement in Java?",
+      "difficulty": 1,
+      "tags": ["control-flow", "syntax"],
+      "answers": [
+        {"text": "if (x > 5) { }", "is_correct": true},
+        {"text": "if x > 5 { }", "is_correct": false},
+        {"text": "if x > 5:", "is_correct": false},
+        {"text": "if (x > 5) then { }", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used for the else-if condition in Java?",
+      "difficulty": 1,
+      "tags": ["control-flow", "conditionals"],
+      "answers": [
+        {"text": "else if", "is_correct": true},
+        {"text": "elseif", "is_correct": false},
+        {"text": "elif", "is_correct": false},
+        {"text": "elsif", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(5 > 3);",
+      "difficulty": 1,
+      "tags": ["operators", "comparison"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "yes", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which operator checks for equality in Java?",
+      "difficulty": 1,
+      "tags": ["operators", "comparison"],
+      "answers": [
+        {"text": "==", "is_correct": true},
+        {"text": "=", "is_correct": false},
+        {"text": "===", "is_correct": false},
+        {"text": "equals", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(5 != 3);",
+      "difficulty": 1,
+      "tags": ["operators", "comparison"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct syntax for a for loop?",
+      "difficulty": 1,
+      "tags": ["loops", "syntax"],
+      "answers": [
+        {"text": "for (int i = 0; i < 5; i++) { }", "is_correct": true},
+        {"text": "for i in range(5) { }", "is_correct": false},
+        {"text": "for (i = 0; i < 5) { }", "is_correct": false},
+        {"text": "for int i = 0 to 5 { }", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a while loop used for?",
+      "difficulty": 1,
+      "tags": ["loops", "while"],
+      "answers": [
+        {"text": "To repeat code while a condition is true", "is_correct": true},
+        {"text": "To run code exactly once", "is_correct": false},
+        {"text": "To define a method", "is_correct": false},
+        {"text": "To create a class", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword exits a loop immediately?",
+      "difficulty": 1,
+      "tags": ["loops", "control-flow"],
+      "answers": [
+        {"text": "break", "is_correct": true},
+        {"text": "exit", "is_correct": false},
+        {"text": "stop", "is_correct": false},
+        {"text": "end", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword skips the current iteration of a loop?",
+      "difficulty": 2,
+      "tags": ["loops", "control-flow"],
+      "answers": [
+        {"text": "continue", "is_correct": true},
+        {"text": "skip", "is_correct": false},
+        {"text": "next", "is_correct": false},
+        {"text": "pass", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"HELLO\".toLowerCase());",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "hello", "is_correct": true},
+        {"text": "HELLO", "is_correct": false},
+        {"text": "Hello", "is_correct": false},
+        {"text": "hELLO", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".toUpperCase());",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "HELLO", "is_correct": true},
+        {"text": "hello", "is_correct": false},
+        {"text": "Hello", "is_correct": false},
+        {"text": "hELLO", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you check if a String contains a substring?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "str.contains(\"sub\")", "is_correct": true},
+        {"text": "str.has(\"sub\")", "is_correct": false},
+        {"text": "str.includes(\"sub\")", "is_correct": false},
+        {"text": "\"sub\" in str", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".replace('l', 'x'));",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "hexxo", "is_correct": true},
+        {"text": "hexlo", "is_correct": false},
+        {"text": "hello", "is_correct": false},
+        {"text": "hexoo", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What method splits a String into an array?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "split()", "is_correct": true},
+        {"text": "divide()", "is_correct": false},
+        {"text": "separate()", "is_correct": false},
+        {"text": "toArray()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"a,b,c\".split(\",\").length);",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which logical operator returns true if both conditions are true?",
+      "difficulty": 1,
+      "tags": ["operators", "logical"],
+      "answers": [
+        {"text": "&&", "is_correct": true},
+        {"text": "||", "is_correct": false},
+        {"text": "&", "is_correct": false},
+        {"text": "and", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which logical operator returns true if at least one condition is true?",
+      "difficulty": 1,
+      "tags": ["operators", "logical"],
+      "answers": [
+        {"text": "||", "is_correct": true},
+        {"text": "&&", "is_correct": false},
+        {"text": "|", "is_correct": false},
+        {"text": "or", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which logical operator inverts a boolean value?",
+      "difficulty": 1,
+      "tags": ["operators", "logical"],
+      "answers": [
+        {"text": "!", "is_correct": true},
+        {"text": "not", "is_correct": false},
+        {"text": "~", "is_correct": false},
+        {"text": "^", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(!true);",
+      "difficulty": 1,
+      "tags": ["operators", "logical"],
+      "answers": [
+        {"text": "false", "is_correct": true},
+        {"text": "true", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "!true", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to define a method that returns an integer?",
+      "difficulty": 2,
+      "tags": ["methods", "syntax"],
+      "answers": [
+        {"text": "public int methodName() { return 5; }", "is_correct": true},
+        {"text": "public methodName() int { return 5; }", "is_correct": false},
+        {"text": "int public methodName() { return 5; }", "is_correct": false},
+        {"text": "def methodName(): int { return 5; }", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'void' return type mean?",
+      "difficulty": 1,
+      "tags": ["methods", "return-types"],
+      "answers": [
+        {"text": "The method does not return any value", "is_correct": true},
+        {"text": "The method returns null", "is_correct": false},
+        {"text": "The method returns an empty string", "is_correct": false},
+        {"text": "The method returns 0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to return a value from a method?",
+      "difficulty": 1,
+      "tags": ["methods", "return"],
+      "answers": [
+        {"text": "return", "is_correct": true},
+        {"text": "give", "is_correct": false},
+        {"text": "send", "is_correct": false},
+        {"text": "output", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(Math.abs(-5));",
+      "difficulty": 1,
+      "tags": ["math", "methods"],
+      "answers": [
+        {"text": "5", "is_correct": true},
+        {"text": "-5", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(Math.max(5, 10));",
+      "difficulty": 1,
+      "tags": ["math", "methods"],
+      "answers": [
+        {"text": "10", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(Math.min(5, 10));",
+      "difficulty": 1,
+      "tags": ["math", "methods"],
+      "answers": [
+        {"text": "5", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(Math.pow(2, 3));",
+      "difficulty": 2,
+      "tags": ["math", "methods"],
+      "answers": [
+        {"text": "8.0", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "8", "is_correct": false},
+        {"text": "9", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(Math.sqrt(16));",
+      "difficulty": 2,
+      "tags": ["math", "methods"],
+      "answers": [
+        {"text": "4.0", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "8", "is_correct": false},
+        {"text": "256", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you convert a String to an integer?",
+      "difficulty": 2,
+      "tags": ["conversion", "parsing"],
+      "answers": [
+        {"text": "Integer.parseInt(\"123\")", "is_correct": true},
+        {"text": "int(\"123\")", "is_correct": false},
+        {"text": "\"123\".toInt()", "is_correct": false},
+        {"text": "Integer.convert(\"123\")", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you convert an integer to a String?",
+      "difficulty": 2,
+      "tags": ["conversion", "strings"],
+      "answers": [
+        {"text": "String.valueOf(123) or Integer.toString(123)", "is_correct": true},
+        {"text": "str(123)", "is_correct": false},
+        {"text": "123.toString()", "is_correct": false},
+        {"text": "String.convert(123)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".charAt(0));",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "h", "is_correct": true},
+        {"text": "e", "is_correct": false},
+        {"text": "hello", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".substring(1, 4));",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "ell", "is_correct": true},
+        {"text": "hell", "is_correct": false},
+        {"text": "ello", "is_correct": false},
+        {"text": "hel", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".indexOf('l'));",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "2", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "-1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does indexOf() return if the character is not found?",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "-1", "is_correct": true},
+        {"text": "0", "is_correct": false},
+        {"text": "null", "is_correct": false},
+        {"text": "false", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"  hello  \".trim());",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "hello", "is_correct": true},
+        {"text": "  hello  ", "is_correct": false},
+        {"text": "hello  ", "is_correct": false},
+        {"text": "  hello", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".startsWith(\"he\"));",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "he", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".endsWith(\"lo\"));",
+      "difficulty": 2,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "lo", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the keyword to create a new object?",
+      "difficulty": 1,
+      "tags": ["oop", "objects"],
+      "answers": [
+        {"text": "new", "is_correct": true},
+        {"text": "create", "is_correct": false},
+        {"text": "make", "is_correct": false},
+        {"text": "object", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a constructor in Java?",
+      "difficulty": 2,
+      "tags": ["oop", "constructors"],
+      "answers": [
+        {"text": "A special method that initializes an object", "is_correct": true},
+        {"text": "A method that destroys an object", "is_correct": false},
+        {"text": "A method that returns a value", "is_correct": false},
+        {"text": "A static method", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is special about a constructor's name?",
+      "difficulty": 2,
+      "tags": ["oop", "constructors"],
+      "answers": [
+        {"text": "It must match the class name exactly", "is_correct": true},
+        {"text": "It must start with 'init'", "is_correct": false},
+        {"text": "It must be 'constructor'", "is_correct": false},
+        {"text": "It can be any name", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What access modifier makes a member accessible from anywhere?",
+      "difficulty": 2,
+      "tags": ["access-modifiers", "oop"],
+      "answers": [
+        {"text": "public", "is_correct": true},
+        {"text": "private", "is_correct": false},
+        {"text": "protected", "is_correct": false},
+        {"text": "default", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What access modifier makes a member accessible only within its class?",
+      "difficulty": 2,
+      "tags": ["access-modifiers", "oop"],
+      "answers": [
+        {"text": "private", "is_correct": true},
+        {"text": "public", "is_correct": false},
+        {"text": "protected", "is_correct": false},
+        {"text": "internal", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the 'this' keyword?",
+      "difficulty": 2,
+      "tags": ["keywords", "oop"],
+      "answers": [
+        {"text": "To refer to the current object instance", "is_correct": true},
+        {"text": "To create a new object", "is_correct": false},
+        {"text": "To refer to the parent class", "is_correct": false},
+        {"text": "To call a static method", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the 'null' value in Java?",
+      "difficulty": 1,
+      "tags": ["null", "data-types"],
+      "answers": [
+        {"text": "A special value meaning no object reference", "is_correct": true},
+        {"text": "The same as 0", "is_correct": false},
+        {"text": "The same as an empty string", "is_correct": false},
+        {"text": "An error value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What exception is thrown when accessing a null reference?",
+      "difficulty": 2,
+      "tags": ["exceptions", "null"],
+      "answers": [
+        {"text": "NullPointerException", "is_correct": true},
+        {"text": "NullException", "is_correct": false},
+        {"text": "NullReferenceException", "is_correct": false},
+        {"text": "NullAccessException", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the default value of an int instance variable?",
+      "difficulty": 2,
+      "tags": ["variables", "defaults"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "null", "is_correct": false},
+        {"text": "-1", "is_correct": false},
+        {"text": "undefined", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the default value of a boolean instance variable?",
+      "difficulty": 2,
+      "tags": ["variables", "defaults"],
+      "answers": [
+        {"text": "false", "is_correct": true},
+        {"text": "true", "is_correct": false},
+        {"text": "null", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the default value of a String instance variable?",
+      "difficulty": 2,
+      "tags": ["variables", "defaults"],
+      "answers": [
+        {"text": "null", "is_correct": true},
+        {"text": "\"\"", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "undefined", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to inherit from a class?",
+      "difficulty": 2,
+      "tags": ["inheritance", "oop"],
+      "answers": [
+        {"text": "extends", "is_correct": true},
+        {"text": "inherits", "is_correct": false},
+        {"text": "implements", "is_correct": false},
+        {"text": "derives", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to implement an interface?",
+      "difficulty": 2,
+      "tags": ["interfaces", "oop"],
+      "answers": [
+        {"text": "implements", "is_correct": true},
+        {"text": "extends", "is_correct": false},
+        {"text": "interface", "is_correct": false},
+        {"text": "uses", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'static' keyword mean for a variable?",
+      "difficulty": 2,
+      "tags": ["static", "keywords"],
+      "answers": [
+        {"text": "The variable belongs to the class, not instances", "is_correct": true},
+        {"text": "The variable cannot be changed", "is_correct": false},
+        {"text": "The variable is private", "is_correct": false},
+        {"text": "The variable is faster to access", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'final' keyword do for a variable?",
+      "difficulty": 2,
+      "tags": ["final", "keywords"],
+      "answers": [
+        {"text": "Makes the variable a constant that cannot be changed", "is_correct": true},
+        {"text": "Makes the variable static", "is_correct": false},
+        {"text": "Makes the variable private", "is_correct": false},
+        {"text": "Makes the variable public", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(5 + \"5\");",
+      "difficulty": 2,
+      "tags": ["operators", "strings"],
+      "answers": [
+        {"text": "55", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "5 + 5", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"5\" + 5);",
+      "difficulty": 2,
+      "tags": ["operators", "strings"],
+      "answers": [
+        {"text": "55", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "5 5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the ternary operator in Java?",
+      "difficulty": 2,
+      "tags": ["operators", "ternary"],
+      "answers": [
+        {"text": "condition ? value1 : value2", "is_correct": true},
+        {"text": "condition ?? value1 : value2", "is_correct": false},
+        {"text": "if condition then value1 else value2", "is_correct": false},
+        {"text": "condition | value1 | value2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: int x = 5; System.out.println(x++);",
+      "difficulty": 2,
+      "tags": ["operators", "increment"],
+      "answers": [
+        {"text": "5", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: int x = 5; System.out.println(++x);",
+      "difficulty": 2,
+      "tags": ["operators", "increment"],
+      "answers": [
+        {"text": "6", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between x++ and ++x?",
+      "difficulty": 2,
+      "tags": ["operators", "increment"],
+      "answers": [
+        {"text": "x++ returns value then increments, ++x increments then returns", "is_correct": true},
+        {"text": "They are identical", "is_correct": false},
+        {"text": "++x is faster", "is_correct": false},
+        {"text": "x++ adds 2, ++x adds 1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does += do in Java?",
+      "difficulty": 1,
+      "tags": ["operators", "assignment"],
+      "answers": [
+        {"text": "Adds and assigns the value", "is_correct": true},
+        {"text": "Checks if values are equal", "is_correct": false},
+        {"text": "Concatenates strings only", "is_correct": false},
+        {"text": "Increments by 2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: int x = 10; x += 5; System.out.println(x);",
+      "difficulty": 1,
+      "tags": ["operators", "assignment"],
+      "answers": [
+        {"text": "15", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "105", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to create an ArrayList of Strings?",
+      "difficulty": 2,
+      "tags": ["collections", "arraylist"],
+      "answers": [
+        {"text": "ArrayList<String> list = new ArrayList<>();", "is_correct": true},
+        {"text": "ArrayList list = new ArrayList<String>;", "is_correct": false},
+        {"text": "List<String> = new ArrayList[];", "is_correct": false},
+        {"text": "ArrayList<String> list = ArrayList();", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you add an element to an ArrayList?",
+      "difficulty": 1,
+      "tags": ["collections", "arraylist"],
+      "answers": [
+        {"text": "list.add(element)", "is_correct": true},
+        {"text": "list.append(element)", "is_correct": false},
+        {"text": "list.insert(element)", "is_correct": false},
+        {"text": "list.push(element)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you get the size of an ArrayList?",
+      "difficulty": 1,
+      "tags": ["collections", "arraylist"],
+      "answers": [
+        {"text": "list.size()", "is_correct": true},
+        {"text": "list.length()", "is_correct": false},
+        {"text": "list.length", "is_correct": false},
+        {"text": "list.count()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you get an element from an ArrayList at index 0?",
+      "difficulty": 1,
+      "tags": ["collections", "arraylist"],
+      "answers": [
+        {"text": "list.get(0)", "is_correct": true},
+        {"text": "list[0]", "is_correct": false},
+        {"text": "list.at(0)", "is_correct": false},
+        {"text": "list.element(0)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which loop is best for iterating over a collection?",
+      "difficulty": 2,
+      "tags": ["loops", "collections"],
+      "answers": [
+        {"text": "Enhanced for loop (for-each)", "is_correct": true},
+        {"text": "While loop", "is_correct": false},
+        {"text": "Do-while loop", "is_correct": false},
+        {"text": "Infinite loop", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct syntax for an enhanced for loop?",
+      "difficulty": 2,
+      "tags": ["loops", "syntax"],
+      "answers": [
+        {"text": "for (String s : list) { }", "is_correct": true},
+        {"text": "for (String s in list) { }", "is_correct": false},
+        {"text": "foreach (String s : list) { }", "is_correct": false},
+        {"text": "for each String s in list { }", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to handle exceptions?",
+      "difficulty": 2,
+      "tags": ["exceptions", "syntax"],
+      "answers": [
+        {"text": "try { } catch (Exception e) { }", "is_correct": true},
+        {"text": "try { } except (Exception e) { }", "is_correct": false},
+        {"text": "catch { } try (Exception e) { }", "is_correct": false},
+        {"text": "handle { } exception (Exception e) { }", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What block always executes after try-catch?",
+      "difficulty": 2,
+      "tags": ["exceptions", "finally"],
+      "answers": [
+        {"text": "finally", "is_correct": true},
+        {"text": "always", "is_correct": false},
+        {"text": "end", "is_correct": false},
+        {"text": "complete", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to throw an exception?",
+      "difficulty": 2,
+      "tags": ["exceptions", "keywords"],
+      "answers": [
+        {"text": "throw", "is_correct": true},
+        {"text": "throws", "is_correct": false},
+        {"text": "raise", "is_correct": false},
+        {"text": "exception", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".equals(\"hello\"));",
+      "difficulty": 1,
+      "tags": ["strings", "comparison"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Why should you use .equals() instead of == for Strings?",
+      "difficulty": 3,
+      "tags": ["strings", "comparison"],
+      "answers": [
+        {"text": ".equals() compares content, == compares references", "is_correct": true},
+        {"text": ".equals() is faster", "is_correct": false},
+        {"text": "They are identical for Strings", "is_correct": false},
+        {"text": "== doesn't work with Strings", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"Hello\".equalsIgnoreCase(\"HELLO\"));",
+      "difficulty": 2,
+      "tags": ["strings", "comparison"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "HELLO", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the switch statement used for?",
+      "difficulty": 2,
+      "tags": ["control-flow", "switch"],
+      "answers": [
+        {"text": "To select one of many code blocks to execute", "is_correct": true},
+        {"text": "To create a loop", "is_correct": false},
+        {"text": "To define a method", "is_correct": false},
+        {"text": "To handle exceptions", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword ends a case in a switch statement?",
+      "difficulty": 2,
+      "tags": ["control-flow", "switch"],
+      "answers": [
+        {"text": "break", "is_correct": true},
+        {"text": "end", "is_correct": false},
+        {"text": "stop", "is_correct": false},
+        {"text": "exit", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What happens if you forget break in a switch case?",
+      "difficulty": 2,
+      "tags": ["control-flow", "switch"],
+      "answers": [
+        {"text": "Execution falls through to the next case", "is_correct": true},
+        {"text": "A compilation error occurs", "is_correct": false},
+        {"text": "The switch exits automatically", "is_correct": false},
+        {"text": "An exception is thrown", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the default case in a switch statement?",
+      "difficulty": 2,
+      "tags": ["control-flow", "switch"],
+      "answers": [
+        {"text": "Code that runs if no other case matches", "is_correct": true},
+        {"text": "The first case that runs", "is_correct": false},
+        {"text": "An optional optimization", "is_correct": false},
+        {"text": "The fastest case", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"hello\".isEmpty());",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "false", "is_correct": true},
+        {"text": "true", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"\".isEmpty());",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "null", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a do-while loop?",
+      "difficulty": 2,
+      "tags": ["loops", "do-while"],
+      "answers": [
+        {"text": "A loop that executes at least once before checking the condition", "is_correct": true},
+        {"text": "A loop that never executes", "is_correct": false},
+        {"text": "The same as a regular while loop", "is_correct": false},
+        {"text": "A loop that runs forever", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct syntax for a do-while loop?",
+      "difficulty": 2,
+      "tags": ["loops", "syntax"],
+      "answers": [
+        {"text": "do { } while (condition);", "is_correct": true},
+        {"text": "while (condition) do { }", "is_correct": false},
+        {"text": "do while (condition) { }", "is_correct": false},
+        {"text": "loop do { } while (condition)", "is_correct": false}
+      ]
+    }
+  ]
+}
