@@ -1,0 +1,1105 @@
+{
+  "topic": "Java Fundamentals",
+  "questions": [
+    {
+      "text": "What does JVM stand for?",
+      "difficulty": 1,
+      "tags": ["basics", "jvm"],
+      "answers": [
+        {"text": "Java Virtual Machine", "is_correct": true},
+        {"text": "Java Visual Machine", "is_correct": false},
+        {"text": "Java Variable Machine", "is_correct": false},
+        {"text": "Java Version Manager", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does JDK stand for?",
+      "difficulty": 1,
+      "tags": ["basics", "jdk"],
+      "answers": [
+        {"text": "Java Development Kit", "is_correct": true},
+        {"text": "Java Debug Kit", "is_correct": false},
+        {"text": "Java Desktop Kit", "is_correct": false},
+        {"text": "Java Data Kit", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What symbol ends most Java statements?",
+      "difficulty": 1,
+      "tags": ["syntax", "basics"],
+      "answers": [
+        {"text": ";", "is_correct": true},
+        {"text": ":", "is_correct": false},
+        {"text": ".", "is_correct": false},
+        {"text": ",", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which keyword is used to define a class in Java?",
+      "difficulty": 1,
+      "tags": ["classes", "keywords"],
+      "answers": [
+        {"text": "class", "is_correct": true},
+        {"text": "Class", "is_correct": false},
+        {"text": "define", "is_correct": false},
+        {"text": "struct", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct way to print text to the console?",
+      "difficulty": 1,
+      "tags": ["output", "basics"],
+      "answers": [
+        {"text": "System.out.println(\"text\");", "is_correct": true},
+        {"text": "print(\"text\");", "is_correct": false},
+        {"text": "console.log(\"text\");", "is_correct": false},
+        {"text": "echo(\"text\");", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(2 + 2);",
+      "difficulty": 1,
+      "tags": ["output", "arithmetic"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "22", "is_correct": false},
+        {"text": "2 + 2", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What data type stores whole numbers?",
+      "difficulty": 1,
+      "tags": ["data-types", "primitives"],
+      "answers": [
+        {"text": "int", "is_correct": true},
+        {"text": "double", "is_correct": false},
+        {"text": "String", "is_correct": false},
+        {"text": "char", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What data type stores true or false values?",
+      "difficulty": 1,
+      "tags": ["data-types", "primitives"],
+      "answers": [
+        {"text": "boolean", "is_correct": true},
+        {"text": "bool", "is_correct": false},
+        {"text": "Boolean", "is_correct": false},
+        {"text": "bit", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(10 - 3);",
+      "difficulty": 1,
+      "tags": ["output", "arithmetic"],
+      "answers": [
+        {"text": "7", "is_correct": true},
+        {"text": "13", "is_correct": false},
+        {"text": "10 - 3", "is_correct": false},
+        {"text": "-7", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(3 * 4);",
+      "difficulty": 1,
+      "tags": ["output", "arithmetic"],
+      "answers": [
+        {"text": "12", "is_correct": true},
+        {"text": "7", "is_correct": false},
+        {"text": "34", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What operator is used for multiplication?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "*", "is_correct": true},
+        {"text": "x", "is_correct": false},
+        {"text": "X", "is_correct": false},
+        {"text": "mult", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What operator is used for division?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "/", "is_correct": true},
+        {"text": "\\", "is_correct": false},
+        {"text": "div", "is_correct": false},
+        {"text": ":", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What operator is used for addition?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "+", "is_correct": true},
+        {"text": "add", "is_correct": false},
+        {"text": "&", "is_correct": false},
+        {"text": "plus", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What operator is used for subtraction?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "-", "is_correct": true},
+        {"text": "_", "is_correct": false},
+        {"text": "sub", "is_correct": false},
+        {"text": "minus", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of these is a valid String?",
+      "difficulty": 1,
+      "tags": ["strings", "syntax"],
+      "answers": [
+        {"text": "\"Hello\"", "is_correct": true},
+        {"text": "'Hello'", "is_correct": false},
+        {"text": "Hello", "is_correct": false},
+        {"text": "`Hello`", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What type of quotes are used for Strings in Java?",
+      "difficulty": 1,
+      "tags": ["strings", "syntax"],
+      "answers": [
+        {"text": "Double quotes \"\"", "is_correct": true},
+        {"text": "Single quotes ''", "is_correct": false},
+        {"text": "Backticks ``", "is_correct": false},
+        {"text": "No quotes needed", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What type of quotes are used for a single character (char)?",
+      "difficulty": 1,
+      "tags": ["char", "syntax"],
+      "answers": [
+        {"text": "Single quotes ''", "is_correct": true},
+        {"text": "Double quotes \"\"", "is_correct": false},
+        {"text": "Backticks ``", "is_correct": false},
+        {"text": "Parentheses ()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 10 + 5",
+      "difficulty": 1,
+      "tags": ["arithmetic", "basics"],
+      "answers": [
+        {"text": "15", "is_correct": true},
+        {"text": "105", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "50", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 20 - 8",
+      "difficulty": 1,
+      "tags": ["arithmetic", "basics"],
+      "answers": [
+        {"text": "12", "is_correct": true},
+        {"text": "28", "is_correct": false},
+        {"text": "8", "is_correct": false},
+        {"text": "-12", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 6 * 7",
+      "difficulty": 1,
+      "tags": ["arithmetic", "basics"],
+      "answers": [
+        {"text": "42", "is_correct": true},
+        {"text": "13", "is_correct": false},
+        {"text": "67", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the assignment operator in Java?",
+      "difficulty": 1,
+      "tags": ["operators", "assignment"],
+      "answers": [
+        {"text": "=", "is_correct": true},
+        {"text": "==", "is_correct": false},
+        {"text": ":=", "is_correct": false},
+        {"text": "=>", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which declares an integer variable named 'age' with value 25?",
+      "difficulty": 1,
+      "tags": ["variables", "declaration"],
+      "answers": [
+        {"text": "int age = 25;", "is_correct": true},
+        {"text": "age = 25;", "is_correct": false},
+        {"text": "integer age = 25;", "is_correct": false},
+        {"text": "int = age 25;", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which declares a String variable named 'name' with value \"John\"?",
+      "difficulty": 1,
+      "tags": ["variables", "strings"],
+      "answers": [
+        {"text": "String name = \"John\";", "is_correct": true},
+        {"text": "string name = \"John\";", "is_correct": false},
+        {"text": "String name = 'John';", "is_correct": false},
+        {"text": "str name = \"John\";", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which declares a boolean variable set to true?",
+      "difficulty": 1,
+      "tags": ["variables", "boolean"],
+      "answers": [
+        {"text": "boolean flag = true;", "is_correct": true},
+        {"text": "boolean flag = True;", "is_correct": false},
+        {"text": "bool flag = true;", "is_correct": false},
+        {"text": "boolean flag = \"true\";", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(true);",
+      "difficulty": 1,
+      "tags": ["boolean", "output"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "TRUE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(false);",
+      "difficulty": 1,
+      "tags": ["boolean", "output"],
+      "answers": [
+        {"text": "false", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "FALSE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What symbol starts a single-line comment?",
+      "difficulty": 1,
+      "tags": ["comments", "syntax"],
+      "answers": [
+        {"text": "//", "is_correct": true},
+        {"text": "#", "is_correct": false},
+        {"text": "/*", "is_correct": false},
+        {"text": "--", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 5 > 3?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 3 > 5?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "false", "is_correct": true},
+        {"text": "true", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 5 == 5?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "10", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 5 == 3?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "false", "is_correct": true},
+        {"text": "true", "is_correct": false},
+        {"text": "2", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does < mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Less than", "is_correct": true},
+        {"text": "Greater than", "is_correct": false},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does > mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Greater than", "is_correct": true},
+        {"text": "Less than", "is_correct": false},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does <= mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Less than or equal to", "is_correct": true},
+        {"text": "Greater than or equal to", "is_correct": false},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does >= mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Greater than or equal to", "is_correct": true},
+        {"text": "Less than or equal to", "is_correct": false},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 10 >= 10?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "10", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 5 <= 5?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword starts an if statement?",
+      "difficulty": 1,
+      "tags": ["conditionals", "keywords"],
+      "answers": [
+        {"text": "if", "is_correct": true},
+        {"text": "If", "is_correct": false},
+        {"text": "IF", "is_correct": false},
+        {"text": "when", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword provides an alternative in an if statement?",
+      "difficulty": 1,
+      "tags": ["conditionals", "keywords"],
+      "answers": [
+        {"text": "else", "is_correct": true},
+        {"text": "otherwise", "is_correct": false},
+        {"text": "then", "is_correct": false},
+        {"text": "or", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What brackets surround a code block?",
+      "difficulty": 1,
+      "tags": ["syntax", "blocks"],
+      "answers": [
+        {"text": "{ }", "is_correct": true},
+        {"text": "[ ]", "is_correct": false},
+        {"text": "( )", "is_correct": false},
+        {"text": "< >", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What brackets surround a condition in an if statement?",
+      "difficulty": 1,
+      "tags": ["syntax", "conditionals"],
+      "answers": [
+        {"text": "( )", "is_correct": true},
+        {"text": "{ }", "is_correct": false},
+        {"text": "[ ]", "is_correct": false},
+        {"text": "< >", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"Java\");",
+      "difficulty": 1,
+      "tags": ["output", "strings"],
+      "answers": [
+        {"text": "Java", "is_correct": true},
+        {"text": "\"Java\"", "is_correct": false},
+        {"text": "java", "is_correct": false},
+        {"text": "JAVA", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(100);",
+      "difficulty": 1,
+      "tags": ["output", "numbers"],
+      "answers": [
+        {"text": "100", "is_correct": true},
+        {"text": "\"100\"", "is_correct": false},
+        {"text": "one hundred", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 100 / 10",
+      "difficulty": 1,
+      "tags": ["arithmetic", "division"],
+      "answers": [
+        {"text": "10", "is_correct": true},
+        {"text": "1000", "is_correct": false},
+        {"text": "90", "is_correct": false},
+        {"text": "0.1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 5 * 5",
+      "difficulty": 1,
+      "tags": ["arithmetic", "multiplication"],
+      "answers": [
+        {"text": "25", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "55", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 9 / 3",
+      "difficulty": 1,
+      "tags": ["arithmetic", "division"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "27", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "12", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which is NOT a Java primitive type?",
+      "difficulty": 1,
+      "tags": ["data-types", "primitives"],
+      "answers": [
+        {"text": "String", "is_correct": true},
+        {"text": "int", "is_correct": false},
+        {"text": "boolean", "is_correct": false},
+        {"text": "char", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which is a Java primitive type?",
+      "difficulty": 1,
+      "tags": ["data-types", "primitives"],
+      "answers": [
+        {"text": "int", "is_correct": true},
+        {"text": "String", "is_correct": false},
+        {"text": "Integer", "is_correct": false},
+        {"text": "Array", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What stores decimal numbers like 3.14?",
+      "difficulty": 1,
+      "tags": ["data-types", "primitives"],
+      "answers": [
+        {"text": "double", "is_correct": true},
+        {"text": "int", "is_correct": false},
+        {"text": "String", "is_correct": false},
+        {"text": "boolean", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Is Java case-sensitive?",
+      "difficulty": 1,
+      "tags": ["basics", "syntax"],
+      "answers": [
+        {"text": "Yes", "is_correct": true},
+        {"text": "No", "is_correct": false},
+        {"text": "Sometimes", "is_correct": false},
+        {"text": "Only for variables", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Are 'Name' and 'name' the same variable in Java?",
+      "difficulty": 1,
+      "tags": ["variables", "case-sensitivity"],
+      "answers": [
+        {"text": "No, they are different", "is_correct": true},
+        {"text": "Yes, they are the same", "is_correct": false},
+        {"text": "Only in methods", "is_correct": false},
+        {"text": "Only in classes", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to create a constant in Java?",
+      "difficulty": 1,
+      "tags": ["keywords", "constants"],
+      "answers": [
+        {"text": "final", "is_correct": true},
+        {"text": "const", "is_correct": false},
+        {"text": "constant", "is_correct": false},
+        {"text": "static", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"A\" + \"B\");",
+      "difficulty": 1,
+      "tags": ["strings", "concatenation"],
+      "answers": [
+        {"text": "AB", "is_correct": true},
+        {"text": "A + B", "is_correct": false},
+        {"text": "A B", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(1 + 1);",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "2", "is_correct": true},
+        {"text": "11", "is_correct": false},
+        {"text": "1 + 1", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(\"1\" + \"1\");",
+      "difficulty": 1,
+      "tags": ["strings", "concatenation"],
+      "answers": [
+        {"text": "11", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "1 + 1", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the main method signature in Java?",
+      "difficulty": 1,
+      "tags": ["methods", "main"],
+      "answers": [
+        {"text": "public static void main(String[] args)", "is_correct": true},
+        {"text": "void main()", "is_correct": false},
+        {"text": "public main()", "is_correct": false},
+        {"text": "static main(String args)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Every Java program must have which method?",
+      "difficulty": 1,
+      "tags": ["methods", "main"],
+      "answers": [
+        {"text": "main", "is_correct": true},
+        {"text": "start", "is_correct": false},
+        {"text": "run", "is_correct": false},
+        {"text": "init", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'void' mean for a method?",
+      "difficulty": 1,
+      "tags": ["methods", "return-types"],
+      "answers": [
+        {"text": "The method returns nothing", "is_correct": true},
+        {"text": "The method is empty", "is_correct": false},
+        {"text": "The method returns zero", "is_correct": false},
+        {"text": "The method returns null", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword creates a new object?",
+      "difficulty": 1,
+      "tags": ["objects", "keywords"],
+      "answers": [
+        {"text": "new", "is_correct": true},
+        {"text": "create", "is_correct": false},
+        {"text": "object", "is_correct": false},
+        {"text": "make", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What brackets are used for array indices?",
+      "difficulty": 1,
+      "tags": ["arrays", "syntax"],
+      "answers": [
+        {"text": "[ ]", "is_correct": true},
+        {"text": "( )", "is_correct": false},
+        {"text": "{ }", "is_correct": false},
+        {"text": "< >", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the first index of an array?",
+      "difficulty": 1,
+      "tags": ["arrays", "indexing"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "1", "is_correct": false},
+        {"text": "-1", "is_correct": false},
+        {"text": "first", "is_correct": false}
+      ]
+    },
+    {
+      "text": "If an array has 5 elements, what is the last index?",
+      "difficulty": 1,
+      "tags": ["arrays", "indexing"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "-1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword starts a for loop?",
+      "difficulty": 1,
+      "tags": ["loops", "keywords"],
+      "answers": [
+        {"text": "for", "is_correct": true},
+        {"text": "loop", "is_correct": false},
+        {"text": "repeat", "is_correct": false},
+        {"text": "iterate", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword starts a while loop?",
+      "difficulty": 1,
+      "tags": ["loops", "keywords"],
+      "answers": [
+        {"text": "while", "is_correct": true},
+        {"text": "loop", "is_correct": false},
+        {"text": "during", "is_correct": false},
+        {"text": "repeat", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does ++ do to a variable?",
+      "difficulty": 1,
+      "tags": ["operators", "increment"],
+      "answers": [
+        {"text": "Adds 1 to it", "is_correct": true},
+        {"text": "Doubles it", "is_correct": false},
+        {"text": "Subtracts 1", "is_correct": false},
+        {"text": "Squares it", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does -- do to a variable?",
+      "difficulty": 1,
+      "tags": ["operators", "decrement"],
+      "answers": [
+        {"text": "Subtracts 1 from it", "is_correct": true},
+        {"text": "Halves it", "is_correct": false},
+        {"text": "Adds 1", "is_correct": false},
+        {"text": "Makes it negative", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: int x = 5; x++; System.out.println(x);",
+      "difficulty": 1,
+      "tags": ["operators", "increment"],
+      "answers": [
+        {"text": "6", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "10", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: int x = 10; x--; System.out.println(x);",
+      "difficulty": 1,
+      "tags": ["operators", "decrement"],
+      "answers": [
+        {"text": "9", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "11", "is_correct": false},
+        {"text": "-10", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 15 % 4",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "3.75", "is_correct": false},
+        {"text": "11", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 10 % 5",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 7 % 2",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "3.5", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the modulus operator % return?",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "The remainder of division", "is_correct": true},
+        {"text": "The quotient", "is_correct": false},
+        {"text": "A percentage", "is_correct": false},
+        {"text": "The product", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is System.out used for?",
+      "difficulty": 1,
+      "tags": ["output", "basics"],
+      "answers": [
+        {"text": "Printing output to the console", "is_correct": true},
+        {"text": "Reading input from user", "is_correct": false},
+        {"text": "Writing to files", "is_correct": false},
+        {"text": "Connecting to internet", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between print() and println()?",
+      "difficulty": 1,
+      "tags": ["output", "methods"],
+      "answers": [
+        {"text": "println() adds a new line at the end", "is_correct": true},
+        {"text": "print() is faster", "is_correct": false},
+        {"text": "They are identical", "is_correct": false},
+        {"text": "println() prints numbers only", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What package contains the Scanner class?",
+      "difficulty": 1,
+      "tags": ["input", "packages"],
+      "answers": [
+        {"text": "java.util", "is_correct": true},
+        {"text": "java.io", "is_correct": false},
+        {"text": "java.lang", "is_correct": false},
+        {"text": "java.scanner", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to import a class?",
+      "difficulty": 1,
+      "tags": ["packages", "keywords"],
+      "answers": [
+        {"text": "import", "is_correct": true},
+        {"text": "include", "is_correct": false},
+        {"text": "using", "is_correct": false},
+        {"text": "require", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Where do import statements go in a Java file?",
+      "difficulty": 1,
+      "tags": ["packages", "syntax"],
+      "answers": [
+        {"text": "At the top, before the class", "is_correct": true},
+        {"text": "Inside the class", "is_correct": false},
+        {"text": "At the bottom", "is_correct": false},
+        {"text": "Inside the main method", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is an integer?",
+      "difficulty": 1,
+      "tags": ["data-types", "basics"],
+      "answers": [
+        {"text": "A whole number without decimals", "is_correct": true},
+        {"text": "A number with decimals", "is_correct": false},
+        {"text": "A letter", "is_correct": false},
+        {"text": "A true/false value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of these is an integer?",
+      "difficulty": 1,
+      "tags": ["data-types", "basics"],
+      "answers": [
+        {"text": "42", "is_correct": true},
+        {"text": "3.14", "is_correct": false},
+        {"text": "\"42\"", "is_correct": false},
+        {"text": "true", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of these is a double?",
+      "difficulty": 1,
+      "tags": ["data-types", "basics"],
+      "answers": [
+        {"text": "3.14", "is_correct": true},
+        {"text": "42", "is_correct": false},
+        {"text": "\"3.14\"", "is_correct": false},
+        {"text": "true", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of these is a String?",
+      "difficulty": 1,
+      "tags": ["data-types", "strings"],
+      "answers": [
+        {"text": "\"Hello\"", "is_correct": true},
+        {"text": "42", "is_correct": false},
+        {"text": "3.14", "is_correct": false},
+        {"text": "true", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which of these is a boolean?",
+      "difficulty": 1,
+      "tags": ["data-types", "boolean"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "42", "is_correct": false},
+        {"text": "\"true\"", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(0);",
+      "difficulty": 1,
+      "tags": ["output", "numbers"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "zero", "is_correct": false},
+        {"text": "null", "is_correct": false},
+        {"text": "Nothing", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Can a variable name start with a number?",
+      "difficulty": 1,
+      "tags": ["variables", "naming"],
+      "answers": [
+        {"text": "No", "is_correct": true},
+        {"text": "Yes", "is_correct": false},
+        {"text": "Only with 0", "is_correct": false},
+        {"text": "Only with 1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Can a variable name contain numbers?",
+      "difficulty": 1,
+      "tags": ["variables", "naming"],
+      "answers": [
+        {"text": "Yes, but not at the start", "is_correct": true},
+        {"text": "No, never", "is_correct": false},
+        {"text": "Only at the start", "is_correct": false},
+        {"text": "Only single digits", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which is a valid variable name?",
+      "difficulty": 1,
+      "tags": ["variables", "naming"],
+      "answers": [
+        {"text": "myVar1", "is_correct": true},
+        {"text": "1myVar", "is_correct": false},
+        {"text": "my-var", "is_correct": false},
+        {"text": "my var", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which is NOT a valid variable name?",
+      "difficulty": 1,
+      "tags": ["variables", "naming"],
+      "answers": [
+        {"text": "my-variable", "is_correct": true},
+        {"text": "myVariable", "is_correct": false},
+        {"text": "_variable", "is_correct": false},
+        {"text": "$variable", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(8 / 2);",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "16", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "10", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(3 + 4 * 2);",
+      "difficulty": 1,
+      "tags": ["arithmetic", "order-of-operations"],
+      "answers": [
+        {"text": "11", "is_correct": true},
+        {"text": "14", "is_correct": false},
+        {"text": "9", "is_correct": false},
+        {"text": "24", "is_correct": false}
+      ]
+    },
+    {
+      "text": "In 3 + 4 * 2, which operation happens first?",
+      "difficulty": 1,
+      "tags": ["arithmetic", "order-of-operations"],
+      "answers": [
+        {"text": "4 * 2 (multiplication)", "is_correct": true},
+        {"text": "3 + 4 (addition)", "is_correct": false},
+        {"text": "They happen at the same time", "is_correct": false},
+        {"text": "Left to right", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What makes code inside parentheses execute first?",
+      "difficulty": 1,
+      "tags": ["arithmetic", "order-of-operations"],
+      "answers": [
+        {"text": "Parentheses have highest priority", "is_correct": true},
+        {"text": "It's random", "is_correct": false},
+        {"text": "Parentheses have lowest priority", "is_correct": false},
+        {"text": "They don't change anything", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println((3 + 4) * 2);",
+      "difficulty": 1,
+      "tags": ["arithmetic", "order-of-operations"],
+      "answers": [
+        {"text": "14", "is_correct": true},
+        {"text": "11", "is_correct": false},
+        {"text": "9", "is_correct": false},
+        {"text": "24", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a method in Java?",
+      "difficulty": 1,
+      "tags": ["methods", "basics"],
+      "answers": [
+        {"text": "A block of code that performs a task", "is_correct": true},
+        {"text": "A variable that stores data", "is_correct": false},
+        {"text": "A type of loop", "is_correct": false},
+        {"text": "A class name", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a class in Java?",
+      "difficulty": 1,
+      "tags": ["classes", "basics"],
+      "answers": [
+        {"text": "A blueprint for creating objects", "is_correct": true},
+        {"text": "A type of variable", "is_correct": false},
+        {"text": "A loop structure", "is_correct": false},
+        {"text": "A comment type", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is an object in Java?",
+      "difficulty": 1,
+      "tags": ["objects", "basics"],
+      "answers": [
+        {"text": "An instance of a class", "is_correct": true},
+        {"text": "A type of loop", "is_correct": false},
+        {"text": "A primitive data type", "is_correct": false},
+        {"text": "A comment", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What access modifier makes something accessible everywhere?",
+      "difficulty": 1,
+      "tags": ["access-modifiers", "keywords"],
+      "answers": [
+        {"text": "public", "is_correct": true},
+        {"text": "private", "is_correct": false},
+        {"text": "protected", "is_correct": false},
+        {"text": "hidden", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What access modifier makes something accessible only in its class?",
+      "difficulty": 1,
+      "tags": ["access-modifiers", "keywords"],
+      "answers": [
+        {"text": "private", "is_correct": true},
+        {"text": "public", "is_correct": false},
+        {"text": "protected", "is_correct": false},
+        {"text": "hidden", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: System.out.println(50 + 50);",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "100", "is_correct": true},
+        {"text": "5050", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to return a value from a method?",
+      "difficulty": 1,
+      "tags": ["methods", "keywords"],
+      "answers": [
+        {"text": "return", "is_correct": true},
+        {"text": "give", "is_correct": false},
+        {"text": "output", "is_correct": false},
+        {"text": "send", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is null in Java?",
+      "difficulty": 1,
+      "tags": ["null", "basics"],
+      "answers": [
+        {"text": "A special value meaning no object", "is_correct": true},
+        {"text": "The number zero", "is_correct": false},
+        {"text": "An empty string", "is_correct": false},
+        {"text": "The boolean false", "is_correct": false}
+      ]
+    }
+  ]
+}
