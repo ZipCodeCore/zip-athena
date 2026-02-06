@@ -1028,9 +1028,9 @@ func (db *SQLiteDB) UpdateUser(user *models.User) error {
 	// Normalize category to lowercase for comparison and storage
 	user.Category = strings.ToLower(user.Category)
 	
-	// Validate category
+	// Validate category (after normalization)
 	if user.Category != "" && user.Category != "java" && user.Category != "data" {
-		return fmt.Errorf("invalid category: must be 'java' or 'data'")
+		return fmt.Errorf("invalid category: must be 'java' or 'data' (case-insensitive)")
 	}
 
 	// If password is provided, update it along with other fields
