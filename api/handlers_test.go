@@ -533,6 +533,104 @@ func TestGetProgressHandlerUserSpecificStats(t *testing.T) {
 	}
 }
 
+// TestGetProgressHandlerAdminViewsAllAttempts tests that admin users can see all quiz attempts
+func TestGetProgressHandlerAdminViewsAllAttempts(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Create an admin user
+	adminUser := &models.User{
+		Username: "admin",
+		Email:    "admin@example.com",
+		Category: "admin",
+		IsAdmin:  true,
+	}
+	if err := db.CreateUser(adminUser); err != nil {
+		t.Fatalf("Failed to create admin user: %v", err)
+	}
+
+	// Create a regular user
+	regularUser := &models.User{
+		Username: "student",
+		Email:    "student@example.com",
+		Category: "java",
+		IsAdmin:  false,
+	}
+	if err := db.CreateUser(regularUser); err != nil {
+		t.Fatalf("Failed to create regular user: %v", err)
+	}
+
+	// Create quiz attempts for admin
+	completedTime := time.Now()
+	adminAttempt := &models.QuizAttempt{
+		UserID:          adminUser.ID,
+		StartTime:       time.Now().Add(-2 * time.Hour),
+		CompletedTime:   &completedTime,
+		TotalQuestions:  5,
+		CorrectAnswers:  4,
+		QuestionIDs:     []string{"1.1", "1.2", "1.3", "1.4", "1.5"},
+		QuestionResults: make(map[string]bool),
+	}
+	if err := db.CreateQuizAttempt(adminAttempt); err != nil {
+		t.Fatalf("Failed to create admin quiz attempt: %v", err)
+	}
+
+	// Create quiz attempts for regular user
+	completedTime2 := time.Now()
+	regularAttempt := &models.QuizAttempt{
+		UserID:          regularUser.ID,
+		StartTime:       time.Now().Add(-1 * time.Hour),
+		CompletedTime:   &completedTime2,
+		TotalQuestions:  10,
+		CorrectAnswers:  7,
+		QuestionIDs:     []string{"2.1", "2.2", "2.3", "2.4", "2.5", "2.6", "2.7", "2.8", "2.9", "2.10"},
+		QuestionResults: make(map[string]bool),
+	}
+	if err := db.CreateQuizAttempt(regularAttempt); err != nil {
+		t.Fatalf("Failed to create regular user quiz attempt: %v", err)
+	}
+
+	// Get progress for admin user - should see ALL attempts
+	req := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(adminUser.ID), nil)
+	w := httptest.NewRecorder()
+	handler.GetProgressHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
+	}
+
+	var adminProgress map[string]interface{}
+	if err := json.NewDecoder(w.Body).Decode(&adminProgress); err != nil {
+		t.Fatalf("Failed to decode admin response: %v", err)
+	}
+
+	// Admin should see all quiz attempts (both their own and regular user's)
+	adminQuizAttempts := adminProgress["quiz_attempts"].([]interface{})
+	if len(adminQuizAttempts) != 2 {
+		t.Errorf("Expected admin to see 2 quiz attempts (all attempts), got %d", len(adminQuizAttempts))
+	}
+
+	// Get progress for regular user - should see only their own attempts
+	req2 := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(regularUser.ID), nil)
+	w2 := httptest.NewRecorder()
+	handler.GetProgressHandler(w2, req2)
+
+	if w2.Code != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, w2.Code)
+	}
+
+	var regularProgress map[string]interface{}
+	if err := json.NewDecoder(w2.Body).Decode(&regularProgress); err != nil {
+		t.Fatalf("Failed to decode regular user response: %v", err)
+	}
+
+	// Regular user should see only their own attempts
+	regularQuizAttempts := regularProgress["quiz_attempts"].([]interface{})
+	if len(regularQuizAttempts) != 1 {
+		t.Errorf("Expected regular user to see 1 quiz attempt (only their own), got %d", len(regularQuizAttempts))
+	}
+}
+
 // TestCreateUserWithPasswordHashing tests that passwords are hashed when creating users via admin
 func TestCreateUserWithPasswordHashing(t *testing.T) {
 	// Create a temporary SQLite database for this test
