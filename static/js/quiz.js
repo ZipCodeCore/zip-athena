@@ -49,13 +49,13 @@ if (resumeQuiz) {
     document.getElementById('topicTitle').textContent = `Resume Quiz`;
     quizAttemptId = resumeData.attemptId;
     answeredQuestions = resumeData.questionResults || {};
-    
+
     // Initialize score with previously correct answers
     score = Object.values(answeredQuestions).filter(result => result === true).length;
-    
+
     // Clear the resume data from localStorage
     localStorage.removeItem('resumeQuiz');
-    
+
     // Load the quiz attempt and resume
     loadAndResumeQuiz(resumeData);
 } else if (currentQuiz) {
@@ -77,20 +77,24 @@ if (resumeQuiz) {
 // Show difficulty selection modal
 function showDifficultyModal() {
     const modal = document.getElementById('difficultyModal');
-    modal.style.display = 'flex';
+    if (!modal) {
+        return;
+    }
+
+    // Use classList to show modal (more reliable than inline style)
+    modal.classList.add('show');
 
     // Set up click handler for the start quiz button immediately
-    // (DOMContentLoaded may have already fired since script is at end of body)
     const startQuizBtn = document.getElementById('startQuizBtn');
     if (startQuizBtn) {
         startQuizBtn.addEventListener('click', function() {
             const selected = document.querySelector('input[name="difficulty"]:checked');
             if (selected) {
                 selectedDifficulty = parseInt(selected.value);
-                modal.style.display = 'none';
+                modal.classList.remove('show');
                 generateQuiz();
             }
-        }, { once: true }); // Use once to prevent multiple handlers if modal shown again
+        }, { once: true });
     }
 }
 
