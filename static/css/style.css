@@ -1,6 +1,8 @@
+/* Base Styles */
 body {
     background-color: #f8f9fa;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .card {
@@ -17,6 +19,7 @@ body {
 .btn {
     border-radius: 5px;
     font-weight: 500;
+    min-height: 44px; /* Touch-friendly button height */
 }
 
 .navbar-brand {
@@ -40,6 +43,7 @@ body {
     border-radius: 8px;
     margin-bottom: 10px;
     transition: all 0.2s;
+    min-height: 50px; /* Touch-friendly */
 }
 
 .answer-option:hover {
@@ -65,12 +69,135 @@ body {
 .answer-option input[type="radio"] {
     cursor: pointer;
     margin-right: 10px;
+    width: 20px;
+    height: 20px; /* Larger touch target */
 }
 
-/* Mobile responsive adjustments */
+/* Hamburger Menu Styles */
+.navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive Navigation */
+.navbar-nav .btn {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Touch-friendly Controls */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+    min-height: 44px;
+    font-size: 16px; /* Prevents zoom on iOS */
+}
+
+/* Responsive Tables */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile-optimized Cards */
+.card {
+    margin-bottom: 1rem;
+}
+
+/* Tablet Styles (768px - 1024px) */
+@media (max-width: 1024px) {
+    .container-fluid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+}
+
+/* Mobile Styles (up to 768px) */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .navbar-brand .badge {
+        font-size: 0.65rem;
+    }
+    
+    /* Stack cards vertically */
+    .row > [class*='col-'] {
+        margin-bottom: 1rem;
+    }
+    
+    /* Responsive text sizing */
+    h1 {
+        font-size: 1.75rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    h3 {
+        font-size: 1.25rem;
+    }
+    
+    h4 {
+        font-size: 1.1rem;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    
+    .lead {
+        font-size: 1.1rem;
+    }
+    
+    /* Optimize table for mobile */
+    .table {
+        font-size: 0.875rem;
+    }
+    
+    .table thead {
+        display: none;
+    }
+    
+    .table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+    }
+    
+    .table td {
+        display: block;
+        text-align: right;
+        padding: 0.5rem;
+        border: none;
+    }
+    
+    .table td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+}
+
+/* Small Mobile Styles (320px - 576px) */
 @media (max-width: 576px) {
     .navbar-brand {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     .answer-option {
@@ -78,10 +205,86 @@ body {
     }
 
     .topic-card:hover {
-        transform: none;
+        transform: none; /* Disable transform on mobile to avoid issues */
     }
 
     .card-body {
         padding: 1rem;
+    }
+    
+    /* Ensure buttons are full-width on mobile for easier tapping */
+    .btn-group-vertical .btn,
+    .d-grid .btn {
+        width: 100%;
+    }
+    
+    /* Adjust modal for mobile */
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    /* Reduce spacing on mobile */
+    .mt-4,
+    .my-4 {
+        margin-top: 1.5rem !important;
+    }
+    
+    .mb-4,
+    .my-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    /* Hide long text on small screens */
+    .text-truncate-mobile {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+/* Extra Small Mobile (320px) */
+@media (max-width: 375px) {
+    .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    
+    .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1rem;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .navbar {
+        padding: 0.25rem 0;
+    }
+    
+    .card {
+        margin-bottom: 0.5rem;
+    }
+    
+    .mt-4,
+    .my-4 {
+        margin-top: 1rem !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navbar,
+    .btn,
+    nav {
+        display: none;
+    }
+    
+    .card {
+        border: 1px solid #000;
+        break-inside: avoid;
     }
 }

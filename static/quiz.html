@@ -11,14 +11,21 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="/dashboard.html">
-                <strong>Athena</strong><small><span class="badge bg-danger">(Beta-1)</span></small> Quiz Platform
+                <strong>Athena</strong> <span class="badge bg-danger">(Beta-1)</span>
             </a>
-            <div class="navbar-text text-white">
-                <span id="userDisplay"></span>
-                <a href="/instructor.html" class="btn btn-sm btn-outline-warning ms-3" id="instructorButton" style="display: none;">Administration</a>
-                <button class="btn btn-sm btn-outline-light ms-3" onclick="logout()">Logout</button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <span class="navbar-text text-white me-3">
+                        <span id="userDisplay"></span>
+                    </span>
+                    <a href="/instructor.html" class="btn btn-sm btn-outline-warning" id="instructorButton" style="display: none;">Administration</a>
+                    <button class="btn btn-sm btn-outline-light" onclick="logout()">Logout</button>
+                </div>
             </div>
         </div>
     </nav>

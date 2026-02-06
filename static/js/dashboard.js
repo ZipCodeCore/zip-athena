@@ -135,18 +135,18 @@ function loadQuizAttempts(quizAttempts) {
             }
 
             row.innerHTML = `
-                <td>${attempt.id}</td>
-                <td>${quizDescription}</td>
-                <td>${startTime}</td>
-                <td><span class="badge ${statusBadgeClass}">${status}</span></td>
-                <td>${correctDisplay}</td>
-                <td>${difficultyDisplay}</td>
-                <td>
+                <td data-label="Quiz ID">${attempt.id}</td>
+                <td data-label="Quiz Description">${quizDescription}</td>
+                <td data-label="Started">${startTime}</td>
+                <td data-label="Status"><span class="badge ${statusBadgeClass}">${status}</span></td>
+                <td data-label="Correct">${correctDisplay}</td>
+                <td data-label="Difficulty">${difficultyDisplay}</td>
+                <td data-label="Score">
                     <span class="badge ${score >= 80 ? 'bg-success' : score >= 60 ? 'bg-warning' : 'bg-danger'}">
                         ${score}%
                     </span>
                 </td>
-                <td>${actionButton}</td>
+                <td data-label="Action">${actionButton}</td>
             `;
             table.appendChild(row);
         });

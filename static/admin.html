@@ -11,13 +11,18 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+        <div class="container-fluid">
             <a class="navbar-brand" href="/">Athena</a>
-            <div class="navbar-nav ms-auto">
-                <span class="navbar-text me-3">Admin: <span id="username"></span></span>
-                <a href="/dashboard.html" class="btn btn-outline-warning btn-sm me-2">Dashboard</a>
-                <a href="/instructor.html" class="btn btn-outline-info btn-sm me-2">Administration</a>
-                <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <span class="navbar-text text-white me-3">Admin: <span id="username"></span></span>
+                    <a href="/dashboard.html" class="btn btn-outline-warning btn-sm me-2">Dashboard</a>
+                    <a href="/instructor.html" class="btn btn-outline-info btn-sm me-2">Administration</a>
+                    <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+                </div>
             </div>
         </div>
     </nav>
