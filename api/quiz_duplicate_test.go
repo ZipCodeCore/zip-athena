@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -183,9 +184,9 @@ func TestGenerateQuizAllUniqueQuestions(t *testing.T) {
 	for i := 1; i <= 10; i++ {
 		question := &models.Question{
 			TopicID:         topic.ID,
-			QuestionText:    "Question " + string(rune(i)),
+			QuestionText:    fmt.Sprintf("Question %d", i),
 			Difficulty:      5,
-			TopicQuestionID: "2." + string(rune(i)),
+			TopicQuestionID: fmt.Sprintf("2.%d", i),
 		}
 		if err := db.CreateQuestion(question); err != nil {
 			t.Fatalf("Failed to create question: %v", err)

@@ -498,7 +498,7 @@ func (h *Handler) GenerateQuizByTagsHandler(w http.ResponseWriter, r *http.Reque
 			uniqueQuestions[q.TopicQuestionID] = q
 		}
 	}
-	
+
 	// Convert map back to slice
 	questions = make([]*models.Question, 0, len(uniqueQuestions))
 	for _, q := range uniqueQuestions {

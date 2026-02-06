@@ -138,7 +138,7 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 			uniqueQuestions[q.TopicQuestionID] = q
 		}
 	}
-	
+
 	// Convert map back to slice
 	questions = make([]*models.Question, 0, len(uniqueQuestions))
 	for _, q := range uniqueQuestions {

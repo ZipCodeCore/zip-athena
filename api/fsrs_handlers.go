@@ -261,7 +261,7 @@ func (h *Handler) GenerateAdaptiveQuizHandler(w http.ResponseWriter, r *http.Req
 			uniqueQuestions[q.TopicQuestionID] = q
 		}
 	}
-	
+
 	// Convert map back to slice
 	allQuestions = make([]*models.Question, 0, len(uniqueQuestions))
 	for _, q := range uniqueQuestions {
