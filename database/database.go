@@ -1941,9 +1941,11 @@ func (db *InMemoryDB) getQuestionAnalyticsInternal(questionID int) (*models.Ques
 
 	if totalAttempts > 0 {
 		analytics.Accuracy = float64(correctAttempts) / float64(totalAttempts) * 100
+	}
 
-		// Calculate recommended difficulty based on accuracy
-		// Only flag questions that have been attempted
+	// Calculate recommended difficulty based on accuracy
+	// Only flag for review if there are enough attempts (at least 10)
+	if totalAttempts >= 10 {
 		if analytics.Accuracy > 90 {
 			analytics.RecommendedDifficulty = question.Difficulty + 1
 			if analytics.RecommendedDifficulty > 7 {
@@ -1960,9 +1962,8 @@ func (db *InMemoryDB) getQuestionAnalyticsInternal(questionID int) (*models.Ques
 			analytics.RecommendedDifficulty = question.Difficulty
 		}
 	} else {
-		// No attempts - keep current difficulty, don't flag
+		// Not enough data to make a recommendation
 		analytics.RecommendedDifficulty = question.Difficulty
-		analytics.FlagForReview = false
 	}
 
 	// Get answer distribution from quiz/test attempts
@@ -2407,6 +2408,46 @@ func (db *InMemoryDB) UnflagQuestion(questionID int) error {
 }
 
 func (db *InMemoryDB) AutoFlagQuestions() error {
-// In-memory implementation would analyze question attempts
-return nil
+	// First phase: collect statistics with read lock
+	db.mu.RLock()
+	
+	// Count attempts and correct answers per question
+	questionStats := make(map[int]struct {
+		totalAttempts int
+		correctCount  int
+	})
+
+	for _, qa := range db.questionAttempts {
+		stats := questionStats[qa.QuestionID]
+		stats.totalAttempts++
+		if qa.LastAttemptCorrect {
+			stats.correctCount++
+		}
+		questionStats[qa.QuestionID] = stats
+	}
+	
+	db.mu.RUnlock()
+
+	// Second phase: flag questions (requires write lock in FlagQuestion)
+	for questionID, stats := range questionStats {
+		if stats.totalAttempts < 10 {
+			continue
+		}
+
+		accuracy := (float64(stats.correctCount) / float64(stats.totalAttempts)) * 100
+
+		var reason string
+		if accuracy < 30 {
+			reason = models.FlagReasonTooHard
+		} else if accuracy > 90 {
+			reason = models.FlagReasonTooEasy
+		} else {
+			continue
+		}
+
+		// FlagQuestion will acquire its own write lock
+		db.FlagQuestion(questionID, reason)
+	}
+
+	return nil
 }

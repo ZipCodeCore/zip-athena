@@ -473,7 +473,7 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 		fmt.Println("Paul admin user already exists")
 	}
 
-	// Create Kristofer admin user
+	// Create Kristofer as a data category student (non-admin)
 	krisPassword, err := hashPassword("zipcode0")
 	if err != nil {
 		return fmt.Errorf("failed to hash Kristofer password: %w", err)
@@ -483,14 +483,14 @@ func seedPhase2Data(db *database.SQLiteDB) error {
 	if err == database.ErrNotFound {
 		_, err = db.DB().Exec(
 			"INSERT INTO users (username, email, password, is_admin, category, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-			"kris", "kris@zipcodewilmington.com", krisPassword, true, "java", 0, time.Now(),
+			"kris", "kris@zipcodewilmington.com", krisPassword, false, "data", 0, time.Now(),
 		)
 		if err != nil {
-			return fmt.Errorf("failed to create Kristofer admin user: %w", err)
+			return fmt.Errorf("failed to create Kristofer user: %w", err)
 		}
-		fmt.Println("Created Kristofer admin user (username: kris, password: zipcode0)")
+		fmt.Println("Created Kristofer as data category student (username: kris, password: zipcode0)")
 	} else {
-		fmt.Println("Kristofer admin user already exists")
+		fmt.Println("Kristofer user already exists")
 	}
 
 	// Create regular java student user
