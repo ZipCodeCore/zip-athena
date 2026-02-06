@@ -739,126 +739,128 @@ func TestDashboardStatsArePerUser(t *testing.T) {
 	db := database.NewInMemoryDB()
 	handler := NewHandler(db)
 
-	// Create three users
-	users := []*models.User{
-		{Username: "alice", Email: "alice@example.com", Category: "java"},
-		{Username: "bob", Email: "bob@example.com", Category: "python"},
-		{Username: "charlie", Email: "charlie@example.com", Category: "data"},
+	// Define test data structure
+	type userData struct {
+		user             *models.User
+		quizCount        int
+		questionsPerQuiz int
+		correctPerQuiz   int
 	}
 
-	for _, user := range users {
-		if err := db.CreateUser(user); err != nil {
-			t.Fatalf("Failed to create user %s: %v", user.Username, err)
-		}
+	testUsers := []userData{
+		{
+			user:             &models.User{Username: "alice", Email: "alice@example.com", Category: "java"},
+			quizCount:        5,
+			questionsPerQuiz: 10,
+			correctPerQuiz:   8,
+		},
+		{
+			user:             &models.User{Username: "bob", Email: "bob@example.com", Category: "python"},
+			quizCount:        3,
+			questionsPerQuiz: 10,
+			correctPerQuiz:   9,
+		},
+		{
+			user:             &models.User{Username: "charlie", Email: "charlie@example.com", Category: "data"},
+			quizCount:        7,
+			questionsPerQuiz: 10,
+			correctPerQuiz:   5,
+		},
 	}
 
-	// Create different numbers of quiz attempts for each user with varying stats
-	// Alice: 5 quizzes, 50 questions, 40 correct
-	for i := 0; i < 5; i++ {
-		completedTime := time.Now()
-		attempt := &models.QuizAttempt{
-			UserID:          users[0].ID,
-			StartTime:       time.Now().Add(-1 * time.Hour),
-			CompletedTime:   &completedTime,
-			TotalQuestions:  10,
-			CorrectAnswers:  8,
-			QuestionIDs:     []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"},
-			QuestionResults: make(map[string]bool),
+	// Create users and validate IDs are assigned
+	for i, userData := range testUsers {
+		if err := db.CreateUser(userData.user); err != nil {
+			t.Fatalf("Failed to create user %s: %v", userData.user.Username, err)
 		}
-		if err := db.CreateQuizAttempt(attempt); err != nil {
-			t.Fatalf("Failed to create quiz attempt for alice: %v", err)
+		if userData.user.ID == 0 {
+			t.Fatalf("User %s was not assigned a valid ID", userData.user.Username)
 		}
-	}
-
-	// Bob: 3 quizzes, 30 questions, 27 correct
-	for i := 0; i < 3; i++ {
-		completedTime := time.Now()
-		attempt := &models.QuizAttempt{
-			UserID:          users[1].ID,
-			StartTime:       time.Now().Add(-1 * time.Hour),
-			CompletedTime:   &completedTime,
-			TotalQuestions:  10,
-			CorrectAnswers:  9,
-			QuestionIDs:     []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"},
-			QuestionResults: make(map[string]bool),
-		}
-		if err := db.CreateQuizAttempt(attempt); err != nil {
-			t.Fatalf("Failed to create quiz attempt for bob: %v", err)
+		// Ensure each user has a unique ID
+		for j := 0; j < i; j++ {
+			if testUsers[j].user.ID == userData.user.ID {
+				t.Fatalf("Users %s and %s have duplicate IDs", testUsers[j].user.Username, userData.user.Username)
+			}
 		}
 	}
 
-	// Charlie: 7 quizzes, 70 questions, 35 correct
-	for i := 0; i < 7; i++ {
-		completedTime := time.Now()
-		attempt := &models.QuizAttempt{
-			UserID:          users[2].ID,
-			StartTime:       time.Now().Add(-1 * time.Hour),
-			CompletedTime:   &completedTime,
-			TotalQuestions:  10,
-			CorrectAnswers:  5,
-			QuestionIDs:     []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"},
-			QuestionResults: make(map[string]bool),
-		}
-		if err := db.CreateQuizAttempt(attempt); err != nil {
-			t.Fatalf("Failed to create quiz attempt for charlie: %v", err)
+	// Create quiz attempts for each user based on test data
+	for _, userData := range testUsers {
+		for i := 0; i < userData.quizCount; i++ {
+			completedTime := time.Now()
+			attempt := &models.QuizAttempt{
+				UserID:          userData.user.ID,
+				StartTime:       time.Now().Add(-1 * time.Hour),
+				CompletedTime:   &completedTime,
+				TotalQuestions:  userData.questionsPerQuiz,
+				CorrectAnswers:  userData.correctPerQuiz,
+				QuestionIDs:     []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"},
+				QuestionResults: make(map[string]bool),
+			}
+			if err := db.CreateQuizAttempt(attempt); err != nil {
+				t.Fatalf("Failed to create quiz attempt for %s: %v", userData.user.Username, err)
+			}
 		}
 	}
 
 	// Verify each user gets only their own stats, not aggregate
-	testCases := []struct {
-		userID           int
-		username         string
-		expectedQuizzes  int
-		expectedQuestions int
-		expectedCorrect  int
-	}{
-		{users[0].ID, "alice", 5, 50, 40},
-		{users[1].ID, "bob", 3, 30, 27},
-		{users[2].ID, "charlie", 7, 70, 35},
-	}
-
-	for _, tc := range testCases {
-		req := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(tc.userID), nil)
+	for _, userData := range testUsers {
+		req := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(userData.user.ID), nil)
 		w := httptest.NewRecorder()
 		handler.GetProgressHandler(w, req)
 
 		if w.Code != http.StatusOK {
-			t.Errorf("[%s] Expected status %d, got %d", tc.username, http.StatusOK, w.Code)
+			t.Errorf("[%s] Expected status %d, got %d", userData.user.Username, http.StatusOK, w.Code)
 			continue
 		}
 
 		var progress map[string]interface{}
 		if err := json.NewDecoder(w.Body).Decode(&progress); err != nil {
-			t.Fatalf("[%s] Failed to decode response: %v", tc.username, err)
+			t.Fatalf("[%s] Failed to decode response: %v", userData.user.Username, err)
 		}
+
+		// Calculate expected values
+		expectedQuizzes := userData.quizCount
+		expectedQuestions := userData.quizCount * userData.questionsPerQuiz
+		expectedCorrect := userData.quizCount * userData.correctPerQuiz
 
 		// Verify stats are per-user, not aggregate
 		totalQuizzes := int(progress["total_quizzes"].(float64))
-		if totalQuizzes != tc.expectedQuizzes {
-			t.Errorf("[%s] Expected %d quizzes, got %d (must not show aggregate of all users)", 
-				tc.username, tc.expectedQuizzes, totalQuizzes)
+		if totalQuizzes != expectedQuizzes {
+			t.Errorf("[%s] Expected %d quizzes, got %d (must not show aggregate of all users)",
+				userData.user.Username, expectedQuizzes, totalQuizzes)
 		}
 
 		totalQuestions := int(progress["total_questions"].(float64))
-		if totalQuestions != tc.expectedQuestions {
-			t.Errorf("[%s] Expected %d questions, got %d (must not show aggregate of all users)", 
-				tc.username, tc.expectedQuestions, totalQuestions)
+		if totalQuestions != expectedQuestions {
+			t.Errorf("[%s] Expected %d questions, got %d (must not show aggregate of all users)",
+				userData.user.Username, expectedQuestions, totalQuestions)
 		}
 
 		totalCorrect := int(progress["total_correct"].(float64))
-		if totalCorrect != tc.expectedCorrect {
-			t.Errorf("[%s] Expected %d correct answers, got %d (must not show aggregate of all users)", 
-				tc.username, tc.expectedCorrect, totalCorrect)
+		if totalCorrect != expectedCorrect {
+			t.Errorf("[%s] Expected %d correct answers, got %d (must not show aggregate of all users)",
+				userData.user.Username, expectedCorrect, totalCorrect)
 		}
 	}
 
-	// Also verify that the aggregate across all users is different from individual stats
+	// Verify aggregate stats across all users would be different from individual stats
 	// This ensures we're not accidentally returning the same value for everyone
-	// Aggregate would be: 15 quizzes, 150 questions, 102 correct
-	// But no individual user should have these values
-	for _, tc := range testCases {
-		if tc.expectedQuizzes == 15 || tc.expectedQuestions == 150 || tc.expectedCorrect == 102 {
-			t.Errorf("Test data incorrectly matches aggregate values. Please fix test data.")
+	var aggregateQuizzes, aggregateQuestions, aggregateCorrect int
+	for _, userData := range testUsers {
+		aggregateQuizzes += userData.quizCount
+		aggregateQuestions += userData.quizCount * userData.questionsPerQuiz
+		aggregateCorrect += userData.quizCount * userData.correctPerQuiz
+	}
+
+	// Ensure no individual user has the aggregate values (would indicate a bug)
+	for _, userData := range testUsers {
+		individualQuizzes := userData.quizCount
+		individualQuestions := userData.quizCount * userData.questionsPerQuiz
+		individualCorrect := userData.quizCount * userData.correctPerQuiz
+
+		if individualQuizzes == aggregateQuizzes || individualQuestions == aggregateQuestions || individualCorrect == aggregateCorrect {
+			t.Errorf("Test data for %s matches aggregate values - this would mask bugs. Please use different test data.", userData.user.Username)
 		}
 	}
 }
