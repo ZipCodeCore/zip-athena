@@ -653,8 +653,13 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get quiz attempts
-	quizAttempts, err := h.db.GetQuizAttemptsByUser(userID)
+	// Get quiz attempts - if user is admin, get all attempts; otherwise get only user's attempts
+	var quizAttempts []*models.QuizAttempt
+	if user.IsAdmin {
+		quizAttempts, err = h.db.GetAllQuizAttempts()
+	} else {
+		quizAttempts, err = h.db.GetQuizAttemptsByUser(userID)
+	}
 	if err != nil {
 		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get quiz attempts for user")
 		quizAttempts = []*models.QuizAttempt{}

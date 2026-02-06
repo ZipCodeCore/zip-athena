@@ -683,6 +683,52 @@ func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, er
 	return attempts, rows.Err()
 }
 
+func (db *SQLiteDB) GetAllQuizAttempts() ([]*models.QuizAttempt, error) {
+	rows, err := db.db.Query(
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results FROM quiz_attempts",
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var attempts []*models.QuizAttempt
+	for rows.Next() {
+		attempt := &models.QuizAttempt{}
+		var questionIDsJSON, questionResultsJSON string
+		var completedTime sql.NullTime
+		var quizID, parentAttemptID sql.NullInt64
+
+		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &questionIDsJSON, &questionResultsJSON); err != nil {
+			return nil, err
+		}
+
+		if completedTime.Valid {
+			attempt.CompletedTime = &completedTime.Time
+		}
+
+		if quizID.Valid {
+			qid := int(quizID.Int64)
+			attempt.QuizID = &qid
+		}
+
+		if parentAttemptID.Valid {
+			paid := int(parentAttemptID.Int64)
+			attempt.ParentAttemptID = &paid
+		}
+
+		if err := json.Unmarshal([]byte(questionIDsJSON), &attempt.QuestionIDs); err != nil {
+			return nil, err
+		}
+		if err := json.Unmarshal([]byte(questionResultsJSON), &attempt.QuestionResults); err != nil {
+			return nil, err
+		}
+
+		attempts = append(attempts, attempt)
+	}
+	return attempts, rows.Err()
+}
+
 func (db *SQLiteDB) UpdateQuizAttempt(attempt *models.QuizAttempt) error {
 	questionIDsJSON, err := json.Marshal(attempt.QuestionIDs)
 	if err != nil {

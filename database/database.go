@@ -46,6 +46,7 @@ type Database interface {
 	CreateQuizAttempt(attempt *models.QuizAttempt) error
 	GetQuizAttempt(id int) (*models.QuizAttempt, error)
 	GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, error)
+	GetAllQuizAttempts() ([]*models.QuizAttempt, error)
 	UpdateQuizAttempt(attempt *models.QuizAttempt) error
 
 	// QuestionAttempt operations
@@ -416,6 +417,17 @@ func (db *InMemoryDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, 
 		if attempt.UserID == userID {
 			attempts = append(attempts, attempt)
 		}
+	}
+	return attempts, nil
+}
+
+func (db *InMemoryDB) GetAllQuizAttempts() ([]*models.QuizAttempt, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	attempts := make([]*models.QuizAttempt, 0, len(db.quizAttempts))
+	for _, attempt := range db.quizAttempts {
+		attempts = append(attempts, attempt)
 	}
 	return attempts, nil
 }
