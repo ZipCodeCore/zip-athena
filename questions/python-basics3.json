@@ -1,0 +1,1105 @@
+{
+  "topic": "Python Basics",
+  "questions": [
+    {
+      "text": "What is the correct file extension for Python files?",
+      "difficulty": 1,
+      "tags": ["basics", "files"],
+      "answers": [
+        {"text": ".py", "is_correct": true},
+        {"text": ".python", "is_correct": false},
+        {"text": ".pt", "is_correct": false},
+        {"text": ".pn", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What function is used to display output in Python?",
+      "difficulty": 1,
+      "tags": ["output", "functions"],
+      "answers": [
+        {"text": "print()", "is_correct": true},
+        {"text": "echo()", "is_correct": false},
+        {"text": "display()", "is_correct": false},
+        {"text": "write()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(2 + 2)",
+      "difficulty": 1,
+      "tags": ["output", "arithmetic"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "22", "is_correct": false},
+        {"text": "2 + 2", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What symbol is used for comments in Python?",
+      "difficulty": 1,
+      "tags": ["comments", "syntax"],
+      "answers": [
+        {"text": "#", "is_correct": true},
+        {"text": "//", "is_correct": false},
+        {"text": "/*", "is_correct": false},
+        {"text": "--", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(5 + 3)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "8", "is_correct": true},
+        {"text": "53", "is_correct": false},
+        {"text": "5 + 3", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(10 - 4)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "6", "is_correct": true},
+        {"text": "14", "is_correct": false},
+        {"text": "10 - 4", "is_correct": false},
+        {"text": "-6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(3 * 4)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "12", "is_correct": true},
+        {"text": "7", "is_correct": false},
+        {"text": "34", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What operator is used for addition?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "+", "is_correct": true},
+        {"text": "add", "is_correct": false},
+        {"text": "&", "is_correct": false},
+        {"text": "plus", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What operator is used for subtraction?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "-", "is_correct": true},
+        {"text": "_", "is_correct": false},
+        {"text": "sub", "is_correct": false},
+        {"text": "minus", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What operator is used for multiplication?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "*", "is_correct": true},
+        {"text": "x", "is_correct": false},
+        {"text": "X", "is_correct": false},
+        {"text": "mult", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What operator is used for division?",
+      "difficulty": 1,
+      "tags": ["operators", "arithmetic"],
+      "answers": [
+        {"text": "/", "is_correct": true},
+        {"text": "\\", "is_correct": false},
+        {"text": "div", "is_correct": false},
+        {"text": ":", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('Hello')",
+      "difficulty": 1,
+      "tags": ["strings", "output"],
+      "answers": [
+        {"text": "Hello", "is_correct": true},
+        {"text": "'Hello'", "is_correct": false},
+        {"text": "hello", "is_correct": false},
+        {"text": "HELLO", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which can be used to create a string in Python?",
+      "difficulty": 1,
+      "tags": ["strings", "syntax"],
+      "answers": [
+        {"text": "Both single quotes '' and double quotes \"\"", "is_correct": true},
+        {"text": "Only double quotes \"\"", "is_correct": false},
+        {"text": "Only single quotes ''", "is_correct": false},
+        {"text": "Only backticks ``", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('Hello' + ' World')",
+      "difficulty": 1,
+      "tags": ["strings", "concatenation"],
+      "answers": [
+        {"text": "Hello World", "is_correct": true},
+        {"text": "HelloWorld", "is_correct": false},
+        {"text": "Hello + World", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(10 / 2)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "division"],
+      "answers": [
+        {"text": "5.0", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "20", "is_correct": false},
+        {"text": "8", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 5 + 5",
+      "difficulty": 1,
+      "tags": ["arithmetic", "basics"],
+      "answers": [
+        {"text": "10", "is_correct": true},
+        {"text": "55", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "25", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 20 - 5",
+      "difficulty": 1,
+      "tags": ["arithmetic", "basics"],
+      "answers": [
+        {"text": "15", "is_correct": true},
+        {"text": "25", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "-15", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 6 * 7",
+      "difficulty": 1,
+      "tags": ["arithmetic", "basics"],
+      "answers": [
+        {"text": "42", "is_correct": true},
+        {"text": "13", "is_correct": false},
+        {"text": "67", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the assignment operator in Python?",
+      "difficulty": 1,
+      "tags": ["operators", "assignment"],
+      "answers": [
+        {"text": "=", "is_correct": true},
+        {"text": "==", "is_correct": false},
+        {"text": ":=", "is_correct": false},
+        {"text": "=>", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you create a variable named 'x' with value 5?",
+      "difficulty": 1,
+      "tags": ["variables", "assignment"],
+      "answers": [
+        {"text": "x = 5", "is_correct": true},
+        {"text": "int x = 5", "is_correct": false},
+        {"text": "var x = 5", "is_correct": false},
+        {"text": "x := 5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you create a variable named 'name' with value 'John'?",
+      "difficulty": 1,
+      "tags": ["variables", "strings"],
+      "answers": [
+        {"text": "name = 'John'", "is_correct": true},
+        {"text": "String name = 'John'", "is_correct": false},
+        {"text": "var name = 'John'", "is_correct": false},
+        {"text": "name := 'John'", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(True)",
+      "difficulty": 1,
+      "tags": ["boolean", "output"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "true", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "TRUE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(False)",
+      "difficulty": 1,
+      "tags": ["boolean", "output"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "FALSE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How are boolean True and False written in Python?",
+      "difficulty": 1,
+      "tags": ["boolean", "syntax"],
+      "answers": [
+        {"text": "True and False (capitalized)", "is_correct": true},
+        {"text": "true and false (lowercase)", "is_correct": false},
+        {"text": "TRUE and FALSE (uppercase)", "is_correct": false},
+        {"text": "1 and 0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 5 > 3?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 3 > 5?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 5 == 5?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "10", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 5 == 3?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "False", "is_correct": true},
+        {"text": "True", "is_correct": false},
+        {"text": "2", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does < mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Less than", "is_correct": true},
+        {"text": "Greater than", "is_correct": false},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does > mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Greater than", "is_correct": true},
+        {"text": "Less than", "is_correct": false},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does == mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Equal to", "is_correct": true},
+        {"text": "Assignment", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false},
+        {"text": "Greater than", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does != mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Not equal to", "is_correct": true},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Less than", "is_correct": false},
+        {"text": "Greater than", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does <= mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Less than or equal to", "is_correct": true},
+        {"text": "Greater than or equal to", "is_correct": false},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does >= mean?",
+      "difficulty": 1,
+      "tags": ["comparison", "operators"],
+      "answers": [
+        {"text": "Greater than or equal to", "is_correct": true},
+        {"text": "Less than or equal to", "is_correct": false},
+        {"text": "Equal to", "is_correct": false},
+        {"text": "Not equal to", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 10 >= 10?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "10", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is 5 <= 5?",
+      "difficulty": 1,
+      "tags": ["comparison", "boolean"],
+      "answers": [
+        {"text": "True", "is_correct": true},
+        {"text": "False", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword starts an if statement in Python?",
+      "difficulty": 1,
+      "tags": ["conditionals", "keywords"],
+      "answers": [
+        {"text": "if", "is_correct": true},
+        {"text": "If", "is_correct": false},
+        {"text": "IF", "is_correct": false},
+        {"text": "when", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword provides an alternative in an if statement?",
+      "difficulty": 1,
+      "tags": ["conditionals", "keywords"],
+      "answers": [
+        {"text": "else", "is_correct": true},
+        {"text": "otherwise", "is_correct": false},
+        {"text": "then", "is_correct": false},
+        {"text": "or", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What character ends the condition line in an if statement?",
+      "difficulty": 1,
+      "tags": ["conditionals", "syntax"],
+      "answers": [
+        {"text": ":", "is_correct": true},
+        {"text": ";", "is_correct": false},
+        {"text": "{", "is_correct": false},
+        {"text": "then", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How does Python define code blocks?",
+      "difficulty": 1,
+      "tags": ["syntax", "indentation"],
+      "answers": [
+        {"text": "Using indentation (spaces/tabs)", "is_correct": true},
+        {"text": "Using curly braces { }", "is_correct": false},
+        {"text": "Using begin/end keywords", "is_correct": false},
+        {"text": "Using parentheses ( )", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What creates a list in Python?",
+      "difficulty": 1,
+      "tags": ["lists", "syntax"],
+      "answers": [
+        {"text": "Square brackets [ ]", "is_correct": true},
+        {"text": "Curly braces { }", "is_correct": false},
+        {"text": "Parentheses ( )", "is_correct": false},
+        {"text": "Angle brackets < >", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([1, 2, 3])",
+      "difficulty": 1,
+      "tags": ["lists", "output"],
+      "answers": [
+        {"text": "[1, 2, 3]", "is_correct": true},
+        {"text": "1, 2, 3", "is_correct": false},
+        {"text": "1 2 3", "is_correct": false},
+        {"text": "(1, 2, 3)", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the first index of a list?",
+      "difficulty": 1,
+      "tags": ["lists", "indexing"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "1", "is_correct": false},
+        {"text": "-1", "is_correct": false},
+        {"text": "first", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([10, 20, 30][0])",
+      "difficulty": 1,
+      "tags": ["lists", "indexing"],
+      "answers": [
+        {"text": "10", "is_correct": true},
+        {"text": "20", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "[10]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print([10, 20, 30][1])",
+      "difficulty": 1,
+      "tags": ["lists", "indexing"],
+      "answers": [
+        {"text": "20", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "30", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword starts a for loop?",
+      "difficulty": 1,
+      "tags": ["loops", "keywords"],
+      "answers": [
+        {"text": "for", "is_correct": true},
+        {"text": "loop", "is_correct": false},
+        {"text": "repeat", "is_correct": false},
+        {"text": "foreach", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword starts a while loop?",
+      "difficulty": 1,
+      "tags": ["loops", "keywords"],
+      "answers": [
+        {"text": "while", "is_correct": true},
+        {"text": "loop", "is_correct": false},
+        {"text": "during", "is_correct": false},
+        {"text": "repeat", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword exits a loop immediately?",
+      "difficulty": 1,
+      "tags": ["loops", "keywords"],
+      "answers": [
+        {"text": "break", "is_correct": true},
+        {"text": "exit", "is_correct": false},
+        {"text": "stop", "is_correct": false},
+        {"text": "end", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword defines a function?",
+      "difficulty": 1,
+      "tags": ["functions", "keywords"],
+      "answers": [
+        {"text": "def", "is_correct": true},
+        {"text": "function", "is_correct": false},
+        {"text": "func", "is_correct": false},
+        {"text": "define", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(len('hello'))",
+      "difficulty": 1,
+      "tags": ["strings", "functions"],
+      "answers": [
+        {"text": "5", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "hello", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(len([1, 2, 3]))",
+      "difficulty": 1,
+      "tags": ["lists", "functions"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "2", "is_correct": false},
+        {"text": "[1, 2, 3]", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What function gets the length of a list or string?",
+      "difficulty": 1,
+      "tags": ["functions", "basics"],
+      "answers": [
+        {"text": "len()", "is_correct": true},
+        {"text": "length()", "is_correct": false},
+        {"text": "size()", "is_correct": false},
+        {"text": "count()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(type(5))",
+      "difficulty": 1,
+      "tags": ["types", "functions"],
+      "answers": [
+        {"text": "<class 'int'>", "is_correct": true},
+        {"text": "int", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "number", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(type('hello'))",
+      "difficulty": 1,
+      "tags": ["types", "functions"],
+      "answers": [
+        {"text": "<class 'str'>", "is_correct": true},
+        {"text": "str", "is_correct": false},
+        {"text": "string", "is_correct": false},
+        {"text": "hello", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(type(3.14))",
+      "difficulty": 1,
+      "tags": ["types", "functions"],
+      "answers": [
+        {"text": "<class 'float'>", "is_correct": true},
+        {"text": "float", "is_correct": false},
+        {"text": "double", "is_correct": false},
+        {"text": "3.14", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(type(True))",
+      "difficulty": 1,
+      "tags": ["types", "functions"],
+      "answers": [
+        {"text": "<class 'bool'>", "is_correct": true},
+        {"text": "bool", "is_correct": false},
+        {"text": "boolean", "is_correct": false},
+        {"text": "True", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is an integer in Python?",
+      "difficulty": 1,
+      "tags": ["types", "basics"],
+      "answers": [
+        {"text": "A whole number without decimals", "is_correct": true},
+        {"text": "A number with decimals", "is_correct": false},
+        {"text": "A letter", "is_correct": false},
+        {"text": "A true/false value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a float in Python?",
+      "difficulty": 1,
+      "tags": ["types", "basics"],
+      "answers": [
+        {"text": "A number with decimals", "is_correct": true},
+        {"text": "A whole number", "is_correct": false},
+        {"text": "A text value", "is_correct": false},
+        {"text": "A true/false value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a string in Python?",
+      "difficulty": 1,
+      "tags": ["types", "basics"],
+      "answers": [
+        {"text": "Text enclosed in quotes", "is_correct": true},
+        {"text": "A whole number", "is_correct": false},
+        {"text": "A decimal number", "is_correct": false},
+        {"text": "A true/false value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(100)",
+      "difficulty": 1,
+      "tags": ["output", "numbers"],
+      "answers": [
+        {"text": "100", "is_correct": true},
+        {"text": "'100'", "is_correct": false},
+        {"text": "one hundred", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 100 / 10",
+      "difficulty": 1,
+      "tags": ["arithmetic", "division"],
+      "answers": [
+        {"text": "10.0", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "1000", "is_correct": false},
+        {"text": "90", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 5 * 5",
+      "difficulty": 1,
+      "tags": ["arithmetic", "multiplication"],
+      "answers": [
+        {"text": "25", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "55", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 9 / 3",
+      "difficulty": 1,
+      "tags": ["arithmetic", "division"],
+      "answers": [
+        {"text": "3.0", "is_correct": true},
+        {"text": "27", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "12", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('A' + 'B')",
+      "difficulty": 1,
+      "tags": ["strings", "concatenation"],
+      "answers": [
+        {"text": "AB", "is_correct": true},
+        {"text": "A + B", "is_correct": false},
+        {"text": "A B", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(1 + 1)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "2", "is_correct": true},
+        {"text": "11", "is_correct": false},
+        {"text": "1 + 1", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('1' + '1')",
+      "difficulty": 1,
+      "tags": ["strings", "concatenation"],
+      "answers": [
+        {"text": "11", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "1 + 1", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What function gets input from the user?",
+      "difficulty": 1,
+      "tags": ["input", "functions"],
+      "answers": [
+        {"text": "input()", "is_correct": true},
+        {"text": "get()", "is_correct": false},
+        {"text": "read()", "is_correct": false},
+        {"text": "scan()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does input() return?",
+      "difficulty": 1,
+      "tags": ["input", "functions"],
+      "answers": [
+        {"text": "A string", "is_correct": true},
+        {"text": "An integer", "is_correct": false},
+        {"text": "A float", "is_correct": false},
+        {"text": "A boolean", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you convert a string to an integer?",
+      "difficulty": 1,
+      "tags": ["conversion", "functions"],
+      "answers": [
+        {"text": "int()", "is_correct": true},
+        {"text": "integer()", "is_correct": false},
+        {"text": "toInt()", "is_correct": false},
+        {"text": "number()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you convert a number to a string?",
+      "difficulty": 1,
+      "tags": ["conversion", "functions"],
+      "answers": [
+        {"text": "str()", "is_correct": true},
+        {"text": "string()", "is_correct": false},
+        {"text": "toString()", "is_correct": false},
+        {"text": "text()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(int('42'))",
+      "difficulty": 1,
+      "tags": ["conversion", "output"],
+      "answers": [
+        {"text": "42", "is_correct": true},
+        {"text": "'42'", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "4", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(str(42))",
+      "difficulty": 1,
+      "tags": ["conversion", "output"],
+      "answers": [
+        {"text": "42", "is_correct": true},
+        {"text": "'42'", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "forty-two", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the modulus operator in Python?",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "%", "is_correct": true},
+        {"text": "mod", "is_correct": false},
+        {"text": "//", "is_correct": false},
+        {"text": "\\", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the modulus operator % return?",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "The remainder of division", "is_correct": true},
+        {"text": "The quotient", "is_correct": false},
+        {"text": "A percentage", "is_correct": false},
+        {"text": "The product", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 10 % 3",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "3.33", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 10 % 5",
+      "difficulty": 1,
+      "tags": ["operators", "modulus"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the exponentiation operator in Python?",
+      "difficulty": 1,
+      "tags": ["operators", "exponentiation"],
+      "answers": [
+        {"text": "**", "is_correct": true},
+        {"text": "^", "is_correct": false},
+        {"text": "pow", "is_correct": false},
+        {"text": "^^", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the value of: 2 ** 3",
+      "difficulty": 1,
+      "tags": ["operators", "exponentiation"],
+      "answers": [
+        {"text": "8", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "9", "is_correct": false},
+        {"text": "23", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('python'.upper())",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "PYTHON", "is_correct": true},
+        {"text": "python", "is_correct": false},
+        {"text": "Python", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('PYTHON'.lower())",
+      "difficulty": 1,
+      "tags": ["strings", "methods"],
+      "answers": [
+        {"text": "python", "is_correct": true},
+        {"text": "PYTHON", "is_correct": false},
+        {"text": "Python", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What method adds an item to the end of a list?",
+      "difficulty": 1,
+      "tags": ["lists", "methods"],
+      "answers": [
+        {"text": "append()", "is_correct": true},
+        {"text": "add()", "is_correct": false},
+        {"text": "insert()", "is_correct": false},
+        {"text": "push()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is None in Python?",
+      "difficulty": 1,
+      "tags": ["none", "basics"],
+      "answers": [
+        {"text": "A special value meaning 'no value'", "is_correct": true},
+        {"text": "The number zero", "is_correct": false},
+        {"text": "An empty string", "is_correct": false},
+        {"text": "The boolean False", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Is Python case-sensitive?",
+      "difficulty": 1,
+      "tags": ["basics", "syntax"],
+      "answers": [
+        {"text": "Yes", "is_correct": true},
+        {"text": "No", "is_correct": false},
+        {"text": "Sometimes", "is_correct": false},
+        {"text": "Only for variables", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Are 'Name' and 'name' the same variable?",
+      "difficulty": 1,
+      "tags": ["variables", "case-sensitivity"],
+      "answers": [
+        {"text": "No, they are different", "is_correct": true},
+        {"text": "Yes, they are the same", "is_correct": false},
+        {"text": "Only in functions", "is_correct": false},
+        {"text": "Only in classes", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Can a variable name start with a number?",
+      "difficulty": 1,
+      "tags": ["variables", "naming"],
+      "answers": [
+        {"text": "No", "is_correct": true},
+        {"text": "Yes", "is_correct": false},
+        {"text": "Only with 0", "is_correct": false},
+        {"text": "Only with 1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which is a valid variable name?",
+      "difficulty": 1,
+      "tags": ["variables", "naming"],
+      "answers": [
+        {"text": "my_var", "is_correct": true},
+        {"text": "1var", "is_correct": false},
+        {"text": "my-var", "is_correct": false},
+        {"text": "my var", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which is NOT a valid variable name?",
+      "difficulty": 1,
+      "tags": ["variables", "naming"],
+      "answers": [
+        {"text": "2count", "is_correct": true},
+        {"text": "count2", "is_correct": false},
+        {"text": "_count", "is_correct": false},
+        {"text": "Count", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(8 / 2)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "4.0", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "16", "is_correct": false},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(3 + 4 * 2)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "order-of-operations"],
+      "answers": [
+        {"text": "11", "is_correct": true},
+        {"text": "14", "is_correct": false},
+        {"text": "9", "is_correct": false},
+        {"text": "24", "is_correct": false}
+      ]
+    },
+    {
+      "text": "In 3 + 4 * 2, which operation happens first?",
+      "difficulty": 1,
+      "tags": ["arithmetic", "order-of-operations"],
+      "answers": [
+        {"text": "4 * 2 (multiplication)", "is_correct": true},
+        {"text": "3 + 4 (addition)", "is_correct": false},
+        {"text": "They happen at the same time", "is_correct": false},
+        {"text": "Left to right", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print((3 + 4) * 2)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "order-of-operations"],
+      "answers": [
+        {"text": "14", "is_correct": true},
+        {"text": "11", "is_correct": false},
+        {"text": "9", "is_correct": false},
+        {"text": "24", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(0)",
+      "difficulty": 1,
+      "tags": ["output", "numbers"],
+      "answers": [
+        {"text": "0", "is_correct": true},
+        {"text": "zero", "is_correct": false},
+        {"text": "None", "is_correct": false},
+        {"text": "Nothing", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print('')",
+      "difficulty": 1,
+      "tags": ["output", "strings"],
+      "answers": [
+        {"text": "An empty line (nothing visible)", "is_correct": true},
+        {"text": "''", "is_correct": false},
+        {"text": "Error", "is_correct": false},
+        {"text": "None", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to import a module?",
+      "difficulty": 1,
+      "tags": ["modules", "keywords"],
+      "answers": [
+        {"text": "import", "is_correct": true},
+        {"text": "include", "is_correct": false},
+        {"text": "using", "is_correct": false},
+        {"text": "require", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a list in Python?",
+      "difficulty": 1,
+      "tags": ["lists", "basics"],
+      "answers": [
+        {"text": "An ordered collection of items", "is_correct": true},
+        {"text": "A single value", "is_correct": false},
+        {"text": "A function", "is_correct": false},
+        {"text": "A type of loop", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a function in Python?",
+      "difficulty": 1,
+      "tags": ["functions", "basics"],
+      "answers": [
+        {"text": "A reusable block of code", "is_correct": true},
+        {"text": "A variable", "is_correct": false},
+        {"text": "A type of loop", "is_correct": false},
+        {"text": "A list", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword returns a value from a function?",
+      "difficulty": 1,
+      "tags": ["functions", "keywords"],
+      "answers": [
+        {"text": "return", "is_correct": true},
+        {"text": "give", "is_correct": false},
+        {"text": "output", "is_correct": false},
+        {"text": "send", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(50 + 50)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "100", "is_correct": true},
+        {"text": "5050", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the output of: print(10 * 10)",
+      "difficulty": 1,
+      "tags": ["arithmetic", "output"],
+      "answers": [
+        {"text": "100", "is_correct": true},
+        {"text": "20", "is_correct": false},
+        {"text": "1010", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What creates a dictionary in Python?",
+      "difficulty": 1,
+      "tags": ["dictionaries", "syntax"],
+      "answers": [
+        {"text": "Curly braces { }", "is_correct": true},
+        {"text": "Square brackets [ ]", "is_correct": false},
+        {"text": "Parentheses ( )", "is_correct": false},
+        {"text": "Angle brackets < >", "is_correct": false}
+      ]
+    }
+  ]
+}
