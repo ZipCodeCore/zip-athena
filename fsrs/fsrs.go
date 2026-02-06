@@ -11,8 +11,8 @@ import (
 const (
 	// Default FSRS parameters (optimized values)
 	DefaultRequestRetention = 0.9
-	MaximumInterval        = 36500 // ~100 years in days
-	
+	MaximumInterval         = 36500 // ~100 years in days
+
 	// Rating grades
 	RatingAgain = 1
 	RatingHard  = 2
@@ -41,16 +41,16 @@ type Card struct {
 
 // ReviewLog represents a single review record
 type ReviewLog struct {
-	Rating      int
+	Rating        int
 	ScheduledDays int
 	ElapsedDays   int
-	Review       time.Time
-	State        int
+	Review        time.Time
+	State         int
 }
 
 // SchedulingInfo contains scheduling information for all rating options
 type SchedulingInfo struct {
-	Card  Card
+	Card      Card
 	ReviewLog ReviewLog
 }
 
@@ -110,7 +110,7 @@ func (p *Parameters) Repeat(card Card, now time.Time) SchedulingCards {
 
 func (p *Parameters) schedule(card Card, now time.Time, rating int) SchedulingInfo {
 	newCard := card
-	
+
 	if card.State == 0 {
 		// New card - initialize difficulty
 		newCard.Difficulty = p.initDifficulty(rating)
@@ -192,11 +192,11 @@ func (p *Parameters) nextRecallStability(d, s float64, elapsed int, rating int) 
 	}
 
 	retrievability := math.Exp(math.Log(0.9) * float64(elapsed) / s)
-	newS := s * (1 + math.Exp(p.W[8]) *
-		(11-d) *
-		math.Pow(s, -p.W[9]) *
-		(math.Exp((1-retrievability)*p.W[10]) - 1) *
-		hardPenalty *
+	newS := s * (1 + math.Exp(p.W[8])*
+		(11-d)*
+		math.Pow(s, -p.W[9])*
+		(math.Exp((1-retrievability)*p.W[10])-1)*
+		hardPenalty*
 		easyBonus)
 
 	return newS

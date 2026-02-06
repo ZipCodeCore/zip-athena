@@ -321,13 +321,13 @@ func (db *SQLiteDB) runMigrations() error {
 	// Migration: Fix file_path values that don't match actual filenames on disk
 	filePathFixes := map[string]string{
 		"java/8-classes-and-objects.md":    "java/8-oop-classes-and-objects.md",
-		"java/9-inheritance.md":           "java/9-oop-inheritance.md",
-		"java/10-polymorphism.md":         "java/10-oop-polymorphism.md",
-		"java/15-collections.md":          "java/15-collections-framework.md",
-		"python/11-modules-packages.md":   "python/11-modules-and-packages.md",
+		"java/9-inheritance.md":            "java/9-oop-inheritance.md",
+		"java/10-polymorphism.md":          "java/10-oop-polymorphism.md",
+		"java/15-collections.md":           "java/15-collections-framework.md",
+		"python/11-modules-packages.md":    "python/11-modules-and-packages.md",
 		"python/14-classes-and-objects.md": "python/14-oop-classes-and-objects.md",
-		"python/15-inheritance.md":        "python/15-oop-inheritance.md",
-		"python/16-polymorphism.md":       "python/16-oop-polymorphism.md",
+		"python/15-inheritance.md":         "python/15-oop-inheritance.md",
+		"python/16-polymorphism.md":        "python/16-oop-polymorphism.md",
 	}
 	for oldPath, newPath := range filePathFixes {
 		_, err = db.db.Exec(`UPDATE learning_resources SET file_path = ? WHERE file_path = ?`, newPath, oldPath)
@@ -1026,7 +1026,7 @@ func (db *SQLiteDB) UpdateUser(user *models.User) error {
 	if user.Category != "" && user.Category != "java" && user.Category != "data" {
 		return fmt.Errorf("invalid category: must be 'java' or 'data'")
 	}
-	
+
 	// If password is provided, update it along with other fields
 	if user.Password != "" {
 		result, err := db.db.Exec(

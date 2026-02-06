@@ -25,8 +25,8 @@ type TokenClaims struct {
 type TokenPair struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
-	ExpiresIn    int64  `json:"expires_in"`  // Access token expiry in seconds
-	TokenType    string `json:"token_type"`  // Always "Bearer"
+	ExpiresIn    int64  `json:"expires_in"` // Access token expiry in seconds
+	TokenType    string `json:"token_type"` // Always "Bearer"
 }
 
 // TokenBlacklist keeps track of invalidated tokens
@@ -37,17 +37,17 @@ type TokenBlacklist struct {
 
 // JWTManager handles all JWT operations
 type JWTManager struct {
-	secretKey       []byte
-	accessExpiry    time.Duration
-	refreshExpiry   time.Duration
-	blacklist       *TokenBlacklist
+	secretKey     []byte
+	accessExpiry  time.Duration
+	refreshExpiry time.Duration
+	blacklist     *TokenBlacklist
 }
 
 var (
-	ErrTokenExpired    = errors.New("token has expired")
-	ErrTokenInvalid    = errors.New("token is invalid")
+	ErrTokenExpired     = errors.New("token has expired")
+	ErrTokenInvalid     = errors.New("token is invalid")
 	ErrTokenBlacklisted = errors.New("token has been revoked")
-	ErrNoToken         = errors.New("no token provided")
+	ErrNoToken          = errors.New("no token provided")
 )
 
 // NewJWTManager creates a new JWT manager

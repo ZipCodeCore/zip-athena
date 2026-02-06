@@ -57,10 +57,10 @@ type SecurityConfig struct {
 
 // CORSConfig holds CORS-related configuration
 type CORSConfig struct {
-	Enabled        bool
-	AllowedOrigins []string
-	AllowedMethods []string
-	AllowedHeaders []string
+	Enabled            bool
+	AllowedOrigins     []string
+	AllowedMethods     []string
+	AllowedHeaders     []string
 	AllowedCredentials bool
 }
 

@@ -2025,360 +2025,360 @@ func (db *InMemoryDB) UpdateQuestionDifficultyFromAnalytics(questionID int, newD
 // Phase 5: Question Management - InMemoryDB implementations
 
 func (db *InMemoryDB) ListQuestionsWithPagination(page int, perPage int, search string, topicID int, difficulty int) ([]*models.Question, int, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var filtered []*models.Question
-for _, q := range db.questions {
-// Apply filters
-if search != "" && !strings.Contains(strings.ToLower(q.QuestionText), strings.ToLower(search)) {
-continue
-}
-if topicID > 0 && q.TopicID != topicID {
-continue
-}
-if difficulty > 0 && q.Difficulty != difficulty {
-continue
-}
-filtered = append(filtered, q)
-}
+	var filtered []*models.Question
+	for _, q := range db.questions {
+		// Apply filters
+		if search != "" && !strings.Contains(strings.ToLower(q.QuestionText), strings.ToLower(search)) {
+			continue
+		}
+		if topicID > 0 && q.TopicID != topicID {
+			continue
+		}
+		if difficulty > 0 && q.Difficulty != difficulty {
+			continue
+		}
+		filtered = append(filtered, q)
+	}
 
-total := len(filtered)
+	total := len(filtered)
 
-// Apply pagination
-if page < 1 {
-page = 1
-}
-if perPage < 1 {
-perPage = 30
-}
-start := (page - 1) * perPage
-end := start + perPage
+	// Apply pagination
+	if page < 1 {
+		page = 1
+	}
+	if perPage < 1 {
+		perPage = 30
+	}
+	start := (page - 1) * perPage
+	end := start + perPage
 
-if start >= len(filtered) {
-return []*models.Question{}, total, nil
-}
-if end > len(filtered) {
-end = len(filtered)
-}
+	if start >= len(filtered) {
+		return []*models.Question{}, total, nil
+	}
+	if end > len(filtered) {
+		end = len(filtered)
+	}
 
-return filtered[start:end], total, nil
+	return filtered[start:end], total, nil
 }
 
 func (db *InMemoryDB) DeactivateQuestion(questionID int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-if _, exists := db.questions[questionID]; !exists {
-return ErrNotFound
-}
-// For in-memory, we just mark it (IsActive field would be added to model)
-return nil
+	if _, exists := db.questions[questionID]; !exists {
+		return ErrNotFound
+	}
+	// For in-memory, we just mark it (IsActive field would be added to model)
+	return nil
 }
 
 func (db *InMemoryDB) GetQuestionPreview(questionID int) (*models.QuestionPreview, error) {
-question, err := db.GetQuestion(questionID)
-if err != nil {
-return nil, err
-}
+	question, err := db.GetQuestion(questionID)
+	if err != nil {
+		return nil, err
+	}
 
-answers, err := db.GetAnswersByQuestion(questionID)
-if err != nil {
-return nil, err
-}
+	answers, err := db.GetAnswersByQuestion(questionID)
+	if err != nil {
+		return nil, err
+	}
 
-answerList := make([]models.Answer, len(answers))
-for i, ans := range answers {
-answerList[i] = *ans
-}
+	answerList := make([]models.Answer, len(answers))
+	for i, ans := range answers {
+		answerList[i] = *ans
+	}
 
-return &models.QuestionPreview{
-Question: *question,
-Answers:  answerList,
-}, nil
+	return &models.QuestionPreview{
+		Question: *question,
+		Answers:  answerList,
+	}, nil
 }
 
 func (db *InMemoryDB) ValidateQuestionData(question *models.Question, answers []models.Answer) error {
-if question.QuestionText == "" {
-return errors.New("question text is required")
-}
-if len(question.QuestionText) > 1000 {
-return errors.New("question text must be 1000 characters or less")
-}
+	if question.QuestionText == "" {
+		return errors.New("question text is required")
+	}
+	if len(question.QuestionText) > 1000 {
+		return errors.New("question text must be 1000 characters or less")
+	}
 
-_, err := db.GetTopic(question.TopicID)
-if err != nil {
-return errors.New("invalid topic ID")
-}
+	_, err := db.GetTopic(question.TopicID)
+	if err != nil {
+		return errors.New("invalid topic ID")
+	}
 
-if question.Difficulty < 1 || question.Difficulty > 7 {
-return errors.New("difficulty must be between 1 and 7")
-}
+	if question.Difficulty < 1 || question.Difficulty > 7 {
+		return errors.New("difficulty must be between 1 and 7")
+	}
 
-if len(answers) < 2 || len(answers) > 4 {
-return errors.New("must have 2-4 answer options")
-}
+	if len(answers) < 2 || len(answers) > 4 {
+		return errors.New("must have 2-4 answer options")
+	}
 
-correctCount := 0
-for _, answer := range answers {
-if answer.IsCorrect {
-correctCount++
-}
-}
+	correctCount := 0
+	for _, answer := range answers {
+		if answer.IsCorrect {
+			correctCount++
+		}
+	}
 
-if correctCount != 1 {
-return errors.New("exactly 1 answer must be marked as correct")
-}
+	if correctCount != 1 {
+		return errors.New("exactly 1 answer must be marked as correct")
+	}
 
-return nil
+	return nil
 }
 
 // Phase 5: Bulk CSV Import - InMemoryDB implementations
 
 func (db *InMemoryDB) ValidateCSVImport(rows []models.CSVImportRow) (*models.CSVImportResult, error) {
-result := &models.CSVImportResult{
-ValidRows:   []models.CSVImportRow{},
-InvalidRows: []models.CSVImportError{},
-Summary: models.CSVImportSummary{
-TotalRows: len(rows),
-},
-}
+	result := &models.CSVImportResult{
+		ValidRows:   []models.CSVImportRow{},
+		InvalidRows: []models.CSVImportError{},
+		Summary: models.CSVImportSummary{
+			TotalRows: len(rows),
+		},
+	}
 
-for i, row := range rows {
-errors := db.validateCSVRow(row)
-if len(errors) > 0 {
-result.InvalidRows = append(result.InvalidRows, models.CSVImportError{
-Row:    i + 2,
-Data:   row,
-Errors: errors,
-})
-result.Summary.InvalidRows++
-} else {
-result.ValidRows = append(result.ValidRows, row)
-result.Summary.ValidRows++
-}
-}
+	for i, row := range rows {
+		errors := db.validateCSVRow(row)
+		if len(errors) > 0 {
+			result.InvalidRows = append(result.InvalidRows, models.CSVImportError{
+				Row:    i + 2,
+				Data:   row,
+				Errors: errors,
+			})
+			result.Summary.InvalidRows++
+		} else {
+			result.ValidRows = append(result.ValidRows, row)
+			result.Summary.ValidRows++
+		}
+	}
 
-return result, nil
+	return result, nil
 }
 
 func (db *InMemoryDB) validateCSVRow(row models.CSVImportRow) []string {
-var errors []string
+	var errors []string
 
-if row.Topic == "" {
-errors = append(errors, "Topic is required")
-}
-if row.Question == "" {
-errors = append(errors, "Question is required")
-}
-if row.Answer1 == "" || row.Answer2 == "" {
-errors = append(errors, "At least 2 answers are required")
-}
+	if row.Topic == "" {
+		errors = append(errors, "Topic is required")
+	}
+	if row.Question == "" {
+		errors = append(errors, "Question is required")
+	}
+	if row.Answer1 == "" || row.Answer2 == "" {
+		errors = append(errors, "At least 2 answers are required")
+	}
 
-if row.CorrectAnswer == "" {
-errors = append(errors, "Correct answer is required")
-} else {
-validAnswer := false
-if row.CorrectAnswer == row.Answer1 || row.CorrectAnswer == row.Answer2 ||
-row.CorrectAnswer == row.Answer3 || row.CorrectAnswer == row.Answer4 {
-validAnswer = true
-}
-if !validAnswer {
-errors = append(errors, "Correct answer must match one of the answer options")
-}
-}
+	if row.CorrectAnswer == "" {
+		errors = append(errors, "Correct answer is required")
+	} else {
+		validAnswer := false
+		if row.CorrectAnswer == row.Answer1 || row.CorrectAnswer == row.Answer2 ||
+			row.CorrectAnswer == row.Answer3 || row.CorrectAnswer == row.Answer4 {
+			validAnswer = true
+		}
+		if !validAnswer {
+			errors = append(errors, "Correct answer must match one of the answer options")
+		}
+	}
 
-if row.Difficulty == "" {
-errors = append(errors, "Difficulty is required")
-} else {
-diff, err := strconv.Atoi(row.Difficulty)
-if err != nil || diff < 1 || diff > 7 {
-errors = append(errors, "Difficulty must be a number between 1 and 7")
-}
-}
+	if row.Difficulty == "" {
+		errors = append(errors, "Difficulty is required")
+	} else {
+		diff, err := strconv.Atoi(row.Difficulty)
+		if err != nil || diff < 1 || diff > 7 {
+			errors = append(errors, "Difficulty must be a number between 1 and 7")
+		}
+	}
 
-return errors
+	return errors
 }
 
 func (db *InMemoryDB) BulkCreateQuestions(rows []models.CSVImportRow) (int, error) {
-imported := 0
-for _, row := range rows {
-// Get or create topic
-topicID := db.getOrCreateTopicInMemory(row.Topic)
+	imported := 0
+	for _, row := range rows {
+		// Get or create topic
+		topicID := db.getOrCreateTopicInMemory(row.Topic)
 
-// Parse difficulty
-difficulty, _ := strconv.Atoi(row.Difficulty)
+		// Parse difficulty
+		difficulty, _ := strconv.Atoi(row.Difficulty)
 
-// Parse tags
-var tags []string
-if row.Tags != "" {
-tagList := strings.Split(row.Tags, ",")
-for _, tag := range tagList {
-trimmed := strings.TrimSpace(tag)
-if trimmed != "" {
-tags = append(tags, trimmed)
-}
-}
-}
+		// Parse tags
+		var tags []string
+		if row.Tags != "" {
+			tagList := strings.Split(row.Tags, ",")
+			for _, tag := range tagList {
+				trimmed := strings.TrimSpace(tag)
+				if trimmed != "" {
+					tags = append(tags, trimmed)
+				}
+			}
+		}
 
-// Create question
-question := &models.Question{
-TopicID:         topicID,
-QuestionText:    row.Question,
-Difficulty:      difficulty,
-Tags:            tags,
-TopicQuestionID: fmt.Sprintf("%d.%d", topicID, time.Now().UnixNano()%10000),
-CreatedAt:       time.Now(),
-}
+		// Create question
+		question := &models.Question{
+			TopicID:         topicID,
+			QuestionText:    row.Question,
+			Difficulty:      difficulty,
+			Tags:            tags,
+			TopicQuestionID: fmt.Sprintf("%d.%d", topicID, time.Now().UnixNano()%10000),
+			CreatedAt:       time.Now(),
+		}
 
-if err := db.CreateQuestion(question); err != nil {
-return imported, err
-}
+		if err := db.CreateQuestion(question); err != nil {
+			return imported, err
+		}
 
-// Create answers
-answers := []string{row.Answer1, row.Answer2, row.Answer3, row.Answer4}
-for _, answer := range answers {
-if answer == "" {
-continue
-}
-isCorrect := answer == row.CorrectAnswer
-ans := &models.Answer{
-QuestionID: question.ID,
-AnswerText: answer,
-IsCorrect:  isCorrect,
-}
-if err := db.CreateAnswer(ans); err != nil {
-return imported, err
-}
-}
+		// Create answers
+		answers := []string{row.Answer1, row.Answer2, row.Answer3, row.Answer4}
+		for _, answer := range answers {
+			if answer == "" {
+				continue
+			}
+			isCorrect := answer == row.CorrectAnswer
+			ans := &models.Answer{
+				QuestionID: question.ID,
+				AnswerText: answer,
+				IsCorrect:  isCorrect,
+			}
+			if err := db.CreateAnswer(ans); err != nil {
+				return imported, err
+			}
+		}
 
-imported++
-}
+		imported++
+	}
 
-return imported, nil
+	return imported, nil
 }
 
 func (db *InMemoryDB) getOrCreateTopicInMemory(topicName string) int {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-// Find existing topic
-for _, topic := range db.topics {
-if topic.Name == topicName {
-return topic.ID
-}
-}
+	// Find existing topic
+	for _, topic := range db.topics {
+		if topic.Name == topicName {
+			return topic.ID
+		}
+	}
 
-// Create new topic
-topic := &models.Topic{
-Name:      topicName,
-IsActive:  true,
-CreatedAt: time.Now(),
-}
-topic.ID = db.nextTopicID
-db.nextTopicID++
-db.topics[topic.ID] = topic
+	// Create new topic
+	topic := &models.Topic{
+		Name:      topicName,
+		IsActive:  true,
+		CreatedAt: time.Now(),
+	}
+	topic.ID = db.nextTopicID
+	db.nextTopicID++
+	db.topics[topic.ID] = topic
 
-return topic.ID
+	return topic.ID
 }
 
 // Phase 5: Tag Management - InMemoryDB implementations
 
 func (db *InMemoryDB) GetTagsWithMetadata() ([]*models.Tag, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-tagCounts := make(map[string]int)
-for _, q := range db.questions {
-for _, tag := range q.Tags {
-tagCounts[tag]++
-}
-}
+	tagCounts := make(map[string]int)
+	for _, q := range db.questions {
+		for _, tag := range q.Tags {
+			tagCounts[tag]++
+		}
+	}
 
-var result []*models.Tag
-for name, count := range tagCounts {
-result = append(result, &models.Tag{
-Name:          name,
-QuestionCount: count,
-})
-}
+	var result []*models.Tag
+	for name, count := range tagCounts {
+		result = append(result, &models.Tag{
+			Name:          name,
+			QuestionCount: count,
+		})
+	}
 
-return result, nil
+	return result, nil
 }
 
 func (db *InMemoryDB) MergeTags(sourceTags []string, targetTag string) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-for _, q := range db.questions {
-hasSourceTag := false
-newTags := []string{}
+	for _, q := range db.questions {
+		hasSourceTag := false
+		newTags := []string{}
 
-for _, tag := range q.Tags {
-isSourceTag := false
-for _, sourceTag := range sourceTags {
-if strings.EqualFold(tag, sourceTag) {
-isSourceTag = true
-hasSourceTag = true
-break
-}
-}
-if !isSourceTag {
-newTags = append(newTags, tag)
-}
-}
+		for _, tag := range q.Tags {
+			isSourceTag := false
+			for _, sourceTag := range sourceTags {
+				if strings.EqualFold(tag, sourceTag) {
+					isSourceTag = true
+					hasSourceTag = true
+					break
+				}
+			}
+			if !isSourceTag {
+				newTags = append(newTags, tag)
+			}
+		}
 
-if hasSourceTag {
-// Add target tag if not already present
-hasTarget := false
-for _, tag := range newTags {
-if strings.EqualFold(tag, targetTag) {
-hasTarget = true
-break
-}
-}
-if !hasTarget {
-newTags = append(newTags, targetTag)
-}
+		if hasSourceTag {
+			// Add target tag if not already present
+			hasTarget := false
+			for _, tag := range newTags {
+				if strings.EqualFold(tag, targetTag) {
+					hasTarget = true
+					break
+				}
+			}
+			if !hasTarget {
+				newTags = append(newTags, targetTag)
+			}
 
-q.Tags = newTags
-}
-}
+			q.Tags = newTags
+		}
+	}
 
-return nil
+	return nil
 }
 
 func (db *InMemoryDB) DeleteTag(tagName string) error {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-// Check if any questions use this tag
-for _, q := range db.questions {
-for _, tag := range q.Tags {
-if strings.EqualFold(tag, tagName) {
-return errors.New("cannot delete tag: tag is in use by questions")
-}
-}
-}
+	// Check if any questions use this tag
+	for _, q := range db.questions {
+		for _, tag := range q.Tags {
+			if strings.EqualFold(tag, tagName) {
+				return errors.New("cannot delete tag: tag is in use by questions")
+			}
+		}
+	}
 
-return nil
+	return nil
 }
 
 func (db *InMemoryDB) GetQuestionsByTag(tagName string) ([]*models.Question, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var questions []*models.Question
-for _, q := range db.questions {
-for _, tag := range q.Tags {
-if strings.EqualFold(tag, tagName) {
-questions = append(questions, q)
-break
-}
-}
-}
+	var questions []*models.Question
+	for _, q := range db.questions {
+		for _, tag := range q.Tags {
+			if strings.EqualFold(tag, tagName) {
+				questions = append(questions, q)
+				break
+			}
+		}
+	}
 
-return questions, nil
+	return questions, nil
 }
 
 // Phase 5: Quality Review - InMemoryDB implementations
@@ -2422,7 +2422,7 @@ func (db *InMemoryDB) UnflagQuestion(questionID int) error {
 func (db *InMemoryDB) AutoFlagQuestions() error {
 	// First phase: collect statistics with read lock
 	db.mu.RLock()
-	
+
 	// Count attempts and correct answers per question
 	questionStats := make(map[int]struct {
 		totalAttempts int
@@ -2437,7 +2437,7 @@ func (db *InMemoryDB) AutoFlagQuestions() error {
 		}
 		questionStats[qa.QuestionID] = stats
 	}
-	
+
 	db.mu.RUnlock()
 
 	// Second phase: flag questions (requires write lock in FlagQuestion)

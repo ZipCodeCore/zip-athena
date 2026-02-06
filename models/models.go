@@ -9,7 +9,7 @@ type User struct {
 	Email       string    `json:"email"`
 	Password    string    `json:"password,omitempty"` // Only used for auth, not returned in API
 	IsAdmin     bool      `json:"is_admin"`
-	Category    string    `json:"category"`    // "java" or "data" - determines accessible topics and resources
+	Category    string    `json:"category"` // "java" or "data" - determines accessible topics and resources
 	TotalPoints int       `json:"total_points"`
 	CreatedAt   time.Time `json:"created_at"`
 }
@@ -352,16 +352,16 @@ type CSVImportRow struct {
 
 // CSVImportResult represents the result of CSV import validation (Phase 5)
 type CSVImportResult struct {
-	ValidRows   []CSVImportRow    `json:"valid_rows"`
-	InvalidRows []CSVImportError  `json:"invalid_rows"`
-	Summary     CSVImportSummary  `json:"summary"`
+	ValidRows   []CSVImportRow   `json:"valid_rows"`
+	InvalidRows []CSVImportError `json:"invalid_rows"`
+	Summary     CSVImportSummary `json:"summary"`
 }
 
 // CSVImportError represents an error in a CSV row (Phase 5)
 type CSVImportError struct {
-	Row     int            `json:"row"`
-	Data    CSVImportRow   `json:"data"`
-	Errors  []string       `json:"errors"`
+	Row    int          `json:"row"`
+	Data   CSVImportRow `json:"data"`
+	Errors []string     `json:"errors"`
 }
 
 // CSVImportSummary represents summary of import operation (Phase 5)

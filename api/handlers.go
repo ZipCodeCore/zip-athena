@@ -125,7 +125,7 @@ func (h *Handler) CreateTopicHandler(w http.ResponseWriter, r *http.Request) {
 	topic.CreatedAt = time.Now()
 	// Default to active for new topics
 	topic.IsActive = true
-	
+
 	if err := h.db.CreateTopic(&topic); err != nil {
 		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create topic")
 		http.Error(w, err.Error(), http.StatusInternalServerError)

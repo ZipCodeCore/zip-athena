@@ -41,10 +41,10 @@ func (h *Handler) ListInstructorQuestionsHandler(w http.ResponseWriter, r *http.
 	}
 
 	response := map[string]interface{}{
-		"questions":  questions,
-		"total":      total,
-		"page":       page,
-		"per_page":   perPage,
+		"questions":   questions,
+		"total":       total,
+		"page":        page,
+		"per_page":    perPage,
 		"total_pages": (total + perPage - 1) / perPage,
 	}
 
