@@ -659,6 +659,7 @@ async function loadAnswers(questionId) {
         answers.forEach(answer => {
             const answerDiv = document.createElement('div');
             answerDiv.className = 'border rounded p-2 mb-2';
+            answerDiv.id = `answer-${answer.id}`;
             
             const container = document.createElement('div');
             container.className = 'd-flex justify-content-between align-items-start';
@@ -675,13 +676,23 @@ async function loadAnswers(questionId) {
                 textDiv.appendChild(badge);
             }
             
+            const buttonGroup = document.createElement('div');
+            
+            const editBtn = document.createElement('button');
+            editBtn.className = 'btn btn-sm btn-warning me-2';
+            editBtn.textContent = 'Edit';
+            editBtn.onclick = () => showEditAnswerForm(answer);
+            
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'btn btn-sm btn-danger';
             deleteBtn.textContent = 'Delete';
             deleteBtn.onclick = () => deleteAnswer(answer.id);
             
+            buttonGroup.appendChild(editBtn);
+            buttonGroup.appendChild(deleteBtn);
+            
             container.appendChild(textDiv);
-            container.appendChild(deleteBtn);
+            container.appendChild(buttonGroup);
             answerDiv.appendChild(container);
             answersList.appendChild(answerDiv);
         });
@@ -762,6 +773,99 @@ async function deleteAnswer(answerId) {
     } catch (error) {
         console.error('Error deleting answer:', error);
         alert('Failed to delete answer');
+    }
+}
+
+function showEditAnswerForm(answer) {
+    // Hide the add answer form if it's open
+    document.getElementById('addAnswerForm').style.display = 'none';
+    
+    // Create or get the edit form
+    let editForm = document.getElementById('editAnswerForm');
+    if (!editForm) {
+        editForm = createEditAnswerForm();
+    }
+    
+    // Populate the form with the answer data
+    document.getElementById('editAnswerId').value = answer.id;
+    document.getElementById('editAnswerText').value = answer.answer_text;
+    document.getElementById('editAnswerIsCorrect').checked = answer.is_correct;
+    
+    // Show the edit form
+    editForm.style.display = 'block';
+    
+    // Scroll to the form
+    editForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function createEditAnswerForm() {
+    const editForm = document.createElement('div');
+    editForm.id = 'editAnswerForm';
+    editForm.className = 'mb-3 p-3 border rounded bg-light';
+    editForm.style.display = 'none';
+    editForm.innerHTML = `
+        <h6>Edit Answer</h6>
+        <input type="hidden" id="editAnswerId">
+        <div class="mb-2">
+            <label for="editAnswerText" class="form-label">Answer Text</label>
+            <input type="text" class="form-control" id="editAnswerText" required>
+        </div>
+        <div class="mb-2 form-check">
+            <input type="checkbox" class="form-check-input" id="editAnswerIsCorrect">
+            <label class="form-check-label" for="editAnswerIsCorrect">Is Correct Answer</label>
+        </div>
+        <button type="button" class="btn btn-sm btn-primary" onclick="saveEditedAnswer()">Save Changes</button>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="cancelEditAnswer()">Cancel</button>
+    `;
+    
+    // Insert the edit form after the add answer form
+    const addAnswerForm = document.getElementById('addAnswerForm');
+    addAnswerForm.parentNode.insertBefore(editForm, addAnswerForm.nextSibling);
+    
+    return editForm;
+}
+
+function cancelEditAnswer() {
+    const editForm = document.getElementById('editAnswerForm');
+    if (editForm) {
+        editForm.style.display = 'none';
+    }
+}
+
+async function saveEditedAnswer() {
+    const answerId = document.getElementById('editAnswerId').value;
+    const questionId = document.getElementById('questionId').value;
+    
+    const answerData = {
+        question_id: parseInt(questionId),
+        answer_text: document.getElementById('editAnswerText').value,
+        is_correct: document.getElementById('editAnswerIsCorrect').checked
+    };
+
+    if (!answerData.answer_text) {
+        alert('Answer text is required');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/answers?id=${answerId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-User-ID': currentUser.id.toString()
+            },
+            body: JSON.stringify(answerData)
+        });
+
+        if (response.ok) {
+            cancelEditAnswer();
+            await loadAnswers(questionId);
+        } else {
+            throw new Error('Failed to update answer');
+        }
+    } catch (error) {
+        console.error('Error updating answer:', error);
+        alert('Failed to update answer');
     }
 }
 
