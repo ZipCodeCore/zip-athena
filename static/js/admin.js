@@ -836,6 +836,17 @@ async function saveEditedAnswer() {
     const answerId = document.getElementById('editAnswerId').value;
     const questionId = document.getElementById('questionId').value;
     
+    // Validate IDs
+    if (!answerId || isNaN(parseInt(answerId))) {
+        alert('Invalid answer ID');
+        return;
+    }
+    
+    if (!questionId || isNaN(parseInt(questionId))) {
+        alert('Invalid question ID');
+        return;
+    }
+    
     const answerData = {
         question_id: parseInt(questionId),
         answer_text: document.getElementById('editAnswerText').value,
@@ -848,7 +859,7 @@ async function saveEditedAnswer() {
     }
 
     try {
-        const response = await fetch(`/admin/answers?id=${answerId}`, {
+        const response = await fetch(`/admin/answers?id=${encodeURIComponent(answerId)}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
