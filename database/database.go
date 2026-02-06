@@ -1941,11 +1941,12 @@ func (db *InMemoryDB) getQuestionAnalyticsInternal(questionID int) (*models.Ques
 
 	if totalAttempts > 0 {
 		analytics.Accuracy = float64(correctAttempts) / float64(totalAttempts) * 100
-	}
 
 	// Calculate recommended difficulty based on accuracy
 	// Only flag for review if there are enough attempts (at least 10)
 	if totalAttempts >= 10 {
+		// Calculate recommended difficulty based on accuracy
+		// Only flag questions that have been attempted
 		if analytics.Accuracy > 90 {
 			analytics.RecommendedDifficulty = question.Difficulty + 1
 			if analytics.RecommendedDifficulty > 7 {
@@ -1963,7 +1964,9 @@ func (db *InMemoryDB) getQuestionAnalyticsInternal(questionID int) (*models.Ques
 		}
 	} else {
 		// Not enough data to make a recommendation
+		// No attempts - keep current difficulty, don't flag
 		analytics.RecommendedDifficulty = question.Difficulty
+		analytics.FlagForReview = false
 	}
 
 	// Get answer distribution from quiz/test attempts
