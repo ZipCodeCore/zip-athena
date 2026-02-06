@@ -1,0 +1,665 @@
+{
+  "topic": "SQL Database",
+  "questions": [
+    {
+      "text": "What is the result of a Cartesian product (CROSS JOIN) between two tables?",
+      "difficulty": 3,
+      "tags": ["join", "cross-join", "theory"],
+      "answers": [
+        {"text": "Every row from the first table paired with every row from the second table", "is_correct": true},
+        {"text": "Only rows that match in both tables", "is_correct": false},
+        {"text": "All rows from both tables combined vertically", "is_correct": false},
+        {"text": "Only rows that don't match in either table", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a subquery?",
+      "difficulty": 3,
+      "tags": ["subquery", "nested", "queries"],
+      "answers": [
+        {"text": "A query nested inside another query", "is_correct": true},
+        {"text": "A query that runs before the main query", "is_correct": false},
+        {"text": "A query that modifies data", "is_correct": false},
+        {"text": "A query stored in a separate file", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between WHERE and HAVING?",
+      "difficulty": 3,
+      "tags": ["where", "having", "filtering"],
+      "answers": [
+        {"text": "WHERE filters rows before grouping, HAVING filters groups after aggregation", "is_correct": true},
+        {"text": "WHERE is faster than HAVING", "is_correct": false},
+        {"text": "HAVING can only be used with COUNT", "is_correct": false},
+        {"text": "WHERE works with strings, HAVING works with numbers", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the COALESCE function do?",
+      "difficulty": 3,
+      "tags": ["functions", "null", "coalesce"],
+      "answers": [
+        {"text": "Returns the first non-NULL value from a list of arguments", "is_correct": true},
+        {"text": "Combines multiple strings into one", "is_correct": false},
+        {"text": "Converts NULL to zero", "is_correct": false},
+        {"text": "Counts the number of NULL values", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is an index in a database?",
+      "difficulty": 3,
+      "tags": ["index", "performance", "optimization"],
+      "answers": [
+        {"text": "A data structure that improves the speed of data retrieval operations", "is_correct": true},
+        {"text": "A unique identifier for each row", "is_correct": false},
+        {"text": "A backup copy of the table", "is_correct": false},
+        {"text": "A constraint that prevents duplicate values", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a self-join?",
+      "difficulty": 3,
+      "tags": ["join", "self-join", "advanced"],
+      "answers": [
+        {"text": "A join where a table is joined with itself", "is_correct": true},
+        {"text": "A join that automatically matches primary keys", "is_correct": false},
+        {"text": "A join that returns duplicate rows", "is_correct": false},
+        {"text": "A join between two identical tables", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a view in SQL?",
+      "difficulty": 3,
+      "tags": ["view", "virtual-table", "basics"],
+      "answers": [
+        {"text": "A virtual table based on the result of a SELECT statement", "is_correct": true},
+        {"text": "A backup of a table", "is_correct": false},
+        {"text": "A temporary table that exists only during a session", "is_correct": false},
+        {"text": "A graphical representation of data", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the EXISTS operator do?",
+      "difficulty": 3,
+      "tags": ["exists", "subquery", "operators"],
+      "answers": [
+        {"text": "Returns TRUE if a subquery returns any rows", "is_correct": true},
+        {"text": "Checks if a table exists in the database", "is_correct": false},
+        {"text": "Verifies if a column contains any values", "is_correct": false},
+        {"text": "Tests if a value exists in a list", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the CASE expression?",
+      "difficulty": 3,
+      "tags": ["case", "conditional", "expressions"],
+      "answers": [
+        {"text": "To provide conditional logic within a SQL statement", "is_correct": true},
+        {"text": "To convert text to uppercase or lowercase", "is_correct": false},
+        {"text": "To handle exceptions in queries", "is_correct": false},
+        {"text": "To create a new column permanently", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between UNION and UNION ALL?",
+      "difficulty": 3,
+      "tags": ["union", "set-operations", "duplicates"],
+      "answers": [
+        {"text": "UNION removes duplicates, UNION ALL keeps all rows including duplicates", "is_correct": true},
+        {"text": "UNION ALL is faster because it sorts the results", "is_correct": false},
+        {"text": "UNION works with different column types, UNION ALL requires matching types", "is_correct": false},
+        {"text": "UNION ALL merges columns, UNION merges rows", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a correlated subquery?",
+      "difficulty": 3,
+      "tags": ["subquery", "correlated", "advanced"],
+      "answers": [
+        {"text": "A subquery that references columns from the outer query", "is_correct": true},
+        {"text": "A subquery that runs only once", "is_correct": false},
+        {"text": "A subquery that returns multiple columns", "is_correct": false},
+        {"text": "A subquery used in the FROM clause", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does IFNULL or NVL function do?",
+      "difficulty": 3,
+      "tags": ["functions", "null", "handling"],
+      "answers": [
+        {"text": "Returns a specified value if the expression is NULL", "is_correct": true},
+        {"text": "Checks if a value is NULL and returns TRUE or FALSE", "is_correct": false},
+        {"text": "Converts all NULL values in a column to zero", "is_correct": false},
+        {"text": "Removes rows where the column is NULL", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is normalization in database design?",
+      "difficulty": 3,
+      "tags": ["normalization", "design", "theory"],
+      "answers": [
+        {"text": "The process of organizing data to reduce redundancy and improve integrity", "is_correct": true},
+        {"text": "Converting all data to a standard format", "is_correct": false},
+        {"text": "Making all tables the same size", "is_correct": false},
+        {"text": "Encrypting sensitive data", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a transaction in SQL?",
+      "difficulty": 3,
+      "tags": ["transaction", "acid", "basics"],
+      "answers": [
+        {"text": "A sequence of operations performed as a single logical unit of work", "is_correct": true},
+        {"text": "A single SELECT statement", "is_correct": false},
+        {"text": "The transfer of data between tables", "is_correct": false},
+        {"text": "A backup operation", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does COMMIT do in a transaction?",
+      "difficulty": 3,
+      "tags": ["transaction", "commit", "control"],
+      "answers": [
+        {"text": "Permanently saves all changes made during the transaction", "is_correct": true},
+        {"text": "Temporarily saves changes until the session ends", "is_correct": false},
+        {"text": "Cancels the current transaction", "is_correct": false},
+        {"text": "Creates a backup of the current state", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does ROLLBACK do in a transaction?",
+      "difficulty": 3,
+      "tags": ["transaction", "rollback", "control"],
+      "answers": [
+        {"text": "Undoes all changes made during the current transaction", "is_correct": true},
+        {"text": "Saves changes and starts a new transaction", "is_correct": false},
+        {"text": "Moves to the previous row in a result set", "is_correct": false},
+        {"text": "Restores the database from a backup", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of GROUP BY?",
+      "difficulty": 3,
+      "tags": ["group-by", "aggregate", "grouping"],
+      "answers": [
+        {"text": "To group rows that have the same values and apply aggregate functions", "is_correct": true},
+        {"text": "To sort the results in groups", "is_correct": false},
+        {"text": "To join multiple tables together", "is_correct": false},
+        {"text": "To filter rows before they are selected", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which statement about NULL comparisons is correct?",
+      "difficulty": 3,
+      "tags": ["null", "comparison", "logic"],
+      "answers": [
+        {"text": "NULL = NULL returns NULL (unknown), not TRUE", "is_correct": true},
+        {"text": "NULL = NULL always returns TRUE", "is_correct": false},
+        {"text": "NULL = NULL always returns FALSE", "is_correct": false},
+        {"text": "NULL cannot be compared at all", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the result of any arithmetic operation with NULL?",
+      "difficulty": 3,
+      "tags": ["null", "arithmetic", "operations"],
+      "answers": [
+        {"text": "NULL", "is_correct": true},
+        {"text": "Zero", "is_correct": false},
+        {"text": "An error", "is_correct": false},
+        {"text": "The other operand's value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the CONCAT function do?",
+      "difficulty": 3,
+      "tags": ["functions", "strings", "concat"],
+      "answers": [
+        {"text": "Combines two or more strings into one", "is_correct": true},
+        {"text": "Counts the characters in a string", "is_correct": false},
+        {"text": "Compares two strings", "is_correct": false},
+        {"text": "Converts a number to a string", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the SUBSTRING (or SUBSTR) function do?",
+      "difficulty": 3,
+      "tags": ["functions", "strings", "substring"],
+      "answers": [
+        {"text": "Extracts a portion of a string", "is_correct": true},
+        {"text": "Replaces part of a string", "is_correct": false},
+        {"text": "Finds a string within another string", "is_correct": false},
+        {"text": "Removes whitespace from a string", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the LENGTH (or LEN) function return?",
+      "difficulty": 3,
+      "tags": ["functions", "strings", "length"],
+      "answers": [
+        {"text": "The number of characters in a string", "is_correct": true},
+        {"text": "The number of words in a string", "is_correct": false},
+        {"text": "The memory size of a string", "is_correct": false},
+        {"text": "The maximum allowed length of a column", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the TRIM function?",
+      "difficulty": 3,
+      "tags": ["functions", "strings", "trim"],
+      "answers": [
+        {"text": "Removes leading and trailing spaces from a string", "is_correct": true},
+        {"text": "Shortens a string to a specified length", "is_correct": false},
+        {"text": "Removes all spaces from a string", "is_correct": false},
+        {"text": "Removes duplicate characters", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does UPPER or UCASE function do?",
+      "difficulty": 3,
+      "tags": ["functions", "strings", "case"],
+      "answers": [
+        {"text": "Converts all characters to uppercase", "is_correct": true},
+        {"text": "Returns the highest value in a column", "is_correct": false},
+        {"text": "Moves a row to the top of the result", "is_correct": false},
+        {"text": "Capitalizes only the first letter", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a composite key?",
+      "difficulty": 3,
+      "tags": ["keys", "composite", "design"],
+      "answers": [
+        {"text": "A primary key consisting of two or more columns", "is_correct": true},
+        {"text": "A key that references multiple tables", "is_correct": false},
+        {"text": "A key that allows duplicate values", "is_correct": false},
+        {"text": "A key that is automatically generated", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between DELETE and TRUNCATE?",
+      "difficulty": 3,
+      "tags": ["delete", "truncate", "comparison"],
+      "answers": [
+        {"text": "DELETE can use WHERE clause and is logged; TRUNCATE removes all rows and is faster", "is_correct": true},
+        {"text": "DELETE is faster; TRUNCATE is slower but safer", "is_correct": false},
+        {"text": "DELETE removes the table; TRUNCATE only removes data", "is_correct": false},
+        {"text": "There is no difference between them", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a scalar subquery?",
+      "difficulty": 3,
+      "tags": ["subquery", "scalar", "types"],
+      "answers": [
+        {"text": "A subquery that returns exactly one value (single row, single column)", "is_correct": true},
+        {"text": "A subquery that returns multiple rows", "is_correct": false},
+        {"text": "A subquery that uses mathematical operations", "is_correct": false},
+        {"text": "A subquery in the FROM clause", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the IN operator do when used with a subquery?",
+      "difficulty": 3,
+      "tags": ["in", "subquery", "operators"],
+      "answers": [
+        {"text": "Checks if a value matches any value returned by the subquery", "is_correct": true},
+        {"text": "Inserts the subquery results into a table", "is_correct": false},
+        {"text": "Runs the subquery inside the main query's table", "is_correct": false},
+        {"text": "Counts how many values are in the subquery result", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a derived table?",
+      "difficulty": 3,
+      "tags": ["subquery", "derived-table", "from-clause"],
+      "answers": [
+        {"text": "A subquery used in the FROM clause that acts as a temporary table", "is_correct": true},
+        {"text": "A table created from another table's structure", "is_correct": false},
+        {"text": "A table that inherits columns from a parent table", "is_correct": false},
+        {"text": "A calculated column in a SELECT statement", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does COUNT(column_name) return compared to COUNT(*)?",
+      "difficulty": 3,
+      "tags": ["count", "aggregate", "null"],
+      "answers": [
+        {"text": "COUNT(column) excludes NULL values; COUNT(*) counts all rows", "is_correct": true},
+        {"text": "COUNT(column) is faster; COUNT(*) is slower", "is_correct": false},
+        {"text": "COUNT(*) excludes NULL values; COUNT(column) includes them", "is_correct": false},
+        {"text": "They always return the same result", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of an alias in SQL?",
+      "difficulty": 3,
+      "tags": ["alias", "readability", "syntax"],
+      "answers": [
+        {"text": "To give a table or column a temporary name for readability or to resolve ambiguity", "is_correct": true},
+        {"text": "To permanently rename a table or column", "is_correct": false},
+        {"text": "To create a backup of a table", "is_correct": false},
+        {"text": "To hide sensitive column names", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a natural join?",
+      "difficulty": 3,
+      "tags": ["join", "natural-join", "types"],
+      "answers": [
+        {"text": "A join that automatically matches columns with the same name in both tables", "is_correct": true},
+        {"text": "A join that uses natural numbers as keys", "is_correct": false},
+        {"text": "A join that preserves the natural order of rows", "is_correct": false},
+        {"text": "A join that doesn't require any condition", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the ROUND function do?",
+      "difficulty": 3,
+      "tags": ["functions", "numeric", "round"],
+      "answers": [
+        {"text": "Rounds a number to a specified number of decimal places", "is_correct": true},
+        {"text": "Rounds a number up to the nearest integer", "is_correct": false},
+        {"text": "Rounds a number down to the nearest integer", "is_correct": false},
+        {"text": "Returns the remainder of a division", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the CEILING (or CEIL) function do?",
+      "difficulty": 3,
+      "tags": ["functions", "numeric", "ceiling"],
+      "answers": [
+        {"text": "Rounds a number up to the nearest integer", "is_correct": true},
+        {"text": "Returns the highest value in a column", "is_correct": false},
+        {"text": "Limits the maximum value allowed", "is_correct": false},
+        {"text": "Rounds a number to specified decimal places", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the FLOOR function do?",
+      "difficulty": 3,
+      "tags": ["functions", "numeric", "floor"],
+      "answers": [
+        {"text": "Rounds a number down to the nearest integer", "is_correct": true},
+        {"text": "Returns the lowest value in a column", "is_correct": false},
+        {"text": "Sets a minimum value for a column", "is_correct": false},
+        {"text": "Removes decimal places without rounding", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the modulo operator (% or MOD) used for?",
+      "difficulty": 3,
+      "tags": ["operators", "numeric", "modulo"],
+      "answers": [
+        {"text": "Returns the remainder after division", "is_correct": true},
+        {"text": "Calculates a percentage", "is_correct": false},
+        {"text": "Divides two numbers", "is_correct": false},
+        {"text": "Returns the absolute value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is referential integrity?",
+      "difficulty": 3,
+      "tags": ["constraints", "foreign-key", "integrity"],
+      "answers": [
+        {"text": "A constraint ensuring that foreign key values match primary key values in the referenced table", "is_correct": true},
+        {"text": "A rule that prevents duplicate values", "is_correct": false},
+        {"text": "A constraint that requires all columns to have values", "is_correct": false},
+        {"text": "A backup mechanism for data recovery", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a CHECK constraint?",
+      "difficulty": 3,
+      "tags": ["constraints", "check", "validation"],
+      "answers": [
+        {"text": "A constraint that limits the values that can be placed in a column", "is_correct": true},
+        {"text": "A function that verifies if a query is correct", "is_correct": false},
+        {"text": "A validation that runs after data is inserted", "is_correct": false},
+        {"text": "A constraint that checks for NULL values", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the DEFAULT constraint used for?",
+      "difficulty": 3,
+      "tags": ["constraints", "default", "values"],
+      "answers": [
+        {"text": "To specify a default value when no value is provided during INSERT", "is_correct": true},
+        {"text": "To set a column as the primary key", "is_correct": false},
+        {"text": "To make a column required", "is_correct": false},
+        {"text": "To specify the default sort order", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between CHAR and VARCHAR data types?",
+      "difficulty": 3,
+      "tags": ["data-types", "char", "varchar"],
+      "answers": [
+        {"text": "CHAR has a fixed length, VARCHAR has a variable length", "is_correct": true},
+        {"text": "CHAR stores characters, VARCHAR stores numbers", "is_correct": false},
+        {"text": "CHAR is faster for all operations", "is_correct": false},
+        {"text": "VARCHAR can store more characters than CHAR", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does DISTINCT do when used with multiple columns?",
+      "difficulty": 3,
+      "tags": ["distinct", "multiple-columns", "queries"],
+      "answers": [
+        {"text": "Returns unique combinations of all specified columns", "is_correct": true},
+        {"text": "Returns distinct values for each column separately", "is_correct": false},
+        {"text": "Only works on the first column listed", "is_correct": false},
+        {"text": "Causes an error; DISTINCT only works with one column", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is an INNER JOIN equivalent to?",
+      "difficulty": 3,
+      "tags": ["join", "inner-join", "equivalence"],
+      "answers": [
+        {"text": "A join that returns only rows with matching values in both tables", "is_correct": true},
+        {"text": "A CROSS JOIN with a WHERE clause", "is_correct": false},
+        {"text": "A LEFT JOIN that excludes NULL values", "is_correct": false},
+        {"text": "A UNION of two SELECT statements", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What happens when you ORDER BY a column that contains NULL values?",
+      "difficulty": 3,
+      "tags": ["order-by", "null", "sorting"],
+      "answers": [
+        {"text": "NULLs appear first or last depending on the database system", "is_correct": true},
+        {"text": "NULL values are always excluded from the results", "is_correct": false},
+        {"text": "NULL values cause an error", "is_correct": false},
+        {"text": "NULL values are sorted alphabetically as 'NULL'", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is ACID in database transactions?",
+      "difficulty": 3,
+      "tags": ["transaction", "acid", "theory"],
+      "answers": [
+        {"text": "Atomicity, Consistency, Isolation, Durability", "is_correct": true},
+        {"text": "Add, Change, Insert, Delete", "is_correct": false},
+        {"text": "Automatic Commit In Database", "is_correct": false},
+        {"text": "Access Control and Identity", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does Atomicity mean in ACID?",
+      "difficulty": 3,
+      "tags": ["transaction", "acid", "atomicity"],
+      "answers": [
+        {"text": "A transaction is all-or-nothing; either all operations succeed or none do", "is_correct": true},
+        {"text": "Transactions are broken into the smallest possible units", "is_correct": false},
+        {"text": "Each transaction affects only one row", "is_correct": false},
+        {"text": "Transactions cannot be split across tables", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the ON clause in a JOIN?",
+      "difficulty": 3,
+      "tags": ["join", "on-clause", "syntax"],
+      "answers": [
+        {"text": "To specify the condition for matching rows between tables", "is_correct": true},
+        {"text": "To specify which table to join first", "is_correct": false},
+        {"text": "To enable or disable the join", "is_correct": false},
+        {"text": "To specify the columns to select", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between ON and WHERE in a LEFT JOIN?",
+      "difficulty": 3,
+      "tags": ["join", "on-clause", "where"],
+      "answers": [
+        {"text": "ON filters during the join; WHERE filters after, potentially excluding left table rows", "is_correct": true},
+        {"text": "They are exactly the same", "is_correct": false},
+        {"text": "ON is for equality comparisons; WHERE is for other conditions", "is_correct": false},
+        {"text": "WHERE is faster than ON", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the REPLACE function do?",
+      "difficulty": 3,
+      "tags": ["functions", "strings", "replace"],
+      "answers": [
+        {"text": "Replaces all occurrences of a substring with another substring", "is_correct": true},
+        {"text": "Replaces a row in a table", "is_correct": false},
+        {"text": "Replaces NULL values with a specified value", "is_correct": false},
+        {"text": "Replaces a table with a new structure", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a compound condition?",
+      "difficulty": 3,
+      "tags": ["conditions", "logic", "operators"],
+      "answers": [
+        {"text": "Multiple conditions combined using AND, OR, or NOT", "is_correct": true},
+        {"text": "A condition that uses mathematical operators", "is_correct": false},
+        {"text": "A condition that spans multiple tables", "is_correct": false},
+        {"text": "A condition stored in a variable", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How do you negate the IN operator?",
+      "difficulty": 3,
+      "tags": ["in", "not-in", "operators"],
+      "answers": [
+        {"text": "NOT IN", "is_correct": true},
+        {"text": "!IN", "is_correct": false},
+        {"text": "OUT", "is_correct": false},
+        {"text": "<> IN", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the result of 5 BETWEEN 5 AND 10?",
+      "difficulty": 3,
+      "tags": ["between", "operators", "inclusive"],
+      "answers": [
+        {"text": "TRUE - BETWEEN is inclusive of both endpoints", "is_correct": true},
+        {"text": "FALSE - BETWEEN excludes the lower bound", "is_correct": false},
+        {"text": "FALSE - BETWEEN excludes both bounds", "is_correct": false},
+        {"text": "An error - values cannot equal the boundaries", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does GROUP BY do with NULL values?",
+      "difficulty": 3,
+      "tags": ["group-by", "null", "aggregation"],
+      "answers": [
+        {"text": "All NULL values are grouped together into one group", "is_correct": true},
+        {"text": "NULL values are excluded from grouping", "is_correct": false},
+        {"text": "Each NULL value creates its own group", "is_correct": false},
+        {"text": "GROUP BY cannot be used with columns containing NULL", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of CAST or CONVERT function?",
+      "difficulty": 3,
+      "tags": ["functions", "cast", "data-types"],
+      "answers": [
+        {"text": "To convert a value from one data type to another", "is_correct": true},
+        {"text": "To format numbers as currency", "is_correct": false},
+        {"text": "To encrypt data", "is_correct": false},
+        {"text": "To copy data between tables", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the INTERSECT operator used for?",
+      "difficulty": 3,
+      "tags": ["set-operations", "intersect", "queries"],
+      "answers": [
+        {"text": "Returns only rows that appear in both result sets", "is_correct": true},
+        {"text": "Joins two tables on matching columns", "is_correct": false},
+        {"text": "Finds where two ranges overlap", "is_correct": false},
+        {"text": "Combines two queries into one result", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the EXCEPT (or MINUS) operator used for?",
+      "difficulty": 3,
+      "tags": ["set-operations", "except", "queries"],
+      "answers": [
+        {"text": "Returns rows from the first query that are not in the second query", "is_correct": true},
+        {"text": "Excludes specific columns from the result", "is_correct": false},
+        {"text": "Handles exceptions in queries", "is_correct": false},
+        {"text": "Subtracts numeric values between queries", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a clustered index?",
+      "difficulty": 3,
+      "tags": ["index", "clustered", "performance"],
+      "answers": [
+        {"text": "An index that determines the physical order of data in the table", "is_correct": true},
+        {"text": "An index on multiple columns", "is_correct": false},
+        {"text": "An index shared across multiple tables", "is_correct": false},
+        {"text": "An index created automatically on primary keys only", "is_correct": false}
+      ]
+    },
+    {
+      "text": "How many clustered indexes can a table have?",
+      "difficulty": 3,
+      "tags": ["index", "clustered", "constraints"],
+      "answers": [
+        {"text": "Only one", "is_correct": true},
+        {"text": "Up to three", "is_correct": false},
+        {"text": "As many as needed", "is_correct": false},
+        {"text": "One per column", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a non-clustered index?",
+      "difficulty": 3,
+      "tags": ["index", "non-clustered", "performance"],
+      "answers": [
+        {"text": "An index with a separate structure that points to the data rows", "is_correct": true},
+        {"text": "An index that hasn't been organized yet", "is_correct": false},
+        {"text": "An index on a single column only", "is_correct": false},
+        {"text": "A temporary index that's dropped after use", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of using table aliases in self-joins?",
+      "difficulty": 3,
+      "tags": ["self-join", "alias", "syntax"],
+      "answers": [
+        {"text": "To distinguish between the different references to the same table", "is_correct": true},
+        {"text": "To improve query performance", "is_correct": false},
+        {"text": "To create a copy of the table", "is_correct": false},
+        {"text": "To hide the real table name for security", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the ANY operator used for with subqueries?",
+      "difficulty": 3,
+      "tags": ["any", "subquery", "operators"],
+      "answers": [
+        {"text": "Returns TRUE if the comparison is true for any value returned by the subquery", "is_correct": true},
+        {"text": "Selects any random row from the subquery result", "is_correct": false},
+        {"text": "Checks if the subquery returns any rows at all", "is_correct": false},
+        {"text": "Allows any data type in the comparison", "is_correct": false}
+      ]
+    }
+  ]
+}
