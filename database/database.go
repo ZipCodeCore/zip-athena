@@ -2379,7 +2379,6 @@ func (db *InMemoryDB) GetFlaggedQuestions() ([]*models.FlaggedQuestion, error) {
 	for _, fq := range db.flaggedQuestions {
 		flagged = append(flagged, fq)
 	}
-
 	return flagged, nil
 }
 
@@ -2387,49 +2386,22 @@ func (db *InMemoryDB) FlagQuestion(questionID int, reason string) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
-	question, exists := db.questions[questionID]
-	if !exists {
+	if _, exists := db.questions[questionID]; !exists {
 		return ErrNotFound
 	}
 
-	// Calculate accuracy and total attempts
-	var accuracy float64
-	var totalAttempts int
-	correctCount := 0
-	for _, qa := range db.questionAttempts {
-		if qa.QuestionID == questionID {
-			totalAttempts++
-			if qa.LastAttemptCorrect {
-				correctCount++
-			}
-		}
-	}
-
-	if totalAttempts > 0 {
-		accuracy = (float64(correctCount) / float64(totalAttempts)) * 100
-	}
-
-	// Store in flagged questions map
+	// Store flagged question
 	db.flaggedQuestions[questionID] = &models.FlaggedQuestion{
-		QuestionID:      questionID,
-		TopicQuestionID: question.TopicQuestionID,
-		QuestionText:    question.QuestionText,
-		FlagReason:      reason,
-		FlaggedAt:       time.Now(),
-		Accuracy:        accuracy,
-		TotalAttempts:   totalAttempts,
+		QuestionID: questionID,
+		FlagReason: reason,
+		FlaggedAt:  time.Now(),
 	}
-
 	return nil
 }
 
 func (db *InMemoryDB) UnflagQuestion(questionID int) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
-
-	if _, exists := db.flaggedQuestions[questionID]; !exists {
-		return ErrNotFound
-	}
 
 	delete(db.flaggedQuestions, questionID)
 	return nil
