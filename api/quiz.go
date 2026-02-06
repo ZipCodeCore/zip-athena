@@ -129,6 +129,22 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Remove duplicate questions based on TopicQuestionID
+	// Use a map to track unique questions
+	uniqueQuestions := make(map[string]*models.Question)
+	for _, q := range questions {
+		// Only keep the first occurrence of each TopicQuestionID
+		if _, exists := uniqueQuestions[q.TopicQuestionID]; !exists {
+			uniqueQuestions[q.TopicQuestionID] = q
+		}
+	}
+	
+	// Convert map back to slice
+	questions = make([]*models.Question, 0, len(uniqueQuestions))
+	for _, q := range uniqueQuestions {
+		questions = append(questions, q)
+	}
+
 	// Shuffle and limit questions
 	rand.Shuffle(len(questions), func(i, j int) {
 		questions[i], questions[j] = questions[j], questions[i]
