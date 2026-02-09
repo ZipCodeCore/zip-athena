@@ -1184,8 +1184,8 @@ func (db *SQLiteDB) DeleteAnswer(id int) error {
 // Admin operations - Topics
 func (db *SQLiteDB) UpdateTopic(topic *models.Topic) error {
 	result, err := db.db.Exec(
-		"UPDATE topics SET name = ?, description = ?, is_active = ?, display_order = ? WHERE id = ?",
-		topic.Name, topic.Description, topic.IsActive, topic.DisplayOrder, topic.ID,
+		"UPDATE topics SET name = ?, description = ?, category = ?, is_active = ?, display_order = ? WHERE id = ?",
+		topic.Name, topic.Description, topic.Category, topic.IsActive, topic.DisplayOrder, topic.ID,
 	)
 	if err != nil {
 		return err
