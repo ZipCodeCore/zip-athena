@@ -1,0 +1,16 @@
+# Get admin token
+TOKEN=$(curl -s -X POST https://athena.zipcode.rocks/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","password":"foobarbaz"}' | jq -r '.access_token')
+
+# Fix Python Basics
+curl -X PUT "https://athena.zipcode.rocks/admin/topics?id=2" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Python Basics","description":"Introduction to Python programming","category":"python","is_active":true,"display_order":2}'
+
+# Fix SQL Database
+curl -X PUT "https://athena.zipcode.rocks/admin/topics?id=3" \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"SQL Database","description":"Structured Query Language basics","category":"sql","is_active":true,"display_order":3}'
