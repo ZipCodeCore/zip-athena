@@ -97,6 +97,7 @@ func (db *SQLiteDB) initSchema() error {
 		total_questions INTEGER DEFAULT 0,
 		correct_answers INTEGER DEFAULT 0,
 		difficulty_average REAL DEFAULT 0,
+		description TEXT DEFAULT '',
 		question_ids TEXT,
 		question_results TEXT,
 		FOREIGN KEY (user_id) REFERENCES users(id),
@@ -333,6 +334,30 @@ func (db *SQLiteDB) runMigrations() error {
 		_, err = db.db.Exec(`UPDATE learning_resources SET file_path = ? WHERE file_path = ?`, newPath, oldPath)
 		if err != nil {
 			return fmt.Errorf("failed to fix file_path %s -> %s: %w", oldPath, newPath, err)
+		}
+	}
+
+	// Migration: Add description column to quiz_attempts table if it doesn't exist
+	var hasDescription bool
+	qaRows, err := db.db.Query("PRAGMA table_info(quiz_attempts)")
+	if err == nil {
+		defer qaRows.Close()
+		for qaRows.Next() {
+			var cid int
+			var name, ctype string
+			var notnull, pk int
+			var dfltValue interface{}
+			if err := qaRows.Scan(&cid, &name, &ctype, &notnull, &dfltValue, &pk); err == nil {
+				if name == "description" {
+					hasDescription = true
+				}
+			}
+		}
+	}
+	if !hasDescription {
+		_, err := db.db.Exec("ALTER TABLE quiz_attempts ADD COLUMN description TEXT DEFAULT ''")
+		if err != nil {
+			return fmt.Errorf("failed to add description column to quiz_attempts: %w", err)
 		}
 	}
 
@@ -584,8 +609,8 @@ func (db *SQLiteDB) CreateQuizAttempt(attempt *models.QuizAttempt) error {
 	}
 
 	result, err := db.db.Exec(
-		"INSERT INTO quiz_attempts (user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-		attempt.UserID, attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.StartTime, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, attempt.DifficultyAverage, string(questionIDsJSON), string(questionResultsJSON),
+		"INSERT INTO quiz_attempts (user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, description, question_ids, question_results) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		attempt.UserID, attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.StartTime, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, attempt.DifficultyAverage, attempt.Description, string(questionIDsJSON), string(questionResultsJSON),
 	)
 	if err != nil {
 		return err
@@ -605,9 +630,9 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 	var quizID, parentAttemptID sql.NullInt64
 
 	err := db.db.QueryRow(
-		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results FROM quiz_attempts WHERE id = ?",
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, description, question_ids, question_results FROM quiz_attempts WHERE id = ?",
 		id,
-	).Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &questionIDsJSON, &questionResultsJSON)
+	).Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &attempt.Description, &questionIDsJSON, &questionResultsJSON)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -641,7 +666,7 @@ func (db *SQLiteDB) GetQuizAttempt(id int) (*models.QuizAttempt, error) {
 
 func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, error) {
 	rows, err := db.db.Query(
-		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results FROM quiz_attempts WHERE user_id = ?",
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, description, question_ids, question_results FROM quiz_attempts WHERE user_id = ?",
 		userID,
 	)
 	if err != nil {
@@ -656,7 +681,7 @@ func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, er
 		var completedTime sql.NullTime
 		var quizID, parentAttemptID sql.NullInt64
 
-		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &questionIDsJSON, &questionResultsJSON); err != nil {
+		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &attempt.Description, &questionIDsJSON, &questionResultsJSON); err != nil {
 			return nil, err
 		}
 
@@ -688,7 +713,7 @@ func (db *SQLiteDB) GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, er
 
 func (db *SQLiteDB) GetAllQuizAttempts() ([]*models.QuizAttempt, error) {
 	rows, err := db.db.Query(
-		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, question_ids, question_results FROM quiz_attempts",
+		"SELECT id, user_id, quiz_id, parent_attempt_id, attempt_number, is_retake, start_time, completed_time, total_questions, correct_answers, difficulty_average, description, question_ids, question_results FROM quiz_attempts",
 	)
 	if err != nil {
 		return nil, err
@@ -702,7 +727,7 @@ func (db *SQLiteDB) GetAllQuizAttempts() ([]*models.QuizAttempt, error) {
 		var completedTime sql.NullTime
 		var quizID, parentAttemptID sql.NullInt64
 
-		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &questionIDsJSON, &questionResultsJSON); err != nil {
+		if err := rows.Scan(&attempt.ID, &attempt.UserID, &quizID, &parentAttemptID, &attempt.AttemptNumber, &attempt.IsRetake, &attempt.StartTime, &completedTime, &attempt.TotalQuestions, &attempt.CorrectAnswers, &attempt.DifficultyAverage, &attempt.Description, &questionIDsJSON, &questionResultsJSON); err != nil {
 			return nil, err
 		}
 
@@ -743,8 +768,8 @@ func (db *SQLiteDB) UpdateQuizAttempt(attempt *models.QuizAttempt) error {
 	}
 
 	result, err := db.db.Exec(
-		"UPDATE quiz_attempts SET quiz_id = ?, parent_attempt_id = ?, attempt_number = ?, is_retake = ?, completed_time = ?, total_questions = ?, correct_answers = ?, difficulty_average = ?, question_ids = ?, question_results = ? WHERE id = ?",
-		attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, attempt.DifficultyAverage, string(questionIDsJSON), string(questionResultsJSON), attempt.ID,
+		"UPDATE quiz_attempts SET quiz_id = ?, parent_attempt_id = ?, attempt_number = ?, is_retake = ?, completed_time = ?, total_questions = ?, correct_answers = ?, difficulty_average = ?, description = ?, question_ids = ?, question_results = ? WHERE id = ?",
+		attempt.QuizID, attempt.ParentAttemptID, attempt.AttemptNumber, attempt.IsRetake, attempt.CompletedTime, attempt.TotalQuestions, attempt.CorrectAnswers, attempt.DifficultyAverage, attempt.Description, string(questionIDsJSON), string(questionResultsJSON), attempt.ID,
 	)
 	if err != nil {
 		return err

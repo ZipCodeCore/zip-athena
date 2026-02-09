@@ -203,6 +203,7 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 		StartTime:       time.Now(),
 		TotalQuestions:  len(questions),
 		CorrectAnswers:  0,
+		Description:     topic.Name,
 		QuestionIDs:     questionIDs,
 		QuestionResults: make(map[string]bool),
 	}
@@ -627,6 +628,7 @@ func (h *Handler) RetakeQuizHandler(w http.ResponseWriter, r *http.Request) {
 		StartTime:       time.Now(),
 		TotalQuestions:  len(questions),
 		CorrectAnswers:  0,
+		Description:     parentAttempt.Description, // Copy description from parent
 		QuestionIDs:     parentAttempt.QuestionIDs, // Use same questions as parent
 		QuestionResults: make(map[string]bool),
 	}

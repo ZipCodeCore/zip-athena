@@ -57,8 +57,9 @@ type QuizAttempt struct {
 	CompletedTime     *time.Time      `json:"completed_time,omitempty"`
 	TotalQuestions    int             `json:"total_questions"`
 	CorrectAnswers    int             `json:"correct_answers"`
-	DifficultyAverage float64         `json:"difficulty_average"` // Average difficulty of all questions in quiz (1-7 scale)
-	QuestionIDs       []string        `json:"question_ids"`       // List of topic_question_id
+	DifficultyAverage float64         `json:"difficulty_average"`  // Average difficulty of all questions in quiz (1-7 scale)
+	Description       string          `json:"quiz_description"`    // Human-readable description (e.g., "Python Basics Quiz")
+	QuestionIDs       []string        `json:"question_ids"`        // List of topic_question_id
 	QuestionResults   map[string]bool `json:"question_results"`   // topic_question_id -> correct/incorrect
 }
 
