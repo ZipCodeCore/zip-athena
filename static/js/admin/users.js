@@ -20,16 +20,16 @@ export async function loadUsers() {
         users.forEach(user => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${escapeHtml(user.id)}</td>
+                <td>${user.id}</td>
                 <td>${escapeHtml(user.username)}</td>
                 <td>${escapeHtml(user.email)}</td>
                 <td>${escapeHtml(normalizeCategory(user.category))}</td>
                 <td>${user.is_admin ? 'Yes' : 'No'}</td>
-                <td>${escapeHtml(user.total_points)}</td>
-                <td>${escapeHtml(new Date(user.created_at).toLocaleDateString())}</td>
+                <td>${user.total_points}</td>
+                <td>${new Date(user.created_at).toLocaleDateString()}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning" data-action="edit-user" data-id="${user.id}">Edit</button>
-                    <button class="btn btn-sm btn-danger" data-action="delete-user" data-id="${user.id}" 
+                    <button class="btn btn-sm btn-warning" data-action="edit-user" data-id="${escapeHtml(user.id)}">Edit</button>
+                    <button class="btn btn-sm btn-danger" data-action="delete-user" data-id="${escapeHtml(user.id)}" 
                             ${user.id === currentUser.id ? 'disabled' : ''}>Delete</button>
                 </td>
             `;

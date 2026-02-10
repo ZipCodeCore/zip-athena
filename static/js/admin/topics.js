@@ -14,11 +14,7 @@ export async function loadTopics() {
             console.error('User not loaded yet');
             return;
         }
-        const response = await fetch(`/topics?user_id=${currentUser.id}`);
-
-        if (!response.ok) throw new Error('Failed to load topics');
-
-        const topics = await response.json();
+        const topics = await API.get(`/topics?user_id=${currentUser.id}`);
         const tbody = document.getElementById('topicsTable');
         tbody.innerHTML = '';
 
@@ -55,8 +51,7 @@ export async function editTopic(topicId) {
         console.error('User not loaded yet');
         return;
     }
-    const response = await fetch(`/topics?user_id=${currentUser.id}`);
-    const topics = await response.json();
+    const topics = await API.get(`/topics?user_id=${currentUser.id}`);
     const topic = topics.find(t => t.id === topicId);
     if (!topic) return;
 
@@ -80,17 +75,8 @@ export async function saveTopic() {
             topicData.id = parseInt(topicId);
             await API.put(`/admin/topics?id=${topicId}`, topicData);
         } else {
-            // Create new topic (use standard endpoint since there's no admin create endpoint)
-            const response = await fetch('/topics', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(topicData)
-            });
-            if (!response.ok) {
-                throw new Error('Failed to save topic');
-            }
+            // Create new topic
+            await API.post('/topics', topicData);
         }
 
         bootstrap.Modal.getInstance(document.getElementById('topicModal')).hide();

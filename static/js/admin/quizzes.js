@@ -107,15 +107,7 @@ export async function deleteQuiz(quizId) {
 
 export async function loadQuizQuestions(quizId) {
     try {
-        const response = await fetch(`/admin/quiz-questions?quiz_id=${quizId}`, {
-            headers: {
-                'X-User-ID': currentUser.id.toString()
-            }
-        });
-
-        if (!response.ok) throw new Error('Failed to load quiz questions');
-
-        const questions = await response.json();
+        const questions = await API.get(`/admin/quiz-questions?quiz_id=${quizId}`);
         const questionsList = document.getElementById('quizQuestionsList');
         questionsList.innerHTML = '';
 
@@ -198,26 +190,14 @@ export async function addQuestionToQuiz() {
     }
 
     try {
-        const response = await fetch('/admin/quiz-questions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-User-ID': currentUser.id.toString()
-            },
-            body: JSON.stringify({
-                quiz_id: parseInt(quizId),
-                question_id: questionId,
-                order: order
-            })
+        await API.post('/admin/quiz-questions', {
+            quiz_id: parseInt(quizId),
+            question_id: questionId,
+            order: order
         });
-
-        if (response.ok) {
-            cancelAddQuestionToQuiz();
-            await loadQuizQuestions(quizId);
-        } else {
-            const errorText = await response.text();
-            throw new Error(errorText || 'Failed to add question to quiz');
-        }
+        
+        cancelAddQuestionToQuiz();
+        await loadQuizQuestions(quizId);
     } catch (error) {
         console.error('Error adding question to quiz:', error);
         alert('Failed to add question to quiz: ' + error.message);
@@ -228,23 +208,14 @@ export async function removeQuestionFromQuiz(quizId, questionId) {
     if (!confirm('Are you sure you want to remove this question from the quiz?')) return;
 
     try {
-        const response = await fetch('/admin/quiz-questions', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-User-ID': currentUser.id.toString()
-            },
+        await API.delete('/admin/quiz-questions', {
             body: JSON.stringify({
                 quiz_id: quizId,
                 question_id: questionId
             })
         });
-
-        if (response.ok) {
-            await loadQuizQuestions(quizId);
-        } else {
-            throw new Error('Failed to remove question from quiz');
-        }
+        
+        await loadQuizQuestions(quizId);
     } catch (error) {
         console.error('Error removing question from quiz:', error);
         alert('Failed to remove question from quiz');

@@ -10,15 +10,7 @@ export function setCurrentUser(user) {
 
 export async function loadAnswers(questionId) {
     try {
-        const response = await fetch(`/admin/answers?question_id=${questionId}`, {
-            headers: {
-                'X-User-ID': currentUser.id.toString()
-            }
-        });
-
-        if (!response.ok) throw new Error('Failed to load answers');
-
-        const answers = await response.json();
+        const answers = await API.get(`/admin/answers?question_id=${questionId}`);
         const answersList = document.getElementById('answersList');
         answersList.innerHTML = '';
 
