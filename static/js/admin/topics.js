@@ -21,10 +21,10 @@ export async function loadTopics() {
         topics.forEach(topic => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${escapeHtml(topic.id)}</td>
+                <td>${topic.id}</td>
                 <td>${escapeHtml(topic.name)}</td>
                 <td>${escapeHtml(topic.description)}</td>
-                <td>${escapeHtml(new Date(topic.created_at).toLocaleDateString())}</td>
+                <td>${new Date(topic.created_at).toLocaleDateString()}</td>
                 <td>
                     <button class="btn btn-sm btn-warning" data-action="edit-topic" data-id="${topic.id}">Edit</button>
                     <button class="btn btn-sm btn-danger" data-action="delete-topic" data-id="${topic.id}">Delete</button>

@@ -190,7 +190,7 @@ function createEditAnswerForm() {
     // Create save button
     const saveBtn = document.createElement('button');
     saveBtn.type = 'button';
-    saveBtn.className = 'btn btn-sm btn-primary';
+    saveBtn.className = 'btn btn-sm btn-primary me-2';
     saveBtn.textContent = 'Save Changes';
     saveBtn.addEventListener('click', saveEditedAnswer);
     editForm.appendChild(saveBtn);

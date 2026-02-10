@@ -17,11 +17,11 @@ export async function loadQuizzes() {
         quizzes.forEach(quiz => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${escapeHtml(quiz.id)}</td>
+                <td>${quiz.id}</td>
                 <td>${escapeHtml(quiz.name)}</td>
-                <td>${escapeHtml(quiz.topic_id)}</td>
+                <td>${quiz.topic_id}</td>
                 <td>${escapeHtml(quiz.description)}</td>
-                <td>${escapeHtml(new Date(quiz.created_at).toLocaleDateString())}</td>
+                <td>${new Date(quiz.created_at).toLocaleDateString()}</td>
                 <td>
                     <button class="btn btn-sm btn-warning" data-action="edit-quiz" data-id="${quiz.id}">Edit</button>
                     <button class="btn btn-sm btn-danger" data-action="delete-quiz" data-id="${quiz.id}">Delete</button>

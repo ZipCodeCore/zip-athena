@@ -17,10 +17,10 @@ export async function loadQuestions() {
         questions.forEach(q => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${escapeHtml(q.id)}</td>
+                <td>${q.id}</td>
                 <td>${escapeHtml(q.question_text.substring(0, 50))}...</td>
-                <td>${escapeHtml(q.topic_id)}</td>
-                <td>${escapeHtml(q.difficulty)}</td>
+                <td>${q.topic_id}</td>
+                <td>${q.difficulty}</td>
                 <td>${escapeHtml(q.tags ? q.tags.join(', ') : '')}</td>
                 <td>
                     <button class="btn btn-sm btn-warning" data-action="edit-question" data-id="${q.id}">Edit</button>

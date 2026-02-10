@@ -28,8 +28,8 @@ export async function loadUsers() {
                 <td>${user.total_points}</td>
                 <td>${new Date(user.created_at).toLocaleDateString()}</td>
                 <td>
-                    <button class="btn btn-sm btn-warning" data-action="edit-user" data-id="${escapeHtml(user.id)}">Edit</button>
-                    <button class="btn btn-sm btn-danger" data-action="delete-user" data-id="${escapeHtml(user.id)}" 
+                    <button class="btn btn-sm btn-warning" data-action="edit-user" data-id="${user.id}">Edit</button>
+                    <button class="btn btn-sm btn-danger" data-action="delete-user" data-id="${user.id}" 
                             ${user.id === currentUser.id ? 'disabled' : ''}>Delete</button>
                 </td>
             `;
