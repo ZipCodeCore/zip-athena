@@ -57,7 +57,11 @@ func findMigrationsPath() string {
 	
 	for _, path := range paths {
 		if _, err := os.Stat(path); err == nil {
-			absPath, _ := filepath.Abs(path)
+			absPath, err := filepath.Abs(path)
+			if err != nil {
+				// If we can't get absolute path, use the relative path
+				return path
+			}
 			return absPath
 		}
 	}
