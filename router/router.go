@@ -214,7 +214,7 @@ func New(h *api.Handler) *chi.Mux {
 		})
 
 		// Test Management routes
-		r.Get("/tests/{id}/publish", h.PublishTestHandler)
+		r.Post("/tests/{id}/publish", h.PublishTestHandler)
 		r.Get("/tests/{id}/results", h.GetTestResultsInstructorHandler)
 		r.Get("/tests/{id}/export", h.ExportTestResultsHandler)
 
