@@ -76,32 +76,15 @@ func New(h *api.Handler) *chi.Mux {
 
 	// Quiz History routes
 	r.Get("/students/quiz-history", h.GetQuizHistoryHandler)
-	r.Get("/students/quiz-history/*", h.GetQuizAttemptDetailsHandler)
+	r.Get("/students/quiz-history/{id}", h.GetQuizAttemptDetailsHandler)
 
 	// Timed Test Taking routes
 	r.Get("/tests/available", h.GetAvailableTestsHandler)
-	r.Get("/tests/*", func(w http.ResponseWriter, r *http.Request) {
-		path := r.URL.Path
-		if len(path) > 7 && path[len(path)-6:] == "/start" {
-			h.StartTestHandler(w, r)
-		} else {
-			h.GetTestDetailsHandler(w, r)
-		}
-	})
-	r.Route("/test-attempts/*", func(r chi.Router) {
-		r.HandleFunc("/*", func(w http.ResponseWriter, r *http.Request) {
-			path := r.URL.Path
-			if len(path) > 7 && path[len(path)-7:] == "/answer" {
-				h.UpdateTestAnswerHandler(w, r)
-			} else if len(path) > 7 && path[len(path)-7:] == "/submit" {
-				h.SubmitTestHandler(w, r)
-			} else if len(path) > 8 && path[len(path)-8:] == "/results" {
-				h.GetTestResultsHandler(w, r)
-			} else {
-				http.Error(w, "Not found", http.StatusNotFound)
-			}
-		})
-	})
+	r.Get("/tests/{id}", h.GetTestDetailsHandler)
+	r.Post("/tests/{id}/start", h.StartTestHandler)
+	r.Put("/test-attempts/{id}/answer", h.UpdateTestAnswerHandler)
+	r.Post("/test-attempts/{id}/submit", h.SubmitTestHandler)
+	r.Get("/test-attempts/{id}/results", h.GetTestResultsHandler)
 
 	// Tag-Based Review routes
 	r.Get("/tags", h.GetTagsHandler)
@@ -110,18 +93,12 @@ func New(h *api.Handler) *chi.Mux {
 
 	// Learning Resources routes
 	r.Get("/learning/outline", h.GetCurriculumOutlineHandler)
-	r.Get("/learning/phase/*", h.GetPhaseResourcesHandler)
-	r.Get("/learning/resource/*", func(w http.ResponseWriter, r *http.Request) {
-		path := r.URL.Path
-		if len(path) > 8 && path[len(path)-8:] == "/content" {
-			h.GetLearningResourceContentHandler(w, r)
-		} else {
-			h.GetLearningResourceHandler(w, r)
-		}
-	})
+	r.Get("/learning/phase/{id}", h.GetPhaseResourcesHandler)
+	r.Get("/learning/resource/{id}", h.GetLearningResourceHandler)
+	r.Get("/learning/resource/{id}/content", h.GetLearningResourceContentHandler)
 	r.Get("/learning/search", h.SearchLearningResourcesHandler)
 	r.Post("/learning/track-view", h.TrackLearningViewHandler)
-	r.Get("/quiz/question/*/learning", h.GetQuestionLearningLinksHandler)
+	r.Get("/quiz/question/{id}/learning", h.GetQuestionLearningLinksHandler)
 
 	// Admin routes (protected by AdminMiddleware)
 	r.Route("/admin", func(r chi.Router) {
@@ -237,9 +214,9 @@ func New(h *api.Handler) *chi.Mux {
 		})
 
 		// Test Management routes
-		r.Get("/tests/*/publish", h.PublishTestHandler)
-		r.Get("/tests/*/results", h.GetTestResultsInstructorHandler)
-		r.Get("/tests/*/export", h.ExportTestResultsHandler)
+		r.Get("/tests/{id}/publish", h.PublishTestHandler)
+		r.Get("/tests/{id}/results", h.GetTestResultsInstructorHandler)
+		r.Get("/tests/{id}/export", h.ExportTestResultsHandler)
 
 		// Question Management routes
 		r.Route("/questions", func(r chi.Router) {
@@ -249,10 +226,10 @@ func New(h *api.Handler) *chi.Mux {
 			r.Delete("/", h.DeactivateInstructorQuestionHandler)
 
 			r.Get("/analytics", h.GetQuestionAnalyticsHandler)
-			r.Get("/*/analytics", h.GetQuestionDetailedAnalyticsHandler)
-			r.Get("/*/answer-distribution", h.GetAnswerDistributionHandler)
-			r.Put("/*/difficulty", h.UpdateQuestionDifficultyHandler)
-			r.Get("/*/preview", h.PreviewInstructorQuestionHandler)
+			r.Get("/{id}/analytics", h.GetQuestionDetailedAnalyticsHandler)
+			r.Get("/{id}/answer-distribution", h.GetAnswerDistributionHandler)
+			r.Put("/{id}/difficulty", h.UpdateQuestionDifficultyHandler)
+			r.Get("/{id}/preview", h.PreviewInstructorQuestionHandler)
 		})
 	})
 
