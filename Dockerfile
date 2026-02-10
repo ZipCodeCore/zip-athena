@@ -46,6 +46,9 @@ COPY --from=builder /app/static ./static
 # Copy learning resources
 COPY --from=builder /app/learning ./learning
 
+# Copy database migrations
+COPY --from=builder /app/database/migrations ./database/migrations
+
 # Create data directory for SQLite database
 RUN mkdir -p /data && chown -R athena:athena /data /app
 
