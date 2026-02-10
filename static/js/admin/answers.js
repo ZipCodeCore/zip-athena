@@ -152,28 +152,68 @@ function createEditAnswerForm() {
     editForm.id = 'editAnswerForm';
     editForm.className = 'mb-3 p-3 border rounded bg-light';
     editForm.style.display = 'none';
-    editForm.innerHTML = `
-        <h6>Edit Answer</h6>
-        <input type="hidden" id="editAnswerId">
-        <div class="mb-2">
-            <label for="editAnswerText" class="form-label">Answer Text</label>
-            <input type="text" class="form-control" id="editAnswerText" required>
-        </div>
-        <div class="mb-2 form-check">
-            <input type="checkbox" class="form-check-input" id="editAnswerIsCorrect">
-            <label class="form-check-label" for="editAnswerIsCorrect">Is Correct Answer</label>
-        </div>
-        <button type="button" class="btn btn-sm btn-primary" id="saveEditedAnswerBtn">Save Changes</button>
-        <button type="button" class="btn btn-sm btn-secondary" id="cancelEditAnswerBtn">Cancel</button>
-    `;
+    
+    // Create heading
+    const heading = document.createElement('h6');
+    heading.textContent = 'Edit Answer';
+    editForm.appendChild(heading);
+    
+    // Create hidden input
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.id = 'editAnswerId';
+    editForm.appendChild(hiddenInput);
+    
+    // Create answer text field
+    const textDiv = document.createElement('div');
+    textDiv.className = 'mb-2';
+    const textLabel = document.createElement('label');
+    textLabel.htmlFor = 'editAnswerText';
+    textLabel.className = 'form-label';
+    textLabel.textContent = 'Answer Text';
+    const textInput = document.createElement('input');
+    textInput.type = 'text';
+    textInput.className = 'form-control';
+    textInput.id = 'editAnswerText';
+    textInput.required = true;
+    textDiv.appendChild(textLabel);
+    textDiv.appendChild(textInput);
+    editForm.appendChild(textDiv);
+    
+    // Create checkbox field
+    const checkDiv = document.createElement('div');
+    checkDiv.className = 'mb-2 form-check';
+    const checkInput = document.createElement('input');
+    checkInput.type = 'checkbox';
+    checkInput.className = 'form-check-input';
+    checkInput.id = 'editAnswerIsCorrect';
+    const checkLabel = document.createElement('label');
+    checkLabel.className = 'form-check-label';
+    checkLabel.htmlFor = 'editAnswerIsCorrect';
+    checkLabel.textContent = 'Is Correct Answer';
+    checkDiv.appendChild(checkInput);
+    checkDiv.appendChild(checkLabel);
+    editForm.appendChild(checkDiv);
+    
+    // Create save button
+    const saveBtn = document.createElement('button');
+    saveBtn.type = 'button';
+    saveBtn.className = 'btn btn-sm btn-primary';
+    saveBtn.textContent = 'Save Changes';
+    saveBtn.addEventListener('click', saveEditedAnswer);
+    editForm.appendChild(saveBtn);
+    
+    // Create cancel button
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.className = 'btn btn-sm btn-secondary';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.addEventListener('click', cancelEditAnswer);
+    editForm.appendChild(cancelBtn);
     
     // Insert the edit form after the add answer form
     const addAnswerForm = document.getElementById('addAnswerForm');
     addAnswerForm.parentNode.insertBefore(editForm, addAnswerForm.nextSibling);
-    
-    // Add event listeners
-    editForm.querySelector('#saveEditedAnswerBtn').addEventListener('click', saveEditedAnswer);
-    editForm.querySelector('#cancelEditAnswerBtn').addEventListener('click', cancelEditAnswer);
     
     return editForm;
 }

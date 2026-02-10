@@ -136,7 +136,7 @@ export async function loadQuizQuestions(quizId) {
             strong.textContent = `#${index + 1}: `;
             textDiv.appendChild(strong);
             
-            const questionText = document.createTextNode(escapeHtml(question.question_text.substring(0, 60)) + '...');
+            const questionText = document.createTextNode(question.question_text.substring(0, 60) + '...');
             textDiv.appendChild(questionText);
             
             const br = document.createElement('br');
