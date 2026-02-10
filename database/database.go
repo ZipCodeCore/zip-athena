@@ -17,106 +17,99 @@ var (
 	ErrAlreadyExists = errors.New("record already exists")
 )
 
-// Database interface defines the contract for data operations
-type Database interface {
-	// Core database access
-	DB() *sql.DB
-	Close() error
-
-	// User operations
+// UserRepository handles user-related database operations
+type UserRepository interface {
 	CreateUser(user *models.User) error
 	GetUser(id int) (*models.User, error)
 	UpdateUserPoints(id int, points int) error
+	ListUsers() ([]*models.User, error)
+	UpdateUser(user *models.User) error
+	DeleteUser(id int) error
+}
 
-	// Topic operations
+// TopicRepository handles topic-related database operations
+type TopicRepository interface {
 	CreateTopic(topic *models.Topic) error
 	GetTopic(id int) (*models.Topic, error)
 	ListTopics() ([]*models.Topic, error)
+	UpdateTopic(topic *models.Topic) error
+	DeleteTopic(id int) error
+	ReorderTopics(topicIDs []int) error
+}
 
-	// Question operations
+// QuestionRepository handles question-related database operations
+type QuestionRepository interface {
 	CreateQuestion(question *models.Question) error
 	GetQuestion(id int) (*models.Question, error)
 	GetQuestionsByTopic(topicID int) ([]*models.Question, error)
+	ListQuestions() ([]*models.Question, error)
+	UpdateQuestion(question *models.Question) error
+	DeleteQuestion(id int) error
+	ListQuestionsWithPagination(page int, perPage int, search string, topicID int, difficulty int) ([]*models.Question, int, error)
+	DeactivateQuestion(questionID int) error
+	GetQuestionPreview(questionID int) (*models.QuestionPreview, error)
+	ValidateQuestionData(question *models.Question, answers []models.Answer) error
+}
 
-	// Answer operations
+// AnswerRepository handles answer-related database operations
+type AnswerRepository interface {
 	CreateAnswer(answer *models.Answer) error
+	GetAnswer(id int) (*models.Answer, error)
 	GetAnswersByQuestion(questionID int) ([]*models.Answer, error)
+	UpdateAnswer(answer *models.Answer) error
+	DeleteAnswer(id int) error
+}
 
-	// QuizAttempt operations
-	CreateQuizAttempt(attempt *models.QuizAttempt) error
-	GetQuizAttempt(id int) (*models.QuizAttempt, error)
-	GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, error)
-	GetAllQuizAttempts() ([]*models.QuizAttempt, error)
-	UpdateQuizAttempt(attempt *models.QuizAttempt) error
-
-	// QuestionAttempt operations
-	CreateQuestionAttempt(attempt *models.QuestionAttempt) error
-	GetQuestionAttempt(id int) (*models.QuestionAttempt, error)
-	GetQuestionAttemptsByUser(userID int) ([]*models.QuestionAttempt, error)
-	UpdateQuestionAttempt(attempt *models.QuestionAttempt) error
-
-	// Quiz operations (Phase 2)
+// QuizRepository handles quiz and quiz attempt operations
+type QuizRepository interface {
+	// Quiz CRUD
 	CreateQuiz(quiz *models.Quiz) error
 	GetQuiz(id int) (*models.Quiz, error)
 	ListQuizzes() ([]*models.Quiz, error)
 	UpdateQuiz(quiz *models.Quiz) error
 	DeleteQuiz(id int) error
 
-	// UserQuestionState operations (Phase 2 - FSRS)
-	CreateUserQuestionState(state *models.UserQuestionState) error
-	GetUserQuestionState(userID, questionID int) (*models.UserQuestionState, error)
-	GetUserQuestionStatesByUser(userID int) ([]*models.UserQuestionState, error)
-	GetDueUserQuestionStates(userID int) ([]*models.UserQuestionState, error)
-	UpdateUserQuestionState(state *models.UserQuestionState) error
+	// Quiz-Question relationships
+	AddQuestionToQuiz(quizID, questionID, order int) error
+	RemoveQuestionFromQuiz(quizID, questionID int) error
+	GetQuizQuestions(quizID int) ([]*models.Question, error)
 
-	// Admin operations (Phase 2)
-	ListUsers() ([]*models.User, error)
-	UpdateUser(user *models.User) error
-	DeleteUser(id int) error
-	ListQuestions() ([]*models.Question, error)
-	UpdateQuestion(question *models.Question) error
-	DeleteQuestion(id int) error
-	UpdateAnswer(answer *models.Answer) error
-	DeleteAnswer(id int) error
-	UpdateTopic(topic *models.Topic) error
-	DeleteTopic(id int) error
+	// Quiz Attempts
+	CreateQuizAttempt(attempt *models.QuizAttempt) error
+	GetQuizAttempt(id int) (*models.QuizAttempt, error)
+	GetQuizAttemptsByUser(userID int) ([]*models.QuizAttempt, error)
+	GetAllQuizAttempts() ([]*models.QuizAttempt, error)
+	UpdateQuizAttempt(attempt *models.QuizAttempt) error
 
-	// Phase 3: Test operations
+	// Quiz History
+	GetQuizHistoryByUser(userID int, page int, perPage int) ([]*models.QuizAttempt, error)
+	GetQuizHistoryByTopic(userID int, topicID int, page int, perPage int) ([]*models.QuizAttempt, error)
+	GetQuizAttemptWithDetails(attemptID int) (*models.QuizAttempt, error)
+}
+
+// QuestionAttemptRepository handles question attempt operations
+type QuestionAttemptRepository interface {
+	CreateQuestionAttempt(attempt *models.QuestionAttempt) error
+	GetQuestionAttempt(id int) (*models.QuestionAttempt, error)
+	GetQuestionAttemptsByUser(userID int) ([]*models.QuestionAttempt, error)
+	UpdateQuestionAttempt(attempt *models.QuestionAttempt) error
+}
+
+// TestRepository handles test and test attempt operations
+type TestRepository interface {
+	// Test CRUD
 	CreateTest(test *models.Test) error
 	GetTest(id int) (*models.Test, error)
 	ListTests() ([]*models.Test, error)
 	UpdateTest(test *models.Test) error
 	DeleteTest(id int) error
 
-	// Phase 3: Many-to-many Quiz-Question relationships
-	AddQuestionToQuiz(quizID, questionID, order int) error
-	RemoveQuestionFromQuiz(quizID, questionID int) error
-	GetQuizQuestions(quizID int) ([]*models.Question, error)
-
-	// Phase 3: Many-to-many Test-Question relationships
+	// Test-Question relationships
 	AddQuestionToTest(testID, questionID, order int) error
 	RemoveQuestionFromTest(testID, questionID int) error
 	GetTestQuestions(testID int) ([]*models.Question, error)
 
-	// Phase 3: Analytics operations
-	GetStudentProgress(userID int) (*models.StudentProgress, error)
-	GetCohortAnalytics() (*models.CohortAnalytics, error)
-	GetAnswer(id int) (*models.Answer, error)
-
-	// Phase 3: Instructor operations
-	ListStudentsWithMetrics(searchQuery string, sortBy string, filterCohort string) ([]*models.StudentProgress, error)
-	GetStudentQuizHistory(userID int) ([]*models.QuizAttempt, error)
-	GetStudentWeakAreas(userID int) (*models.WeakAreas, error)
-
-	// Phase 3: Topic Management
-	ReorderTopics(topicIDs []int) error
-
-	// Phase 4: Quiz History
-	GetQuizHistoryByUser(userID int, page int, perPage int) ([]*models.QuizAttempt, error)
-	GetQuizHistoryByTopic(userID int, topicID int, page int, perPage int) ([]*models.QuizAttempt, error)
-	GetQuizAttemptWithDetails(attemptID int) (*models.QuizAttempt, error)
-
-	// Phase 4: Timed Test Taking
+	// Test Attempts
 	CreateTestAttempt(attempt *models.TestAttempt) error
 	GetTestAttempt(id int) (*models.TestAttempt, error)
 	UpdateTestAttemptAnswer(attemptID int, questionID string, answerID int) error
@@ -125,44 +118,79 @@ type Database interface {
 	GetAvailableTests(userID int) ([]*models.Test, error)
 	GetTestAttemptsByUser(userID int, testID int) ([]*models.TestAttempt, error)
 
-	// Phase 4: Tag-Based Review
-	GetAllTags() ([]string, error)
-	GetTagsWithCounts() (map[string]int, error)
-	GetTagStats(userID int) ([]*models.TagStats, error)
-	GetQuestionsByTags(tags []string, useAnd bool) ([]*models.Question, error)
-
-	// Phase 4: Test Management (Instructor)
+	// Test Management
 	PublishTest(testID int) error
 	GetTestResultsByTest(testID int) (*models.TestResult, error)
 	ExportTestResults(testID int) ([]byte, error)
+}
 
-	// Phase 4: Question Performance Analytics
+// FSRSRepository handles FSRS (spaced repetition) state operations
+type FSRSRepository interface {
+	CreateUserQuestionState(state *models.UserQuestionState) error
+	GetUserQuestionState(userID, questionID int) (*models.UserQuestionState, error)
+	GetUserQuestionStatesByUser(userID int) ([]*models.UserQuestionState, error)
+	GetDueUserQuestionStates(userID int) ([]*models.UserQuestionState, error)
+	UpdateUserQuestionState(state *models.UserQuestionState) error
+}
+
+// AnalyticsRepository handles analytics and reporting operations
+type AnalyticsRepository interface {
+	GetStudentProgress(userID int) (*models.StudentProgress, error)
+	GetCohortAnalytics() (*models.CohortAnalytics, error)
+	ListStudentsWithMetrics(searchQuery string, sortBy string, filterCohort string) ([]*models.StudentProgress, error)
+	GetStudentQuizHistory(userID int) ([]*models.QuizAttempt, error)
+	GetStudentWeakAreas(userID int) (*models.WeakAreas, error)
 	GetQuestionAnalytics() ([]*models.QuestionAnalytics, error)
 	GetQuestionDetailedAnalytics(questionID int) (*models.QuestionAnalytics, error)
 	GetAnswerDistribution(questionID int) (map[int]int, error)
 	UpdateQuestionDifficultyFromAnalytics(questionID int, newDifficulty int) error
+}
 
-	// Phase 5: Question Management
-	ListQuestionsWithPagination(page int, perPage int, search string, topicID int, difficulty int) ([]*models.Question, int, error)
-	DeactivateQuestion(questionID int) error
-	GetQuestionPreview(questionID int) (*models.QuestionPreview, error)
-	ValidateQuestionData(question *models.Question, answers []models.Answer) error
-
-	// Phase 5: Bulk CSV Import
-	ValidateCSVImport(rows []models.CSVImportRow) (*models.CSVImportResult, error)
-	BulkCreateQuestions(rows []models.CSVImportRow) (int, error)
-
-	// Phase 5: Tag Management
+// TagRepository handles tag-related operations
+type TagRepository interface {
+	GetAllTags() ([]string, error)
+	GetTagsWithCounts() (map[string]int, error)
+	GetTagStats(userID int) ([]*models.TagStats, error)
+	GetQuestionsByTags(tags []string, useAnd bool) ([]*models.Question, error)
 	GetTagsWithMetadata() ([]*models.Tag, error)
 	MergeTags(sourceTags []string, targetTag string) error
 	DeleteTag(tagName string) error
 	GetQuestionsByTag(tagName string) ([]*models.Question, error)
+}
 
-	// Phase 5: Quality Review
+// QualityRepository handles question quality and review operations
+type QualityRepository interface {
 	GetFlaggedQuestions() ([]*models.FlaggedQuestion, error)
 	FlagQuestion(questionID int, reason string) error
 	UnflagQuestion(questionID int) error
 	AutoFlagQuestions() error
+}
+
+// BulkImportRepository handles bulk import operations
+type BulkImportRepository interface {
+	ValidateCSVImport(rows []models.CSVImportRow) (*models.CSVImportResult, error)
+	BulkCreateQuestions(rows []models.CSVImportRow) (int, error)
+}
+
+// Database interface composes all repository interfaces
+type Database interface {
+	// Core database access
+	DB() *sql.DB
+	Close() error
+
+	// Composed repositories
+	UserRepository
+	TopicRepository
+	QuestionRepository
+	AnswerRepository
+	QuizRepository
+	QuestionAttemptRepository
+	TestRepository
+	FSRSRepository
+	AnalyticsRepository
+	TagRepository
+	QualityRepository
+	BulkImportRepository
 }
 
 // InMemoryDB implements the Database interface using in-memory storage
