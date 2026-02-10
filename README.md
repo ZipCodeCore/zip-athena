@@ -78,6 +78,28 @@ go run main.go
 # Open browser to http://localhost:9206
 ```
 
+## Database Migrations
+
+Athena uses [golang-migrate](https://github.com/golang-migrate/migrate) for database version control and schema management. Migrations are automatically applied when the application starts.
+
+### Manual Migration Management
+
+```bash
+# Build the migration tool
+go build -o migrate ./cmd/migrate
+
+# Check current migration version
+./migrate -db athena.db -cmd version
+
+# Apply all pending migrations
+./migrate -db athena.db -cmd up
+
+# Roll back the last migration
+./migrate -db athena.db -cmd down -steps 1
+```
+
+See [DATABASE_MIGRATIONS.md](DATABASE_MIGRATIONS.md) for complete migration documentation.
+
 ## Architecture
 
 - **Backend**: Go API server with comprehensive error logging
@@ -91,10 +113,15 @@ go run main.go
 zip-athena/
 ├── models/          # Data models (User, Topic, Question, Answer, QuizAttempt, etc.)
 ├── database/        # Database layer with SQLite implementation
+│   ├── migrations/  # SQL migration files for schema versioning
+│   ├── migrate.go   # Migration runner functions
+│   └── sqlite.go    # SQLite database implementation
 ├── api/             # HTTP API handlers with error logging
 ├── fsrs/            # FSRS-4.5 spaced repetition algorithm
 ├── static/          # Frontend HTML, CSS, and JavaScript
-├── cmd/seed/        # Database seeding utility
+├── cmd/
+│   ├── seed/        # Database seeding utility
+│   └── migrate/     # Migration management CLI tool
 └── main.go          # Application entry point
 ```
 
