@@ -1,4 +1,6 @@
-Athena API server starting on port :9206
-Database: ./athena.db
-2026/01/30 11:44:20 listen tcp :9206: bind: address already in use
-exit status 1
+nohup: ignoring input
+WARNING: Using insecure default JWT secret. Set JWT_SECRET environment variable.
+time="2026-02-10T15:05:36Z" level=info msg="Starting Athena API server" db_path=./athena.db db_type=sqlite log_level=info port=":9206"
+time="2026-02-10T15:05:36Z" level=info msg="Database initialized successfully"
+time="2026-02-10T15:05:36Z" level=info msg="Athena API server listening on :9206"
+time="2026-02-10T15:05:36Z" level=info msg="Database: ./athena.db"
