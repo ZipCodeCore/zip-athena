@@ -1,14 +1,14 @@
 package database
 
 import (
-"database/sql"
-"encoding/json"
-"fmt"
-"strconv"
-"strings"
-"time"
+	"database/sql"
+	"encoding/json"
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
 
-"github.com/ZipCodeCore/zip-athena/models"
+	"github.com/ZipCodeCore/zip-athena/models"
 )
 
 func (db *SQLiteDB) ValidateCSVImport(rows []models.CSVImportRow) (*models.CSVImportResult, error) {
