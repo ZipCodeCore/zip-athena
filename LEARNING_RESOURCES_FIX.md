@@ -127,6 +127,6 @@ To test this fix locally first:
 # Start the server
 go run main.go
 
-# Open http://localhost:8080/learning.html
+# Open http://localhost:9206/learning.html
 # Navigate to any Phase 2 or 3 resource and verify it loads
 ```

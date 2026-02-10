@@ -25,11 +25,17 @@ Current migrations:
 
 ## Using the Migration CLI
 
-The `migrate` command-line tool provides migration management:
+The `migrate` command-line tool provides migration management. It is the single entry point for manual migration control and uses the same migration files the app runs on startup.
 
 ### Build the migrate tool
 ```bash
 go build -o migrate ./cmd/migrate
+```
+
+Alternatively, run without building:
+
+```bash
+go run ./cmd/migrate -cmd version
 ```
 
 ### Check migration version
@@ -103,6 +109,8 @@ The application automatically runs pending migrations on startup when creating a
 db, err := database.NewSQLiteDB("athena.db")
 // Migrations are applied automatically
 ```
+
+The same migration paths and versions are shared between `database/migrate.go` and `cmd/migrate` to keep the flow consistent.
 
 This ensures that:
 - Fresh databases get the complete schema

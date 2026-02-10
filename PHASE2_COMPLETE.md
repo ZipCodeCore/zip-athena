@@ -155,19 +155,19 @@ go test ./...
 ```bash
 go build -o athena .
 ./athena
-# Server starts on http://localhost:8080
+# Server starts on http://localhost:9206
 ```
 
 ### 4. Access Admin Panel
-1. Navigate to http://localhost:8080/index.html
+1. Navigate to http://localhost:9206/index.html
 2. Login with admin/admin
-3. Go to http://localhost:8080/admin.html
+3. Go to http://localhost:9206/admin.html
 
 ## API Examples
 
 ### Submit FSRS Review
 ```bash
-curl -X POST http://localhost:8080/fsrs/review \
+curl -X POST http://localhost:9206/fsrs/review \
   -H "Content-Type: application/json" \
   -d '{
     "user_id": 1,
@@ -178,12 +178,12 @@ curl -X POST http://localhost:8080/fsrs/review \
 
 ### Get Due Questions
 ```bash
-curl http://localhost:8080/fsrs/due?user_id=1&limit=10
+curl http://localhost:9206/fsrs/due?user_id=1&limit=10
 ```
 
 ### Generate Adaptive Quiz
 ```bash
-curl -X POST http://localhost:8080/fsrs/quiz/generate \
+curl -X POST http://localhost:9206/fsrs/quiz/generate \
   -H "Content-Type: application/json" \
   -d '{
     "user_id": 1,
@@ -194,7 +194,7 @@ curl -X POST http://localhost:8080/fsrs/quiz/generate \
 
 ### Create Quiz (Admin)
 ```bash
-curl -X POST http://localhost:8080/admin/quizzes \
+curl -X POST http://localhost:9206/admin/quizzes \
   -H "Content-Type: application/json" \
   -H "X-User-ID: 1" \
   -d '{

@@ -6,21 +6,20 @@ This document provides examples of how to interact with the Athena API.
 
 ```bash
 go run main.go
-# Server starts on http://localhost:8080
+# Server starts on http://localhost:9206
 ```
 
 ## API Examples
 
-### 1. Create a User
+### 1. Register a User
 
 ```bash
-curl -X POST http://localhost:8080/users \
+curl -X POST http://localhost:9206/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "username": "john_doe",
     "email": "john@example.com",
-    "is_admin": false,
-    "total_points": 0
+    "password": "replace-with-strong-password"
   }'
 ```
 
@@ -36,28 +35,39 @@ Response:
 }
 ```
 
-### 2. Get a User
+### 2. Login
 
 ```bash
-curl http://localhost:8080/users?id=1
+curl -X POST http://localhost:9206/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john_doe",
+    "password": "replace-with-strong-password"
+  }'
 ```
 
 Response:
 ```json
 {
-  "id": 1,
-  "username": "john_doe",
-  "email": "john@example.com",
-  "is_admin": false,
-  "total_points": 0,
-  "created_at": "2024-01-27T15:30:00Z"
+  "token": "<jwt-token>",
+  "user": {
+    "id": 1,
+    "username": "john_doe",
+    "email": "john@example.com"
+  }
 }
+```
+
+Use the token in the `Authorization` header for protected endpoints:
+
+```
+Authorization: Bearer <jwt-token>
 ```
 
 ### 3. Create a Topic
 
 ```bash
-curl -X POST http://localhost:8080/topics \
+curl -X POST http://localhost:9206/topics \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Go Programming",
@@ -75,10 +85,10 @@ Response:
 }
 ```
 
-### 4. List All Topics
+### 4. List Topics (Filtered by User Category)
 
 ```bash
-curl http://localhost:8080/topics
+curl "http://localhost:9206/topics?user_id=1"
 ```
 
 Response:
@@ -102,7 +112,7 @@ Response:
 ### 5. Create a Question
 
 ```bash
-curl -X POST http://localhost:8080/questions \
+curl -X POST http://localhost:9206/questions \
   -H "Content-Type: application/json" \
   -d '{
     "topic_id": 1,
@@ -129,7 +139,7 @@ Response:
 ### 6. Get Questions by Topic
 
 ```bash
-curl http://localhost:8080/questions?topic_id=1
+curl "http://localhost:9206/questions?topic_id=1"
 ```
 
 Response:
@@ -156,49 +166,49 @@ Response:
 ]
 ```
 
-### 7. Create a Quiz Attempt
+### 7. Generate a Quiz
 
 ```bash
-curl -X POST http://localhost:8080/quiz-attempts \
+curl -X POST http://localhost:9206/quiz/generate \
   -H "Content-Type: application/json" \
   -d '{
     "user_id": 1,
-    "total_questions": 5,
-    "correct_answers": 3,
-    "question_ids": ["1.1", "1.2", "2.1", "2.2", "3.1"],
-    "question_results": {
-      "1.1": true,
-      "1.2": false,
-      "2.1": true,
-      "2.2": true,
-      "3.1": false
-    }
+    "topic_id": 1,
+    "num_questions": 5,
+    "difficulty_level": 2
   }'
 ```
 
 Response:
 ```json
 {
-  "id": 1,
-  "user_id": 1,
-  "start_time": "2024-01-27T15:34:00Z",
-  "total_questions": 5,
-  "correct_answers": 3,
-  "question_ids": ["1.1", "1.2", "2.1", "2.2", "3.1"],
-  "question_results": {
-    "1.1": true,
-    "1.2": false,
-    "2.1": true,
-    "2.2": true,
-    "3.1": false
-  }
+  "quiz_attempt_id": 42,
+  "questions": [
+    {
+      "question": {
+        "id": 1,
+        "question_text": "What keyword is used to declare a variable in Go?"
+      },
+      "answers": [
+        {"id": 10, "answer_text": "var"},
+        {"id": 11, "answer_text": "let"}
+      ]
+    }
+  ]
 }
 ```
 
-### 8. Get Quiz Attempts by User
+### 8. Submit an Answer
 
 ```bash
-curl http://localhost:8080/quiz-attempts?user_id=1
+curl -X POST http://localhost:9206/quiz/submit-answer \
+  -H "Content-Type: application/json" \
+  -d '{
+    "quiz_attempt_id": 42,
+    "question_id": 1,
+    "answer_id": 10,
+    "user_id": 1
+  }'
 ```
 
 Response:
@@ -254,9 +264,7 @@ Internal server error message
 
 ## Next Steps
 
-1. Add authentication (JWT tokens)
-2. Implement rate limiting
-3. Add request validation
-4. Implement CORS for frontend
+- Review the full endpoint list in [README.md](README.md)
+- See [SPECIFICATION.md](SPECIFICATION.md) and phase summaries for design details
 5. Implement spaced repetition algorithm
 6. Add more endpoints for answers, question attempts, etc.

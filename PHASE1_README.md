@@ -41,7 +41,7 @@ This will create:
 ./athena
 ```
 
-The server will start on `http://localhost:8080`
+The server will start on `http://localhost:9206`
 
 Alternatively, you can specify a custom database path:
 ```bash
@@ -52,7 +52,7 @@ DB_PATH=/path/to/custom.db ./athena
 
 Open your browser and navigate to:
 ```
-http://localhost:8080/index.html
+http://localhost:9206/index.html
 ```
 
 ## Using the Application

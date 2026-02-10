@@ -142,10 +142,10 @@ go build -o athena .
 ./athena
 ```
 
-Server starts on http://localhost:8080
+Server starts on http://localhost:9206
 
 ### Accessing Admin Panel
-1. Navigate to http://localhost:8080/admin.html
+1. Navigate to http://localhost:9206/admin.html
 2. First login as admin (username: admin, password: admin) at /index.html
 3. Then access /admin.html
 
@@ -194,7 +194,7 @@ Server starts on http://localhost:8080
 
 ### Review a Question
 ```bash
-curl -X POST http://localhost:8080/fsrs/review \
+curl -X POST http://localhost:9206/fsrs/review \
   -H "Content-Type: application/json" \
   -d '{
     "user_id": 1,
@@ -205,12 +205,12 @@ curl -X POST http://localhost:8080/fsrs/review \
 
 ### Get Due Questions
 ```bash
-curl http://localhost:8080/fsrs/due?user_id=1&limit=10
+curl http://localhost:9206/fsrs/due?user_id=1&limit=10
 ```
 
 ### Create Quiz (Admin)
 ```bash
-curl -X POST http://localhost:8080/admin/quizzes \
+curl -X POST http://localhost:9206/admin/quizzes \
   -H "Content-Type: application/json" \
   -H "X-User-ID: 1" \
   -d '{
@@ -222,7 +222,7 @@ curl -X POST http://localhost:8080/admin/quizzes \
 
 ### List Users (Admin)
 ```bash
-curl http://localhost:8080/admin/users \
+curl http://localhost:9206/admin/users \
   -H "X-User-ID: 1"
 ```
 

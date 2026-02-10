@@ -2,11 +2,20 @@
 
 Athena is a specialized testing application for students who are learning how to develop software. It is a web-based three-tier application with an API business logic middle-end and a relational database backend.
 
-## Current Status: Phase 3 Complete ✅
+## Current Status: Phase 5 Complete ✅
 
-Athena now includes comprehensive features for students, instructors, and administrators with full FSRS-4.5 spaced repetition, quiz retakes, import/export, and instructor analytics.
+Athena now includes comprehensive student learning, instructor analytics, and admin content management, with FSRS-4.5 spaced repetition, timed tests, learning resources, bulk import, and quality review.
 
 ## Recent Updates
+
+### February 2026 (Recent PRs)
+- **Simplified migration flow** with a cleaner CLI and fewer moving parts
+- **SQLite layer split into focused modules** for clearer database responsibilities
+- **Routing cleanup** with consolidated API registration and consistent middleware
+- **Frontend JS refactor** for smaller, better-factored UI code
+- **Mobile-responsive UI improvements** across student and admin views
+- **Quiz generation fixes** for filtering, difficulty handling, and duplicate prevention
+- **Dashboard and admin fixes** (user stats, category display, question editing, labels, available topics)
 
 ### January 28, 2026
 - **[Bug Fix]** Added comprehensive error logging to all API handlers
@@ -23,6 +32,20 @@ Athena now includes comprehensive features for students, instructors, and admini
   - Parent-child attempt tracking with attempt numbers
   - 13 new comprehensive tests added
   - Authorization validation ensures students only retake their own quizzes
+
+### Phase 5 Features
+- **Content Management & Quality**
+  - Bulk CSV question import with validation
+  - Tag management (merge, delete, analytics)
+  - Flagged question review and resolution
+  - Instructor question management with previews
+
+### Phase 4 Features
+- **Student Learning Enhancements**
+  - Quiz attempt history and detailed review
+  - Timed test-taking with results
+  - Tag-based review quizzes
+  - Learning resources and curriculum outline
 
 ### Phase 3 Features
 - **Instructor Analytics**
@@ -102,22 +125,27 @@ See [DATABASE_MIGRATIONS.md](DATABASE_MIGRATIONS.md) for complete migration docu
 
 ## Architecture
 
-- **Backend**: Go API server with comprehensive error logging
-- **Database**: SQLite3
-- **Frontend**: HTML/JavaScript with Bootstrap CSS framework
+- **Backend**: Go API server (Chi router) with structured logging and middleware
+- **Middleware**: CORS, rate limiting, request size limits, content-type checks, JWT optional auth
+- **Database**: SQLite3 with schema migrations via golang-migrate
+- **Frontend**: HTML/JavaScript with Bootstrap, mobile-responsive layout
 - **Algorithm**: FSRS-4.5 spaced repetition system
 
 ## Project Structure
 
 ```
 zip-athena/
-├── models/          # Data models (User, Topic, Question, Answer, QuizAttempt, etc.)
+├── api/             # HTTP API handlers
+├── config/          # Environment-based configuration
 ├── database/        # Database layer with SQLite implementation
 │   ├── migrations/  # SQL migration files for schema versioning
-│   ├── migrate.go   # Migration runner functions
-│   └── sqlite.go    # SQLite database implementation
-├── api/             # HTTP API handlers with error logging
+│   └── migrate.go   # Migration runner functions
 ├── fsrs/            # FSRS-4.5 spaced repetition algorithm
+├── learning/        # Learning resource content and guides
+├── logger/          # Structured logging setup
+├── models/          # Data models (User, Topic, Question, Answer, QuizAttempt, etc.)
+├── questions/       # Seed question banks
+├── router/          # Route registration and middleware
 ├── static/          # Frontend HTML, CSS, and JavaScript
 ├── cmd/
 │   ├── seed/        # Database seeding utility
@@ -138,7 +166,7 @@ go build -o athena .
 go run main.go
 ```
 
-The server runs on port 9206.
+The server runs on port 9206 by default. Configure with `PORT` and other env vars in [config/config.go](config/config.go).
 
 ## Running Tests
 
@@ -153,19 +181,13 @@ go test -v ./api
 go test -v ./fsrs
 ```
 
-### Test Coverage (81+ Tests)
+### Test Coverage
 
-- **Model Tests**: 5 tests covering all data structures
-- **Database Tests**: 10 tests for CRUD operations and concurrency
-- **API Handler Tests**: 20+ tests for endpoints
-- **FSRS Tests**: 20 tests for spaced repetition algorithm
-- **Phase 2 Tests**: 20 tests for FSRS integration
-- **Retake Tests**: 13 tests for quiz retake functionality
-- **Phase 3 Tests**: 44 tests for instructor analytics, import/export, and topic management
-
-**Total**: 100+ comprehensive tests across all components
+100+ tests across database, API handlers, FSRS, and phased features.
 
 ## API Endpoints
+
+Most admin and instructor endpoints require JWT authentication. See [API_EXAMPLES.md](API_EXAMPLES.md).
 
 ### Authentication
 - `POST /auth/register` - User registration
@@ -173,10 +195,21 @@ go test -v ./fsrs
 
 ### Student Endpoints
 - `POST /quiz/generate` - Generate a new quiz
+- `POST /quiz/generate/by-tags` - Generate a tag-filtered quiz
 - `POST /quiz/submit-answer` - Submit answer for a question
 - `POST /quiz/complete` - Complete a quiz
 - `POST /quiz/retake` - Retake a quiz (for scores < 100%)
 - `GET /progress?user_id={id}` - Get student progress
+- `GET /students/quiz-history` - Quiz history list
+- `GET /students/quiz-history/{id}` - Quiz attempt details
+
+### Tests (Student)
+- `GET /tests/available` - Available tests
+- `GET /tests/{id}` - Test details
+- `POST /tests/{id}/start` - Start a test
+- `PUT /test-attempts/{id}/answer` - Submit test answer
+- `POST /test-attempts/{id}/submit` - Submit test
+- `GET /test-attempts/{id}/results` - Test results
 
 ### FSRS Endpoints
 - `POST /fsrs/review` - Review a question with rating (1-4)
@@ -188,6 +221,11 @@ go test -v ./fsrs
 - `POST /admin/users` - Create user
 - `PUT /admin/users` - Update user
 - `DELETE /admin/users` - Delete user
+- `POST /admin/questions/import` - CSV import questions
+- `POST /admin/questions/import/validate` - Validate CSV
+- `POST /admin/questions/import/confirm` - Confirm import
+- `GET /admin/questions/flagged` - Flagged question queue
+- `POST /admin/questions/auto-flag` - Auto-flag questions
 - `GET /admin/questions` - List all questions
 - `POST /admin/questions` - Create question
 - `PUT /admin/questions` - Update question
@@ -205,6 +243,8 @@ go test -v ./fsrs
 - `POST /instructor/quizzes/import` - Import quiz from JSON
 - `GET /instructor/questions/export` - Export questions as JSON
 - `POST /instructor/questions/import` - Import questions from JSON
+- `GET /instructor/questions` - List questions with filters
+- `GET /instructor/questions/{id}/preview` - Preview question
 
 ## Key Features
 
@@ -212,14 +252,19 @@ go test -v ./fsrs
 - **Quiz Retakes**: Students can retake quizzes to improve understanding
 - **Adaptive Quizzing**: Automatically prioritizes questions that need review
 - **Comprehensive Error Logging**: All errors logged to stderr for monitoring
-- **Admin Dashboard**: Full content management system
+- **Admin Dashboard**: Full content management and quality review
 - **Instructor Analytics**: Track student and cohort performance
 - **Import/Export**: Bulk question and quiz management
+- **Bulk CSV Import**: Validation and confirmation workflow
+- **Tag-Based Review**: Filter quizzes by tags and track accuracy
+- **Timed Tests**: Formal assessments with results export
+- **Learning Resources**: Curriculum outline and resource linking
 - **Thread-safe Database**: Concurrent operation support
 - **RESTful API**: Clean, well-documented endpoints
 - **Secure Authentication**: Bcrypt password hashing
 - **Progress Tracking**: Detailed statistics and history
 - **Tag-based Organization**: Categorize questions by topics and tags
+- **Mobile Responsive UI**: Improved layouts for smaller screens
 
 ## Admin Access
 
@@ -242,6 +287,8 @@ All errors that prevent users from completing operations are logged to stderr wi
 - `PHASE2_README.md` - Phase 2 requirements and design
 - `PHASE2_COMPLETE.md` - Phase 2 completion summary
 - `PHASE3_COMPLETE.md` - Phase 3 completion summary
+- `PHASE4_COMPLETE.md` - Phase 4 completion summary
+- `PHASE5_COMPLETE.md` - Phase 5 completion summary
 - `QUIZ_RETAKE_FEATURE.md` - Quiz retake feature documentation
 - `IMPLEMENTATION_SUMMARY.md` - Retake implementation details
 - `IMPLEMENTATION_PHASES.md` - Complete phased implementation plan

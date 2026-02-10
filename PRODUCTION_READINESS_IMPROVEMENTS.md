@@ -136,7 +136,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:*,http://127.0.0.1:*
 
 ```bash
 # .env
-PORT=8080
+PORT=9206
 DB_TYPE=postgres
 DATABASE_URL=postgresql://user:pass@prod-db:5432/athena?sslmode=require
 JWT_SECRET=<strong-random-secret-generated-with-openssl-rand-base64-32>
@@ -157,7 +157,7 @@ CORS_ALLOW_CREDENTIALS=true
 go run main.go
 
 # With environment variables
-PORT=8080 LOG_LEVEL=debug go run main.go
+PORT=9206 LOG_LEVEL=debug go run main.go
 
 # With .env file
 export $(cat .env | xargs) && go run main.go
