@@ -45,5 +45,6 @@ athena-opt
 athena-orig
 /main
 athena-server
+migrate
 static/js/admin.js.backup
 server.log
