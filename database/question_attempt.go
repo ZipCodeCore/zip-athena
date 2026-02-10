@@ -1,9 +1,9 @@
 package database
 
 import (
-"database/sql"
+	"database/sql"
 
-"github.com/ZipCodeCore/zip-athena/models"
+	"github.com/ZipCodeCore/zip-athena/models"
 )
 
 func (db *SQLiteDB) CreateQuestionAttempt(attempt *models.QuestionAttempt) error {
