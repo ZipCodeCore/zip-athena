@@ -3,6 +3,8 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"os"
+	"path/filepath"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -39,7 +41,29 @@ func (db *SQLiteDB) Close() error {
 
 // initSchema creates the database tables using migrations
 func (db *SQLiteDB) initSchema() error {
-	return db.RunMigrations("database/migrations")
+	// Find migrations directory relative to this file or working directory
+	migrationsPath := findMigrationsPath()
+	return db.RunMigrations(migrationsPath)
+}
+
+// findMigrationsPath locates the migrations directory
+func findMigrationsPath() string {
+	// Try relative to working directory first
+	paths := []string{
+		"database/migrations",
+		"../database/migrations",
+		"../../database/migrations",
+	}
+	
+	for _, path := range paths {
+		if _, err := os.Stat(path); err == nil {
+			absPath, _ := filepath.Abs(path)
+			return absPath
+		}
+	}
+	
+	// Default to relative path
+	return "database/migrations"
 }
 
 // User operations
