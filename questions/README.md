@@ -4,6 +4,22 @@ This directory contains question files that can be bulk-loaded into the Athena d
 
 ## Usage
 
+### Web UI Import (Recommended)
+
+1. Log in to the Admin Dashboard at `/admin.html`
+2. Navigate to the **Questions** tab
+3. Click the **Import Questions** button
+4. Select a topic from the dropdown menu
+5. Choose a JSON file to upload
+6. Click **Import Questions**
+
+The import panel will display:
+- Number of questions successfully imported
+- Number of duplicate questions skipped
+- Any errors encountered during import
+
+### Command-Line Import
+
 ```bash
 # Load all JSON files from the questions directory
 go run ./cmd/loadquestions/main.go
