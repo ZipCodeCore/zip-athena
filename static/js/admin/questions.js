@@ -3,6 +3,7 @@ import API from '../utils/api.js';
 import { escapeHtml } from '../utils/sanitize.js';
 
 let currentUser = null;
+let allTopics = []; // Store topics for import dropdown
 
 export function setCurrentUser(user) {
     currentUser = user;
@@ -32,6 +33,25 @@ export async function loadQuestions() {
     } catch (error) {
         console.error('Error loading questions:', error);
         alert('Failed to load questions');
+    }
+}
+
+// Load topics for import dropdown
+export async function loadTopicsForImport() {
+    try {
+        allTopics = await API.get('/topics');
+        const select = document.getElementById('importTopicSelect');
+        select.innerHTML = '<option value="">-- Select a topic --</option>';
+        
+        allTopics.forEach(topic => {
+            const option = document.createElement('option');
+            option.value = topic.id;
+            option.textContent = `${topic.name} (ID: ${topic.id})`;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading topics:', error);
+        alert('Failed to load topics');
     }
 }
 
@@ -127,3 +147,109 @@ export async function saveQuestion() {
         alert('Failed to save question: ' + error.message);
     }
 }
+
+// Show import questions panel
+window.showImportQuestionsPanel = async function() {
+    await loadTopicsForImport();
+    document.getElementById('importQuestionsPanel').style.display = 'block';
+    document.getElementById('importResults').style.display = 'none';
+    document.getElementById('importQuestionsForm').reset();
+};
+
+// Hide import questions panel
+window.hideImportQuestionsPanel = function() {
+    document.getElementById('importQuestionsPanel').style.display = 'none';
+    document.getElementById('importResults').style.display = 'none';
+    document.getElementById('importQuestionsForm').reset();
+};
+
+// Handle import form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const importForm = document.getElementById('importQuestionsForm');
+    if (importForm) {
+        importForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const topicId = document.getElementById('importTopicSelect').value;
+            const fileInput = document.getElementById('importFileInput');
+            const file = fileInput.files[0];
+            
+            if (!topicId) {
+                alert('Please select a topic');
+                return;
+            }
+            
+            if (!file) {
+                alert('Please select a JSON file');
+                return;
+            }
+            
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Importing...';
+            
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('topic_id', topicId);
+                
+                const response = await fetch('/admin/questions/import-json', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-User-ID': localStorage.getItem('userId') || '1'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                // Display results
+                const resultsDiv = document.getElementById('importResults');
+                const alertDiv = document.getElementById('importResultsAlert');
+                resultsDiv.style.display = 'block';
+                
+                if (response.ok && result.success) {
+                    alertDiv.className = 'alert alert-success';
+                    let message = `<strong>Import Successful!</strong><br>`;
+                    message += `Topic: ${escapeHtml(result.topic)}<br>`;
+                    message += `Successfully imported: ${result.imported} questions<br>`;
+                    if (result.skipped > 0) {
+                        message += `Skipped (duplicates): ${result.skipped}<br>`;
+                    }
+                    if (result.errors > 0) {
+                        message += `<span class="text-warning">Errors: ${result.errors}</span><br>`;
+                        if (result.messages && result.messages.length > 0) {
+                            message += '<br><strong>Error details:</strong><ul>';
+                            result.messages.forEach(msg => {
+                                message += `<li>${escapeHtml(msg)}</li>`;
+                            });
+                            message += '</ul>';
+                        }
+                    }
+                    alertDiv.innerHTML = message;
+                    
+                    // Reload questions table
+                    await loadQuestions();
+                    
+                    // Reset form
+                    importForm.reset();
+                } else {
+                    alertDiv.className = 'alert alert-danger';
+                    alertDiv.innerHTML = `<strong>Import Failed!</strong><br>${escapeHtml(result.message || 'Unknown error')}`;
+                }
+            } catch (error) {
+                console.error('Error importing questions:', error);
+                const resultsDiv = document.getElementById('importResults');
+                const alertDiv = document.getElementById('importResultsAlert');
+                resultsDiv.style.display = 'block';
+                alertDiv.className = 'alert alert-danger';
+                alertDiv.innerHTML = `<strong>Import Failed!</strong><br>Error: ${escapeHtml(error.message)}`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+    }
+});

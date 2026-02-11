@@ -122,6 +122,9 @@ func New(h *api.Handler) *chi.Mux {
 			r.Put("/", h.UpdateQuestionHandler)
 			r.Delete("/", h.DeleteQuestionHandler)
 
+			// JSON Import route
+			r.Post("/import-json", h.ImportQuestionsJSONHandler)
+
 			// CSV Import routes
 			r.Post("/import", h.ImportQuestionsCSVHandler)
 			r.Post("/import/validate", h.ValidateQuestionsCSVHandler)

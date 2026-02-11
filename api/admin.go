@@ -549,3 +549,181 @@ func (h *Handler) DeleteAnswerHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusNoContent)
 }
+
+// ImportQuestionsJSONHandler handles POST /admin/questions/import-json
+// This handler accepts a JSON file in the format used by the CLI tool
+// along with a topic_id parameter to assign all questions to that topic
+func (h *Handler) ImportQuestionsJSONHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Parse multipart form
+	if err := r.ParseMultipartForm(10 << 20); err != nil { // 10 MB max
+		http.Error(w, "Failed to parse form", http.StatusBadRequest)
+		return
+	}
+
+	// Get topic_id from form
+	topicIDStr := r.FormValue("topic_id")
+	if topicIDStr == "" {
+		http.Error(w, "topic_id is required", http.StatusBadRequest)
+		return
+	}
+
+	topicID, err := strconv.Atoi(topicIDStr)
+	if err != nil {
+		http.Error(w, "Invalid topic ID", http.StatusBadRequest)
+		return
+	}
+
+	// Verify topic exists
+	topic, err := h.db.GetTopic(topicID)
+	if err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "Topic not found", http.StatusNotFound)
+			return
+		}
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get topic")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Get the file from the form
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, "Failed to get file from form", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	// Parse JSON file
+	var questionData struct {
+		Topic     string `json:"topic"`
+		Questions []struct {
+			Text       string   `json:"text"`
+			Difficulty int      `json:"difficulty"`
+			Tags       []string `json:"tags"`
+			Answers    []struct {
+				Text      string `json:"text"`
+				IsCorrect bool   `json:"is_correct"`
+			} `json:"answers"`
+		} `json:"questions"`
+	}
+
+	if err := json.NewDecoder(file).Decode(&questionData); err != nil {
+		http.Error(w, "Failed to parse JSON: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if len(questionData.Questions) == 0 {
+		http.Error(w, "No questions found in JSON file", http.StatusBadRequest)
+		return
+	}
+
+	// Get existing questions to check for duplicates
+	existingQuestions, _ := h.db.GetQuestionsByTopic(topicID)
+	existingTexts := make(map[string]bool)
+	for _, eq := range existingQuestions {
+		existingTexts[eq.QuestionText] = true
+	}
+
+	importedCount := 0
+	skippedCount := 0
+	errorCount := 0
+	var errors []string
+
+	// Import questions
+	startNum := len(existingQuestions) + 1
+	for i, q := range questionData.Questions {
+		// Validate question
+		if q.Text == "" {
+			errorCount++
+			errors = append(errors, "Question "+(strconv.Itoa(i+1))+": question text is empty")
+			continue
+		}
+
+		if q.Difficulty < 1 || q.Difficulty > 7 {
+			errorCount++
+			errors = append(errors, "Question "+(strconv.Itoa(i+1))+": difficulty must be between 1 and 7")
+			continue
+		}
+
+		if len(q.Answers) < 2 || len(q.Answers) > 6 {
+			errorCount++
+			errors = append(errors, "Question "+(strconv.Itoa(i+1))+": must have between 2 and 6 answers")
+			continue
+		}
+
+		// Validate answers
+		correctCount := 0
+		for _, a := range q.Answers {
+			if a.Text == "" {
+				errorCount++
+				errors = append(errors, "Question "+(strconv.Itoa(i+1))+": answer text is empty")
+				continue
+			}
+			if a.IsCorrect {
+				correctCount++
+			}
+		}
+
+		if correctCount != 1 {
+			errorCount++
+			errors = append(errors, "Question "+(strconv.Itoa(i+1))+": exactly one answer must be correct")
+			continue
+		}
+
+		// Check for duplicates
+		if existingTexts[q.Text] {
+			skippedCount++
+			continue
+		}
+
+		// Create question
+		topicQuestionID := topic.Name + "." + strconv.Itoa(startNum+importedCount)
+		question := models.Question{
+			TopicID:         topicID,
+			QuestionText:    q.Text,
+			Difficulty:      q.Difficulty,
+			Tags:            q.Tags,
+			TopicQuestionID: topicQuestionID,
+			CreatedAt:       time.Now(),
+		}
+
+		if err := h.db.CreateQuestion(&question); err != nil {
+			h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create question during JSON import")
+			errorCount++
+			errors = append(errors, "Question "+(strconv.Itoa(i+1))+": failed to create - "+err.Error())
+			continue
+		}
+
+		// Create answers
+		for _, a := range q.Answers {
+			answer := models.Answer{
+				QuestionID: question.ID,
+				AnswerText: a.Text,
+				IsCorrect:  a.IsCorrect,
+			}
+			if err := h.db.CreateAnswer(&answer); err != nil {
+				h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create answer during JSON import")
+				errorCount++
+				errors = append(errors, "Question "+(strconv.Itoa(i+1))+": failed to create answer - "+err.Error())
+			}
+		}
+
+		importedCount++
+		existingTexts[q.Text] = true
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"success":  true,
+		"imported": importedCount,
+		"skipped":  skippedCount,
+		"errors":   errorCount,
+		"messages": errors,
+		"topic":    topic.Name,
+	})
+}
