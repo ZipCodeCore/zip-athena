@@ -3,7 +3,7 @@ import API from '../utils/api.js';
 import { escapeHtml } from '../utils/sanitize.js';
 
 let currentUser = null;
-let allTopics = []; // Store topics for import dropdown
+let importTopics = []; // Store topics for the import dropdown
 
 export function setCurrentUser(user) {
     currentUser = user;
@@ -39,11 +39,11 @@ export async function loadQuestions() {
 // Load topics for import dropdown
 export async function loadTopicsForImport() {
     try {
-        allTopics = await API.get('/topics');
+        importTopics = await API.get('/topics');
         const select = document.getElementById('importTopicSelect');
         select.innerHTML = '<option value="">-- Select a topic --</option>';
         
-        allTopics.forEach(topic => {
+        importTopics.forEach(topic => {
             const option = document.createElement('option');
             option.value = topic.id;
             option.textContent = `${topic.name} (ID: ${topic.id})`;

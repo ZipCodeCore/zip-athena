@@ -658,15 +658,21 @@ func (h *Handler) ImportQuestionsJSONHandler(w http.ResponseWriter, r *http.Requ
 
 		// Validate answers
 		correctCount := 0
+		hasEmptyAnswer := false
 		for _, a := range q.Answers {
 			if a.Text == "" {
-				errorCount++
-				errors = append(errors, "Question "+(strconv.Itoa(i+1))+": answer text is empty")
-				continue
+				hasEmptyAnswer = true
+				break
 			}
 			if a.IsCorrect {
 				correctCount++
 			}
+		}
+
+		if hasEmptyAnswer {
+			errorCount++
+			errors = append(errors, "Question "+(strconv.Itoa(i+1))+": answer text is empty")
+			continue
 		}
 
 		if correctCount != 1 {
@@ -681,8 +687,8 @@ func (h *Handler) ImportQuestionsJSONHandler(w http.ResponseWriter, r *http.Requ
 			continue
 		}
 
-		// Create question
-		topicQuestionID := topic.Name + "." + strconv.Itoa(startNum+importedCount)
+		// Create question with sequential numbering based on actual imported count
+		topicQuestionID := strconv.Itoa(topicID) + "." + strconv.Itoa(startNum+importedCount)
 		question := models.Question{
 			TopicID:         topicID,
 			QuestionText:    q.Text,
