@@ -1,316 +1,301 @@
-# Athena - Student Quiz Application
+# Athena - Adaptive Learning Platform
 
-Athena is a specialized testing application for students who are learning how to develop software. It is a web-based three-tier application with an API business logic middle-end and a relational database backend.
+Athena is an intelligent quiz application that helps students learn programming through adaptive, spaced repetition. It's also a complete, production-quality codebase designed to teach modern software development practices.
 
-## Current Status: Phase 5 Complete ✅
-
-Athena now includes comprehensive student learning, instructor analytics, and admin content management, with FSRS-4.5 spaced repetition, timed tests, learning resources, bulk import, and quality review.
-
-## Recent Updates
-
-### February 2026 (Recent PRs)
-- **Simplified migration flow** with a cleaner CLI and fewer moving parts
-- **SQLite layer split into focused modules** for clearer database responsibilities
-- **Routing cleanup** with consolidated API registration and consistent middleware
-- **Frontend JS refactor** for smaller, better-factored UI code
-- **Mobile-responsive UI improvements** across student and admin views
-- **Quiz generation fixes** for filtering, difficulty handling, and duplicate prevention
-- **Dashboard and admin fixes** (user stats, category display, question editing, labels, available topics)
-
-### January 28, 2026
-- **[Bug Fix]** Added comprehensive error logging to all API handlers
-  - All database errors now logged to stderr with contextual information
-  - Silent error cases now properly logged (quiz generation, FSRS updates, progress tracking)
-  - Replaced stdout logging (fmt.Printf) with stderr logging (log.Printf)
-  - Improves server monitoring and debugging capabilities
-
-### January 28, 2026 (Earlier)
-- **[Feature]** Quiz Retake System (Phase 2.5)
-  - Students can retake quizzes with scores less than 100%
-  - Exact same questions reproduced in retakes
-  - FSRS integration: incorrect answers get shorter review intervals
-  - Parent-child attempt tracking with attempt numbers
-  - 13 new comprehensive tests added
-  - Authorization validation ensures students only retake their own quizzes
-
-### Phase 5 Features
-- **Content Management & Quality**
-  - Bulk CSV question import with validation
-  - Tag management (merge, delete, analytics)
-  - Flagged question review and resolution
-  - Instructor question management with previews
-
-### Phase 4 Features
-- **Student Learning Enhancements**
-  - Quiz attempt history and detailed review
-  - Timed test-taking with results
-  - Tag-based review quizzes
-  - Learning resources and curriculum outline
-
-### Phase 3 Features
-- **Instructor Analytics**
-  - Student progress tracking with detailed performance metrics
-  - Cohort analytics for class-wide statistics
-  - Individual student assessment views
-- **Import/Export**
-  - Quiz import/export in JSON format
-  - Question bank import/export
-  - Bulk question management capabilities
-- **Test Management**
-  - Create and manage formal tests
-  - Question-to-test assignment
-  - Test CRUD operations
-- **Quiz-Question Relationships**
-  - Dynamic quiz-question linking
-  - Reusable question pools
-  - Flexible quiz composition
-
-### Phase 2 Features
-- **FSRS-4.5 Spaced Repetition Algorithm**
-  - Adaptive scheduling based on difficulty and performance
-  - 20 comprehensive unit tests
-  - Difficulty and stability tracking
-- **Adaptive Quiz Generation**
-  - Prioritizes due questions over new or future questions
-  - Integration with spaced repetition system
-- **Admin Dashboard**
-  - Full CRUD operations for users, topics, questions, quizzes
-  - User management and statistics
-  - Question and quiz management
-- **Enhanced Question Bank**
-  - Java: 20 questions
-  - Python: 18 questions
-  - Go: 15 questions
-
-### Phase 1 Features
-- User authentication with bcrypt password hashing
-- Quiz generation and taking
-- Progress tracking
-- Bootstrap-based responsive UI
-- SQLite3 database backend
+**Dual Purpose**:
+1. 📚 **Learning Tool** - Use it to learn Java, Python, and SQL through intelligent quizzing
+2. 🎓 **Teaching Resource** - Study the codebase to learn three-tier architecture, RESTful APIs, databases, and Go programming
 
 ## Quick Start
 
+Get up and running in 5 minutes:
+
 ```bash
-# Seed the database with sample questions
+# 1. Clone the repository
+git clone https://github.com/ZipCodeCore/zip-athena.git
+cd zip-athena
+
+# 2. Seed the database with sample questions
 go run cmd/seed/main.go
 
-# Start the server
+# 3. Start the server
 go run main.go
 
-# Open browser to http://localhost:9206
+# 4. Open browser to http://localhost:9206
 ```
 
-## Database Migrations
+## What Makes Athena Special?
 
-Athena uses [golang-migrate](https://github.com/golang-migrate/migrate) for database version control and schema management. Migrations are automatically applied when the application starts.
+### Intelligent Learning with FSRS
+- Uses the **FSRS-4.5 spaced repetition algorithm** (research-backed, superior to traditional Anki/SM-2)
+- Questions appear at optimal intervals for maximum retention
+- Adapts to your performance - struggles more, masters less
 
-### Manual Migration Management
+### Student-Focused Features
+- Quiz retakes to improve understanding
+- Detailed progress tracking and analytics
+- Timed tests for assessment
+- Learning resources linked to questions
+- Tag-based review for focused practice
 
-```bash
-# Build the migration tool
-go build -o migrate ./cmd/migrate
+### Built for Learning Software Development
+- Clean three-tier architecture (Frontend → API → Database)
+- Well-tested (100+ tests)
+- Production-ready code patterns
+- Comprehensive documentation
+- Real-world security practices
 
-# Check current migration version
-./migrate -db athena.db -cmd version
+## Documentation
 
-# Apply all pending migrations
-./migrate -db athena.db -cmd up
+### For Students & Learners
 
-# Roll back the last migration
-./migrate -db athena.db -cmd down -steps 1
+- **[Getting Started Guide](GETTING_STARTED.md)** - Set up and run Athena in 5 minutes
+- **[Learning Guide](LEARNING_GUIDE.md)** - Use this codebase to learn software development
+  - 6 guided learning pathways (Go, APIs, Databases, Testing, Security, Algorithms)
+  - Code reading techniques
+  - Exercises by skill level
+  - Study group discussion questions
+
+### For Developers & Contributors
+
+- **[Architecture Guide](ARCHITECTURE.md)** - Understand how Athena is built
+  - High-level architecture overview
+  - Component responsibilities
+  - Core algorithms (FSRS, adaptive quiz generation)
+  - Design decisions and rationale
+  
+- **[Development Guide](DEVELOPMENT_GUIDE.md)** - Contribute to the codebase
+  - Development workflow
+  - Adding features/endpoints/tables
+  - Testing guidelines
+  - Code quality standards
+
+### Technical References
+
+- **[API Examples](docs/development/API_EXAMPLES.md)** - Complete API documentation
+- **[Database Migrations](docs/development/DATABASE_MIGRATIONS.md)** - Schema management
+- **[Import/Export Format](docs/development/IMPORT_EXPORT_FORMAT.md)** - Data interchange
+- **[Test Summary](docs/development/TEST_SUMMARY.md)** - Testing documentation
+
+### Additional Resources
+
+- **[Specification](docs/SPECIFICATION.md)** - Complete system specification
+- **[Curriculum](docs/CURRICULUM.md)** - Learning content organization
+- **[Development History](docs/archive/)** - Phase implementation details
+
+## Architecture Overview
+
+```
+┌─────────────────┐
+│   Web Browser   │  ← Vanilla JS + Bootstrap
+│  (Static HTML)  │    No build step required
+└────────┬────────┘
+         │ HTTP/JSON
+┌────────▼────────┐
+│   Go API Server │  ← Chi router + Middleware
+│   (RESTful API) │    JWT auth, CORS, rate limiting
+└────────┬────────┘
+         │ SQL
+┌────────▼────────┐
+│ SQLite Database │  ← Migrations, indexes
+│   (athena.db)   │    Thread-safe, ACID-compliant
+└─────────────────┘
 ```
 
-See [DATABASE_MIGRATIONS.md](DATABASE_MIGRATIONS.md) for complete migration documentation.
+## Using Athena
 
-## Architecture
+### As a Student
 
-- **Backend**: Go API server (Chi router) with structured logging and middleware
-- **Middleware**: CORS, rate limiting, request size limits, content-type checks, JWT optional auth
-- **Database**: SQLite3 with schema migrations via golang-migrate
-- **Frontend**: HTML/JavaScript with Bootstrap, mobile-responsive layout
-- **Algorithm**: FSRS-4.5 spaced repetition system
+1. **Register/Login** at http://localhost:9206
+2. **Browse Topics** on your dashboard (Java, Python, SQL)
+3. **Take Quizzes** - Answer questions, get immediate feedback
+4. **Track Progress** - See your accuracy, points, and improvement
+5. **Review Material** - Access learning resources
+6. **Retake Quizzes** - Improve your understanding
 
-## Project Structure
+### As an Instructor
 
-```
-zip-athena/
-├── api/             # HTTP API handlers
-├── config/          # Environment-based configuration
-├── database/        # Database layer with SQLite implementation
-│   ├── migrations/  # SQL migration files for schema versioning
-│   └── migrate.go   # Migration runner functions
-├── fsrs/            # FSRS-4.5 spaced repetition algorithm
-├── learning/        # Learning resource content and guides
-├── logger/          # Structured logging setup
-├── models/          # Data models (User, Topic, Question, Answer, QuizAttempt, etc.)
-├── questions/       # Seed question banks
-├── router/          # Route registration and middleware
-├── static/          # Frontend HTML, CSS, and JavaScript
-├── cmd/
-│   ├── seed/        # Database seeding utility
-│   └── migrate/     # Migration management CLI tool
-└── main.go          # Application entry point
-```
+1. **Login** as instructor
+2. **View Student Progress** at http://localhost:9206/instructor.html
+3. **Monitor Class Analytics** - See cohort-wide statistics
+4. **Identify Struggling Students** - Focus help where needed
+5. **Import/Export Content** - Share quiz banks
 
-## Running the Application
+### As an Admin
 
-```bash
-# Build the application
-go build -o athena .
+1. **Login** with admin credentials (username: `admin`, password: `admin`)
+2. **Manage Content** at http://localhost:9206/admin.html
+3. **Create/Edit Questions** - Build question banks
+4. **Bulk Import** - Upload questions via CSV
+5. **Review Flagged Questions** - Quality control
 
-# Run the server
-./athena
+## For Developers
 
-# Or run directly
-go run main.go
-```
-
-The server runs on port 9206 by default. Configure with `PORT` and other env vars in [config/config.go](config/config.go).
-
-## Running Tests
+### Running Tests
 
 ```bash
 # Run all tests
 go test -v ./...
 
-# Run tests for a specific package
-go test -v ./models
-go test -v ./database
+# Run with coverage
+go test -cover ./...
+
+# Run specific package
 go test -v ./api
 go test -v ./fsrs
 ```
 
-### Test Coverage
+**Test Coverage**: 100+ tests across all layers (database, API, FSRS algorithm)
 
-100+ tests across database, API handlers, FSRS, and phased features.
+### Common Development Tasks
 
-## API Endpoints
+```bash
+# Format code
+go fmt ./...
 
-Most admin and instructor endpoints require JWT authentication. See [API_EXAMPLES.md](API_EXAMPLES.md).
+# Check for issues
+go vet ./...
 
-### Authentication
-- `POST /auth/register` - User registration
-- `POST /auth/login` - User login
+# Build application
+go build -o athena .
 
-### Student Endpoints
-- `POST /quiz/generate` - Generate a new quiz
-- `POST /quiz/generate/by-tags` - Generate a tag-filtered quiz
-- `POST /quiz/submit-answer` - Submit answer for a question
-- `POST /quiz/complete` - Complete a quiz
-- `POST /quiz/retake` - Retake a quiz (for scores < 100%)
-- `GET /progress?user_id={id}` - Get student progress
-- `GET /students/quiz-history` - Quiz history list
-- `GET /students/quiz-history/{id}` - Quiz attempt details
+# Run with custom config
+PORT=8080 LOG_LEVEL=debug go run main.go
 
-### Tests (Student)
-- `GET /tests/available` - Available tests
-- `GET /tests/{id}` - Test details
-- `POST /tests/{id}/start` - Start a test
-- `PUT /test-attempts/{id}/answer` - Submit test answer
-- `POST /test-attempts/{id}/submit` - Submit test
-- `GET /test-attempts/{id}/results` - Test results
+# Manage database migrations
+go build -o migrate ./cmd/migrate
+./migrate -db athena.db -cmd version
+```
 
-### FSRS Endpoints
-- `POST /fsrs/review` - Review a question with rating (1-4)
-- `GET /fsrs/due?user_id={id}` - Get due questions for review
-- `POST /fsrs/quiz/generate` - Generate adaptive quiz based on FSRS
-
-### Admin Endpoints (Protected)
-- `GET /admin/users` - List all users
-- `POST /admin/users` - Create user
-- `PUT /admin/users` - Update user
-- `DELETE /admin/users` - Delete user
-- `POST /admin/questions/import` - CSV import questions
-- `POST /admin/questions/import/validate` - Validate CSV
-- `POST /admin/questions/import/confirm` - Confirm import
-- `GET /admin/questions/flagged` - Flagged question queue
-- `POST /admin/questions/auto-flag` - Auto-flag questions
-- `GET /admin/questions` - List all questions
-- `POST /admin/questions` - Create question
-- `PUT /admin/questions` - Update question
-- `DELETE /admin/questions` - Delete question
-- `GET /admin/quizzes` - List all quizzes
-- `POST /admin/quizzes` - Create quiz
-- `PUT /admin/quizzes` - Update quiz
-- `DELETE /admin/quizzes` - Delete quiz
-- Similar endpoints for topics, answers, and tests
-
-### Instructor Endpoints (Protected)
-- `GET /instructor/student-progress?user_id={id}` - Get detailed student progress
-- `GET /instructor/cohort-analytics` - Get cohort-wide statistics
-- `GET /instructor/quizzes/export?id={id}` - Export quiz as JSON
-- `POST /instructor/quizzes/import` - Import quiz from JSON
-- `GET /instructor/questions/export` - Export questions as JSON
-- `POST /instructor/questions/import` - Import questions from JSON
-- `GET /instructor/questions` - List questions with filters
-- `GET /instructor/questions/{id}/preview` - Preview question
+See [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) for complete development documentation.
 
 ## Key Features
 
-- **Spaced Repetition Learning**: FSRS-4.5 algorithm for optimal review scheduling
-- **Quiz Retakes**: Students can retake quizzes to improve understanding
-- **Adaptive Quizzing**: Automatically prioritizes questions that need review
-- **Comprehensive Error Logging**: All errors logged to stderr for monitoring
-- **Admin Dashboard**: Full content management and quality review
-- **Instructor Analytics**: Track student and cohort performance
-- **Import/Export**: Bulk question and quiz management
-- **Bulk CSV Import**: Validation and confirmation workflow
-- **Tag-Based Review**: Filter quizzes by tags and track accuracy
-- **Timed Tests**: Formal assessments with results export
-- **Learning Resources**: Curriculum outline and resource linking
-- **Thread-safe Database**: Concurrent operation support
-- **RESTful API**: Clean, well-documented endpoints
-- **Secure Authentication**: Bcrypt password hashing
-- **Progress Tracking**: Detailed statistics and history
-- **Tag-based Organization**: Categorize questions by topics and tags
-- **Mobile Responsive UI**: Improved layouts for smaller screens
+### For Students
+- 📚 **Adaptive Quizzing** - FSRS algorithm schedules optimal review intervals
+- 🔄 **Quiz Retakes** - Retake quizzes to improve understanding
+- 📊 **Progress Tracking** - Detailed statistics and history
+- ⏱️ **Timed Tests** - Formal assessments with results
+- 📖 **Learning Resources** - Curriculum guides linked to questions
+- 🏷️ **Tag-Based Review** - Focus on specific concepts
 
-## Admin Access
+### For Instructors
+- 👥 **Student Analytics** - Track individual student progress
+- 📈 **Cohort Analytics** - Class-wide performance statistics
+- 🎯 **Identify Struggles** - Find students who need help
+- 📦 **Import/Export** - Share quiz banks and questions
 
-Default admin account for development:
-- **Username**: admin
-- **Password**: admin
-- **Capabilities**: Full access to all admin and instructor features
+### For Admins
+- ✏️ **Question Management** - Create, edit, delete questions
+- 📥 **Bulk CSV Import** - Upload question banks efficiently
+- 🚩 **Quality Review** - Flag and review problematic questions
+- 🏷️ **Tag Management** - Organize and analyze by tags
+- 👤 **User Management** - Full user CRUD operations
 
-## Error Logging
+## API Endpoints
 
-All errors that prevent users from completing operations are logged to stderr with:
-- Descriptive error messages
-- Contextual information (user IDs, question IDs, etc.)
-- Timestamp information via Go's log package
-- Helps with debugging and monitoring in production
+Athena provides a comprehensive RESTful API. See [API Examples](docs/development/API_EXAMPLES.md) for complete documentation.
 
-## Documentation
+### Example Endpoints
 
-- `PHASE1_README.md` - Phase 1 implementation details
-- `PHASE2_README.md` - Phase 2 requirements and design
-- `PHASE2_COMPLETE.md` - Phase 2 completion summary
-- `PHASE3_COMPLETE.md` - Phase 3 completion summary
-- `PHASE4_COMPLETE.md` - Phase 4 completion summary
-- `PHASE5_COMPLETE.md` - Phase 5 completion summary
-- `QUIZ_RETAKE_FEATURE.md` - Quiz retake feature documentation
-- `IMPLEMENTATION_SUMMARY.md` - Retake implementation details
-- `IMPLEMENTATION_PHASES.md` - Complete phased implementation plan
-- `IMPORT_EXPORT_FORMAT.md` - Import/export format specification
-- `API_EXAMPLES.md` - API usage examples
-- `SPECIFICATION.md` - Complete system specification
-- `TEST_SUMMARY.md` - Testing documentation
+**Authentication**:
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - Login and get JWT token
+
+**Student Quizzing**:
+- `POST /quiz/generate` - Generate adaptive quiz
+- `POST /quiz/submit-answer` - Submit an answer
+- `POST /quiz/complete` - Complete quiz
+- `POST /quiz/retake` - Retake a quiz
+- `GET /progress?user_id={id}` - Get progress stats
+
+**FSRS Spaced Repetition**:
+- `POST /fsrs/review` - Review question with rating (1-4)
+- `GET /fsrs/due?user_id={id}` - Get due questions
+
+**Admin** (requires JWT):
+- `GET /admin/users` - List all users
+- `POST /admin/questions` - Create question
+- `POST /admin/questions/import` - Bulk CSV import
+
+**Instructor** (requires JWT):
+- `GET /instructor/student-progress?user_id={id}` - Student details
+- `GET /instructor/cohort-analytics` - Class statistics
+
+## Learning Pathways
+
+Want to learn from this codebase? Choose a pathway in the [Learning Guide](LEARNING_GUIDE.md):
+
+1. **"I'm New to Go"** - Learn Go by reading working code (2-3 hours)
+2. **"I Want to Understand Web APIs"** - RESTful API design (3-4 hours)
+3. **"I Need to Learn Databases"** - Schema design, SQL, migrations (4-5 hours)
+4. **"I Want to Master Testing"** - Unit, integration, feature tests (3-4 hours)
+5. **"I Want to Understand Security"** - Auth, authorization, best practices (3-4 hours)
+6. **"I Want to Learn Algorithms"** - FSRS spaced repetition (4-6 hours)
+
+Each pathway includes:
+- Guided steps through the codebase
+- Hands-on exercises
+- Time estimates
+- Learning objectives
+
+## Contributing
+
+We welcome contributions! See [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) for:
+
+- Development setup
+- Code style guidelines
+- Testing requirements
+- Pull request process
+- Common development tasks
+
+**Quick Start for Contributors**:
+```bash
+# Fork the repository
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/zip-athena.git
+
+# Create a feature branch
+git checkout -b feature/your-feature
+
+# Make changes and test
+go test -v ./...
+
+# Submit pull request
+```
+
+## Project Structure
+
+```
+zip-athena/
+├── api/              # HTTP handlers and middleware
+├── config/           # Configuration management
+├── database/         # Data layer with SQLite
+│   └── migrations/   # Schema migrations
+├── fsrs/             # FSRS algorithm
+├── models/           # Data models
+├── router/           # HTTP routing
+├── static/           # Frontend (HTML/JS/CSS)
+├── cmd/              # CLI tools (seed, migrate)
+├── docs/             # Documentation
+│   ├── development/  # Technical references
+│   └── archive/      # Development history
+└── main.go          # Application entry point
+```
 
 ## Technology Stack
 
-- **Language**: Go 1.x
-- **Database**: SQLite3 (production-ready for small to medium deployments)
-- **Password Hashing**: bcrypt
-- **Frontend**: Vanilla JavaScript with Bootstrap 5
-- **Algorithm**: FSRS-4.5 (research-backed spaced repetition)
+- **Language**: Go 1.x - Fast, concurrent, easy deployment
+- **Router**: Chi - Lightweight, composable HTTP router
+- **Database**: SQLite3 - Zero-config, file-based, ACID-compliant
+- **Frontend**: Vanilla JS + Bootstrap 5 - No build step needed
+- **Security**: bcrypt password hashing, JWT tokens
+- **Algorithm**: FSRS-4.5 - Research-backed spaced repetition
 
-## Future Enhancements
+## License
 
-- Real-time progress notifications
-- Question difficulty auto-adjustment
-- Gamification features (achievements, leaderboards)
-- Mobile app support
-- Advanced analytics dashboards
-- Question version control
-- Collaborative quiz creation
+See [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+Built with modern software development practices to serve as both a functional learning platform and an educational resource for understanding production-quality codebases.
