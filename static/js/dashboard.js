@@ -238,3 +238,128 @@ function startQuiz(topicId, topicName) {
 
 // Load dashboard on page load
 loadDashboard();
+
+// Load assigned quizzes on startup to check for pending quizzes
+loadAssignedQuizzesBadge();
+
+// Show the assigned quizzes panel
+function showAssignedQuizzes() {
+    document.getElementById('assignedQuizzesSection').style.display = 'block';
+    loadAssignedQuizzesList();
+}
+
+// Hide the assigned quizzes panel
+function hideAssignedQuizzes() {
+    document.getElementById('assignedQuizzesSection').style.display = 'none';
+}
+
+// Load assigned quizzes badge (count of pending/incomplete quizzes)
+async function loadAssignedQuizzesBadge() {
+    if (user.is_admin) return; // admins don't take assigned quizzes
+
+    try {
+        const response = await fetch(`/assigned-quizzes?user_id=${user.id}`);
+        if (!response.ok) return;
+
+        const quizzes = await response.json();
+        if (!quizzes || quizzes.length === 0) return;
+
+        document.getElementById('assignedQuizzesBtn').style.display = 'inline-block';
+
+        const pending = quizzes.filter(q => !q.completed_at).length;
+        const badge = document.getElementById('assignedQuizzesBadge');
+        if (pending > 0) {
+            badge.textContent = pending;
+            badge.style.display = 'inline-block';
+        }
+    } catch (error) {
+        console.error('Error loading assigned quizzes badge:', error);
+    }
+}
+
+// Load and display the list of assigned quizzes
+async function loadAssignedQuizzesList() {
+    const container = document.getElementById('assignedQuizzesList');
+    container.innerHTML = '<div class="text-center text-muted">Loading...</div>';
+
+    try {
+        const response = await fetch(`/assigned-quizzes?user_id=${user.id}`);
+        if (!response.ok) {
+            container.innerHTML = '<div class="alert alert-danger">Failed to load assigned quizzes.</div>';
+            return;
+        }
+
+        const quizzes = await response.json();
+        if (!quizzes || quizzes.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted">No quizzes have been assigned to you yet.</div>';
+            return;
+        }
+
+        let html = '<div class="list-group">';
+        quizzes.forEach(q => {
+            const categoryBadge = q.quiz_category
+                ? `<span class="badge bg-secondary ms-1">${q.quiz_category.toUpperCase()}</span>`
+                : '';
+
+            let statusHtml = '';
+            let actionBtn = '';
+
+            if (q.completed_at) {
+                const scoreVal = q.score !== undefined && q.score !== null ? q.score.toFixed(0) : '?';
+                const scoreClass = q.score >= 80 ? 'bg-success' : q.score >= 60 ? 'bg-warning' : 'bg-danger';
+                statusHtml = `<span class="badge bg-success">Completed</span>
+                    <span class="badge ${scoreClass} ms-1">${scoreVal}%</span>
+                    <small class="text-muted ms-2">(${q.correct_answers}/${q.total_questions} correct)</small>`;
+                actionBtn = `<button class="btn btn-sm btn-outline-primary" onclick="startAssignedQuiz(${q.quiz_id})">Retake</button>`;
+            } else {
+                statusHtml = '<span class="badge bg-warning text-dark">Not Started</span>';
+                actionBtn = `<button class="btn btn-sm btn-warning" onclick="startAssignedQuiz(${q.quiz_id})">Start Quiz</button>`;
+            }
+
+            html += `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${q.quiz_name}</strong>${categoryBadge}
+                            <br>
+                            <small class="text-muted">${q.quiz_description || ''}</small>
+                            <br>
+                            ${statusHtml}
+                        </div>
+                        <div>
+                            ${actionBtn}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading assigned quizzes list:', error);
+        container.innerHTML = '<div class="alert alert-danger">Error loading assigned quizzes.</div>';
+    }
+}
+
+// Start an assigned quiz
+async function startAssignedQuiz(quizId) {
+    try {
+        const response = await fetch(`/assigned-quizzes/start?quiz_id=${quizId}&user_id=${user.id}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            alert('Failed to start quiz: ' + errorText);
+            return;
+        }
+
+        const quizData = await response.json();
+        localStorage.setItem('currentQuiz', JSON.stringify(quizData));
+        window.location.href = '/quiz.html';
+    } catch (error) {
+        console.error('Error starting assigned quiz:', error);
+        alert('Error starting quiz. Please try again.');
+    }
+}

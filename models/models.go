@@ -80,9 +80,51 @@ type Quiz struct {
 	ID          int       `json:"id"`
 	Name        string    `json:"name"` // e.g., "java.1", "python.2"
 	TopicID     int       `json:"topic_id"`
+	Category    string    `json:"category"` // "java", "python", "sql", etc.
 	Description string    `json:"description"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+// AssignedQuiz represents a quiz assigned to a specific student
+type AssignedQuiz struct {
+	ID         int       `json:"id"`
+	QuizID     int       `json:"quiz_id"`
+	UserID     int       `json:"user_id"`
+	AssignedAt time.Time `json:"assigned_at"`
+	AssignedBy int       `json:"assigned_by"`
+}
+
+// AssignedQuizInfo combines quiz info with assignment details for student view
+type AssignedQuizInfo struct {
+	AssignedQuiz
+	QuizName        string     `json:"quiz_name"`
+	QuizDescription string     `json:"quiz_description"`
+	QuizCategory    string     `json:"quiz_category"`
+	CompletedAt     *time.Time `json:"completed_at,omitempty"`
+	Score           *float64   `json:"score,omitempty"`
+	CorrectAnswers  *int       `json:"correct_answers,omitempty"`
+	TotalQuestions  *int       `json:"total_questions,omitempty"`
+}
+
+// AssignedQuizStudentResult represents a single student's result on an assigned quiz
+type AssignedQuizStudentResult struct {
+	UserID         int        `json:"user_id"`
+	Username       string     `json:"username"`
+	AssignedAt     time.Time  `json:"assigned_at"`
+	CompletedAt    *time.Time `json:"completed_at,omitempty"`
+	Score          *float64   `json:"score,omitempty"`
+	CorrectAnswers *int       `json:"correct_answers,omitempty"`
+	TotalQuestions *int       `json:"total_questions,omitempty"`
+}
+
+// AssignedQuizStatus represents the instructor status view for an assigned quiz
+type AssignedQuizStatus struct {
+	QuizID         int                         `json:"quiz_id"`
+	QuizName       string                      `json:"quiz_name"`
+	QuizCategory   string                      `json:"quiz_category"`
+	QuizDescription string                     `json:"quiz_description"`
+	StudentResults []AssignedQuizStudentResult `json:"student_results"`
 }
 
 // UserQuestionState tracks FSRS state for each user-question pair

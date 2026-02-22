@@ -62,6 +62,9 @@
                         <a class="nav-link" href="#student-progress">Student Progress</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#assigned-quizzes">Assigned Quizzes</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#import-export">Import/Export</a>
                     </li>
                     <li class="nav-item">
@@ -340,6 +343,129 @@
                 </div>
             </div>
         </section>
+
+        <!-- Assigned Quizzes Section -->
+        <section id="assigned-quizzes" class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2><i class="bi bi-clipboard-check-fill"></i> Assigned Quizzes</h2>
+                <button class="btn btn-primary" onclick="loadAssignedQuizStatus()">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+            </div>
+
+            <div class="row mb-4">
+                <!-- Import & Create Quiz Form -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="bi bi-file-earmark-arrow-up"></i> Create Quiz from JSON</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Import questions from a JSON file to create a named, categorized quiz that can be assigned to students.</p>
+                            <div class="alert alert-info small">
+                                <strong>JSON Format:</strong>
+                                <pre class="mb-0 mt-1" style="font-size:0.8em;">{
+  "topic": "Optional Topic Name",
+  "questions": [
+    {
+      "text": "Question text?",
+      "difficulty": 3,
+      "tags": ["tag1"],
+      "answers": [
+        {"text": "Correct answer", "is_correct": true},
+        {"text": "Wrong answer", "is_correct": false}
+      ]
+    }
+  ]
+}</pre>
+                            </div>
+                            <form id="createQuizFromJsonForm">
+                                <div class="mb-2">
+                                    <label class="form-label">Quiz Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="newQuizName" placeholder="e.g. Java Midterm Review" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Category <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="newQuizCategory" required>
+                                        <option value="">-- Select category --</option>
+                                        <option value="java">Java</option>
+                                        <option value="python">Python</option>
+                                        <option value="sql">SQL</option>
+                                        <option value="general">General</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Description</label>
+                                    <input type="text" class="form-control" id="newQuizDescription" placeholder="Optional description">
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">JSON File <span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" id="newQuizJsonFile" accept=".json" required>
+                                </div>
+                                <button type="button" class="btn btn-warning" onclick="createQuizFromJson()">
+                                    <i class="bi bi-upload"></i> Import & Create Quiz
+                                </button>
+                            </form>
+                            <div id="createQuizResult" class="mt-3" style="display:none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assign Quiz to Students Form -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="bi bi-person-check-fill"></i> Assign Quiz to Students</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Select a quiz and choose students to assign it to.</p>
+                            <div class="mb-2">
+                                <label class="form-label">Select Quiz</label>
+                                <select class="form-select" id="assignQuizSelect">
+                                    <option value="">-- Select a quiz --</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Select Students</label>
+                                <div id="assignStudentsList" class="border rounded p-2" style="max-height:200px; overflow-y:auto;">
+                                    <small class="text-muted">Loading students...</small>
+                                </div>
+                                <div class="mt-1">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="selectAllStudents()">Select All</button>
+                                    <button class="btn btn-sm btn-outline-secondary ms-1" onclick="deselectAllStudents()">Deselect All</button>
+                                </div>
+                            </div>
+                            <button class="btn btn-info text-white" onclick="assignQuizToStudents()">
+                                <i class="bi bi-person-check"></i> Assign Quiz
+                            </button>
+                            <div id="assignQuizResult" class="mt-3" style="display:none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Status Table -->
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill"></i> Assigned Quiz Status</h5>
+                </div>
+                <div class="card-body">
+                    <div id="assignedQuizSummaryTable">
+                        <p class="text-muted">Click Refresh to load status.</p>
+                    </div>
+
+                    <!-- Detailed Results Panel -->
+                    <div id="quizDetailPanel" style="display:none;" class="mt-4">
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 id="quizDetailTitle">Quiz Results</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="hideQuizDetail()">✕ Close</button>
+                        </div>
+                        <div id="quizDetailContent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -381,6 +507,8 @@
                     loadCohortAnalytics();
                     loadQuizzes();
                     loadStudentList();
+                    loadAssignedQuizDropdown();
+                    loadAssignStudentsList();
                 }
             } catch (e) {
                 console.error('Failed to parse user data:', e);
@@ -719,6 +847,233 @@
                 }
             };
             reader.readAsText(file);
+        }
+
+        // ============ Assigned Quizzes Functions ============
+
+        async function createQuizFromJson() {
+            const name = document.getElementById('newQuizName').value.trim();
+            const category = document.getElementById('newQuizCategory').value;
+            const description = document.getElementById('newQuizDescription').value.trim();
+            const fileInput = document.getElementById('newQuizJsonFile');
+            const resultDiv = document.getElementById('createQuizResult');
+
+            if (!name || !category || !fileInput.files[0]) {
+                alert('Quiz name, category, and JSON file are required.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('quiz_name', name);
+            formData.append('category', category);
+            formData.append('description', description);
+            formData.append('file', fileInput.files[0]);
+
+            resultDiv.style.display = 'none';
+            try {
+                const response = await fetch('/instructor/assigned-quizzes/import', {
+                    method: 'POST',
+                    headers: {'X-User-ID': userId},
+                    body: formData
+                });
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    resultDiv.className = 'alert alert-success';
+                    resultDiv.innerHTML = `✅ Quiz "<strong>${escapeHtml(result.quiz_name)}</strong>" created (ID: ${result.quiz_id}) with ${result.imported} questions imported.`;
+                    resultDiv.style.display = 'block';
+                    // Refresh quiz dropdowns
+                    loadQuizzes();
+                    loadAssignedQuizDropdown();
+                } else {
+                    const errors = Array.isArray(result.errors) ? result.errors.join('<br>') : JSON.stringify(result);
+                    resultDiv.className = 'alert alert-danger';
+                    resultDiv.innerHTML = `❌ Failed to create quiz:<br>${errors}`;
+                    resultDiv.style.display = 'block';
+                }
+            } catch (e) {
+                resultDiv.className = 'alert alert-danger';
+                resultDiv.innerHTML = '❌ Network error: ' + e.message;
+                resultDiv.style.display = 'block';
+            }
+        }
+
+        async function loadAssignedQuizDropdown() {
+            const select = document.getElementById('assignQuizSelect');
+            select.innerHTML = '<option value="">-- Select a quiz --</option>';
+            try {
+                const response = await fetch('/admin/quizzes', {headers: {'X-User-ID': userId}});
+                const quizzes = await response.json();
+                quizzes.forEach(q => {
+                    const opt = document.createElement('option');
+                    opt.value = q.id;
+                    opt.textContent = `${q.name}${q.category ? ' [' + q.category + ']' : ''}`;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error('Error loading quizzes for assign dropdown:', e);
+            }
+        }
+
+        async function loadAssignStudentsList() {
+            const container = document.getElementById('assignStudentsList');
+            container.innerHTML = '<small class="text-muted">Loading...</small>';
+            try {
+                const response = await fetch('/instructor/students', {headers: {'X-User-ID': userId}});
+                const students = await response.json();
+                if (!students || students.length === 0) {
+                    container.innerHTML = '<small class="text-muted">No students found.</small>';
+                    return;
+                }
+                container.innerHTML = '';
+                students.forEach(s => {
+                    if (s.is_admin) return; // skip admins
+                    const div = document.createElement('div');
+                    div.className = 'form-check';
+                    div.innerHTML = `<input class="form-check-input student-assign-check" type="checkbox" value="${s.id}" id="student_${s.id}">
+                        <label class="form-check-label" for="student_${s.id}">${escapeHtml(s.username)}</label>`;
+                    container.appendChild(div);
+                });
+            } catch (e) {
+                container.innerHTML = '<small class="text-danger">Error loading students.</small>';
+            }
+        }
+
+        function selectAllStudents() {
+            document.querySelectorAll('.student-assign-check').forEach(cb => cb.checked = true);
+        }
+        function deselectAllStudents() {
+            document.querySelectorAll('.student-assign-check').forEach(cb => cb.checked = false);
+        }
+
+        async function assignQuizToStudents() {
+            const quizId = parseInt(document.getElementById('assignQuizSelect').value);
+            const resultDiv = document.getElementById('assignQuizResult');
+
+            if (!quizId) {
+                alert('Please select a quiz.');
+                return;
+            }
+
+            const checked = document.querySelectorAll('.student-assign-check:checked');
+            if (checked.length === 0) {
+                alert('Please select at least one student.');
+                return;
+            }
+
+            const userIds = Array.from(checked).map(cb => parseInt(cb.value));
+
+            resultDiv.style.display = 'none';
+            try {
+                const response = await fetch(`/instructor/assigned-quizzes/assign?quiz_id=${quizId}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'X-User-ID': userId},
+                    body: JSON.stringify({user_ids: userIds})
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'alert alert-success';
+                    resultDiv.innerHTML = `✅ Quiz assigned to ${result.assigned} student(s).`;
+                    resultDiv.style.display = 'block';
+                    loadAssignedQuizStatus();
+                } else {
+                    resultDiv.className = 'alert alert-danger';
+                    resultDiv.innerHTML = '❌ Failed to assign quiz.';
+                    resultDiv.style.display = 'block';
+                }
+            } catch (e) {
+                resultDiv.className = 'alert alert-danger';
+                resultDiv.innerHTML = '❌ Network error: ' + e.message;
+                resultDiv.style.display = 'block';
+            }
+        }
+
+        async function loadAssignedQuizStatus() {
+            const container = document.getElementById('assignedQuizSummaryTable');
+            container.innerHTML = '<p class="text-muted">Loading...</p>';
+            try {
+                const response = await fetch('/instructor/assigned-quizzes/status', {headers: {'X-User-ID': userId}});
+                const summaries = await response.json();
+
+                if (!summaries || summaries.length === 0) {
+                    container.innerHTML = '<p class="text-muted">No quizzes have been assigned yet.</p>';
+                    return;
+                }
+
+                let html = `<div class="table-responsive"><table class="table table-striped">
+                    <thead><tr>
+                        <th>Quiz Name</th><th>Category</th><th>Description</th>
+                        <th>Assigned</th><th>Completed</th><th>Actions</th>
+                    </tr></thead><tbody>`;
+                summaries.forEach(s => {
+                    html += `<tr>
+                        <td><strong>${escapeHtml(s.quiz_name)}</strong></td>
+                        <td><span class="badge bg-secondary">${escapeHtml(s.quiz_category || '')}</span></td>
+                        <td>${escapeHtml(s.quiz_description || '')}</td>
+                        <td>${s.assigned_count}</td>
+                        <td>${s.completed_count} / ${s.assigned_count}</td>
+                        <td><button class="btn btn-sm btn-primary" data-quiz-id="${s.quiz_id}" data-quiz-name="${escapeHtml(s.quiz_name)}" onclick="showQuizDetail(parseInt(this.dataset.quizId), this.dataset.quizName)">View Results</button></td>
+                    </tr>`;
+                });
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = '<p class="text-danger">Error loading quiz status: ' + e.message + '</p>';
+            }
+        }
+
+        async function showQuizDetail(quizId, quizName) {
+            const panel = document.getElementById('quizDetailPanel');
+            const title = document.getElementById('quizDetailTitle');
+            const content = document.getElementById('quizDetailContent');
+
+            title.textContent = `Results: ${quizName}`;
+            content.innerHTML = '<p class="text-muted">Loading...</p>';
+            panel.style.display = 'block';
+            panel.scrollIntoView({behavior: 'smooth'});
+
+            try {
+                const response = await fetch(`/instructor/assigned-quizzes/status/quiz?quiz_id=${quizId}`, {headers: {'X-User-ID': userId}});
+                const status = await response.json();
+
+                if (!status.student_results || status.student_results.length === 0) {
+                    content.innerHTML = '<p class="text-muted">No students assigned to this quiz.</p>';
+                    return;
+                }
+
+                let html = `<div class="table-responsive"><table class="table table-striped">
+                    <thead><tr>
+                        <th>Student</th><th>Assigned</th><th>Completed</th><th>Score</th><th>Correct</th>
+                    </tr></thead><tbody>`;
+                status.student_results.forEach(r => {
+                    const completed = r.completed_at
+                        ? new Date(r.completed_at).toLocaleString()
+                        : '<span class="text-muted">Not completed</span>';
+                    const scoreHtml = r.score !== undefined && r.score !== null
+                        ? `<span class="badge ${r.score >= 80 ? 'bg-success' : r.score >= 60 ? 'bg-warning' : 'bg-danger'}">${r.score.toFixed(0)}%</span>`
+                        : '<span class="text-muted">—</span>';
+                    const correct = r.correct_answers !== undefined && r.correct_answers !== null
+                        ? `${r.correct_answers}/${r.total_questions}`
+                        : '—';
+
+                    html += `<tr>
+                        <td>${escapeHtml(r.username)}</td>
+                        <td>${new Date(r.assigned_at).toLocaleDateString()}</td>
+                        <td>${completed}</td>
+                        <td>${scoreHtml}</td>
+                        <td>${correct}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table></div>';
+                content.innerHTML = html;
+            } catch (e) {
+                content.innerHTML = '<p class="text-danger">Error loading results: ' + e.message + '</p>';
+            }
+        }
+
+        function hideQuizDetail() {
+            document.getElementById('quizDetailPanel').style.display = 'none';
         }
     </script>
     <script>

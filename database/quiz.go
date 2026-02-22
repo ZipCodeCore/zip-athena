@@ -9,8 +9,8 @@ import (
 
 func (db *SQLiteDB) CreateQuiz(quiz *models.Quiz) error {
 	result, err := db.db.Exec(
-		"INSERT INTO quizzes (name, topic_id, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
-		quiz.Name, quiz.TopicID, quiz.Description, quiz.CreatedAt, quiz.UpdatedAt,
+		"INSERT INTO quizzes (name, topic_id, category, description, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+		quiz.Name, quiz.TopicID, quiz.Category, quiz.Description, quiz.CreatedAt, quiz.UpdatedAt,
 	)
 	if err != nil {
 		return err
@@ -26,9 +26,9 @@ func (db *SQLiteDB) CreateQuiz(quiz *models.Quiz) error {
 func (db *SQLiteDB) GetQuiz(id int) (*models.Quiz, error) {
 	quiz := &models.Quiz{}
 	err := db.db.QueryRow(
-		"SELECT id, name, topic_id, description, created_at, updated_at FROM quizzes WHERE id = ?",
+		"SELECT id, name, topic_id, COALESCE(category, ''), description, created_at, updated_at FROM quizzes WHERE id = ?",
 		id,
-	).Scan(&quiz.ID, &quiz.Name, &quiz.TopicID, &quiz.Description, &quiz.CreatedAt, &quiz.UpdatedAt)
+	).Scan(&quiz.ID, &quiz.Name, &quiz.TopicID, &quiz.Category, &quiz.Description, &quiz.CreatedAt, &quiz.UpdatedAt)
 	if err == sql.ErrNoRows {
 		return nil, ErrNotFound
 	}
@@ -39,7 +39,7 @@ func (db *SQLiteDB) GetQuiz(id int) (*models.Quiz, error) {
 }
 
 func (db *SQLiteDB) ListQuizzes() ([]*models.Quiz, error) {
-	rows, err := db.db.Query("SELECT id, name, topic_id, description, created_at, updated_at FROM quizzes")
+	rows, err := db.db.Query("SELECT id, name, topic_id, COALESCE(category, ''), description, created_at, updated_at FROM quizzes")
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (db *SQLiteDB) ListQuizzes() ([]*models.Quiz, error) {
 	var quizzes []*models.Quiz
 	for rows.Next() {
 		quiz := &models.Quiz{}
-		if err := rows.Scan(&quiz.ID, &quiz.Name, &quiz.TopicID, &quiz.Description, &quiz.CreatedAt, &quiz.UpdatedAt); err != nil {
+		if err := rows.Scan(&quiz.ID, &quiz.Name, &quiz.TopicID, &quiz.Category, &quiz.Description, &quiz.CreatedAt, &quiz.UpdatedAt); err != nil {
 			return nil, err
 		}
 		quizzes = append(quizzes, quiz)
@@ -58,8 +58,8 @@ func (db *SQLiteDB) ListQuizzes() ([]*models.Quiz, error) {
 
 func (db *SQLiteDB) UpdateQuiz(quiz *models.Quiz) error {
 	result, err := db.db.Exec(
-		"UPDATE quizzes SET name = ?, topic_id = ?, description = ?, updated_at = ? WHERE id = ?",
-		quiz.Name, quiz.TopicID, quiz.Description, quiz.UpdatedAt, quiz.ID,
+		"UPDATE quizzes SET name = ?, topic_id = ?, category = ?, description = ?, updated_at = ? WHERE id = ?",
+		quiz.Name, quiz.TopicID, quiz.Category, quiz.Description, quiz.UpdatedAt, quiz.ID,
 	)
 	if err != nil {
 		return err
