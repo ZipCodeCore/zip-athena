@@ -166,6 +166,16 @@ type QualityRepository interface {
 	AutoFlagQuestions() error
 }
 
+// AssignedQuizRepository handles quiz assignment operations
+type AssignedQuizRepository interface {
+	AssignQuizToUser(quizID, userID, assignedBy int) error
+	UnassignQuizFromUser(quizID, userID int) error
+	GetAssignedQuizzesForUser(userID int) ([]*models.AssignedQuizInfo, error)
+	GetAssignedQuizUserIDs(quizID int) ([]int, error)
+	GetAssignedQuizStatus(quizID int) (*models.AssignedQuizStatus, error)
+	ListAssignedQuizzes() ([]*models.AssignedQuiz, error)
+}
+
 // BulkImportRepository handles bulk import operations
 type BulkImportRepository interface {
 	ValidateCSVImport(rows []models.CSVImportRow) (*models.CSVImportResult, error)
@@ -191,6 +201,7 @@ type Database interface {
 	TagRepository
 	QualityRepository
 	BulkImportRepository
+	AssignedQuizRepository
 }
 
 // InMemoryDB implements the Database interface using in-memory storage
@@ -208,6 +219,7 @@ type InMemoryDB struct {
 	testQuestions      map[string]*models.TestQuestion      // key: "testID-questionID" Phase 3
 	testAttempts       map[int]*models.TestAttempt          // Phase 4
 	flaggedQuestions   map[int]*models.FlaggedQuestion      // Phase 5
+	assignedQuizzes    map[int]*models.AssignedQuiz         // key: id
 	nextUserID         int
 	nextTopicID        int
 	nextQuestionID     int
@@ -220,6 +232,7 @@ type InMemoryDB struct {
 	nextQuizQuestionID int // Phase 3
 	nextTestQuestionID int // Phase 3
 	nextTestAttemptID  int // Phase 4
+	nextAssignedQuizID int
 	mu                 sync.RWMutex
 }
 
@@ -239,6 +252,7 @@ func NewInMemoryDB() *InMemoryDB {
 		testQuestions:      make(map[string]*models.TestQuestion),
 		testAttempts:       make(map[int]*models.TestAttempt),
 		flaggedQuestions:   make(map[int]*models.FlaggedQuestion),
+		assignedQuizzes:    make(map[int]*models.AssignedQuiz),
 		nextUserID:         1,
 		nextTopicID:        1,
 		nextQuestionID:     1,
@@ -250,6 +264,7 @@ func NewInMemoryDB() *InMemoryDB {
 		nextTestID:         1,
 		nextQuizQuestionID: 1,
 		nextTestQuestionID: 1,
+		nextAssignedQuizID: 1,
 	}
 }
 
@@ -2490,4 +2505,166 @@ func (db *InMemoryDB) AutoFlagQuestions() error {
 	}
 
 	return nil
+}
+
+// AssignedQuiz operations (InMemoryDB)
+
+func (db *InMemoryDB) AssignQuizToUser(quizID, userID, assignedBy int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+// Check if already assigned
+for _, aq := range db.assignedQuizzes {
+if aq.QuizID == quizID && aq.UserID == userID {
+return nil // already assigned, idempotent
+}
+}
+
+aq := &models.AssignedQuiz{
+ID:         db.nextAssignedQuizID,
+QuizID:     quizID,
+UserID:     userID,
+AssignedAt: time.Now(),
+AssignedBy: assignedBy,
+}
+db.nextAssignedQuizID++
+db.assignedQuizzes[aq.ID] = aq
+return nil
+}
+
+func (db *InMemoryDB) UnassignQuizFromUser(quizID, userID int) error {
+db.mu.Lock()
+defer db.mu.Unlock()
+
+for id, aq := range db.assignedQuizzes {
+if aq.QuizID == quizID && aq.UserID == userID {
+delete(db.assignedQuizzes, id)
+return nil
+}
+}
+return ErrNotFound
+}
+
+func (db *InMemoryDB) GetAssignedQuizzesForUser(userID int) ([]*models.AssignedQuizInfo, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+var result []*models.AssignedQuizInfo
+for _, aq := range db.assignedQuizzes {
+if aq.UserID != userID {
+continue
+}
+
+quiz, exists := db.quizzes[aq.QuizID]
+if !exists {
+continue
+}
+
+info := &models.AssignedQuizInfo{
+AssignedQuiz:    *aq,
+QuizName:        quiz.Name,
+QuizDescription: quiz.Description,
+QuizCategory:    quiz.Category,
+}
+
+// Find the latest completed quiz attempt for this quiz+user
+for _, attempt := range db.quizAttempts {
+if attempt.QuizID != nil && *attempt.QuizID == aq.QuizID && attempt.UserID == userID && attempt.CompletedTime != nil {
+if info.CompletedAt == nil || attempt.CompletedTime.After(*info.CompletedAt) {
+info.CompletedAt = attempt.CompletedTime
+ca := attempt.CorrectAnswers
+tq := attempt.TotalQuestions
+info.CorrectAnswers = &ca
+info.TotalQuestions = &tq
+if tq > 0 {
+score := float64(ca) / float64(tq) * 100.0
+info.Score = &score
+}
+}
+}
+}
+
+result = append(result, info)
+}
+return result, nil
+}
+
+func (db *InMemoryDB) GetAssignedQuizUserIDs(quizID int) ([]int, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+var userIDs []int
+for _, aq := range db.assignedQuizzes {
+if aq.QuizID == quizID {
+userIDs = append(userIDs, aq.UserID)
+}
+}
+return userIDs, nil
+}
+
+func (db *InMemoryDB) GetAssignedQuizStatus(quizID int) (*models.AssignedQuizStatus, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+quiz, exists := db.quizzes[quizID]
+if !exists {
+return nil, ErrNotFound
+}
+
+status := &models.AssignedQuizStatus{
+QuizID:          quiz.ID,
+QuizName:        quiz.Name,
+QuizCategory:    quiz.Category,
+QuizDescription: quiz.Description,
+StudentResults:  []models.AssignedQuizStudentResult{},
+}
+
+for _, aq := range db.assignedQuizzes {
+if aq.QuizID != quizID {
+continue
+}
+
+user, exists := db.users[aq.UserID]
+if !exists {
+continue
+}
+
+r := models.AssignedQuizStudentResult{
+UserID:     user.ID,
+Username:   user.Username,
+AssignedAt: aq.AssignedAt,
+}
+
+// Find latest completed attempt
+for _, attempt := range db.quizAttempts {
+if attempt.QuizID != nil && *attempt.QuizID == quizID && attempt.UserID == aq.UserID && attempt.CompletedTime != nil {
+if r.CompletedAt == nil || attempt.CompletedTime.After(*r.CompletedAt) {
+r.CompletedAt = attempt.CompletedTime
+ca := attempt.CorrectAnswers
+tq := attempt.TotalQuestions
+r.CorrectAnswers = &ca
+r.TotalQuestions = &tq
+if tq > 0 {
+score := float64(ca) / float64(tq) * 100.0
+r.Score = &score
+}
+}
+}
+}
+
+status.StudentResults = append(status.StudentResults, r)
+}
+
+return status, nil
+}
+
+func (db *InMemoryDB) ListAssignedQuizzes() ([]*models.AssignedQuiz, error) {
+db.mu.RLock()
+defer db.mu.RUnlock()
+
+result := make([]*models.AssignedQuiz, 0, len(db.assignedQuizzes))
+for _, aq := range db.assignedQuizzes {
+result = append(result, aq)
+}
+return result, nil
 }

@@ -60,6 +60,10 @@ func New(h *api.Handler) *chi.Mux {
 	r.Post("/quiz/retake", h.RetakeQuizHandler)
 	r.Get("/progress", h.GetProgressHandler)
 
+	// Assigned Quiz routes (student)
+	r.Get("/assigned-quizzes", h.GetAssignedQuizzesHandler)
+	r.Post("/assigned-quizzes/start", h.TakeAssignedQuizHandler)
+
 	r.Route("/quizzes", func(r chi.Router) {
 		r.Get("/", h.GetQuizHandler)
 	})
@@ -207,6 +211,13 @@ func New(h *api.Handler) *chi.Mux {
 		r.Post("/quizzes/import", h.ImportQuizHandler)
 		r.Get("/questions/export", h.ExportQuestionsHandler)
 		r.Post("/questions/import", h.ImportQuestionsHandler)
+
+		// Assigned Quiz routes
+		r.Post("/assigned-quizzes/import", h.ImportAndCreateQuizFromJSONHandler)
+		r.Post("/assigned-quizzes/assign", h.AssignQuizToStudentsHandler)
+		r.Delete("/assigned-quizzes/unassign", h.UnassignQuizFromStudentHandler)
+		r.Get("/assigned-quizzes/status", h.ListAssignedQuizzesStatusHandler)
+		r.Get("/assigned-quizzes/status/quiz", h.GetAssignedQuizStatusHandler)
 
 		// Topic Management routes
 		r.Route("/topics", func(r chi.Router) {

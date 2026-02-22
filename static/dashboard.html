@@ -40,9 +40,29 @@
         <!-- Quick Actions -->
         <div class="row mb-4">
             <div class="col-md-12">
-                <a href="/learning.html" class="btn btn-primary btn-lg">
+                <a href="/learning.html" class="btn btn-primary btn-lg me-2">
                     📚 Learning Center
                 </a>
+                <button class="btn btn-warning btn-lg" id="assignedQuizzesBtn" onclick="showAssignedQuizzes()" style="display:none;">
+                    📋 Assigned Quizzes <span id="assignedQuizzesBadge" class="badge bg-danger ms-1" style="display:none;"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Assigned Quizzes Section -->
+        <div class="row mb-4" id="assignedQuizzesSection" style="display:none;">
+            <div class="col-md-12">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">📋 Assigned Quizzes</h4>
+                        <button class="btn btn-sm btn-outline-dark" onclick="hideAssignedQuizzes()">✕ Close</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="assignedQuizzesList">
+                            <div class="text-center text-muted">Loading assigned quizzes...</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
