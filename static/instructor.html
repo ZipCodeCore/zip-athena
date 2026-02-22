@@ -1013,7 +1013,7 @@
                         <td>${escapeHtml(s.quiz_description || '')}</td>
                         <td>${s.assigned_count}</td>
                         <td>${s.completed_count} / ${s.assigned_count}</td>
-                        <td><button class="btn btn-sm btn-primary" onclick="showQuizDetail(${s.quiz_id}, '${escapeHtml(s.quiz_name)}')">View Results</button></td>
+                        <td><button class="btn btn-sm btn-primary" data-quiz-id="${s.quiz_id}" data-quiz-name="${escapeHtml(s.quiz_name)}" onclick="showQuizDetail(parseInt(this.dataset.quizId), this.dataset.quizName)">View Results</button></td>
                     </tr>`;
                 });
                 html += '</tbody></table></div>';

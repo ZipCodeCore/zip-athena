@@ -345,7 +345,8 @@ async function loadAssignedQuizzesList() {
 async function startAssignedQuiz(quizId) {
     try {
         const response = await fetch(`/assigned-quizzes/start?quiz_id=${quizId}&user_id=${user.id}`, {
-            method: 'POST'
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
         });
 
         if (!response.ok) {
