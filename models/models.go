@@ -49,6 +49,7 @@ type Answer struct {
 type QuizAttempt struct {
 	ID                int             `json:"id"`
 	UserID            int             `json:"user_id"`
+	Username          string          `json:"username,omitempty"`
 	QuizID            *int            `json:"quiz_id,omitempty"`
 	ParentAttemptID   *int            `json:"parent_attempt_id,omitempty"` // Reference to original attempt if this is a retake
 	AttemptNumber     int             `json:"attempt_number"`              // 1 for first attempt, 2 for first retake, etc.

@@ -702,9 +702,23 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 		quizAttempts = []*models.QuizAttempt{}
 	}
 
-	// Note: We skip quiz enrichment to avoid N+1 query problem
-	// The frontend falls back to showing Quiz #{id} if name is not available
-	// This prevents database deadlocks when there are many quiz attempts
+	// Enrich quiz attempts with usernames; pre-fetch all unique user IDs to avoid duplicate lookups
+	userCache := map[int]string{userID: user.Username}
+	for _, attempt := range quizAttempts {
+		if _, ok := userCache[attempt.UserID]; !ok {
+			userCache[attempt.UserID] = "" // mark as seen; fill below
+		}
+	}
+	for uid := range userCache {
+		if userCache[uid] == "" {
+			if u, err := h.db.GetUser(uid); err == nil {
+				userCache[uid] = u.Username
+			}
+		}
+	}
+	for _, attempt := range quizAttempts {
+		attempt.Username = userCache[attempt.UserID]
+	}
 
 	// Get question attempts
 	questionAttempts, err := h.db.GetQuestionAttemptsByUser(userID)
