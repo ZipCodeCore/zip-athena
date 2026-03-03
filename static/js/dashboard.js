@@ -137,7 +137,7 @@ function loadQuizAttempts(quizAttempts) {
             row.innerHTML = `
                 <td data-label="Quiz ID">${attempt.id}</td>
                 <td data-label="Quiz Description">${quizDescription}</td>
-                <td data-label="Username">${attempt.username || ''}</td>
+                <td data-label="Username">${attempt.username || 'N/A'}</td>
                 <td data-label="Started">${startTime}</td>
                 <td data-label="Status"><span class="badge ${statusBadgeClass}">${status}</span></td>
                 <td data-label="Correct">${correctDisplay}</td>
