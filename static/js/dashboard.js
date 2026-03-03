@@ -137,6 +137,7 @@ function loadQuizAttempts(quizAttempts) {
             row.innerHTML = `
                 <td data-label="Quiz ID">${attempt.id}</td>
                 <td data-label="Quiz Description">${quizDescription}</td>
+                <td data-label="Username">${attempt.username || ''}</td>
                 <td data-label="Started">${startTime}</td>
                 <td data-label="Status"><span class="badge ${statusBadgeClass}">${status}</span></td>
                 <td data-label="Correct">${correctDisplay}</td>
@@ -151,7 +152,7 @@ function loadQuizAttempts(quizAttempts) {
             table.appendChild(row);
         });
     } else {
-        table.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No quiz attempts yet. Start a quiz to see your progress!</td></tr>';
+        table.innerHTML = '<tr><td colspan="9" class="text-center text-muted">No quiz attempts yet. Start a quiz to see your progress!</td></tr>';
     }
 }
 
