@@ -26,8 +26,35 @@ func NewSQLiteDB(dbPath string) (*SQLiteDB, error) {
 		return nil, fmt.Errorf("failed to open database: %w", err)
 	}
 
+	// Enable WAL (Write-Ahead Logging) mode for better concurrent read/write
+	// performance. WAL allows multiple readers alongside a writer and is safe
+	// to apply to an existing database — it simply updates the journal mode in
+	// the database header on first use and can be reverted with DELETE mode if
+	// ever needed.
+	if _, err := db.Exec("PRAGMA journal_mode=WAL"); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to enable WAL mode: %w", err)
+	}
+
+	// NORMAL synchronization is safe with WAL: SQLite still syncs the WAL
+	// file on checkpoint, so a power failure cannot corrupt the database.
+	// It offers better write throughput than the default FULL mode.
+	if _, err := db.Exec("PRAGMA synchronous=NORMAL"); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to set synchronous mode: %w", err)
+	}
+
+	// Instruct SQLite to wait up to 5 s before returning SQLITE_BUSY when
+	// another connection holds a write lock, avoiding spurious errors under
+	// light concurrent write pressure.
+	if _, err := db.Exec("PRAGMA busy_timeout=5000"); err != nil {
+		db.Close()
+		return nil, fmt.Errorf("failed to set busy timeout: %w", err)
+	}
+
 	sqlDB := &SQLiteDB{db: db}
 	if err := sqlDB.initSchema(); err != nil {
+		db.Close()
 		return nil, fmt.Errorf("failed to initialize schema: %w", err)
 	}
 
