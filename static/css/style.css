@@ -30,7 +30,7 @@ body {
 
 .card-header {
     background-color: #fff;
-    border-bottom: 2px solid #e9ecef;
+    border-bottom: 2px solid var(--zcw-primary-light, #d0dce9);
     font-weight: 600;
 }
 
@@ -65,23 +65,23 @@ body {
 }
 
 .answer-option:hover {
-    border-color: #0d6efd;
-    background-color: #f8f9fa;
+    border-color: var(--zcw-primary, #1a3a5c);
+    background-color: var(--zcw-light, #f4f6f7);
 }
 
 .answer-option.selected {
-    border-color: #0d6efd;
-    background-color: #e7f3ff;
+    border-color: var(--zcw-primary, #1a3a5c);
+    background-color: var(--zcw-primary-light, #d0dce9);
 }
 
 .answer-option.correct {
-    border-color: #198754;
-    background-color: #d1e7dd;
+    border-color: var(--zcw-success, #1a7740);
+    background-color: var(--zcw-success-light, #d1e8da);
 }
 
 .answer-option.incorrect {
-    border-color: #dc3545;
-    background-color: #f8d7da;
+    border-color: var(--zcw-danger, #c0392b);
+    background-color: var(--zcw-danger-light, #f5d0cc);
 }
 
 .answer-option input[type="radio"] {

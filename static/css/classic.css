@@ -1,0 +1,303 @@
+/*
+ * ZCW Classic Color Palette for Bootstrap
+ * Source: https://yoda-public-files.s3.us-east-2.amazonaws.com/zcw-color-palettes/CSS/classic.css
+ *
+ * Apply after Bootstrap CSS to override the default Bootstrap color scheme
+ * with the ZipCode Wilmington Classic palette.
+ */
+
+/* ============================================================
+   ZCW Classic Palette Variables
+   ============================================================ */
+:root {
+    /* Core brand colors */
+    --zcw-primary:           #1a3a5c;   /* Deep Navy Blue       */
+    --zcw-primary-dark:      #12283f;   /* Darker Navy          */
+    --zcw-primary-light:     #d0dce9;   /* Light Navy Tint      */
+    --zcw-primary-rgb:       26, 58, 92;
+
+    --zcw-secondary:         #5d6d7e;   /* Slate Gray           */
+    --zcw-secondary-dark:    #4a5766;   /* Darker Slate         */
+    --zcw-secondary-rgb:     93, 109, 126;
+
+    --zcw-success:           #1a7740;   /* Forest Green         */
+    --zcw-success-light:     #d1e8da;   /* Light Green Tint     */
+    --zcw-success-rgb:       26, 119, 64;
+
+    --zcw-info:              #1a6fa8;   /* Steel Blue           */
+    --zcw-info-light:        #cfe6f5;   /* Light Blue Tint      */
+    --zcw-info-rgb:          26, 111, 168;
+
+    --zcw-warning:           #c78a22;   /* Amber / Gold         */
+    --zcw-warning-light:     #f7ecd6;   /* Light Amber Tint     */
+    --zcw-warning-rgb:       199, 138, 34;
+
+    --zcw-danger:            #c0392b;   /* Deep Red             */
+    --zcw-danger-light:      #f5d0cc;   /* Light Red Tint       */
+    --zcw-danger-rgb:        192, 57, 43;
+
+    --zcw-light:             #f4f6f7;   /* Warm Light Gray      */
+    --zcw-light-rgb:         244, 246, 247;
+
+    --zcw-dark:              #1c2833;   /* Charcoal             */
+    --zcw-dark-rgb:          28, 40, 51;
+
+    /* ── Bootstrap CSS variable overrides ── */
+    --bs-primary:            var(--zcw-primary);
+    --bs-primary-rgb:        var(--zcw-primary-rgb);
+
+    --bs-secondary:          var(--zcw-secondary);
+    --bs-secondary-rgb:      var(--zcw-secondary-rgb);
+
+    --bs-success:            var(--zcw-success);
+    --bs-success-rgb:        var(--zcw-success-rgb);
+
+    --bs-info:               var(--zcw-info);
+    --bs-info-rgb:           var(--zcw-info-rgb);
+
+    --bs-warning:            var(--zcw-warning);
+    --bs-warning-rgb:        var(--zcw-warning-rgb);
+
+    --bs-danger:             var(--zcw-danger);
+    --bs-danger-rgb:         var(--zcw-danger-rgb);
+
+    --bs-light:              var(--zcw-light);
+    --bs-light-rgb:          var(--zcw-light-rgb);
+
+    --bs-dark:               var(--zcw-dark);
+    --bs-dark-rgb:           var(--zcw-dark-rgb);
+
+    /* Body defaults */
+    --bs-body-bg:            #ffffff;
+    --bs-body-color:         var(--zcw-dark);
+    --bs-link-color:         var(--zcw-primary);
+    --bs-link-hover-color:   var(--zcw-primary-dark);
+}
+
+/* ============================================================
+   Backgrounds
+   ============================================================ */
+.bg-primary    { background-color: var(--zcw-primary)   !important; }
+.bg-secondary  { background-color: var(--zcw-secondary) !important; }
+.bg-success    { background-color: var(--zcw-success)   !important; }
+.bg-info       { background-color: var(--zcw-info)      !important; }
+.bg-warning    { background-color: var(--zcw-warning)   !important; }
+.bg-danger     { background-color: var(--zcw-danger)    !important; }
+.bg-light      { background-color: var(--zcw-light)     !important; }
+.bg-dark       { background-color: var(--zcw-dark)      !important; }
+
+/* ============================================================
+   Text colors
+   ============================================================ */
+.text-primary   { color: var(--zcw-primary)   !important; }
+.text-secondary { color: var(--zcw-secondary) !important; }
+.text-success   { color: var(--zcw-success)   !important; }
+.text-info      { color: var(--zcw-info)      !important; }
+.text-warning   { color: var(--zcw-warning)   !important; }
+.text-danger    { color: var(--zcw-danger)    !important; }
+.text-dark      { color: var(--zcw-dark)      !important; }
+
+/* ============================================================
+   Border colors
+   ============================================================ */
+.border-primary   { border-color: var(--zcw-primary)   !important; }
+.border-secondary { border-color: var(--zcw-secondary) !important; }
+.border-success   { border-color: var(--zcw-success)   !important; }
+.border-info      { border-color: var(--zcw-info)      !important; }
+.border-warning   { border-color: var(--zcw-warning)   !important; }
+.border-danger    { border-color: var(--zcw-danger)    !important; }
+
+/* ============================================================
+   Solid buttons
+   ============================================================ */
+.btn-primary {
+    --bs-btn-bg:                   var(--zcw-primary);
+    --bs-btn-border-color:         var(--zcw-primary);
+    --bs-btn-hover-bg:             var(--zcw-primary-dark);
+    --bs-btn-hover-border-color:   var(--zcw-primary-dark);
+    --bs-btn-active-bg:            var(--zcw-primary-dark);
+    --bs-btn-active-border-color:  var(--zcw-primary-dark);
+    --bs-btn-disabled-bg:          var(--zcw-primary);
+    --bs-btn-disabled-border-color: var(--zcw-primary);
+    --bs-btn-color:                #fff;
+    --bs-btn-hover-color:          #fff;
+    --bs-btn-active-color:         #fff;
+}
+
+.btn-secondary {
+    --bs-btn-bg:                   var(--zcw-secondary);
+    --bs-btn-border-color:         var(--zcw-secondary);
+    --bs-btn-hover-bg:             var(--zcw-secondary-dark);
+    --bs-btn-hover-border-color:   var(--zcw-secondary-dark);
+    --bs-btn-color:                #fff;
+    --bs-btn-hover-color:          #fff;
+}
+
+.btn-success {
+    --bs-btn-bg:                   var(--zcw-success);
+    --bs-btn-border-color:         var(--zcw-success);
+    --bs-btn-color:                #fff;
+    --bs-btn-hover-color:          #fff;
+}
+
+.btn-info {
+    --bs-btn-bg:                   var(--zcw-info);
+    --bs-btn-border-color:         var(--zcw-info);
+    --bs-btn-color:                #fff;
+    --bs-btn-hover-color:          #fff;
+}
+
+.btn-warning {
+    --bs-btn-bg:                   var(--zcw-warning);
+    --bs-btn-border-color:         var(--zcw-warning);
+    --bs-btn-color:                #fff;
+    --bs-btn-hover-color:          #fff;
+}
+
+.btn-danger {
+    --bs-btn-bg:                   var(--zcw-danger);
+    --bs-btn-border-color:         var(--zcw-danger);
+    --bs-btn-color:                #fff;
+    --bs-btn-hover-color:          #fff;
+}
+
+/* ============================================================
+   Outline buttons
+   ============================================================ */
+.btn-outline-primary {
+    --bs-btn-color:                var(--zcw-primary);
+    --bs-btn-border-color:         var(--zcw-primary);
+    --bs-btn-hover-bg:             var(--zcw-primary);
+    --bs-btn-hover-border-color:   var(--zcw-primary);
+    --bs-btn-hover-color:          #fff;
+    --bs-btn-active-bg:            var(--zcw-primary);
+    --bs-btn-active-border-color:  var(--zcw-primary);
+    --bs-btn-active-color:         #fff;
+}
+
+.btn-outline-secondary {
+    --bs-btn-color:                var(--zcw-secondary);
+    --bs-btn-border-color:         var(--zcw-secondary);
+    --bs-btn-hover-bg:             var(--zcw-secondary);
+    --bs-btn-hover-border-color:   var(--zcw-secondary);
+    --bs-btn-hover-color:          #fff;
+}
+
+.btn-outline-success {
+    --bs-btn-color:                var(--zcw-success);
+    --bs-btn-border-color:         var(--zcw-success);
+    --bs-btn-hover-bg:             var(--zcw-success);
+    --bs-btn-hover-border-color:   var(--zcw-success);
+    --bs-btn-hover-color:          #fff;
+}
+
+.btn-outline-info {
+    --bs-btn-color:                var(--zcw-info);
+    --bs-btn-border-color:         var(--zcw-info);
+    --bs-btn-hover-bg:             var(--zcw-info);
+    --bs-btn-hover-border-color:   var(--zcw-info);
+    --bs-btn-hover-color:          #fff;
+}
+
+.btn-outline-warning {
+    --bs-btn-color:                var(--zcw-warning);
+    --bs-btn-border-color:         var(--zcw-warning);
+    --bs-btn-hover-bg:             var(--zcw-warning);
+    --bs-btn-hover-border-color:   var(--zcw-warning);
+    --bs-btn-hover-color:          #fff;
+}
+
+.btn-outline-danger {
+    --bs-btn-color:                var(--zcw-danger);
+    --bs-btn-border-color:         var(--zcw-danger);
+    --bs-btn-hover-bg:             var(--zcw-danger);
+    --bs-btn-hover-border-color:   var(--zcw-danger);
+    --bs-btn-hover-color:          #fff;
+}
+
+/* ============================================================
+   Badges
+   ============================================================ */
+.badge.bg-primary   { background-color: var(--zcw-primary)   !important; }
+.badge.bg-secondary { background-color: var(--zcw-secondary) !important; }
+.badge.bg-success   { background-color: var(--zcw-success)   !important; }
+.badge.bg-info      { background-color: var(--zcw-info)      !important; }
+.badge.bg-warning   { background-color: var(--zcw-warning)   !important; }
+.badge.bg-danger    { background-color: var(--zcw-danger)    !important; }
+
+/* ============================================================
+   Alerts
+   ============================================================ */
+.alert-primary {
+    background-color: var(--zcw-primary-light);
+    border-color: var(--zcw-primary);
+    color: var(--zcw-dark);
+}
+
+.alert-info {
+    background-color: var(--zcw-info-light);
+    border-color: var(--zcw-info);
+    color: #0a3b5c;
+}
+
+.alert-success {
+    background-color: var(--zcw-success-light);
+    border-color: var(--zcw-success);
+    color: #0d3d20;
+}
+
+.alert-warning {
+    background-color: var(--zcw-warning-light);
+    border-color: var(--zcw-warning);
+    color: #5c3d05;
+}
+
+.alert-danger {
+    background-color: var(--zcw-danger-light);
+    border-color: var(--zcw-danger);
+    color: #5c1a12;
+}
+
+/* ============================================================
+   Progress bars
+   ============================================================ */
+.progress-bar                    { background-color: var(--zcw-primary);   }
+.progress-bar.bg-success         { background-color: var(--zcw-success)   !important; }
+.progress-bar.bg-info            { background-color: var(--zcw-info)      !important; }
+.progress-bar.bg-warning         { background-color: var(--zcw-warning)   !important; }
+.progress-bar.bg-danger          { background-color: var(--zcw-danger)    !important; }
+
+/* ============================================================
+   Form focus states
+   ============================================================ */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--zcw-primary);
+    box-shadow: 0 0 0 0.25rem rgba(var(--zcw-primary-rgb), 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--zcw-primary);
+    border-color: var(--zcw-primary);
+}
+
+/* ============================================================
+   Nav / Tabs
+   ============================================================ */
+.nav-link.active,
+.nav-pills .nav-link.active,
+.nav-tabs  .nav-link.active {
+    color: var(--zcw-primary) !important;
+}
+
+/* ============================================================
+   Spinners
+   ============================================================ */
+.spinner-border.text-primary,
+.spinner-grow.text-primary { color: var(--zcw-primary) !important; }
+
+/* ============================================================
+   Links
+   ============================================================ */
+a                { color: var(--zcw-primary); }
+a:hover          { color: var(--zcw-primary-dark); }
