@@ -173,7 +173,9 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 
 	// Create topics with different categories
 	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Java Code Tracing", Description: "Trace Java code", Category: "java-tracing", IsActive: true})
 	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Python Code Tracing", Description: "Trace Python code", Category: "python-tracing", IsActive: true})
 	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "sql", IsActive: true})
 
 	// Test 1: Java student should only see Java and SQL topics
@@ -188,13 +190,13 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 	var javaTopics []*models.Topic
 	json.NewDecoder(w.Body).Decode(&javaTopics)
 
-	if len(javaTopics) != 2 {
-		t.Errorf("Java student should see 2 topics (Java, SQL), got %d", len(javaTopics))
+	if len(javaTopics) != 3 {
+		t.Errorf("Java student should see 3 topics (Java, Java tracing, SQL), got %d", len(javaTopics))
 	}
 
 	// Verify no Python topics are returned
 	for _, topic := range javaTopics {
-		if topic.Category == "python" {
+		if topic.Category == "python" || topic.Category == "python-tracing" {
 			t.Errorf("Java student should not see Python topics, but got: %s", topic.Name)
 		}
 	}
@@ -211,13 +213,13 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 	var dataTopics []*models.Topic
 	json.NewDecoder(w.Body).Decode(&dataTopics)
 
-	if len(dataTopics) != 2 {
-		t.Errorf("Data student should see 2 topics (Python, SQL), got %d", len(dataTopics))
+	if len(dataTopics) != 3 {
+		t.Errorf("Data student should see 3 topics (Python, Python tracing, SQL), got %d", len(dataTopics))
 	}
 
 	// Verify no Java topics are returned
 	for _, topic := range dataTopics {
-		if topic.Category == "java" {
+		if topic.Category == "java" || topic.Category == "java-tracing" {
 			t.Errorf("Data student should not see Java topics, but got: %s", topic.Name)
 		}
 	}
@@ -234,8 +236,8 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 	var adminTopics []*models.Topic
 	json.NewDecoder(w.Body).Decode(&adminTopics)
 
-	if len(adminTopics) != 3 {
-		t.Errorf("Admin should see all 3 topics, got %d", len(adminTopics))
+	if len(adminTopics) != 5 {
+		t.Errorf("Admin should see all 5 topics, got %d", len(adminTopics))
 	}
 
 	// Test 4: Missing user_id should return error

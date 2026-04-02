@@ -95,25 +95,8 @@ func (h *Handler) GenerateQuizHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Filter topics based on user category
-	allowedTopics := make(map[string]bool)
-	if user.IsAdmin {
-		// Admins can access all topics
-		allowedTopics["java"] = true
-		allowedTopics["python"] = true
-		allowedTopics["sql"] = true
-	} else if user.Category == "java" {
-		// Java students can only access Java and SQL
-		allowedTopics["java"] = true
-		allowedTopics["sql"] = true
-	} else if user.Category == "data" {
-		// Data students can only access Python and SQL
-		allowedTopics["python"] = true
-		allowedTopics["sql"] = true
-	}
-
 	// Check if user is allowed to access this topic
-	if !allowedTopics[topic.Category] {
+	if !userCanAccessTopic(user, topic) {
 		http.Error(w, "You do not have access to this topic", http.StatusForbidden)
 		return
 	}

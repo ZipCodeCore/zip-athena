@@ -61,6 +61,22 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 	}
 	db.CreateTopic(pythonTopic)
 
+	javaTracingTopic := &models.Topic{
+		Name:        "Java Code Tracing",
+		Description: "Trace Java code",
+		Category:    "java-tracing",
+		CreatedAt:   time.Now(),
+	}
+	db.CreateTopic(javaTracingTopic)
+
+	pythonTracingTopic := &models.Topic{
+		Name:        "Python Code Tracing",
+		Description: "Trace Python code",
+		Category:    "python-tracing",
+		CreatedAt:   time.Now(),
+	}
+	db.CreateTopic(pythonTracingTopic)
+
 	sqlTopic := &models.Topic{
 		Name:        "SQL",
 		Description: "Learn SQL",
@@ -89,6 +105,26 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 		CreatedAt:       time.Now(),
 	}
 	db.CreateQuestion(pythonQuestion)
+
+	javaTracingQuestion := &models.Question{
+		TopicID:         javaTracingTopic.ID,
+		QuestionText:    "What is the output of this Java snippet?",
+		Difficulty:      2,
+		Tags:            []string{"tracing"},
+		TopicQuestionID: "java-tracing.1",
+		CreatedAt:       time.Now(),
+	}
+	db.CreateQuestion(javaTracingQuestion)
+
+	pythonTracingQuestion := &models.Question{
+		TopicID:         pythonTracingTopic.ID,
+		QuestionText:    "What is the output of this Python snippet?",
+		Difficulty:      2,
+		Tags:            []string{"tracing"},
+		TopicQuestionID: "python-tracing.1",
+		CreatedAt:       time.Now(),
+	}
+	db.CreateQuestion(pythonTracingQuestion)
 
 	sqlQuestion := &models.Question{
 		TopicID:         sqlTopic.ID,
@@ -136,7 +172,25 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 		}
 	})
 
-	// Test 3: Java user cannot generate Python quiz
+	// Test 3: Java user can generate Java tracing quiz
+	t.Run("JavaUserCanAccessJavaTracingTopic", func(t *testing.T) {
+		reqBody := GenerateQuizRequest{
+			UserID:       javaUser.ID,
+			TopicID:      javaTracingTopic.ID,
+			NumQuestions: 1,
+		}
+		reqJSON, _ := json.Marshal(reqBody)
+		req := httptest.NewRequest(http.MethodPost, "/quiz/generate", bytes.NewBuffer(reqJSON))
+		w := httptest.NewRecorder()
+
+		handler.GenerateQuizHandler(w, req)
+
+		if w.Code != http.StatusOK {
+			t.Errorf("Expected status 200, got %d. Body: %s", w.Code, w.Body.String())
+		}
+	})
+
+	// Test 4: Java user cannot generate Python quiz
 	t.Run("JavaUserCannotAccessPythonTopic", func(t *testing.T) {
 		reqBody := GenerateQuizRequest{
 			UserID:       javaUser.ID,
@@ -154,7 +208,25 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 		}
 	})
 
-	// Test 4: Data user can generate Python quiz
+	// Test 5: Java user cannot generate Python tracing quiz
+	t.Run("JavaUserCannotAccessPythonTracingTopic", func(t *testing.T) {
+		reqBody := GenerateQuizRequest{
+			UserID:       javaUser.ID,
+			TopicID:      pythonTracingTopic.ID,
+			NumQuestions: 1,
+		}
+		reqJSON, _ := json.Marshal(reqBody)
+		req := httptest.NewRequest(http.MethodPost, "/quiz/generate", bytes.NewBuffer(reqJSON))
+		w := httptest.NewRecorder()
+
+		handler.GenerateQuizHandler(w, req)
+
+		if w.Code != http.StatusForbidden {
+			t.Errorf("Expected status 403 Forbidden, got %d. Body: %s", w.Code, w.Body.String())
+		}
+	})
+
+	// Test 6: Data user can generate Python quiz
 	t.Run("DataUserCanAccessPythonTopic", func(t *testing.T) {
 		reqBody := GenerateQuizRequest{
 			UserID:       dataUser.ID,
@@ -172,7 +244,25 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 		}
 	})
 
-	// Test 5: Data user can generate SQL quiz
+	// Test 7: Data user can generate Python tracing quiz
+	t.Run("DataUserCanAccessPythonTracingTopic", func(t *testing.T) {
+		reqBody := GenerateQuizRequest{
+			UserID:       dataUser.ID,
+			TopicID:      pythonTracingTopic.ID,
+			NumQuestions: 1,
+		}
+		reqJSON, _ := json.Marshal(reqBody)
+		req := httptest.NewRequest(http.MethodPost, "/quiz/generate", bytes.NewBuffer(reqJSON))
+		w := httptest.NewRecorder()
+
+		handler.GenerateQuizHandler(w, req)
+
+		if w.Code != http.StatusOK {
+			t.Errorf("Expected status 200, got %d. Body: %s", w.Code, w.Body.String())
+		}
+	})
+
+	// Test 8: Data user can generate SQL quiz
 	t.Run("DataUserCanAccessSQLTopic", func(t *testing.T) {
 		reqBody := GenerateQuizRequest{
 			UserID:       dataUser.ID,
@@ -190,7 +280,7 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 		}
 	})
 
-	// Test 6: Data user cannot generate Java quiz
+	// Test 9: Data user cannot generate Java quiz
 	t.Run("DataUserCannotAccessJavaTopic", func(t *testing.T) {
 		reqBody := GenerateQuizRequest{
 			UserID:       dataUser.ID,
@@ -208,7 +298,25 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 		}
 	})
 
-	// Test 7: Admin can generate Java quiz
+	// Test 10: Data user cannot generate Java tracing quiz
+	t.Run("DataUserCannotAccessJavaTracingTopic", func(t *testing.T) {
+		reqBody := GenerateQuizRequest{
+			UserID:       dataUser.ID,
+			TopicID:      javaTracingTopic.ID,
+			NumQuestions: 1,
+		}
+		reqJSON, _ := json.Marshal(reqBody)
+		req := httptest.NewRequest(http.MethodPost, "/quiz/generate", bytes.NewBuffer(reqJSON))
+		w := httptest.NewRecorder()
+
+		handler.GenerateQuizHandler(w, req)
+
+		if w.Code != http.StatusForbidden {
+			t.Errorf("Expected status 403 Forbidden, got %d. Body: %s", w.Code, w.Body.String())
+		}
+	})
+
+	// Test 11: Admin can generate Java quiz
 	t.Run("AdminCanAccessJavaTopic", func(t *testing.T) {
 		reqBody := GenerateQuizRequest{
 			UserID:       adminUser.ID,
@@ -226,7 +334,7 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 		}
 	})
 
-	// Test 8: Admin can generate Python quiz
+	// Test 12: Admin can generate Python quiz
 	t.Run("AdminCanAccessPythonTopic", func(t *testing.T) {
 		reqBody := GenerateQuizRequest{
 			UserID:       adminUser.ID,
@@ -244,7 +352,7 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 		}
 	})
 
-	// Test 9: Admin can generate SQL quiz
+	// Test 13: Admin can generate SQL quiz
 	t.Run("AdminCanAccessSQLTopic", func(t *testing.T) {
 		reqBody := GenerateQuizRequest{
 			UserID:       adminUser.ID,
