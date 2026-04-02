@@ -1,0 +1,555 @@
+{
+  "topic": "SQL Database",
+  "questions": [
+    {
+      "text": "What is the difference between DELETE and TRUNCATE in SQL?",
+      "difficulty": 2,
+      "tags": ["dml", "delete", "truncate"],
+      "answers": [
+        {"text": "DELETE removes specific rows and can be rolled back; TRUNCATE removes all rows and is faster", "is_correct": true},
+        {"text": "TRUNCATE removes specific rows; DELETE removes all rows", "is_correct": false},
+        {"text": "DELETE removes the table structure; TRUNCATE removes only data", "is_correct": false},
+        {"text": "There is no difference between them", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a subquery in SQL?",
+      "difficulty": 2,
+      "tags": ["subquery", "queries"],
+      "answers": [
+        {"text": "A query nested inside another query", "is_correct": true},
+        {"text": "A query that runs only once per session", "is_correct": false},
+        {"text": "A stored query saved in the database", "is_correct": false},
+        {"text": "A query that joins more than two tables", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL JOIN returns all rows from both tables, with NULLs where there is no match?",
+      "difficulty": 2,
+      "tags": ["join", "full-outer-join"],
+      "answers": [
+        {"text": "FULL OUTER JOIN", "is_correct": true},
+        {"text": "INNER JOIN", "is_correct": false},
+        {"text": "LEFT JOIN", "is_correct": false},
+        {"text": "CROSS JOIN", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does a CROSS JOIN produce?",
+      "difficulty": 2,
+      "tags": ["join", "cross-join"],
+      "answers": [
+        {"text": "The Cartesian product of both tables (every combination of rows)", "is_correct": true},
+        {"text": "Only matching rows from both tables", "is_correct": false},
+        {"text": "All rows from the left table with NULLs for non-matching right rows", "is_correct": false},
+        {"text": "Rows that exist in one table but not the other", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a view in SQL?",
+      "difficulty": 2,
+      "tags": ["views", "database-objects"],
+      "answers": [
+        {"text": "A virtual table based on the result of a stored SELECT query", "is_correct": true},
+        {"text": "A physical copy of a table stored separately", "is_correct": false},
+        {"text": "A temporary table that lasts for one session", "is_correct": false},
+        {"text": "A graphical display of table relationships", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of an index in SQL?",
+      "difficulty": 2,
+      "tags": ["indexes", "performance"],
+      "answers": [
+        {"text": "To speed up the retrieval of rows from a table", "is_correct": true},
+        {"text": "To enforce uniqueness on a column", "is_correct": false},
+        {"text": "To create a relationship between two tables", "is_correct": false},
+        {"text": "To compress table data for storage efficiency", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the result of using GROUP BY without an aggregate function in a SELECT?",
+      "difficulty": 2,
+      "tags": ["group-by", "aggregate"],
+      "answers": [
+        {"text": "It returns distinct values of the grouped column(s)", "is_correct": true},
+        {"text": "It causes a syntax error", "is_correct": false},
+        {"text": "It returns all rows unsorted", "is_correct": false},
+        {"text": "It groups rows but does not reduce them", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a stored procedure in SQL?",
+      "difficulty": 2,
+      "tags": ["stored-procedures", "database-objects"],
+      "answers": [
+        {"text": "A prepared SQL code block that can be saved and reused", "is_correct": true},
+        {"text": "A type of index for frequently used queries", "is_correct": false},
+        {"text": "A read-only view of a table", "is_correct": false},
+        {"text": "A backup of a table at a specific point in time", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which keyword is used in SQL to define a transaction?",
+      "difficulty": 2,
+      "tags": ["transactions", "acid"],
+      "answers": [
+        {"text": "BEGIN TRANSACTION / START TRANSACTION", "is_correct": true},
+        {"text": "OPEN TRANSACTION", "is_correct": false},
+        {"text": "INIT TRANSACTION", "is_correct": false},
+        {"text": "LOCK TRANSACTION", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does COMMIT do in a SQL transaction?",
+      "difficulty": 2,
+      "tags": ["transactions", "commit"],
+      "answers": [
+        {"text": "Saves all changes made during the transaction permanently", "is_correct": true},
+        {"text": "Undoes all changes made during the transaction", "is_correct": false},
+        {"text": "Pauses the current transaction", "is_correct": false},
+        {"text": "Starts a new nested transaction", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does ROLLBACK do in a SQL transaction?",
+      "difficulty": 2,
+      "tags": ["transactions", "rollback"],
+      "answers": [
+        {"text": "Undoes all changes made during the current transaction", "is_correct": true},
+        {"text": "Saves all changes made during the transaction", "is_correct": false},
+        {"text": "Deletes the transaction log", "is_correct": false},
+        {"text": "Restores a deleted table", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does ACID stand for in database transactions?",
+      "difficulty": 2,
+      "tags": ["transactions", "acid", "terminology"],
+      "answers": [
+        {"text": "Atomicity, Consistency, Isolation, Durability", "is_correct": true},
+        {"text": "Accuracy, Consistency, Integrity, Durability", "is_correct": false},
+        {"text": "Atomicity, Concurrency, Isolation, Data-integrity", "is_correct": false},
+        {"text": "Access, Control, Index, Data", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function concatenates two or more strings?",
+      "difficulty": 2,
+      "tags": ["string-functions", "concat"],
+      "answers": [
+        {"text": "CONCAT()", "is_correct": true},
+        {"text": "JOIN()", "is_correct": false},
+        {"text": "MERGE()", "is_correct": false},
+        {"text": "APPEND()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the COALESCE() function do in SQL?",
+      "difficulty": 2,
+      "tags": ["null-handling", "coalesce"],
+      "answers": [
+        {"text": "Returns the first non-NULL value from a list of arguments", "is_correct": true},
+        {"text": "Combines multiple rows into a single row", "is_correct": false},
+        {"text": "Converts NULL values to empty strings", "is_correct": false},
+        {"text": "Groups similar values together", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between CHAR and VARCHAR data types?",
+      "difficulty": 2,
+      "tags": ["data-types", "char", "varchar"],
+      "answers": [
+        {"text": "CHAR has fixed length; VARCHAR has variable length up to the specified maximum", "is_correct": true},
+        {"text": "CHAR stores only numbers; VARCHAR stores only text", "is_correct": false},
+        {"text": "VARCHAR has fixed length; CHAR has variable length", "is_correct": false},
+        {"text": "There is no practical difference between them", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL clause can reference column aliases defined in the same SELECT?",
+      "difficulty": 2,
+      "tags": ["order-by", "alias", "query-order"],
+      "answers": [
+        {"text": "ORDER BY", "is_correct": true},
+        {"text": "WHERE", "is_correct": false},
+        {"text": "GROUP BY", "is_correct": false},
+        {"text": "HAVING", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the CASE expression in SQL?",
+      "difficulty": 2,
+      "tags": ["case", "conditional"],
+      "answers": [
+        {"text": "To perform conditional logic and return different values based on conditions", "is_correct": true},
+        {"text": "To switch between different database schemas", "is_correct": false},
+        {"text": "To define case-sensitive string comparisons", "is_correct": false},
+        {"text": "To handle exceptions in stored procedures", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a self-join?",
+      "difficulty": 2,
+      "tags": ["join", "self-join"],
+      "answers": [
+        {"text": "A join where a table is joined with itself using aliases", "is_correct": true},
+        {"text": "A join that uses the primary key as the join condition", "is_correct": false},
+        {"text": "A join that does not require a ON clause", "is_correct": false},
+        {"text": "A join automatically performed by the database engine", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is normalization in database design?",
+      "difficulty": 2,
+      "tags": ["normalization", "database-design"],
+      "answers": [
+        {"text": "The process of organizing data to reduce redundancy and improve integrity", "is_correct": true},
+        {"text": "Converting all text columns to lowercase", "is_correct": false},
+        {"text": "Indexing all columns for faster queries", "is_correct": false},
+        {"text": "Merging multiple tables into one for performance", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does First Normal Form (1NF) require?",
+      "difficulty": 2,
+      "tags": ["normalization", "1nf"],
+      "answers": [
+        {"text": "Each column must contain atomic (indivisible) values and each row must be unique", "is_correct": true},
+        {"text": "All non-key columns must depend on the entire primary key", "is_correct": false},
+        {"text": "No transitive dependencies between non-key columns", "is_correct": false},
+        {"text": "All tables must have a surrogate primary key", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL operator returns rows from the first query that do not appear in the second?",
+      "difficulty": 2,
+      "tags": ["set-operations", "except", "minus"],
+      "answers": [
+        {"text": "EXCEPT (or MINUS in some databases)", "is_correct": true},
+        {"text": "NOT IN", "is_correct": false},
+        {"text": "DIFFERENCE", "is_correct": false},
+        {"text": "SUBTRACT", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL operator returns only the rows common to both SELECT queries?",
+      "difficulty": 2,
+      "tags": ["set-operations", "intersect"],
+      "answers": [
+        {"text": "INTERSECT", "is_correct": true},
+        {"text": "UNION", "is_correct": false},
+        {"text": "COMMON", "is_correct": false},
+        {"text": "BOTH", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a correlated subquery?",
+      "difficulty": 2,
+      "tags": ["subquery", "correlated"],
+      "answers": [
+        {"text": "A subquery that references columns from the outer query and is executed once per outer row", "is_correct": true},
+        {"text": "A subquery that is executed only once and its result reused", "is_correct": false},
+        {"text": "A subquery used in the FROM clause as a derived table", "is_correct": false},
+        {"text": "A subquery that joins two tables together", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the EXISTS operator do in SQL?",
+      "difficulty": 2,
+      "tags": ["exists", "subquery"],
+      "answers": [
+        {"text": "Returns TRUE if a subquery returns at least one row", "is_correct": true},
+        {"text": "Checks if a column exists in a table", "is_correct": false},
+        {"text": "Verifies that a table exists in the database", "is_correct": false},
+        {"text": "Returns the count of matching rows", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of SAVEPOINT in SQL transactions?",
+      "difficulty": 2,
+      "tags": ["transactions", "savepoint"],
+      "answers": [
+        {"text": "To set a point within a transaction to which you can roll back later", "is_correct": true},
+        {"text": "To save the entire database state", "is_correct": false},
+        {"text": "To commit a partial transaction", "is_correct": false},
+        {"text": "To lock a table for exclusive access", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function rounds a numeric value to a specified number of decimal places?",
+      "difficulty": 2,
+      "tags": ["numeric-functions", "round"],
+      "answers": [
+        {"text": "ROUND()", "is_correct": true},
+        {"text": "TRUNCATE()", "is_correct": false},
+        {"text": "CEIL()", "is_correct": false},
+        {"text": "FLOOR()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the FLOOR() function do in SQL?",
+      "difficulty": 2,
+      "tags": ["numeric-functions", "floor"],
+      "answers": [
+        {"text": "Returns the largest integer less than or equal to the given number", "is_correct": true},
+        {"text": "Returns the smallest integer greater than or equal to the given number", "is_correct": false},
+        {"text": "Rounds to the nearest integer", "is_correct": false},
+        {"text": "Returns the absolute value of a number", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the CEILING() (or CEIL()) function do in SQL?",
+      "difficulty": 2,
+      "tags": ["numeric-functions", "ceiling"],
+      "answers": [
+        {"text": "Returns the smallest integer greater than or equal to the given number", "is_correct": true},
+        {"text": "Returns the largest integer less than or equal to the given number", "is_correct": false},
+        {"text": "Rounds to the nearest integer", "is_correct": false},
+        {"text": "Returns the maximum value in a column", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a trigger in SQL?",
+      "difficulty": 2,
+      "tags": ["triggers", "database-objects"],
+      "answers": [
+        {"text": "A database object that automatically executes in response to certain events on a table", "is_correct": true},
+        {"text": "A manually executed stored procedure", "is_correct": false},
+        {"text": "An event scheduler for periodic queries", "is_correct": false},
+        {"text": "A constraint that fires when data is invalid", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is denormalization in database design?",
+      "difficulty": 2,
+      "tags": ["denormalization", "database-design"],
+      "answers": [
+        {"text": "Intentionally introducing redundancy to improve read performance", "is_correct": true},
+        {"text": "The process of removing all duplicate data", "is_correct": false},
+        {"text": "Converting a normalized database to First Normal Form", "is_correct": false},
+        {"text": "Removing indexes from a table", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which type of index stores rows in sorted order based on the index key?",
+      "difficulty": 2,
+      "tags": ["indexes", "clustered-index"],
+      "answers": [
+        {"text": "Clustered index", "is_correct": true},
+        {"text": "Non-clustered index", "is_correct": false},
+        {"text": "Composite index", "is_correct": false},
+        {"text": "Bitmap index", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the ON clause used for in a JOIN?",
+      "difficulty": 2,
+      "tags": ["join", "on-clause"],
+      "answers": [
+        {"text": "To specify the condition used to match rows between the joined tables", "is_correct": true},
+        {"text": "To sort the joined result", "is_correct": false},
+        {"text": "To filter rows after joining", "is_correct": false},
+        {"text": "To create a new column in the joined result", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between WHERE and HAVING clauses?",
+      "difficulty": 2,
+      "tags": ["where", "having", "filtering"],
+      "answers": [
+        {"text": "WHERE filters individual rows before grouping; HAVING filters groups after aggregation", "is_correct": true},
+        {"text": "HAVING filters rows before aggregation; WHERE filters after", "is_correct": false},
+        {"text": "WHERE is used with JOINs; HAVING is used with subqueries", "is_correct": false},
+        {"text": "They are interchangeable and have the same effect", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a composite primary key?",
+      "difficulty": 2,
+      "tags": ["primary-key", "composite-key"],
+      "answers": [
+        {"text": "A primary key made up of two or more columns together", "is_correct": true},
+        {"text": "A primary key that auto-increments", "is_correct": false},
+        {"text": "A primary key that references another table", "is_correct": false},
+        {"text": "A primary key with a UUID data type", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function extracts a substring from a string?",
+      "difficulty": 2,
+      "tags": ["string-functions", "substring"],
+      "answers": [
+        {"text": "SUBSTRING() or SUBSTR()", "is_correct": true},
+        {"text": "EXTRACT()", "is_correct": false},
+        {"text": "SLICE()", "is_correct": false},
+        {"text": "PART()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a schema in SQL?",
+      "difficulty": 2,
+      "tags": ["schema", "database-design"],
+      "answers": [
+        {"text": "A logical container that groups database objects like tables, views, and procedures", "is_correct": true},
+        {"text": "A backup of the database structure", "is_correct": false},
+        {"text": "A diagram showing all table relationships", "is_correct": false},
+        {"text": "A column definition within a table", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the TRIM() function do in SQL?",
+      "difficulty": 2,
+      "tags": ["string-functions", "trim"],
+      "answers": [
+        {"text": "Removes leading and trailing spaces from a string", "is_correct": true},
+        {"text": "Removes all spaces from within a string", "is_correct": false},
+        {"text": "Shortens a string to a specified length", "is_correct": false},
+        {"text": "Removes special characters from a string", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL clause is used to specify join conditions instead of ON when column names are identical in both tables?",
+      "difficulty": 2,
+      "tags": ["join", "using"],
+      "answers": [
+        {"text": "USING", "is_correct": true},
+        {"text": "MATCH", "is_correct": false},
+        {"text": "WITH", "is_correct": false},
+        {"text": "BY", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a natural join in SQL?",
+      "difficulty": 2,
+      "tags": ["join", "natural-join"],
+      "answers": [
+        {"text": "A join that automatically matches columns with the same name in both tables", "is_correct": true},
+        {"text": "A join based on the primary and foreign key relationship", "is_correct": false},
+        {"text": "A join that returns only unique rows", "is_correct": false},
+        {"text": "A join that does not require a WHERE clause", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the REPLACE() function in SQL?",
+      "difficulty": 2,
+      "tags": ["string-functions", "replace"],
+      "answers": [
+        {"text": "Replaces occurrences of a substring within a string with another substring", "is_correct": true},
+        {"text": "Replaces a row in a table if a key already exists", "is_correct": false},
+        {"text": "Updates all NULL values in a column with a default", "is_correct": false},
+        {"text": "Swaps two column values in a row", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the DISTINCT keyword do when used inside COUNT()?",
+      "difficulty": 2,
+      "tags": ["aggregate", "count", "distinct"],
+      "answers": [
+        {"text": "Counts only unique non-NULL values in the specified column", "is_correct": true},
+        {"text": "Returns the number of distinct rows in the entire table", "is_correct": false},
+        {"text": "Removes duplicate rows from the result set", "is_correct": false},
+        {"text": "Counts NULL values separately from non-NULL values", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL statement is used to grant privileges to a user?",
+      "difficulty": 2,
+      "tags": ["dcl", "grant", "security"],
+      "answers": [
+        {"text": "GRANT", "is_correct": true},
+        {"text": "ALLOW", "is_correct": false},
+        {"text": "PERMIT", "is_correct": false},
+        {"text": "AUTHORIZE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL statement is used to revoke privileges from a user?",
+      "difficulty": 2,
+      "tags": ["dcl", "revoke", "security"],
+      "answers": [
+        {"text": "REVOKE", "is_correct": true},
+        {"text": "DENY", "is_correct": false},
+        {"text": "REMOVE", "is_correct": false},
+        {"text": "DELETE ACCESS", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is referential integrity in SQL?",
+      "difficulty": 2,
+      "tags": ["referential-integrity", "foreign-key"],
+      "answers": [
+        {"text": "Ensuring that foreign key values always reference an existing primary key", "is_correct": true},
+        {"text": "Ensuring all columns have unique values", "is_correct": false},
+        {"text": "Ensuring no NULL values exist in a table", "is_correct": false},
+        {"text": "Ensuring that all queries return consistent results", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the CHECK constraint?",
+      "difficulty": 2,
+      "tags": ["constraints", "check"],
+      "answers": [
+        {"text": "To limit the range or type of values that can be inserted into a column", "is_correct": true},
+        {"text": "To verify that a table has no duplicate rows", "is_correct": false},
+        {"text": "To check referential integrity between tables", "is_correct": false},
+        {"text": "To validate the database schema against a template", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is an inline view in SQL?",
+      "difficulty": 2,
+      "tags": ["subquery", "inline-view"],
+      "answers": [
+        {"text": "A subquery used in the FROM clause, treated as a temporary table", "is_correct": true},
+        {"text": "A stored view that is embedded in the schema", "is_correct": false},
+        {"text": "A view created without a separate CREATE VIEW statement", "is_correct": false},
+        {"text": "A view that updates automatically when data changes", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between INNER JOIN and OUTER JOIN?",
+      "difficulty": 2,
+      "tags": ["join", "inner-join", "outer-join"],
+      "answers": [
+        {"text": "INNER JOIN returns only matching rows; OUTER JOIN also includes non-matching rows from one or both tables", "is_correct": true},
+        {"text": "OUTER JOIN returns only matching rows; INNER JOIN includes all rows", "is_correct": false},
+        {"text": "INNER JOIN is slower than OUTER JOIN", "is_correct": false},
+        {"text": "They produce identical results", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL data type would you use to store a large amount of text?",
+      "difficulty": 2,
+      "tags": ["data-types", "text"],
+      "answers": [
+        {"text": "TEXT or CLOB", "is_correct": true},
+        {"text": "VARCHAR(255)", "is_correct": false},
+        {"text": "CHAR(MAX)", "is_correct": false},
+        {"text": "BLOB", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the DEFAULT constraint in SQL?",
+      "difficulty": 2,
+      "tags": ["constraints", "default"],
+      "answers": [
+        {"text": "To assign a default value to a column when no value is specified during INSERT", "is_correct": true},
+        {"text": "To set the primary key for a table", "is_correct": false},
+        {"text": "To create a backup value if a query fails", "is_correct": false},
+        {"text": "To reset a column's value to NULL on update", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a CTE (Common Table Expression) in SQL?",
+      "difficulty": 2,
+      "tags": ["cte", "with-clause", "queries"],
+      "answers": [
+        {"text": "A named temporary result set defined with the WITH clause that can be referenced in the main query", "is_correct": true},
+        {"text": "A permanent stored view defined in the schema", "is_correct": false},
+        {"text": "A type of index used for recursive queries", "is_correct": false},
+        {"text": "A constraint that enforces referential integrity across tables", "is_correct": false}
+      ]
+    }
+  ]
+}
