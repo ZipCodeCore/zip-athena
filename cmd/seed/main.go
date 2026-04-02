@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/ZipCodeCore/zip-athena/database"
@@ -16,6 +19,79 @@ func truncate(s string, maxLen int) string {
 		return s
 	}
 	return s[:maxLen] + "..."
+}
+
+// loadQuestionsFromJSONFile reads questions from a JSON file and creates them in the database for the given topic.
+// It skips questions that already exist (matched by question text).
+func loadQuestionsFromJSONFile(db *database.SQLiteDB, topicID int, filePath string) error {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return fmt.Errorf("failed to read file %s: %w", filePath, err)
+	}
+
+	var qf struct {
+		Topic     string `json:"topic"`
+		Questions []struct {
+			Text       string   `json:"text"`
+			Difficulty int      `json:"difficulty"`
+			Tags       []string `json:"tags"`
+			Answers    []struct {
+				Text      string `json:"text"`
+				IsCorrect bool   `json:"is_correct"`
+			} `json:"answers"`
+		} `json:"questions"`
+	}
+
+	if err := json.Unmarshal(data, &qf); err != nil {
+		return fmt.Errorf("failed to parse JSON in %s: %w", filePath, err)
+	}
+
+	// Get existing questions to avoid duplicates
+	existingQuestions, _ := db.GetQuestionsByTopic(topicID)
+	existingTexts := make(map[string]bool)
+	for _, eq := range existingQuestions {
+		existingTexts[strings.ToLower(eq.QuestionText)] = true
+	}
+	startNum := len(existingQuestions) + 1
+
+	imported := 0
+	for i, q := range qf.Questions {
+		if existingTexts[strings.ToLower(q.Text)] {
+			fmt.Printf("Question already exists: %s\n", truncate(q.Text, 50))
+			continue
+		}
+
+		topicQuestionID := fmt.Sprintf("%d.%d", topicID, startNum+i)
+		question := models.Question{
+			TopicID:         topicID,
+			QuestionText:    q.Text,
+			Difficulty:      q.Difficulty,
+			Tags:            q.Tags,
+			TopicQuestionID: topicQuestionID,
+			IsActive:        true,
+			CreatedAt:       time.Now(),
+		}
+
+		if err := db.CreateQuestion(&question); err != nil {
+			log.Printf("Warning: Failed to create question: %v", err)
+			continue
+		}
+
+		for _, a := range q.Answers {
+			answer := models.Answer{
+				QuestionID: question.ID,
+				AnswerText: a.Text,
+				IsCorrect:  a.IsCorrect,
+			}
+			if err := db.CreateAnswer(&answer); err != nil {
+				log.Printf("Warning: Failed to create answer: %v", err)
+			}
+		}
+		imported++
+	}
+
+	fmt.Printf("Loaded %d questions from %s\n", imported, filePath)
+	return nil
 }
 
 func hashPassword(password string) (string, error) {
@@ -424,6 +500,18 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 					log.Printf("Warning: Failed to create answer: %v", err)
 				}
 			}
+		}
+	}
+
+	if len(topics) > 3 && topics[3].ID > 0 {
+		if err := loadQuestionsFromJSONFile(db, topics[3].ID, "./questions/java-code-tracing.json"); err != nil {
+			log.Printf("Warning: Failed to load Java Code Tracing questions: %v", err)
+		}
+	}
+
+	if len(topics) > 4 && topics[4].ID > 0 {
+		if err := loadQuestionsFromJSONFile(db, topics[4].ID, "./questions/python-code-tracing.json"); err != nil {
+			log.Printf("Warning: Failed to load Python Code Tracing questions: %v", err)
 		}
 	}
 
