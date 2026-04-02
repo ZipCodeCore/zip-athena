@@ -49,6 +49,9 @@ COPY --from=builder /app/learning ./learning
 # Copy database migrations
 COPY --from=builder /app/database/migrations ./database/migrations
 
+# Copy question JSON files (used by the loadquestions tool)
+COPY --from=builder /app/questions ./questions
+
 # Create data directory for SQLite database
 RUN mkdir -p /data && chown -R athena:athena /data /app
 

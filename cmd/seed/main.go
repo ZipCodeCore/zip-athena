@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/ZipCodeCore/zip-athena/database"
@@ -41,6 +44,11 @@ func main() {
 	// Seed Phase 2 data (admin user, quizzes, additional questions)
 	if err := seedPhase2Data(db); err != nil {
 		log.Fatalf("Failed to seed Phase 2 data: %v", err)
+	}
+
+	// Seed code tracing questions from JSON files
+	if err := seedCodeTracingQuestions(db); err != nil {
+		log.Printf("Warning: Failed to seed code tracing questions: %v", err)
 	}
 
 	// Seed quiz attempts with random answers (only save if score > 35%)
@@ -1319,5 +1327,119 @@ func seedQuizAttempts(db *database.SQLiteDB) error {
 	}
 
 	fmt.Println("\nQuiz attempts seeding complete!")
+	return nil
+}
+
+// codeTracingQuestionFile mirrors the structure expected by cmd/loadquestions.
+type codeTracingQuestionFile struct {
+	Topic     string                    `json:"topic"`
+	Questions []codeTracingQuestionData `json:"questions"`
+}
+
+type codeTracingQuestionData struct {
+	Text       string              `json:"text"`
+	Difficulty int                 `json:"difficulty"`
+	Tags       []string            `json:"tags"`
+	Answers    []codeTracingAnswer `json:"answers"`
+}
+
+type codeTracingAnswer struct {
+	Text      string `json:"text"`
+	IsCorrect bool   `json:"is_correct"`
+}
+
+// seedCodeTracingQuestions loads questions from the JSON files for code tracing topics.
+// It is idempotent: questions that already exist (matched by text) are skipped.
+func seedCodeTracingQuestions(db *database.SQLiteDB) error {
+	jsonFiles := []string{
+		"./questions/java-code-tracing.json",
+		"./questions/python-code-tracing.json",
+	}
+
+	// Build a topic name -> topic map for quick lookup
+	topics, err := db.ListTopics()
+	if err != nil {
+		return fmt.Errorf("failed to list topics: %w", err)
+	}
+	topicMap := make(map[string]*models.Topic)
+	for _, t := range topics {
+		topicMap[strings.ToLower(t.Name)] = t
+	}
+
+	fmt.Println("\nSeeding code tracing questions from JSON files...")
+
+	for _, filePath := range jsonFiles {
+		data, err := os.ReadFile(filePath)
+		if err != nil {
+			fmt.Printf("  Warning: Could not read %s: %v\n", filePath, err)
+			continue
+		}
+
+		var qf codeTracingQuestionFile
+		if err := json.Unmarshal(data, &qf); err != nil {
+			fmt.Printf("  Warning: Could not parse %s: %v\n", filePath, err)
+			continue
+		}
+
+		topic, ok := topicMap[strings.ToLower(qf.Topic)]
+		if !ok {
+			fmt.Printf("  Warning: Topic '%s' not found in database, skipping %s\n", qf.Topic, filePath)
+			continue
+		}
+
+		fmt.Printf("  Loading questions for topic '%s' (ID: %d)...\n", topic.Name, topic.ID)
+
+		// Build set of existing question texts to avoid duplicates
+		existingQuestions, _ := db.GetQuestionsByTopic(topic.ID)
+		existingTexts := make(map[string]bool)
+		for _, eq := range existingQuestions {
+			existingTexts[strings.ToLower(eq.QuestionText)] = true
+		}
+		startNum := len(existingQuestions) + 1
+
+		imported := 0
+		skipped := 0
+
+		for i, q := range qf.Questions {
+			if strings.TrimSpace(q.Text) == "" {
+				continue
+			}
+			if existingTexts[strings.ToLower(q.Text)] {
+				skipped++
+				continue
+			}
+
+			topicQuestionID := fmt.Sprintf("%d.%d", topic.ID, startNum+imported)
+			question := models.Question{
+				TopicID:         topic.ID,
+				QuestionText:    q.Text,
+				Difficulty:      q.Difficulty,
+				Tags:            q.Tags,
+				TopicQuestionID: topicQuestionID,
+				CreatedAt:       time.Now(),
+			}
+
+			if err := db.CreateQuestion(&question); err != nil {
+				fmt.Printf("    Warning: Failed to create question %d: %v\n", i+1, err)
+				continue
+			}
+
+			for _, a := range q.Answers {
+				answer := models.Answer{
+					QuestionID: question.ID,
+					AnswerText: a.Text,
+					IsCorrect:  a.IsCorrect,
+				}
+				if err := db.CreateAnswer(&answer); err != nil {
+					fmt.Printf("    Warning: Failed to create answer for question %d: %v\n", question.ID, err)
+				}
+			}
+
+			imported++
+		}
+
+		fmt.Printf("  Topic '%s': imported %d, skipped %d (duplicates)\n", topic.Name, imported, skipped)
+	}
+
 	return nil
 }
