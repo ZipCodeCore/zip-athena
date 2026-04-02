@@ -1,0 +1,445 @@
+{
+  "topic": "SQL Database",
+  "questions": [
+    {
+      "text": "Which SQL keyword removes duplicate rows from a result set?",
+      "difficulty": 1,
+      "tags": ["select", "distinct", "basics"],
+      "answers": [
+        {"text": "DISTINCT", "is_correct": true},
+        {"text": "UNIQUE", "is_correct": false},
+        {"text": "NODUPLICATE", "is_correct": false},
+        {"text": "DIFFERENT", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL clause limits the number of rows returned?",
+      "difficulty": 1,
+      "tags": ["select", "limit", "basics"],
+      "answers": [
+        {"text": "LIMIT", "is_correct": true},
+        {"text": "TOP", "is_correct": false},
+        {"text": "RESTRICT", "is_correct": false},
+        {"text": "MAX ROWS", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What SQL statement is used to create a new table?",
+      "difficulty": 1,
+      "tags": ["ddl", "create", "basics"],
+      "answers": [
+        {"text": "CREATE TABLE", "is_correct": true},
+        {"text": "NEW TABLE", "is_correct": false},
+        {"text": "ADD TABLE", "is_correct": false},
+        {"text": "MAKE TABLE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL statement is used to delete a table from a database?",
+      "difficulty": 1,
+      "tags": ["ddl", "drop", "basics"],
+      "answers": [
+        {"text": "DROP TABLE", "is_correct": true},
+        {"text": "DELETE TABLE", "is_correct": false},
+        {"text": "REMOVE TABLE", "is_correct": false},
+        {"text": "TRUNCATE TABLE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does NULL represent in SQL?",
+      "difficulty": 1,
+      "tags": ["null", "basics", "data-types"],
+      "answers": [
+        {"text": "An absence of a value", "is_correct": true},
+        {"text": "The number zero", "is_correct": false},
+        {"text": "An empty string", "is_correct": false},
+        {"text": "A boolean false value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which operator is used to check for NULL values in SQL?",
+      "difficulty": 1,
+      "tags": ["null", "basics", "operators"],
+      "answers": [
+        {"text": "IS NULL", "is_correct": true},
+        {"text": "= NULL", "is_correct": false},
+        {"text": "== NULL", "is_correct": false},
+        {"text": "EQUALS NULL", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function returns the number of rows matching a condition?",
+      "difficulty": 1,
+      "tags": ["aggregate", "count", "basics"],
+      "answers": [
+        {"text": "COUNT()", "is_correct": true},
+        {"text": "SUM()", "is_correct": false},
+        {"text": "TOTAL()", "is_correct": false},
+        {"text": "NUMBER()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function returns the largest value in a column?",
+      "difficulty": 1,
+      "tags": ["aggregate", "max", "basics"],
+      "answers": [
+        {"text": "MAX()", "is_correct": true},
+        {"text": "LARGEST()", "is_correct": false},
+        {"text": "BIGGEST()", "is_correct": false},
+        {"text": "TOP()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function returns the smallest value in a column?",
+      "difficulty": 1,
+      "tags": ["aggregate", "min", "basics"],
+      "answers": [
+        {"text": "MIN()", "is_correct": true},
+        {"text": "SMALLEST()", "is_correct": false},
+        {"text": "LEAST()", "is_correct": false},
+        {"text": "BOTTOM()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function calculates the total sum of a numeric column?",
+      "difficulty": 1,
+      "tags": ["aggregate", "sum", "basics"],
+      "answers": [
+        {"text": "SUM()", "is_correct": true},
+        {"text": "TOTAL()", "is_correct": false},
+        {"text": "ADD()", "is_correct": false},
+        {"text": "COUNT()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function returns the average value of a numeric column?",
+      "difficulty": 1,
+      "tags": ["aggregate", "avg", "basics"],
+      "answers": [
+        {"text": "AVG()", "is_correct": true},
+        {"text": "MEAN()", "is_correct": false},
+        {"text": "AVERAGE()", "is_correct": false},
+        {"text": "MID()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which clause is used with aggregate functions to group results?",
+      "difficulty": 1,
+      "tags": ["group-by", "aggregate", "basics"],
+      "answers": [
+        {"text": "GROUP BY", "is_correct": true},
+        {"text": "ORDER BY", "is_correct": false},
+        {"text": "CLUSTER BY", "is_correct": false},
+        {"text": "ARRANGE BY", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which clause filters grouped results produced by GROUP BY?",
+      "difficulty": 1,
+      "tags": ["having", "aggregate", "basics"],
+      "answers": [
+        {"text": "HAVING", "is_correct": true},
+        {"text": "WHERE", "is_correct": false},
+        {"text": "FILTER", "is_correct": false},
+        {"text": "GROUP FILTER", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What SQL keyword is used to combine the results of two SELECT statements, including duplicates?",
+      "difficulty": 1,
+      "tags": ["union", "set-operations", "basics"],
+      "answers": [
+        {"text": "UNION ALL", "is_correct": true},
+        {"text": "UNION", "is_correct": false},
+        {"text": "COMBINE", "is_correct": false},
+        {"text": "MERGE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What SQL keyword combines two SELECT statements and removes duplicate rows?",
+      "difficulty": 1,
+      "tags": ["union", "set-operations", "basics"],
+      "answers": [
+        {"text": "UNION", "is_correct": true},
+        {"text": "UNION ALL", "is_correct": false},
+        {"text": "JOIN", "is_correct": false},
+        {"text": "INTERSECT", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does PRIMARY KEY constraint do?",
+      "difficulty": 1,
+      "tags": ["constraints", "primary-key", "basics"],
+      "answers": [
+        {"text": "Uniquely identifies each row in a table", "is_correct": true},
+        {"text": "Links two tables together", "is_correct": false},
+        {"text": "Prevents NULL values only", "is_correct": false},
+        {"text": "Sorts the table automatically", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does a FOREIGN KEY constraint do?",
+      "difficulty": 1,
+      "tags": ["constraints", "foreign-key", "basics"],
+      "answers": [
+        {"text": "Links a column to a primary key in another table", "is_correct": true},
+        {"text": "Creates a unique value in the column", "is_correct": false},
+        {"text": "Prevents NULL values in the column", "is_correct": false},
+        {"text": "Encrypts the column data", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which constraint ensures all values in a column are unique?",
+      "difficulty": 1,
+      "tags": ["constraints", "unique", "basics"],
+      "answers": [
+        {"text": "UNIQUE", "is_correct": true},
+        {"text": "DISTINCT", "is_correct": false},
+        {"text": "PRIMARY KEY", "is_correct": false},
+        {"text": "NOT DUPLICATE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which constraint ensures a column cannot have a NULL value?",
+      "difficulty": 1,
+      "tags": ["constraints", "not-null", "basics"],
+      "answers": [
+        {"text": "NOT NULL", "is_correct": true},
+        {"text": "REQUIRED", "is_correct": false},
+        {"text": "MANDATORY", "is_correct": false},
+        {"text": "NO EMPTY", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL statement is used to add a column to an existing table?",
+      "difficulty": 1,
+      "tags": ["ddl", "alter", "basics"],
+      "answers": [
+        {"text": "ALTER TABLE ... ADD COLUMN", "is_correct": true},
+        {"text": "UPDATE TABLE ... ADD COLUMN", "is_correct": false},
+        {"text": "INSERT COLUMN INTO", "is_correct": false},
+        {"text": "CREATE COLUMN IN", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL operator is used to match a pattern in a WHERE clause?",
+      "difficulty": 1,
+      "tags": ["like", "pattern-matching", "basics"],
+      "answers": [
+        {"text": "LIKE", "is_correct": true},
+        {"text": "MATCH", "is_correct": false},
+        {"text": "SIMILAR", "is_correct": false},
+        {"text": "REGEX", "is_correct": false}
+      ]
+    },
+    {
+      "text": "In a LIKE pattern, what wildcard character matches any sequence of characters?",
+      "difficulty": 1,
+      "tags": ["like", "wildcards", "basics"],
+      "answers": [
+        {"text": "%", "is_correct": true},
+        {"text": "*", "is_correct": false},
+        {"text": "?", "is_correct": false},
+        {"text": "#", "is_correct": false}
+      ]
+    },
+    {
+      "text": "In a LIKE pattern, what wildcard character matches exactly one character?",
+      "difficulty": 1,
+      "tags": ["like", "wildcards", "basics"],
+      "answers": [
+        {"text": "_", "is_correct": true},
+        {"text": "?", "is_correct": false},
+        {"text": ".", "is_correct": false},
+        {"text": "!", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL operator checks whether a value falls within a range?",
+      "difficulty": 1,
+      "tags": ["between", "operators", "basics"],
+      "answers": [
+        {"text": "BETWEEN", "is_correct": true},
+        {"text": "RANGE", "is_correct": false},
+        {"text": "IN RANGE", "is_correct": false},
+        {"text": "WITHIN", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL operator checks if a value matches any value in a list?",
+      "difficulty": 1,
+      "tags": ["in", "operators", "basics"],
+      "answers": [
+        {"text": "IN", "is_correct": true},
+        {"text": "ANY OF", "is_correct": false},
+        {"text": "CONTAINS", "is_correct": false},
+        {"text": "MATCH", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What SQL keyword is used to join two tables based on a matching column?",
+      "difficulty": 1,
+      "tags": ["join", "basics"],
+      "answers": [
+        {"text": "JOIN", "is_correct": true},
+        {"text": "LINK", "is_correct": false},
+        {"text": "CONNECT", "is_correct": false},
+        {"text": "MERGE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which type of JOIN returns rows that have matching values in both tables?",
+      "difficulty": 1,
+      "tags": ["join", "inner-join", "basics"],
+      "answers": [
+        {"text": "INNER JOIN", "is_correct": true},
+        {"text": "OUTER JOIN", "is_correct": false},
+        {"text": "LEFT JOIN", "is_correct": false},
+        {"text": "CROSS JOIN", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which type of JOIN returns all rows from the left table, plus matching rows from the right?",
+      "difficulty": 1,
+      "tags": ["join", "left-join", "basics"],
+      "answers": [
+        {"text": "LEFT JOIN", "is_correct": true},
+        {"text": "RIGHT JOIN", "is_correct": false},
+        {"text": "INNER JOIN", "is_correct": false},
+        {"text": "FULL JOIN", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does DDL stand for in SQL?",
+      "difficulty": 1,
+      "tags": ["ddl", "terminology", "basics"],
+      "answers": [
+        {"text": "Data Definition Language", "is_correct": true},
+        {"text": "Data Display Language", "is_correct": false},
+        {"text": "Dynamic Data Language", "is_correct": false},
+        {"text": "Database Design Language", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does DML stand for in SQL?",
+      "difficulty": 1,
+      "tags": ["dml", "terminology", "basics"],
+      "answers": [
+        {"text": "Data Manipulation Language", "is_correct": true},
+        {"text": "Data Management Language", "is_correct": false},
+        {"text": "Database Modification Language", "is_correct": false},
+        {"text": "Data Merging Language", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL command removes all rows from a table without deleting the table structure?",
+      "difficulty": 1,
+      "tags": ["truncate", "dml", "basics"],
+      "answers": [
+        {"text": "TRUNCATE", "is_correct": true},
+        {"text": "DELETE", "is_correct": false},
+        {"text": "DROP", "is_correct": false},
+        {"text": "CLEAR", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL keyword assigns an alias to a column or table?",
+      "difficulty": 1,
+      "tags": ["alias", "as", "basics"],
+      "answers": [
+        {"text": "AS", "is_correct": true},
+        {"text": "NAMED", "is_correct": false},
+        {"text": "ALIAS", "is_correct": false},
+        {"text": "RENAME", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to combine two conditions where both must be true?",
+      "difficulty": 1,
+      "tags": ["and", "operators", "basics"],
+      "answers": [
+        {"text": "AND", "is_correct": true},
+        {"text": "BOTH", "is_correct": false},
+        {"text": "ALL", "is_correct": false},
+        {"text": "WITH", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What keyword is used to combine two conditions where at least one must be true?",
+      "difficulty": 1,
+      "tags": ["or", "operators", "basics"],
+      "answers": [
+        {"text": "OR", "is_correct": true},
+        {"text": "EITHER", "is_correct": false},
+        {"text": "ANY", "is_correct": false},
+        {"text": "ONE OF", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL keyword negates a condition?",
+      "difficulty": 1,
+      "tags": ["not", "operators", "basics"],
+      "answers": [
+        {"text": "NOT", "is_correct": true},
+        {"text": "NEGATE", "is_correct": false},
+        {"text": "EXCEPT", "is_correct": false},
+        {"text": "REVERSE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the correct syntax to comment a single line in SQL?",
+      "difficulty": 1,
+      "tags": ["comments", "syntax", "basics"],
+      "answers": [
+        {"text": "--", "is_correct": true},
+        {"text": "//", "is_correct": false},
+        {"text": "#", "is_correct": false},
+        {"text": "/* */", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function returns the current date?",
+      "difficulty": 1,
+      "tags": ["date-functions", "basics"],
+      "answers": [
+        {"text": "CURDATE() or CURRENT_DATE", "is_correct": true},
+        {"text": "TODAY()", "is_correct": false},
+        {"text": "NOW_DATE()", "is_correct": false},
+        {"text": "GETDATE()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function converts a string to uppercase?",
+      "difficulty": 1,
+      "tags": ["string-functions", "basics"],
+      "answers": [
+        {"text": "UPPER()", "is_correct": true},
+        {"text": "UPPERCASE()", "is_correct": false},
+        {"text": "TOUPPER()", "is_correct": false},
+        {"text": "CAPS()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function converts a string to lowercase?",
+      "difficulty": 1,
+      "tags": ["string-functions", "basics"],
+      "answers": [
+        {"text": "LOWER()", "is_correct": true},
+        {"text": "LOWERCASE()", "is_correct": false},
+        {"text": "TOLOWER()", "is_correct": false},
+        {"text": "SMALL()", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which SQL function returns the length of a string?",
+      "difficulty": 1,
+      "tags": ["string-functions", "basics"],
+      "answers": [
+        {"text": "LENGTH() or LEN()", "is_correct": true},
+        {"text": "SIZE()", "is_correct": false},
+        {"text": "STRLEN()", "is_correct": false},
+        {"text": "COUNT_CHARS()", "is_correct": false}
+      ]
+    }
+  ]
+}
