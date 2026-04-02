@@ -140,6 +140,11 @@ async function loadAndResumeQuiz(resumeData) {
 // Generate quiz
 async function generateQuiz() {
     try {
+        // Use 5 questions for code tracing topics, 10 for regular topics
+        const decodedTopicName = topicName ? decodeURIComponent(topicName).trim() : '';
+        const isCodeTracing = decodedTopicName.toLowerCase().includes('code tracing');
+        const numQuestions = isCodeTracing ? 5 : 10;
+
         const response = await fetch('/quiz/generate', {
             method: 'POST',
             headers: {
@@ -148,7 +153,7 @@ async function generateQuiz() {
             body: JSON.stringify({
                 user_id: user.id,
                 topic_id: parseInt(topicId),
-                num_questions: 10,
+                num_questions: numQuestions,
                 difficulty_level: selectedDifficulty
             }),
         });
@@ -184,8 +189,9 @@ function displayQuestion() {
     document.getElementById('progressBar').style.width = `${progress}%`;
     document.getElementById('progressBadge').textContent = `Question ${currentQuestionIndex + 1} of ${quizData.questions.length}`;
 
-    // Update question
-    document.getElementById('questionText').textContent = question.question.question_text;
+    // Update question - render code blocks if present
+    const questionTextEl = document.getElementById('questionText');
+    renderQuestionText(questionTextEl, question.question.question_text);
     
     // Update difficulty badge
     const difficultyText = `Difficulty ${question.question.difficulty}/7`;
@@ -395,6 +401,57 @@ async function loadLearningResources(questionId, feedbackElement) {
     } catch (error) {
         console.error('Error loading learning resources:', error);
         // Silently fail - don't disrupt quiz flow
+    }
+}
+
+// Render question text, converting markdown-style code blocks to formatted <pre><code> elements
+function renderQuestionText(container, text) {
+    container.innerHTML = '';
+
+    const codeBlockRegex = /```(\w+)?\n?([\s\S]*?)```/g;
+    let lastIndex = 0;
+    let match;
+
+    while ((match = codeBlockRegex.exec(text)) !== null) {
+        // Add text before the code block
+        if (match.index > lastIndex) {
+            const preamble = text.substring(lastIndex, match.index).trim();
+            if (preamble) {
+                const p = document.createElement('p');
+                p.className = 'question-preamble mb-2';
+                p.textContent = preamble;
+                container.appendChild(p);
+            }
+        }
+
+        // Add the code block
+        const language = match[1] || '';
+        const code = match[2];
+        const pre = document.createElement('pre');
+        pre.className = 'code-block';
+        const codeEl = document.createElement('code');
+        codeEl.className = language ? `language-${language}` : '';
+        codeEl.textContent = code; // textContent safely escapes HTML
+        pre.appendChild(codeEl);
+        container.appendChild(pre);
+
+        lastIndex = match.index + match[0].length;
+    }
+
+    // Add any remaining text after the last code block
+    if (lastIndex < text.length) {
+        const remaining = text.substring(lastIndex).trim();
+        if (remaining) {
+            const p = document.createElement('p');
+            p.className = 'question-preamble mb-2';
+            p.textContent = remaining;
+            container.appendChild(p);
+        }
+    }
+
+    // If no code blocks were found, render as plain text
+    if (lastIndex === 0) {
+        container.textContent = text;
     }
 }
 

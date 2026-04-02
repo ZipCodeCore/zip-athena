@@ -306,3 +306,51 @@ select {
         break-inside: avoid;
     }
 }
+
+/* Code Tracing Styles */
+.code-block {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 0.75rem 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: pre;
+    border-left: 4px solid var(--zcw-primary, #1a3a5c);
+}
+
+.code-block code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+}
+
+.question-preamble {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Code Tracing Topic Card */
+.code-tracing-card {
+    border: 2px solid #1e1e1e !important;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.code-tracing-card:hover {
+    border-color: var(--zcw-primary, #1a3a5c) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.code-tracing-card .card-title {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.question-text-container {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
