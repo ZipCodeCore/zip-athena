@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -380,14 +381,9 @@ func (db *InMemoryDB) ListAllTopics() ([]*models.Topic, error) {
 		topics = append(topics, topic)
 	}
 
-	// Sort by display_order
-	for i := 0; i < len(topics); i++ {
-		for j := i + 1; j < len(topics); j++ {
-			if topics[i].DisplayOrder > topics[j].DisplayOrder {
-				topics[i], topics[j] = topics[j], topics[i]
-			}
-		}
-	}
+	sort.Slice(topics, func(i, j int) bool {
+		return topics[i].DisplayOrder < topics[j].DisplayOrder
+	})
 
 	return topics, nil
 }

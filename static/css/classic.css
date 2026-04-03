@@ -290,7 +290,7 @@
 }
 
 .nav-pills .nav-link.active {
-    color: #fff !important;
+    color: var(--bs-white, #fff) !important;
 }
 
 /* ============================================================
