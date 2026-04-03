@@ -194,6 +194,7 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Description</th>
+                                <th>Category</th>
                                 <th>Created</th>
                                 <th>Actions</th>
                             </tr>
@@ -282,6 +283,14 @@
                         <div class="mb-3">
                             <label for="topicDescription" class="form-label">Description</label>
                             <textarea class="form-control" id="topicDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="topicCategory" class="form-label">Category</label>
+                            <select class="form-select" id="topicCategory" required>
+                                <option value="java">Java (java students only)</option>
+                                <option value="python">Python (data students only)</option>
+                                <option value="all">All (visible to every student)</option>
+                            </select>
                         </div>
                     </form>
                 </div>

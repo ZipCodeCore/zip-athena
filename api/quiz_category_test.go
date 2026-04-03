@@ -64,7 +64,7 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 	javaTracingTopic := &models.Topic{
 		Name:        "Java Code Tracing",
 		Description: "Trace Java code",
-		Category:    "java-tracing",
+		Category:    "java",
 		CreatedAt:   time.Now(),
 	}
 	db.CreateTopic(javaTracingTopic)
@@ -72,7 +72,7 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 	pythonTracingTopic := &models.Topic{
 		Name:        "Python Code Tracing",
 		Description: "Trace Python code",
-		Category:    "python-tracing",
+		Category:    "python",
 		CreatedAt:   time.Now(),
 	}
 	db.CreateTopic(pythonTracingTopic)
@@ -80,7 +80,7 @@ func TestGenerateQuizCategoryFiltering(t *testing.T) {
 	sqlTopic := &models.Topic{
 		Name:        "SQL",
 		Description: "Learn SQL",
-		Category:    "sql",
+		Category:    "all",
 		CreatedAt:   time.Now(),
 	}
 	db.CreateTopic(sqlTopic)
