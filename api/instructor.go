@@ -769,6 +769,22 @@ func (h *Handler) UpdateInstructorTopicHandler(w http.ResponseWriter, r *http.Re
 
 	topic.ID = id
 
+	// Preserve fields not supplied by the request body so that a partial
+	// update cannot accidentally deactivate the topic or reset its ordering.
+	existing, err := h.db.GetTopic(id)
+	if err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "Topic not found", http.StatusNotFound)
+			return
+		}
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get topic for update")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	topic.IsActive = existing.IsActive
+	topic.DisplayOrder = existing.DisplayOrder
+	topic.CreatedAt = existing.CreatedAt
+
 	if err := h.db.UpdateTopic(&topic); err == database.ErrNotFound {
 		http.Error(w, "Topic not found", http.StatusNotFound)
 		return

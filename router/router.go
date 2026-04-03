@@ -151,6 +151,7 @@ func New(h *api.Handler) *chi.Mux {
 
 		r.Route("/topics", func(r chi.Router) {
 			r.Get("/", h.ListAdminTopicsHandler)
+			r.Post("/", h.CreateAdminTopicHandler)
 			r.Put("/", h.UpdateTopicHandler)
 			r.Delete("/", h.DeleteTopicHandler)
 		})

@@ -357,6 +357,39 @@ func (h *Handler) DeleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Topic CRUD handlers
+
+// CreateAdminTopicHandler handles POST /admin/topics
+// Creates a new topic with validation, for admin use.
+func (h *Handler) CreateAdminTopicHandler(w http.ResponseWriter, r *http.Request) {
+	var topic models.Topic
+	if err := json.NewDecoder(r.Body).Decode(&topic); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if topic.Name == "" {
+		http.Error(w, "Topic name is required", http.StatusBadRequest)
+		return
+	}
+	if len(topic.Name) > 200 {
+		http.Error(w, "Topic name too long (max 200 characters)", http.StatusBadRequest)
+		return
+	}
+
+	topic.CreatedAt = time.Now()
+	topic.IsActive = true
+
+	if err := h.db.CreateTopic(&topic); err != nil {
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to create topic")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(topic)
+}
+
 // ListAdminTopicsHandler handles GET /admin/topics
 // Returns all active topics without user-category filtering, for admin use.
 func (h *Handler) ListAdminTopicsHandler(w http.ResponseWriter, r *http.Request) {
@@ -403,8 +436,9 @@ func (h *Handler) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
 
 	topic.ID = id
 
-	// Preserve is_active from the existing topic so updating name/description/category
-	// does not accidentally soft-delete the record.
+	// Preserve fields that the request body does not supply so that a
+	// partial update cannot accidentally soft-delete the record or reset
+	// the display order.
 	existing, err := h.db.GetTopic(id)
 	if err != nil {
 		if err == database.ErrNotFound {
@@ -416,6 +450,8 @@ func (h *Handler) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	topic.IsActive = existing.IsActive
+	topic.DisplayOrder = existing.DisplayOrder
+	topic.CreatedAt = existing.CreatedAt
 
 	if err := h.db.UpdateTopic(&topic); err != nil {
 		if err == database.ErrNotFound {
