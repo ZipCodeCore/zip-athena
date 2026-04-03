@@ -16,7 +16,7 @@ import (
 
 // QuestionFile represents a JSON file containing questions for a topic
 type QuestionFile struct {
-	Topic     string         `json:"topic"`      // Topic name (must exist in database)
+	Topic     string         `json:"topic"` // Topic name (must exist in database)
 	Questions []QuestionData `json:"questions"`
 }
 
@@ -104,13 +104,33 @@ func main() {
 		// Find the topic
 		topic, ok := topicMap[strings.ToLower(qf.Topic)]
 		if !ok {
-			fmt.Printf("  ERROR: Topic '%s' not found in database\n", qf.Topic)
-			fmt.Printf("  Available topics: %s\n", getTopicNames(topics))
-			totalErrors++
-			continue
-		}
+			if *dryRun {
+				// In dry-run mode, simulate topic creation so validation/import preview can continue.
+				topic = &models.Topic{ID: -1, Name: qf.Topic}
+				fmt.Printf("  Topic: %s (would be auto-created)\n", qf.Topic)
+			} else {
+				topic = &models.Topic{
+					Name:        qf.Topic,
+					Description: fmt.Sprintf("Auto-created by loadquestions from %s", filepath.Base(file)),
+					Category:    inferTopicCategory(qf.Topic),
+					IsActive:    true,
+					CreatedAt:   time.Now(),
+				}
 
-		fmt.Printf("  Topic: %s (ID: %d)\n", topic.Name, topic.ID)
+				if err := db.CreateTopic(topic); err != nil {
+					fmt.Printf("  ERROR: Failed to auto-create topic '%s': %v\n", qf.Topic, err)
+					fmt.Printf("  Available topics: %s\n", getTopicNames(topics))
+					totalErrors++
+					continue
+				}
+
+				topics = append(topics, topic)
+				topicMap[strings.ToLower(topic.Name)] = topic
+				fmt.Printf("  Topic: %s (auto-created, ID: %d)\n", topic.Name, topic.ID)
+			}
+		} else {
+			fmt.Printf("  Topic: %s (ID: %d)\n", topic.Name, topic.ID)
+		}
 		fmt.Printf("  Questions in file: %d\n", len(qf.Questions))
 
 		// Get existing questions to avoid duplicates
@@ -252,4 +272,16 @@ func getTopicNames(topics []*models.Topic) string {
 		names[i] = t.Name
 	}
 	return strings.Join(names, ", ")
+}
+
+func inferTopicCategory(topicName string) string {
+	name := strings.ToLower(topicName)
+	switch {
+	case strings.Contains(name, "python"):
+		return "python"
+	case strings.Contains(name, "sql"):
+		return "sql"
+	default:
+		return "java"
+	}
 }
