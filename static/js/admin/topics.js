@@ -82,7 +82,7 @@ export async function saveTopic() {
             await API.put(`/admin/topics?id=${topicId}`, topicData);
         } else {
             // Create new topic
-            await API.post('/topics', topicData);
+            await API.post('/admin/topics', topicData);
         }
 
         bootstrap.Modal.getInstance(document.getElementById('topicModal')).hide();

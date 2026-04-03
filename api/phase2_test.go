@@ -858,6 +858,148 @@ func TestDeleteTopic(t *testing.T) {
 	}
 }
 
+// TestCreateAdminTopicHandler verifies that POST /admin/topics creates a topic and
+// that the new topic immediately appears in the admin list.
+func TestCreateAdminTopicHandler(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	newTopic := models.Topic{Name: "Shell Usage", Description: "bash and zsh", Category: "all"}
+	body, _ := json.Marshal(newTopic)
+
+	req := httptest.NewRequest("POST", "/admin/topics", bytes.NewBuffer(body))
+	req.Header.Set("X-User-ID", "1")
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.CreateAdminTopicHandler)(rec, req)
+
+	if rec.Code != http.StatusCreated {
+		t.Errorf("Expected status 201, got %d: %s", rec.Code, rec.Body.String())
+	}
+
+	// Topic must appear in the admin list immediately after creation
+	topics, err := db.ListTopics()
+	if err != nil {
+		t.Fatalf("ListTopics failed: %v", err)
+	}
+	if len(topics) != 1 {
+		t.Errorf("Expected 1 topic in list, got %d", len(topics))
+	}
+	if topics[0].Name != "Shell Usage" {
+		t.Errorf("Expected topic name 'Shell Usage', got '%s'", topics[0].Name)
+	}
+}
+
+// TestUpdateTopicRemainsInAdminList verifies that after updating a topic via
+// PUT /admin/topics the topic is still returned by GET /admin/topics.
+// This is a regression test for the "topic disappears after editing" bug.
+func TestUpdateTopicRemainsInAdminList(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	// Create topic with explicit IsActive=true (mirrors SQLite behaviour)
+	topic := &models.Topic{Name: "Java", Description: "desc", Category: "java", IsActive: true, DisplayOrder: 3, CreatedAt: time.Now()}
+	db.CreateTopic(topic)
+
+	// Send a partial update – only name/description/category, no is_active or display_order
+	update := map[string]interface{}{
+		"name":        "Java Updated",
+		"description": "updated desc",
+		"category":    "all",
+	}
+	body, _ := json.Marshal(update)
+
+	req := httptest.NewRequest("PUT", "/admin/topics?id=1", bytes.NewBuffer(body))
+	req.Header.Set("X-User-ID", "1")
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.UpdateTopicHandler)(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d: %s", rec.Code, rec.Body.String())
+	}
+
+	// Topic must still be present in the admin list
+	topics, err := db.ListTopics()
+	if err != nil {
+		t.Fatalf("ListTopics failed: %v", err)
+	}
+	found := false
+	for _, tp := range topics {
+		if tp.Name == "Java Updated" {
+			found = true
+			if !tp.IsActive {
+				t.Error("Topic should still be active after update")
+			}
+			if tp.DisplayOrder != 3 {
+				t.Errorf("DisplayOrder should be preserved (3), got %d", tp.DisplayOrder)
+			}
+			break
+		}
+	}
+	if !found {
+		t.Error("Updated topic not found in admin list – topic disappeared after edit")
+	}
+}
+
+// TestUpdateInstructorTopicRemainsInList verifies that the instructor update
+// handler preserves is_active so the topic does not vanish after being edited.
+func TestUpdateInstructorTopicRemainsInList(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	topic := &models.Topic{Name: "Python Basics", Description: "intro", Category: "python", IsActive: true, DisplayOrder: 2, CreatedAt: time.Now()}
+	db.CreateTopic(topic)
+
+	// Partial update – no is_active or display_order in request body
+	update := map[string]interface{}{
+		"name":        "Python Basics Updated",
+		"description": "updated intro",
+		"category":    "all",
+	}
+	body, _ := json.Marshal(update)
+
+	req := httptest.NewRequest("PUT", "/instructor/topics?id=1", bytes.NewBuffer(body))
+	req.Header.Set("X-User-ID", "1")
+	rec := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.UpdateInstructorTopicHandler)(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d: %s", rec.Code, rec.Body.String())
+	}
+
+	// Topic must still be present in the list (is_active must not have been zeroed)
+	topics, err := db.ListTopics()
+	if err != nil {
+		t.Fatalf("ListTopics failed: %v", err)
+	}
+	found := false
+	for _, tp := range topics {
+		if tp.Name == "Python Basics Updated" {
+			found = true
+			if !tp.IsActive {
+				t.Error("Topic should still be active after instructor update")
+			}
+			break
+		}
+	}
+	if !found {
+		t.Error("Updated topic not found in list after instructor update – topic disappeared")
+	}
+}
+
 // Test 18: Update answer
 func TestUpdateAnswer(t *testing.T) {
 	db := database.NewInMemoryDB()
