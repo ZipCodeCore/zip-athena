@@ -402,6 +402,21 @@ func (h *Handler) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	topic.ID = id
+
+	// Preserve is_active from the existing topic so updating name/description/category
+	// does not accidentally soft-delete the record.
+	existing, err := h.db.GetTopic(id)
+	if err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "Topic not found", http.StatusNotFound)
+			return
+		}
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get topic for update")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	topic.IsActive = existing.IsActive
+
 	if err := h.db.UpdateTopic(&topic); err != nil {
 		if err == database.ErrNotFound {
 			http.Error(w, "Topic not found", http.StatusNotFound)
