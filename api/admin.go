@@ -449,7 +449,6 @@ func (h *Handler) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// Preserve fields that the request body does not supply.
 	topic.IsActive = existing.IsActive
 	topic.DisplayOrder = existing.DisplayOrder
 	topic.CreatedAt = existing.CreatedAt
