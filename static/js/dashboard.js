@@ -57,19 +57,27 @@ async function loadTopics() {
                 const topicCard = document.createElement('div');
                 topicCard.className = 'col-md-4';
 
-                // Determine badge color based on category
+                // Determine badge color and code tracing flag based on category
+                const isCodeTracing = topic.category === 'java-tracing' || topic.category === 'python-tracing';
+                const baseCategory = isCodeTracing ? topic.category.replace('-tracing', '') : topic.category;
+
                 let badgeColor = 'secondary';
                 let badgeText = topic.category ? topic.category.toUpperCase() : 'GENERAL';
-                if (topic.category === 'java') {
+                if (baseCategory === 'java') {
                     badgeColor = 'primary';
-                } else if (topic.category === 'python') {
+                    badgeText = 'JAVA';
+                } else if (baseCategory === 'python') {
                     badgeColor = 'success';
-                } else if (topic.category === 'sql') {
+                    badgeText = 'PYTHON';
+                } else if (baseCategory === 'sql') {
                     badgeColor = 'warning';
+                    badgeText = 'SQL';
                 }
 
+                const cardClass = isCodeTracing ? 'card topic-card code-tracing-card h-100' : 'card topic-card h-100';
+
                 topicCard.innerHTML = `
-                    <div class="card topic-card h-100" onclick="startQuiz(${topic.id}, '${topic.name}')">
+                    <div class="${cardClass}" onclick="startQuiz(${topic.id}, '${topic.name}')">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h5 class="card-title">${topic.name}</h5>

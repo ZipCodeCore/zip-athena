@@ -33,9 +33,11 @@ const (
 
 // Topic Categories
 const (
-	TopicCategoryJava   = "java"
-	TopicCategoryPython = "python"
-	TopicCategorySQL    = "sql"
+	TopicCategoryJava          = "java"
+	TopicCategoryPython        = "python"
+	TopicCategorySQL           = "sql"
+	TopicCategoryJavaTracing   = "java-tracing"
+	TopicCategoryPythonTracing = "python-tracing"
 )
 
 // User Roles (using IsAdmin bool in User model, but defining for clarity)
