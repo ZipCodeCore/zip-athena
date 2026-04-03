@@ -16,10 +16,21 @@ export async function loadTopics() {
 
         topics.forEach(topic => {
             const row = document.createElement('tr');
+            let categoryBadge = '';
+            if (topic.category === 'java') {
+                categoryBadge = '<span class="badge bg-primary">Java</span>';
+            } else if (topic.category === 'python') {
+                categoryBadge = '<span class="badge bg-success">Python</span>';
+            } else if (topic.category === 'all') {
+                categoryBadge = '<span class="badge bg-warning">All</span>';
+            } else {
+                categoryBadge = `<span class="badge bg-secondary">${escapeHtml(topic.category || '')}</span>`;
+            }
             row.innerHTML = `
                 <td>${topic.id}</td>
                 <td>${escapeHtml(topic.name)}</td>
                 <td>${escapeHtml(topic.description)}</td>
+                <td>${categoryBadge}</td>
                 <td>${new Date(topic.created_at).toLocaleDateString()}</td>
                 <td>
                     <button class="btn btn-sm btn-warning" data-action="edit-topic" data-id="${topic.id}">Edit</button>
@@ -39,6 +50,7 @@ export function showCreateTopicModal() {
     document.getElementById('topicId').value = '';
     document.getElementById('topicName').value = '';
     document.getElementById('topicDescription').value = '';
+    document.getElementById('topicCategory').value = 'java';
     new bootstrap.Modal(document.getElementById('topicModal')).show();
 }
 
@@ -51,6 +63,7 @@ export async function editTopic(topicId) {
     document.getElementById('topicId').value = topic.id;
     document.getElementById('topicName').value = topic.name;
     document.getElementById('topicDescription').value = topic.description;
+    document.getElementById('topicCategory').value = topic.category || 'java';
     new bootstrap.Modal(document.getElementById('topicModal')).show();
 }
 
@@ -58,7 +71,8 @@ export async function saveTopic() {
     const topicId = document.getElementById('topicId').value;
     const topicData = {
         name: document.getElementById('topicName').value,
-        description: document.getElementById('topicDescription').value
+        description: document.getElementById('topicDescription').value,
+        category: document.getElementById('topicCategory').value,
     };
 
     try {

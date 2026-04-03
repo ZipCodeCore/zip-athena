@@ -57,21 +57,22 @@ async function loadTopics() {
                 const topicCard = document.createElement('div');
                 topicCard.className = 'col-md-4';
 
-                // Determine badge color and code tracing flag based on category
-                const isCodeTracing = topic.category === 'java-tracing' || topic.category === 'python-tracing';
-                const baseCategory = isCodeTracing ? topic.category.replace('-tracing', '') : topic.category;
+                // Determine badge color and code tracing flag based on category and name.
+                // Code tracing topics are identified by their name since all topics now use
+                // the three-value category scheme (java/python/all) for access control.
+                const isCodeTracing = topic.name.toLowerCase().includes('code tracing');
 
                 let badgeColor = 'secondary';
                 let badgeText = topic.category ? topic.category.toUpperCase() : 'GENERAL';
-                if (baseCategory === 'java') {
+                if (topic.category === 'java') {
                     badgeColor = 'primary';
                     badgeText = 'JAVA';
-                } else if (baseCategory === 'python') {
+                } else if (topic.category === 'python') {
                     badgeColor = 'success';
                     badgeText = 'PYTHON';
-                } else if (baseCategory === 'sql') {
+                } else if (topic.category === 'all') {
                     badgeColor = 'warning';
-                    badgeText = 'SQL';
+                    badgeText = 'ALL';
                 }
 
                 const cardClass = isCodeTracing ? 'card topic-card code-tracing-card h-100' : 'card topic-card h-100';

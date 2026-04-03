@@ -142,9 +142,9 @@ func seedPhase1Data(db *database.SQLiteDB) error {
 	topics := []models.Topic{
 		{Name: "Java Fundamentals", Description: "Core Java programming concepts", Category: "java", CreatedAt: time.Now()},
 		{Name: "Python Basics", Description: "Introduction to Python programming", Category: "python", CreatedAt: time.Now()},
-		{Name: "SQL Database", Description: "Structured Query Language basics", Category: "sql", CreatedAt: time.Now()},
-		{Name: "Java Code Tracing", Description: "Trace Java code snippets and determine the printed output. Each quiz has 5 questions.", Category: "java-tracing", CreatedAt: time.Now()},
-		{Name: "Python Code Tracing", Description: "Trace Python code snippets and determine the printed output. Each quiz has 5 questions.", Category: "python-tracing", CreatedAt: time.Now()},
+		{Name: "SQL Database", Description: "Structured Query Language basics", Category: "all", CreatedAt: time.Now()},
+		{Name: "Java Code Tracing", Description: "Trace Java code snippets and determine the printed output. Each quiz has 5 questions.", Category: "java", CreatedAt: time.Now()},
+		{Name: "Python Code Tracing", Description: "Trace Python code snippets and determine the printed output. Each quiz has 5 questions.", Category: "python", CreatedAt: time.Now()},
 	}
 
 	// Get existing topics once before the loop

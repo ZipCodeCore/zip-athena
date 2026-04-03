@@ -32,12 +32,14 @@ const (
 )
 
 // Topic Categories
+// Topics are assigned one of three category values:
+//   - "java"   – visible to java students (and admins)
+//   - "python" – visible to data students (and admins)
+//   - "all"    – visible to all students regardless of category
 const (
-	TopicCategoryJava          = "java"
-	TopicCategoryPython        = "python"
-	TopicCategorySQL           = "sql"
-	TopicCategoryJavaTracing   = "java-tracing"
-	TopicCategoryPythonTracing = "python-tracing"
+	TopicCategoryJava   = "java"
+	TopicCategoryPython = "python"
+	TopicCategoryAll    = "all"
 )
 
 // User Roles (using IsAdmin bool in User model, but defining for clarity)

@@ -173,12 +173,12 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 
 	// Create topics with different categories
 	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java", IsActive: true})
-	db.CreateTopic(&models.Topic{Name: "Java Code Tracing", Description: "Trace Java code", Category: "java-tracing", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Java Code Tracing", Description: "Trace Java code", Category: "java", IsActive: true})
 	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python", IsActive: true})
-	db.CreateTopic(&models.Topic{Name: "Python Code Tracing", Description: "Trace Python code", Category: "python-tracing", IsActive: true})
-	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "sql", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Python Code Tracing", Description: "Trace Python code", Category: "python", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "all", IsActive: true})
 
-	// Test 1: Java student should only see Java and SQL topics
+	// Test 1: Java student should only see Java and all-category topics
 	req := httptest.NewRequest(http.MethodGet, "/topics?user_id=1", nil)
 	w := httptest.NewRecorder()
 	handler.ListTopicsHandler(w, req)
@@ -196,12 +196,12 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 
 	// Verify no Python topics are returned
 	for _, topic := range javaTopics {
-		if topic.Category == "python" || topic.Category == "python-tracing" {
+		if topic.Category == "python" {
 			t.Errorf("Java student should not see Python topics, but got: %s", topic.Name)
 		}
 	}
 
-	// Test 2: Data student should only see Python and SQL topics
+	// Test 2: Data student should only see Python and all-category topics
 	req = httptest.NewRequest(http.MethodGet, "/topics?user_id=2", nil)
 	w = httptest.NewRecorder()
 	handler.ListTopicsHandler(w, req)
@@ -219,7 +219,7 @@ func TestListTopicsHandlerCategoryFiltering(t *testing.T) {
 
 	// Verify no Java topics are returned
 	for _, topic := range dataTopics {
-		if topic.Category == "java" || topic.Category == "java-tracing" {
+		if topic.Category == "java" {
 			t.Errorf("Data student should not see Java topics, but got: %s", topic.Name)
 		}
 	}
