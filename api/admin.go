@@ -357,6 +357,30 @@ func (h *Handler) DeleteQuizHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // Topic CRUD handlers
+// ListAdminTopicsHandler handles GET /admin/topics
+// Returns all active topics without user-category filtering, for admin use.
+func (h *Handler) ListAdminTopicsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	topics, err := h.db.ListTopics()
+	if err != nil {
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list topics")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Ensure we return an empty array instead of null when there are no topics
+	if topics == nil {
+		topics = []*models.Topic{}
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(topics)
+}
+
 // UpdateTopicHandler handles PUT /admin/topics/{id}
 func (h *Handler) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPut {
