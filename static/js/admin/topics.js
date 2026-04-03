@@ -10,11 +10,7 @@ export function setCurrentUser(user) {
 
 export async function loadTopics() {
     try {
-        if (!currentUser || !currentUser.id) {
-            console.error('User not loaded yet');
-            return;
-        }
-        const topics = await API.get(`/topics?user_id=${currentUser.id}`);
+        const topics = await API.get('/admin/topics');
         const tbody = document.getElementById('topicsTable');
         tbody.innerHTML = '';
 
@@ -47,11 +43,7 @@ export function showCreateTopicModal() {
 }
 
 export async function editTopic(topicId) {
-    if (!currentUser || !currentUser.id) {
-        console.error('User not loaded yet');
-        return;
-    }
-    const topics = await API.get(`/topics?user_id=${currentUser.id}`);
+    const topics = await API.get('/admin/topics');
     const topic = topics.find(t => t.id === topicId);
     if (!topic) return;
 

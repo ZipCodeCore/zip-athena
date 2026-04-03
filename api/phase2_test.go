@@ -699,6 +699,79 @@ func TestDeleteQuestion(t *testing.T) {
 	}
 }
 
+// Test: List all topics via admin endpoint
+func TestListAdminTopicsHandler(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Create admin user
+	admin := &models.User{
+		Username:  "admin",
+		Email:     "admin@test.com",
+		IsAdmin:   true,
+		CreatedAt: time.Now(),
+	}
+	db.CreateUser(admin)
+
+	// Create topics with different categories
+	db.CreateTopic(&models.Topic{Name: "Java Fundamentals", Description: "Java basics", Category: "java", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Python Basics", Description: "Python basics", Category: "python", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "SQL Database", Description: "SQL basics", Category: "sql", IsActive: true})
+	db.CreateTopic(&models.Topic{Name: "Inactive Topic", Description: "Should not appear", Category: "java", IsActive: false})
+
+	req := httptest.NewRequest("GET", "/admin/topics", nil)
+	req.Header.Set("X-User-ID", "1")
+	rec := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.ListAdminTopicsHandler)(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d: %s", rec.Code, rec.Body.String())
+	}
+
+	var topics []*models.Topic
+	if err := json.NewDecoder(rec.Body).Decode(&topics); err != nil {
+		t.Fatalf("Failed to decode response: %v", err)
+	}
+
+	// Admin should see all active topics (3), not the inactive one
+	if len(topics) != 3 {
+		t.Errorf("Expected 3 active topics, got %d", len(topics))
+	}
+
+	// Verify no inactive topics are returned
+	for _, topic := range topics {
+		if !topic.IsActive {
+			t.Errorf("Inactive topic should not be returned: %s", topic.Name)
+		}
+	}
+}
+
+// Test: List admin topics requires admin authentication
+func TestListAdminTopicsHandlerRequiresAdmin(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	// Non-admin user
+	user := &models.User{
+		Username:  "student",
+		Email:     "student@test.com",
+		IsAdmin:   false,
+		CreatedAt: time.Now(),
+	}
+	db.CreateUser(user)
+
+	req := httptest.NewRequest("GET", "/admin/topics", nil)
+	req.Header.Set("X-User-ID", "1")
+	rec := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.ListAdminTopicsHandler)(rec, req)
+
+	if rec.Code != http.StatusForbidden {
+		t.Errorf("Expected status 403, got %d", rec.Code)
+	}
+}
+
 // Test 16: Update topic
 func TestUpdateTopic(t *testing.T) {
 	db := database.NewInMemoryDB()

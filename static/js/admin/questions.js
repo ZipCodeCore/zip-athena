@@ -39,11 +39,7 @@ export async function loadQuestions() {
 // Load topics for import dropdown
 export async function loadTopicsForImport() {
     try {
-        if (!currentUser || !currentUser.id) {
-            console.error('Cannot load topics: User session not available. Please ensure you are logged in and try again.');
-            return;
-        }
-        importTopics = await API.get(`/topics?user_id=${currentUser.id}`);
+        importTopics = await API.get('/admin/topics');
         const select = document.getElementById('importTopicSelect');
         select.innerHTML = '<option value="">-- Select a topic --</option>';
         
