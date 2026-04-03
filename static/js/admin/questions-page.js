@@ -1,13 +1,9 @@
 // Admin Panel – Questions Page Entry Point
 import * as Questions from './questions.js';
 import * as Answers from './answers.js';
-import { requireAdminUser } from './auth.js';
+import { requireAdminUser, setupLogout } from './auth.js';
 
-// Logout function
-window.logout = function() {
-    localStorage.removeItem('user');
-    window.location.href = '/index.html';
-};
+setupLogout();
 
 // Initialize the questions admin page
 window.addEventListener('DOMContentLoaded', async () => {

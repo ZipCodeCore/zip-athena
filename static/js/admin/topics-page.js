@@ -1,12 +1,8 @@
 // Admin Panel – Topics Page Entry Point
 import * as Topics from './topics.js';
-import { requireAdminUser } from './auth.js';
+import { requireAdminUser, setupLogout } from './auth.js';
 
-// Logout function
-window.logout = function() {
-    localStorage.removeItem('user');
-    window.location.href = '/index.html';
-};
+setupLogout();
 
 // Initialize the topics admin page
 window.addEventListener('DOMContentLoaded', async () => {

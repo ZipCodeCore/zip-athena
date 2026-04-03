@@ -1,12 +1,8 @@
 // Admin Panel – Users Page Entry Point
 import * as Users from './users.js';
-import { requireAdminUser } from './auth.js';
+import { requireAdminUser, setupLogout } from './auth.js';
 
-// Logout function
-window.logout = function() {
-    localStorage.removeItem('user');
-    window.location.href = '/index.html';
-};
+setupLogout();
 
 // Initialize the admin panel
 window.addEventListener('DOMContentLoaded', async () => {

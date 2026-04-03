@@ -30,3 +30,11 @@ export async function requireAdminUser() {
 
     return currentUser;
 }
+
+// Shared logout function for all admin pages.
+export function setupLogout() {
+    window.logout = function() {
+        localStorage.removeItem('user');
+        window.location.href = '/index.html';
+    };
+}

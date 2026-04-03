@@ -1,12 +1,8 @@
 // Admin Panel – Quizzes Page Entry Point
 import * as Quizzes from './quizzes.js';
-import { requireAdminUser } from './auth.js';
+import { requireAdminUser, setupLogout } from './auth.js';
 
-// Logout function
-window.logout = function() {
-    localStorage.removeItem('user');
-    window.location.href = '/index.html';
-};
+setupLogout();
 
 // Initialize the quizzes admin page
 window.addEventListener('DOMContentLoaded', async () => {
