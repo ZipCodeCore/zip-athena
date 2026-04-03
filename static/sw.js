@@ -1,4 +1,4 @@
-const CACHE_NAME = 'athena-v8';
+const CACHE_NAME = 'athena-v9';
 
 const SHELL_FILES = [
     '/index.html',
@@ -12,7 +12,6 @@ const SHELL_FILES = [
     '/js/dashboard.js',
     '/js/quiz.js',
     '/js/learning.js',
-    '/js/admin.js',
     '/manifest.json'
 ];
 
