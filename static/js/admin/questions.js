@@ -39,11 +39,11 @@ export async function loadQuestions() {
 // Load topics for import dropdown
 export async function loadTopicsForImport() {
     try {
-        const topics = await API.get('/admin/topics');
+        importTopics = await API.get('/admin/topics');
         const select = document.getElementById('importTopicSelect');
         select.innerHTML = '<option value="">-- Select a topic --</option>';
         
-        topics.forEach(topic => {
+        importTopics.forEach(topic => {
             const option = document.createElement('option');
             option.value = topic.id;
             option.textContent = `${topic.name} (ID: ${topic.id})`;
