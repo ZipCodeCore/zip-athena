@@ -734,16 +734,20 @@ func TestListAdminTopicsHandler(t *testing.T) {
 		t.Fatalf("Failed to decode response: %v", err)
 	}
 
-	// Admin should see all active topics (3), not the inactive one
-	if len(topics) != 3 {
-		t.Errorf("Expected 3 active topics, got %d", len(topics))
+	// Admin should see all 4 topics including the inactive one
+	if len(topics) != 4 {
+		t.Errorf("Expected 4 topics (including inactive), got %d", len(topics))
 	}
 
-	// Verify no inactive topics are returned
+	// Verify the inactive topic IS returned (admin sees all topics)
+	foundInactive := false
 	for _, topic := range topics {
 		if !topic.IsActive {
-			t.Errorf("Inactive topic should not be returned: %s", topic.Name)
+			foundInactive = true
 		}
+	}
+	if !foundInactive {
+		t.Error("Admin list should include inactive topics")
 	}
 }
 
@@ -908,11 +912,12 @@ func TestUpdateTopicRemainsInAdminList(t *testing.T) {
 	topic := &models.Topic{Name: "Java", Description: "desc", Category: "java", IsActive: true, DisplayOrder: 3, CreatedAt: time.Now()}
 	db.CreateTopic(topic)
 
-	// Send a partial update – only name/description/category, no is_active or display_order
+	// Send a partial update – name/description/category and is_active explicitly set
 	update := map[string]interface{}{
 		"name":        "Java Updated",
 		"description": "updated desc",
 		"category":    "all",
+		"is_active":   true,
 	}
 	body, _ := json.Marshal(update)
 

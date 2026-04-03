@@ -398,7 +398,7 @@ func (h *Handler) ListAdminTopicsHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	topics, err := h.db.ListTopics()
+	topics, err := h.db.ListAllTopics()
 	if err != nil {
 		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list topics")
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -437,8 +437,9 @@ func (h *Handler) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
 	topic.ID = id
 
 	// Preserve fields that the request body does not supply so that a
-	// partial update cannot accidentally soft-delete the record or reset
-	// the display order.
+	// partial update cannot accidentally reset the display order.
+	// is_active is intentionally taken from the request body so that
+	// admins can activate/deactivate topics via the edit form.
 	existing, err := h.db.GetTopic(id)
 	if err != nil {
 		if err == database.ErrNotFound {
@@ -449,7 +450,6 @@ func (h *Handler) UpdateTopicHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	topic.IsActive = existing.IsActive
 	topic.DisplayOrder = existing.DisplayOrder
 	topic.CreatedAt = existing.CreatedAt
 

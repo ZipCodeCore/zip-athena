@@ -32,6 +32,7 @@ type TopicRepository interface {
 	CreateTopic(topic *models.Topic) error
 	GetTopic(id int) (*models.Topic, error)
 	ListTopics() ([]*models.Topic, error)
+	ListAllTopics() ([]*models.Topic, error)
 	UpdateTopic(topic *models.Topic) error
 	DeleteTopic(id int) error
 	ReorderTopics(topicIDs []int) error
@@ -356,6 +357,27 @@ func (db *InMemoryDB) ListTopics() ([]*models.Topic, error) {
 		if topic.IsActive {
 			topics = append(topics, topic)
 		}
+	}
+
+	// Sort by display_order
+	for i := 0; i < len(topics); i++ {
+		for j := i + 1; j < len(topics); j++ {
+			if topics[i].DisplayOrder > topics[j].DisplayOrder {
+				topics[i], topics[j] = topics[j], topics[i]
+			}
+		}
+	}
+
+	return topics, nil
+}
+
+func (db *InMemoryDB) ListAllTopics() ([]*models.Topic, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	topics := make([]*models.Topic, 0, len(db.topics))
+	for _, topic := range db.topics {
+		topics = append(topics, topic)
 	}
 
 	// Sort by display_order
