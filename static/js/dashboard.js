@@ -56,34 +56,27 @@ async function loadTopics() {
             topics.forEach(topic => {
                 const topicCard = document.createElement('div');
                 topicCard.className = 'col-md-4';
-                
-                const isCodeTracing = topic.name && topic.name.toLowerCase().includes('code tracing');
 
                 // Determine badge color based on category
                 let badgeColor = 'secondary';
                 let badgeText = topic.category ? topic.category.toUpperCase() : 'GENERAL';
                 if (topic.category === 'java') {
-                    badgeColor = isCodeTracing ? 'warning' : 'primary';
+                    badgeColor = 'primary';
                 } else if (topic.category === 'python') {
-                    badgeColor = isCodeTracing ? 'info' : 'success';
+                    badgeColor = 'success';
                 } else if (topic.category === 'sql') {
                     badgeColor = 'warning';
                 }
 
-                const cardClass = isCodeTracing ? 'card topic-card code-tracing-card h-100' : 'card topic-card h-100';
-                const icon = isCodeTracing ? '💻 ' : '';
-                const questionCount = isCodeTracing ? '<p class="card-text small text-muted mb-1">5 questions per quiz</p>' : '';
-                
                 topicCard.innerHTML = `
-                    <div class="${cardClass}" onclick="startQuiz(${topic.id}, '${topic.name}')">
+                    <div class="card topic-card h-100" onclick="startQuiz(${topic.id}, '${topic.name}')">
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title">${icon}${topic.name}</h5>
+                                <h5 class="card-title">${topic.name}</h5>
                                 <span class="badge bg-${badgeColor}">${badgeText}</span>
                             </div>
                             <p class="card-text">${topic.description || 'Click to start a quiz'}</p>
-                            ${questionCount}
-                            <button class="btn ${isCodeTracing ? 'btn-outline-dark' : 'btn-primary'} btn-sm" ${isCodeTracing ? 'aria-label="Trace Code Quiz"' : ''}>${isCodeTracing ? '▶ Trace Code' : 'Start Quiz'}</button>
+                            <button class="btn btn-primary btn-sm">Start Quiz</button>
                         </div>
                     </div>
                 `;
