@@ -9,9 +9,10 @@ export function setCurrentUser(user) {
 }
 
 export async function loadQuizzes() {
+    const tbody = document.getElementById('quizzesTable');
+    if (!tbody) return;
     try {
         const quizzes = await API.get('/admin/quizzes');
-        const tbody = document.getElementById('quizzesTable');
         tbody.innerHTML = '';
 
         quizzes.forEach(quiz => {
@@ -31,7 +32,7 @@ export async function loadQuizzes() {
         });
     } catch (error) {
         console.error('Error loading quizzes:', error);
-        alert('Failed to load quizzes');
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-3">Failed to load quizzes. Please refresh the page to try again.</td></tr>';
     }
 }
 

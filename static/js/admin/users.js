@@ -10,11 +10,12 @@ export function setCurrentUser(user) {
 }
 
 export async function loadUsers() {
+    const tbody = document.getElementById('usersTable');
+    if (!tbody) return;
     try {
         console.log('Loading users with X-User-ID:', currentUser.id.toString());
         const users = await API.get('/admin/users');
         console.log('Loaded users:', users.length, 'users');
-        const tbody = document.getElementById('usersTable');
         tbody.innerHTML = '';
 
         users.forEach(user => {
@@ -37,7 +38,7 @@ export async function loadUsers() {
         });
     } catch (error) {
         console.error('Error loading users:', error);
-        alert('Failed to load users');
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-danger py-3">Failed to load users. Please refresh the page to try again.</td></tr>';
     }
 }
 

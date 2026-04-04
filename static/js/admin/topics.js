@@ -9,9 +9,10 @@ export function setCurrentUser(user) {
 }
 
 export async function loadTopics() {
+    const tbody = document.getElementById('topicsTable');
+    if (!tbody) return;
     try {
         const topics = await API.get('/admin/topics');
-        const tbody = document.getElementById('topicsTable');
         tbody.innerHTML = '';
 
         topics.forEach(topic => {
@@ -41,7 +42,7 @@ export async function loadTopics() {
         });
     } catch (error) {
         console.error('Error loading topics:', error);
-        alert('Failed to load topics');
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-3">Failed to load topics. Please refresh the page to try again.</td></tr>';
     }
 }
 
