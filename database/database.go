@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -32,6 +33,7 @@ type TopicRepository interface {
 	CreateTopic(topic *models.Topic) error
 	GetTopic(id int) (*models.Topic, error)
 	ListTopics() ([]*models.Topic, error)
+	ListAllTopics() ([]*models.Topic, error)
 	UpdateTopic(topic *models.Topic) error
 	DeleteTopic(id int) error
 	ReorderTopics(topicIDs []int) error
@@ -366,6 +368,22 @@ func (db *InMemoryDB) ListTopics() ([]*models.Topic, error) {
 			}
 		}
 	}
+
+	return topics, nil
+}
+
+func (db *InMemoryDB) ListAllTopics() ([]*models.Topic, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	topics := make([]*models.Topic, 0, len(db.topics))
+	for _, topic := range db.topics {
+		topics = append(topics, topic)
+	}
+
+	sort.Slice(topics, func(i, j int) bool {
+		return topics[i].DisplayOrder < topics[j].DisplayOrder
+	})
 
 	return topics, nil
 }

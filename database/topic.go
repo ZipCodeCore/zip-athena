@@ -53,6 +53,25 @@ func (db *SQLiteDB) GetTopic(id int) (*models.Topic, error) {
 	return topic, nil
 }
 
+// ListAllTopics retrieves all topics (active and inactive) ordered by display order
+func (db *SQLiteDB) ListAllTopics() ([]*models.Topic, error) {
+	rows, err := db.db.Query("SELECT id, name, description, category, is_active, display_order, created_at FROM topics ORDER BY display_order ASC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var topics []*models.Topic
+	for rows.Next() {
+		topic := &models.Topic{}
+		if err := rows.Scan(&topic.ID, &topic.Name, &topic.Description, &topic.Category, &topic.IsActive, &topic.DisplayOrder, &topic.CreatedAt); err != nil {
+			return nil, err
+		}
+		topics = append(topics, topic)
+	}
+	return topics, rows.Err()
+}
+
 // ListTopics retrieves all active topics ordered by display order
 func (db *SQLiteDB) ListTopics() ([]*models.Topic, error) {
 	rows, err := db.db.Query("SELECT id, name, description, category, is_active, display_order, created_at FROM topics WHERE is_active = 1 ORDER BY display_order ASC")

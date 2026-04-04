@@ -27,11 +27,15 @@ export async function loadTopics() {
             } else {
                 categoryBadge = `<span class="badge bg-secondary">${escapeHtml(topic.category || '')}</span>`;
             }
+            const activeBadge = topic.is_active
+                ? '<span class="badge bg-success">Yes</span>'
+                : '<span class="badge bg-secondary">No</span>';
             row.innerHTML = `
                 <td>${topic.id}</td>
                 <td>${escapeHtml(topic.name)}</td>
                 <td>${escapeHtml(topic.description)}</td>
                 <td>${categoryBadge}</td>
+                <td>${activeBadge}</td>
                 <td>${new Date(topic.created_at).toLocaleDateString()}</td>
                 <td>
                     <button class="btn btn-sm btn-warning" data-action="edit-topic" data-id="${topic.id}">Edit</button>
@@ -52,6 +56,7 @@ export function showCreateTopicModal() {
     document.getElementById('topicName').value = '';
     document.getElementById('topicDescription').value = '';
     document.getElementById('topicCategory').value = 'java';
+    document.getElementById('topicIsActive').checked = true;
     new bootstrap.Modal(document.getElementById('topicModal')).show();
 }
 
@@ -65,6 +70,7 @@ export async function editTopic(topicId) {
     document.getElementById('topicName').value = topic.name;
     document.getElementById('topicDescription').value = topic.description;
     document.getElementById('topicCategory').value = topic.category || 'java';
+    document.getElementById('topicIsActive').checked = topic.is_active;
     new bootstrap.Modal(document.getElementById('topicModal')).show();
 }
 
@@ -74,6 +80,7 @@ export async function saveTopic() {
         name: document.getElementById('topicName').value,
         description: document.getElementById('topicDescription').value,
         category: document.getElementById('topicCategory').value,
+        is_active: document.getElementById('topicIsActive').checked,
     };
 
     try {
