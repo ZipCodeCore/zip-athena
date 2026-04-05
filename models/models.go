@@ -19,7 +19,7 @@ type Topic struct {
 	ID           int       `json:"id"`
 	Name         string    `json:"name"`
 	Description  string    `json:"description"`
-	Category     string    `json:"category"`      // "java", "python", "sql" - determines which user categories can access
+	Category     string    `json:"category"`      // "java", "python", "all" - determines which user categories can access
 	IsActive     bool      `json:"is_active"`     // For soft delete (Phase 3)
 	DisplayOrder int       `json:"display_order"` // For reordering (Phase 3)
 	CreatedAt    time.Time `json:"created_at"`

@@ -6,11 +6,22 @@ Athena is a web-based student quiz application that helps you learn programming 
 
 **Key Features**:
 - 📚 Adaptive quizzing with FSRS spaced repetition
-- 🎯 Topics in Java, Python, and SQL
+- 🎯 Topics in Java, Python, SQL, and Code Tracing
 - 📊 Track your progress and see detailed analytics
 - ⏱️ Timed tests for assessment
 - 🔄 Retake quizzes to improve understanding
 - 📖 Learning resources linked to questions
+
+## Student Categories
+
+Every student account is assigned a **category** that controls which quiz topics they can see:
+
+| Category | Topics Visible |
+|----------|----------------|
+| `java`   | Java Fundamentals, Java Code Tracing, SQL Database |
+| `data`   | Python Basics, Python Code Tracing, SQL Database |
+
+Admins can see all topics regardless of category. Contact your instructor to have your account assigned the correct category.
 
 ## Prerequisites
 
@@ -41,9 +52,11 @@ go run cmd/seed/main.go
 ```
 
 **What this creates**:
-- 40+ questions across Java, Python, and SQL
+- 100+ questions across Java, Python, SQL, and Code Tracing topics
 - Admin user (username: `admin`, password: `admin`)
-- Sample topics and quizzes
+- Java student (username: `user`, password: `user`, category: `java`)
+- Data/Python student (username: `data`, password: `data`, category: `data`)
+- Sample topics, quizzes, and quiz history
 - Database file: `athena.db`
 
 ### 3. Start the Server
@@ -65,13 +78,19 @@ Navigate to: **http://localhost:9206/index.html**
 
 ### 5. Try It Out!
 
-**Option A: Register as a New Student**
-1. Fill out the registration form
-2. Login with your new account
-3. Click on a topic to start a quiz
-4. Answer questions and see your progress
+> **Note**: Self-registration is currently disabled. Use one of the pre-seeded accounts below or contact your instructor to have an account created for you.
 
-**Option B: Login as Admin**
+**Option A: Login as a Java Student**
+1. Username: `user`
+2. Password: `user`
+3. You will see Java and SQL topics on your dashboard
+
+**Option B: Login as a Data/Python Student**
+1. Username: `data`
+2. Password: `data`
+3. You will see Python and SQL topics on your dashboard
+
+**Option C: Login as Admin**
 1. Username: `admin`
 2. Password: `admin`
 3. Go to http://localhost:9206/admin.html to manage content
@@ -124,10 +143,10 @@ Got less than 100% on a quiz? You can retake it!
 ### Topics and Tags
 
 Questions are organized by:
-- **Topics**: Broad areas like "Java Fundamentals"
+- **Topics**: Broad areas such as "Java Fundamentals", "Python Basics", "SQL Database", "Java Code Tracing", and "Python Code Tracing"
 - **Tags**: Specific concepts like "loops", "variables", "inheritance"
 
-Use tags to focus on specific areas you want to improve.
+Which topics you see depends on your account's **category** (`java` or `data`). Use tags to focus on specific areas you want to improve.
 
 ## Common Tasks
 
