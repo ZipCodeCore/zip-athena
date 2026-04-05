@@ -15,7 +15,7 @@ Get up and running in 5 minutes:
 git clone https://github.com/ZipCodeCore/zip-athena.git
 cd zip-athena
 
-# 2. Seed the database with sample questions
+# 2. Seed the database with sample questions and users
 go run cmd/seed/main.go
 
 # 3. Start the server
@@ -23,6 +23,14 @@ go run main.go
 
 # 4. Open browser to http://localhost:9206
 ```
+
+Pre-seeded accounts after running the seed command:
+
+| Username | Password   | Role          | Category |
+|----------|------------|---------------|----------|
+| `admin`  | `admin`    | Admin         | java     |
+| `user`   | `user`     | Java Student  | java     |
+| `data`   | `data`     | Data Student  | data     |
 
 ## What Makes Athena Special?
 
@@ -106,8 +114,8 @@ go run main.go
 
 ### As a Student
 
-1. **Register/Login** at http://localhost:9206
-2. **Browse Topics** on your dashboard (Java, Python, SQL)
+1. **Login** at http://localhost:9206 (use a pre-seeded account or ask your instructor)
+2. **Browse Topics** on your dashboard — topics are filtered by your account category (`java` or `data`)
 3. **Take Quizzes** - Answer questions, get immediate feedback
 4. **Track Progress** - See your accuracy, points, and improvement
 5. **Review Material** - Access learning resources
@@ -178,6 +186,7 @@ See [DEVELOPMENT_GUIDE.md](DEVELOPMENT_GUIDE.md) for complete development docume
 - ⏱️ **Timed Tests** - Formal assessments with results
 - 📖 **Learning Resources** - Curriculum guides linked to questions
 - 🏷️ **Tag-Based Review** - Focus on specific concepts
+- 🎯 **Category-Based Topics** - Java students see Java & SQL topics; Data students see Python & SQL topics
 
 ### For Instructors
 - 👥 **Student Analytics** - Track individual student progress

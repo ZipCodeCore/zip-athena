@@ -11,6 +11,22 @@ Athena is not just a quiz application—it's a complete, production-quality code
 - **Junior developers** studying best practices and patterns
 - **Anyone** curious about building three-tier web applications
 
+## Understanding Student Categories
+
+Athena uses a **category** system to tailor topic visibility to each student's curriculum:
+
+| User Category | Topics Visible |
+|---------------|----------------|
+| `java`        | Java Fundamentals, Java Code Tracing, SQL Database |
+| `data`        | Python Basics, Python Code Tracing, SQL Database |
+
+This is enforced by `api/topic_access.go:userCanAccessTopic()`. Admins bypass this filter and see all topics.
+
+Code for this lives in:
+- `constants/constants.go` — defines `CategoryJava`, `CategoryData`, `TopicCategoryJava`, `TopicCategoryPython`, `TopicCategoryAll`
+- `api/topic_access.go` — the access-control predicate used by quiz and dashboard endpoints
+- `database/migrations/005_topic_category_all.up.sql` — how the category system evolved
+
 ## Learning Objectives
 
 By studying Athena, you'll learn:
@@ -23,6 +39,18 @@ By studying Athena, you'll learn:
 6. **Go programming** - Practical Go with real use cases
 7. **Algorithms** - Implementing spaced repetition (FSRS)
 8. **Code organization** - Package structure and separation of concerns
+
+## Available Quiz Topics
+
+| Topic | Category | Description |
+|-------|----------|-------------|
+| Java Fundamentals | `java` | Core Java concepts — variables, loops, classes |
+| Java Code Tracing | `java` | Read Java snippets and predict printed output |
+| Python Basics | `data` | Introduction to Python — syntax, lists, functions |
+| Python Code Tracing | `data` | Read Python snippets and predict printed output |
+| SQL Database | `all` | Structured Query Language — queries, joins, aggregation |
+
+**Code Tracing topics** are especially useful for building mental models of how programs execute. Questions contain code blocks formatted in Markdown (` ```java` / ` ```python`), rendered as formatted code in the quiz UI.
 
 ## Learning Pathways
 
@@ -194,11 +222,17 @@ Choose a pathway based on your goals:
    - Understand permission checks
    - Learn about user isolation
 
+5. Study `api/topic_access.go` - Category-based access control
+   - Understand how student category (`java` vs `data`) gates topic visibility
+   - See how `constants/constants.go` defines the category values
+   - Trace the path from JWT claims → user record → topic filter
+
 **Exercises**:
 - Trace a login request end-to-end
 - Implement a "reset password" feature
 - Add a new admin-only endpoint
 - Write tests for authorization logic
+- Explain what happens when a `data` student requests a `java`-only topic
 
 **Time Estimate**: 3-4 hours
 
@@ -399,6 +433,12 @@ Quiz Retake:
   → api/quiz.go:RetakeQuiz (handler)
   → database/sqlite.go:CreateRetakeAttempt (storage)
   → api/quiz_retake_test.go (tests)
+
+Topic Category Access:
+  → constants/constants.go (category constants)
+  → api/topic_access.go:userCanAccessTopic (predicate)
+  → api/handlers.go (where predicate is applied)
+  → api/quiz_category_test.go (tests)
 ```
 
 ### 4. Test-Driven Reading
