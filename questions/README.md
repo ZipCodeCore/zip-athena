@@ -100,3 +100,5 @@ Default topics:
 
 - `java-fundamentals.json` - 30 Java questions covering core concepts
 - `python-basics.json` - 30 Python questions covering fundamentals
+- `git-github-basics.json` - 25 beginner Git/GitHub questions
+- `shell-commands-basics.json` - 25 beginner shell command questions
