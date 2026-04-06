@@ -1,0 +1,555 @@
+{
+  "topic": "Git and GitHub Basics",
+  "questions": [
+    {
+      "text": "What is Git?",
+      "difficulty": 1,
+      "tags": ["git", "basics", "version-control"],
+      "answers": [
+        {"text": "A version control system", "is_correct": true},
+        {"text": "A text editor", "is_correct": false},
+        {"text": "A web browser", "is_correct": false},
+        {"text": "A programming language", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is GitHub primarily used for?",
+      "difficulty": 1,
+      "tags": ["github", "basics", "hosting"],
+      "answers": [
+        {"text": "Hosting and collaborating on Git repositories", "is_correct": true},
+        {"text": "Running desktop applications", "is_correct": false},
+        {"text": "Compiling code on your computer", "is_correct": false},
+        {"text": "Replacing your operating system", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command creates a new local Git repository in the current folder?",
+      "difficulty": 1,
+      "tags": ["git", "init", "commands"],
+      "answers": [
+        {"text": "git init", "is_correct": true},
+        {"text": "git start", "is_correct": false},
+        {"text": "git create", "is_correct": false},
+        {"text": "git new", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command copies a remote repository to your computer?",
+      "difficulty": 1,
+      "tags": ["git", "clone", "commands"],
+      "answers": [
+        {"text": "git clone", "is_correct": true},
+        {"text": "git copy", "is_correct": false},
+        {"text": "git pull", "is_correct": false},
+        {"text": "git fetch", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the command 'git status' show?",
+      "difficulty": 1,
+      "tags": ["git", "status", "workflow"],
+      "answers": [
+        {"text": "The state of your working directory and staging area", "is_correct": true},
+        {"text": "A list of all GitHub users", "is_correct": false},
+        {"text": "Only your commit history", "is_correct": false},
+        {"text": "Only changed files on remote", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command stages all modified and new files for the next commit?",
+      "difficulty": 1,
+      "tags": ["git", "add", "staging"],
+      "answers": [
+        {"text": "git add .", "is_correct": true},
+        {"text": "git stage all", "is_correct": false},
+        {"text": "git commit .", "is_correct": false},
+        {"text": "git push .", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'git commit' do?",
+      "difficulty": 1,
+      "tags": ["git", "commit", "workflow"],
+      "answers": [
+        {"text": "Saves a snapshot of staged changes to local history", "is_correct": true},
+        {"text": "Uploads files to GitHub automatically", "is_correct": false},
+        {"text": "Deletes tracked files", "is_correct": false},
+        {"text": "Creates a new repository", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command sends your local commits to a remote repository?",
+      "difficulty": 1,
+      "tags": ["git", "push", "remote"],
+      "answers": [
+        {"text": "git push", "is_correct": true},
+        {"text": "git commit", "is_correct": false},
+        {"text": "git merge", "is_correct": false},
+        {"text": "git pull", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command downloads remote changes and merges them into your current branch?",
+      "difficulty": 1,
+      "tags": ["git", "pull", "remote"],
+      "answers": [
+        {"text": "git pull", "is_correct": true},
+        {"text": "git fetch", "is_correct": false},
+        {"text": "git clone", "is_correct": false},
+        {"text": "git checkout", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows commit history?",
+      "difficulty": 1,
+      "tags": ["git", "log", "history"],
+      "answers": [
+        {"text": "git log", "is_correct": true},
+        {"text": "git history", "is_correct": false},
+        {"text": "git commits", "is_correct": false},
+        {"text": "git show-all", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a branch in Git?",
+      "difficulty": 1,
+      "tags": ["git", "branches", "basics"],
+      "answers": [
+        {"text": "A separate line of development", "is_correct": true},
+        {"text": "A folder that stores only images", "is_correct": false},
+        {"text": "A backup copy of your OS", "is_correct": false},
+        {"text": "A required GitHub subscription plan", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command creates and switches to a new branch named feature-login?",
+      "difficulty": 2,
+      "tags": ["git", "checkout", "switch", "branches"],
+      "answers": [
+        {"text": "git checkout -b feature-login", "is_correct": true},
+        {"text": "git branch feature-login --use", "is_correct": false},
+        {"text": "git switch feature-login --new-branch false", "is_correct": false},
+        {"text": "git create branch feature-login", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command lists your local branches?",
+      "difficulty": 1,
+      "tags": ["git", "branch", "commands"],
+      "answers": [
+        {"text": "git branch", "is_correct": true},
+        {"text": "git branches", "is_correct": false},
+        {"text": "git list-branch", "is_correct": false},
+        {"text": "git show-branch --local-only", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command switches to an existing branch named main?",
+      "difficulty": 1,
+      "tags": ["git", "checkout", "branches"],
+      "answers": [
+        {"text": "git checkout main", "is_correct": true},
+        {"text": "git branch main", "is_correct": false},
+        {"text": "git merge main", "is_correct": false},
+        {"text": "git commit main", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'git merge feature-login' do when run on main?",
+      "difficulty": 2,
+      "tags": ["git", "merge", "branches"],
+      "answers": [
+        {"text": "Combines changes from feature-login into main", "is_correct": true},
+        {"text": "Deletes feature-login permanently", "is_correct": false},
+        {"text": "Uploads both branches to GitHub", "is_correct": false},
+        {"text": "Creates a remote branch automatically", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command checks your configured remotes?",
+      "difficulty": 1,
+      "tags": ["git", "remote", "commands"],
+      "answers": [
+        {"text": "git remote -v", "is_correct": true},
+        {"text": "git remotes", "is_correct": false},
+        {"text": "git list remote", "is_correct": false},
+        {"text": "git status --remote", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the default name often used for the main remote repository?",
+      "difficulty": 1,
+      "tags": ["git", "remote", "origin"],
+      "answers": [
+        {"text": "origin", "is_correct": true},
+        {"text": "main", "is_correct": false},
+        {"text": "master", "is_correct": false},
+        {"text": "upstream-main", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does a pull request on GitHub usually represent?",
+      "difficulty": 1,
+      "tags": ["github", "pull-request", "collaboration"],
+      "answers": [
+        {"text": "A request to review and merge code changes", "is_correct": true},
+        {"text": "A request to delete a repository", "is_correct": false},
+        {"text": "A request for GitHub billing support", "is_correct": false},
+        {"text": "A command to pull from local files", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the staging area in Git?",
+      "difficulty": 2,
+      "tags": ["git", "staging", "workflow"],
+      "answers": [
+        {"text": "A place where changes are prepared before commit", "is_correct": true},
+        {"text": "A cloud backup location on GitHub", "is_correct": false},
+        {"text": "A temporary OS cache unrelated to Git", "is_correct": false},
+        {"text": "A branch used only for production", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which file is commonly used to tell Git which files or folders to ignore?",
+      "difficulty": 1,
+      "tags": ["git", "gitignore", "files"],
+      "answers": [
+        {"text": ".gitignore", "is_correct": true},
+        {"text": ".gitconfig", "is_correct": false},
+        {"text": "ignore.txt", "is_correct": false},
+        {"text": ".ignoregit", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows the changes not yet staged for commit?",
+      "difficulty": 2,
+      "tags": ["git", "diff", "changes"],
+      "answers": [
+        {"text": "git diff", "is_correct": true},
+        {"text": "git log", "is_correct": false},
+        {"text": "git status -s --staged-only", "is_correct": false},
+        {"text": "git show", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command unstages a file named app.js (keeps file changes)?",
+      "difficulty": 2,
+      "tags": ["git", "restore", "staging"],
+      "answers": [
+        {"text": "git restore --staged app.js", "is_correct": true},
+        {"text": "git reset --hard app.js", "is_correct": false},
+        {"text": "git remove app.js", "is_correct": false},
+        {"text": "git checkout --delete app.js", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command is used to fetch remote changes without merging?",
+      "difficulty": 2,
+      "tags": ["git", "fetch", "remote"],
+      "answers": [
+        {"text": "git fetch", "is_correct": true},
+        {"text": "git pull", "is_correct": false},
+        {"text": "git clone", "is_correct": false},
+        {"text": "git merge", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'forking' a repository on GitHub mean?",
+      "difficulty": 1,
+      "tags": ["github", "fork", "collaboration"],
+      "answers": [
+        {"text": "Creating your own copy of someone else's repository", "is_correct": true},
+        {"text": "Deleting a branch from the original repository", "is_correct": false},
+        {"text": "Moving a repository between organizations", "is_correct": false},
+        {"text": "Renaming the default branch", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command sets your global Git username?",
+      "difficulty": 2,
+      "tags": ["git", "config", "identity"],
+      "answers": [
+        {"text": "git config --global user.name \"Your Name\"", "is_correct": true},
+        {"text": "git username --set \"Your Name\"", "is_correct": false},
+        {"text": "git set user.name \"Your Name\"", "is_correct": false},
+        {"text": "git config user --name \"Your Name\"", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command sets your global Git email address?",
+      "difficulty": 2,
+      "tags": ["git", "config", "identity"],
+      "answers": [
+        {"text": "git config --global user.email \"you@example.com\"", "is_correct": true},
+        {"text": "git email --set \"you@example.com\"", "is_correct": false},
+        {"text": "git config email \"you@example.com\"", "is_correct": false},
+        {"text": "git set user.email \"you@example.com\"", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows one-line commit history?",
+      "difficulty": 2,
+      "tags": ["git", "log", "history"],
+      "answers": [
+        {"text": "git log --oneline", "is_correct": true},
+        {"text": "git history --short", "is_correct": false},
+        {"text": "git commits -1line", "is_correct": false},
+        {"text": "git show --brief-log", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows details for your most recent commit?",
+      "difficulty": 2,
+      "tags": ["git", "show", "history"],
+      "answers": [
+        {"text": "git show", "is_correct": true},
+        {"text": "git latest", "is_correct": false},
+        {"text": "git commit --last", "is_correct": false},
+        {"text": "git log --details-only", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command creates a new branch named fix-header without switching to it?",
+      "difficulty": 2,
+      "tags": ["git", "branch", "commands"],
+      "answers": [
+        {"text": "git branch fix-header", "is_correct": true},
+        {"text": "git checkout fix-header", "is_correct": false},
+        {"text": "git switch -b", "is_correct": false},
+        {"text": "git create fix-header", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command deletes a local branch named old-feature?",
+      "difficulty": 2,
+      "tags": ["git", "branch", "cleanup"],
+      "answers": [
+        {"text": "git branch -d old-feature", "is_correct": true},
+        {"text": "git delete branch old-feature", "is_correct": false},
+        {"text": "git remove old-feature", "is_correct": false},
+        {"text": "git checkout -d old-feature", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command renames the current branch to main?",
+      "difficulty": 2,
+      "tags": ["git", "branch", "rename"],
+      "answers": [
+        {"text": "git branch -M main", "is_correct": true},
+        {"text": "git rename-branch main", "is_correct": false},
+        {"text": "git branch --name main", "is_correct": false},
+        {"text": "git move-branch main", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'git pull' combine in one step?",
+      "difficulty": 2,
+      "tags": ["git", "pull", "workflow"],
+      "answers": [
+        {"text": "git fetch and git merge", "is_correct": true},
+        {"text": "git add and git commit", "is_correct": false},
+        {"text": "git clone and git init", "is_correct": false},
+        {"text": "git branch and git checkout", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command removes an untracked file named temp.txt?",
+      "difficulty": 2,
+      "tags": ["git", "clean", "files"],
+      "answers": [
+        {"text": "git clean -f", "is_correct": true},
+        {"text": "git remove temp.txt", "is_correct": false},
+        {"text": "git reset temp.txt", "is_correct": false},
+        {"text": "git restore temp.txt", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command clones and gives the copied folder a custom name?",
+      "difficulty": 2,
+      "tags": ["git", "clone", "commands"],
+      "answers": [
+        {"text": "git clone <repo-url> my-folder", "is_correct": true},
+        {"text": "git clone --name my-folder <repo-url>", "is_correct": false},
+        {"text": "git copy <repo-url> my-folder", "is_correct": false},
+        {"text": "git clone rename my-folder", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a merge conflict?",
+      "difficulty": 1,
+      "tags": ["git", "merge", "conflicts"],
+      "answers": [
+        {"text": "When Git cannot automatically combine changes", "is_correct": true},
+        {"text": "When your internet connection is slow", "is_correct": false},
+        {"text": "When your branch has no commits", "is_correct": false},
+        {"text": "When GitHub is read-only", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command can abort an in-progress merge after conflicts?",
+      "difficulty": 2,
+      "tags": ["git", "merge", "conflicts"],
+      "answers": [
+        {"text": "git merge --abort", "is_correct": true},
+        {"text": "git merge --cancel-now", "is_correct": false},
+        {"text": "git abort merge", "is_correct": false},
+        {"text": "git stop --merge", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command removes a remote named upstream?",
+      "difficulty": 2,
+      "tags": ["git", "remote", "commands"],
+      "answers": [
+        {"text": "git remote remove upstream", "is_correct": true},
+        {"text": "git remote delete upstream now", "is_correct": false},
+        {"text": "git remove remote upstream", "is_correct": false},
+        {"text": "git remote rm-url upstream", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command adds a remote named upstream?",
+      "difficulty": 2,
+      "tags": ["git", "remote", "commands"],
+      "answers": [
+        {"text": "git remote add upstream <repo-url>", "is_correct": true},
+        {"text": "git add remote upstream <repo-url>", "is_correct": false},
+        {"text": "git remote set upstream <repo-url>", "is_correct": false},
+        {"text": "git create remote upstream <repo-url>", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which GitHub feature is used to track bugs and feature requests?",
+      "difficulty": 1,
+      "tags": ["github", "issues", "collaboration"],
+      "answers": [
+        {"text": "Issues", "is_correct": true},
+        {"text": "Wikis", "is_correct": false},
+        {"text": "Projects settings only", "is_correct": false},
+        {"text": "Forks", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which GitHub page shows code review comments and merge options for a branch change?",
+      "difficulty": 1,
+      "tags": ["github", "pull-request", "review"],
+      "answers": [
+        {"text": "Pull request page", "is_correct": true},
+        {"text": "Releases page", "is_correct": false},
+        {"text": "Insights page", "is_correct": false},
+        {"text": "Security tab", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command amends the most recent commit message and/or staged changes?",
+      "difficulty": 2,
+      "tags": ["git", "commit", "amend"],
+      "answers": [
+        {"text": "git commit --amend", "is_correct": true},
+        {"text": "git commit --edit-last", "is_correct": false},
+        {"text": "git amend", "is_correct": false},
+        {"text": "git fix-commit", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command discards unstaged changes in a file named notes.md?",
+      "difficulty": 2,
+      "tags": ["git", "restore", "changes"],
+      "answers": [
+        {"text": "git restore notes.md", "is_correct": true},
+        {"text": "git clean notes.md", "is_correct": false},
+        {"text": "git reset --hard notes.md", "is_correct": false},
+        {"text": "git unstage notes.md", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command tags the current commit as v1.0.0?",
+      "difficulty": 2,
+      "tags": ["git", "tag", "release"],
+      "answers": [
+        {"text": "git tag v1.0.0", "is_correct": true},
+        {"text": "git release v1.0.0", "is_correct": false},
+        {"text": "git version v1.0.0", "is_correct": false},
+        {"text": "git label v1.0.0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command pushes all local tags to remote?",
+      "difficulty": 2,
+      "tags": ["git", "tag", "push"],
+      "answers": [
+        {"text": "git push --tags", "is_correct": true},
+        {"text": "git tag push all", "is_correct": false},
+        {"text": "git push tags", "is_correct": false},
+        {"text": "git push --all-tags-now", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command sets the remote URL for origin?",
+      "difficulty": 2,
+      "tags": ["git", "remote", "origin"],
+      "answers": [
+        {"text": "git remote set-url origin <repo-url>", "is_correct": true},
+        {"text": "git origin set-url <repo-url>", "is_correct": false},
+        {"text": "git remote update origin <repo-url>", "is_correct": false},
+        {"text": "git config remote.origin <repo-url>", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command starts tracking a remote branch named origin/feature-api?",
+      "difficulty": 2,
+      "tags": ["git", "checkout", "tracking"],
+      "answers": [
+        {"text": "git checkout -b feature-api origin/feature-api", "is_correct": true},
+        {"text": "git branch feature-api --remote", "is_correct": false},
+        {"text": "git pull origin/feature-api", "is_correct": false},
+        {"text": "git switch origin/feature-api", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of a .md file like README.md in a repository?",
+      "difficulty": 1,
+      "tags": ["github", "readme", "documentation"],
+      "answers": [
+        {"text": "To provide project documentation and instructions", "is_correct": true},
+        {"text": "To configure Git user identity", "is_correct": false},
+        {"text": "To store compiled binaries", "is_correct": false},
+        {"text": "To replace package managers", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'star' on a GitHub repository usually mean?",
+      "difficulty": 1,
+      "tags": ["github", "star", "basics"],
+      "answers": [
+        {"text": "You bookmarked or liked the project", "is_correct": true},
+        {"text": "You became an owner of the repository", "is_correct": false},
+        {"text": "You merged all open pull requests", "is_correct": false},
+        {"text": "You cloned the repository", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows who last changed each line in a file?",
+      "difficulty": 2,
+      "tags": ["git", "blame", "history"],
+      "answers": [
+        {"text": "git blame <file>", "is_correct": true},
+        {"text": "git who <file>", "is_correct": false},
+        {"text": "git line-history <file>", "is_correct": false},
+        {"text": "git inspect --author-lines <file>", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command removes a file from Git tracking but keeps it on disk?",
+      "difficulty": 2,
+      "tags": ["git", "rm", "tracking"],
+      "answers": [
+        {"text": "git rm --cached <file>", "is_correct": true},
+        {"text": "git untrack <file>", "is_correct": false},
+        {"text": "git remove --local-only <file>", "is_correct": false},
+        {"text": "git clean --cached <file>", "is_correct": false}
+      ]
+    }
+  ]
+}

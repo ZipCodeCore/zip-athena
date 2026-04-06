@@ -1,0 +1,555 @@
+{
+  "topic": "Shell Commands Basics",
+  "questions": [
+    {
+      "text": "Which command prints the current working directory?",
+      "difficulty": 1,
+      "tags": ["shell", "pwd", "navigation"],
+      "answers": [
+        {"text": "pwd", "is_correct": true},
+        {"text": "whereami", "is_correct": false},
+        {"text": "cwd", "is_correct": false},
+        {"text": "dir", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command lists files and folders in the current directory?",
+      "difficulty": 1,
+      "tags": ["shell", "ls", "files"],
+      "answers": [
+        {"text": "ls", "is_correct": true},
+        {"text": "show", "is_correct": false},
+        {"text": "list", "is_correct": false},
+        {"text": "files", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command changes directory to a folder named projects?",
+      "difficulty": 1,
+      "tags": ["shell", "cd", "navigation"],
+      "answers": [
+        {"text": "cd projects", "is_correct": true},
+        {"text": "go projects", "is_correct": false},
+        {"text": "chdir projects", "is_correct": false},
+        {"text": "ls projects", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command moves you up one directory level?",
+      "difficulty": 1,
+      "tags": ["shell", "cd", "navigation"],
+      "answers": [
+        {"text": "cd ..", "is_correct": true},
+        {"text": "cd /", "is_correct": false},
+        {"text": "cd ~", "is_correct": false},
+        {"text": "updir", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command creates a new directory named notes?",
+      "difficulty": 1,
+      "tags": ["shell", "mkdir", "directories"],
+      "answers": [
+        {"text": "mkdir notes", "is_correct": true},
+        {"text": "newdir notes", "is_correct": false},
+        {"text": "mk notes", "is_correct": false},
+        {"text": "touch notes", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command creates an empty file named todo.txt?",
+      "difficulty": 1,
+      "tags": ["shell", "touch", "files"],
+      "answers": [
+        {"text": "touch todo.txt", "is_correct": true},
+        {"text": "mkdir todo.txt", "is_correct": false},
+        {"text": "mkfile todo.txt", "is_correct": false},
+        {"text": "new todo.txt", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays the contents of a file named readme.txt?",
+      "difficulty": 1,
+      "tags": ["shell", "cat", "files"],
+      "answers": [
+        {"text": "cat readme.txt", "is_correct": true},
+        {"text": "open readme.txt", "is_correct": false},
+        {"text": "show readme.txt", "is_correct": false},
+        {"text": "echo readme.txt", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command copies file1.txt to backup/file1.txt?",
+      "difficulty": 1,
+      "tags": ["shell", "cp", "files"],
+      "answers": [
+        {"text": "cp file1.txt backup/file1.txt", "is_correct": true},
+        {"text": "mv file1.txt backup/file1.txt", "is_correct": false},
+        {"text": "copy file1.txt backup/file1.txt", "is_correct": false},
+        {"text": "cat file1.txt > backup/file1.txt && rm file1.txt", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command moves or renames a file?",
+      "difficulty": 1,
+      "tags": ["shell", "mv", "files"],
+      "answers": [
+        {"text": "mv", "is_correct": true},
+        {"text": "cp", "is_correct": false},
+        {"text": "rn", "is_correct": false},
+        {"text": "switch", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command removes a file named old.txt?",
+      "difficulty": 1,
+      "tags": ["shell", "rm", "files"],
+      "answers": [
+        {"text": "rm old.txt", "is_correct": true},
+        {"text": "delete old.txt", "is_correct": false},
+        {"text": "erase old.txt", "is_correct": false},
+        {"text": "rmdir old.txt", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command removes an empty directory named temp?",
+      "difficulty": 1,
+      "tags": ["shell", "rmdir", "directories"],
+      "answers": [
+        {"text": "rmdir temp", "is_correct": true},
+        {"text": "rm temp", "is_correct": false},
+        {"text": "deldir temp", "is_correct": false},
+        {"text": "rmfile temp", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command clears the terminal screen in many shells?",
+      "difficulty": 1,
+      "tags": ["shell", "clear", "terminal"],
+      "answers": [
+        {"text": "clear", "is_correct": true},
+        {"text": "clsall", "is_correct": false},
+        {"text": "wipe", "is_correct": false},
+        {"text": "reset-screen-now", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command prints text to the terminal?",
+      "difficulty": 1,
+      "tags": ["shell", "echo", "output"],
+      "answers": [
+        {"text": "echo", "is_correct": true},
+        {"text": "print", "is_correct": false},
+        {"text": "saytext", "is_correct": false},
+        {"text": "write", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'cd ~' usually do?",
+      "difficulty": 1,
+      "tags": ["shell", "cd", "home-directory"],
+      "answers": [
+        {"text": "Moves to your home directory", "is_correct": true},
+        {"text": "Moves to the root directory", "is_correct": false},
+        {"text": "Creates a new directory", "is_correct": false},
+        {"text": "Lists hidden files", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command lists files with extra details like permissions and size?",
+      "difficulty": 1,
+      "tags": ["shell", "ls", "options"],
+      "answers": [
+        {"text": "ls -l", "is_correct": true},
+        {"text": "ls -a", "is_correct": false},
+        {"text": "ls -h", "is_correct": false},
+        {"text": "ls -d", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows hidden files (dotfiles) in a directory?",
+      "difficulty": 1,
+      "tags": ["shell", "ls", "hidden-files"],
+      "answers": [
+        {"text": "ls -a", "is_correct": true},
+        {"text": "ls -l", "is_correct": false},
+        {"text": "ls -h", "is_correct": false},
+        {"text": "show hidden", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays only the first 10 lines of a file by default?",
+      "difficulty": 2,
+      "tags": ["shell", "head", "files"],
+      "answers": [
+        {"text": "head", "is_correct": true},
+        {"text": "top", "is_correct": false},
+        {"text": "start", "is_correct": false},
+        {"text": "first", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays the last 10 lines of a file by default?",
+      "difficulty": 2,
+      "tags": ["shell", "tail", "files"],
+      "answers": [
+        {"text": "tail", "is_correct": true},
+        {"text": "end", "is_correct": false},
+        {"text": "bottom", "is_correct": false},
+        {"text": "last", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command searches text inside files using patterns?",
+      "difficulty": 2,
+      "tags": ["shell", "grep", "search"],
+      "answers": [
+        {"text": "grep", "is_correct": true},
+        {"text": "find", "is_correct": false},
+        {"text": "scan", "is_correct": false},
+        {"text": "seek", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command can locate files by name in directories?",
+      "difficulty": 2,
+      "tags": ["shell", "find", "search"],
+      "answers": [
+        {"text": "find", "is_correct": true},
+        {"text": "grep", "is_correct": false},
+        {"text": "where", "is_correct": false},
+        {"text": "locateit", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the redirection operator '>' do?",
+      "difficulty": 2,
+      "tags": ["shell", "redirection", "output"],
+      "answers": [
+        {"text": "Writes command output to a file, replacing existing content", "is_correct": true},
+        {"text": "Appends command output to a file", "is_correct": false},
+        {"text": "Reads input from a file", "is_correct": false},
+        {"text": "Runs commands in background", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the redirection operator '>>' do?",
+      "difficulty": 2,
+      "tags": ["shell", "redirection", "output"],
+      "answers": [
+        {"text": "Appends command output to the end of a file", "is_correct": true},
+        {"text": "Overwrites a file with output", "is_correct": false},
+        {"text": "Deletes file content", "is_correct": false},
+        {"text": "Redirects errors only", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the pipe operator '|' do in a shell command?",
+      "difficulty": 2,
+      "tags": ["shell", "pipe", "commands"],
+      "answers": [
+        {"text": "Sends output of one command as input to another", "is_correct": true},
+        {"text": "Runs two commands at the same time", "is_correct": false},
+        {"text": "Saves command output to a file", "is_correct": false},
+        {"text": "Comments out part of a command", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which shortcut can interrupt a running command in many terminals?",
+      "difficulty": 1,
+      "tags": ["shell", "terminal", "shortcuts"],
+      "answers": [
+        {"text": "Ctrl+C", "is_correct": true},
+        {"text": "Ctrl+S", "is_correct": false},
+        {"text": "Ctrl+V", "is_correct": false},
+        {"text": "Ctrl+F", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command often opens a manual/help page for another command (for example, ls)?",
+      "difficulty": 1,
+      "tags": ["shell", "man", "help"],
+      "answers": [
+        {"text": "man ls", "is_correct": true},
+        {"text": "help ls now", "is_correct": false},
+        {"text": "ls --guide", "is_correct": false},
+        {"text": "manual ls file", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows your command history?",
+      "difficulty": 1,
+      "tags": ["shell", "history", "terminal"],
+      "answers": [
+        {"text": "history", "is_correct": true},
+        {"text": "logcmd", "is_correct": false},
+        {"text": "commands", "is_correct": false},
+        {"text": "past", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command repeats the last command in many shells?",
+      "difficulty": 2,
+      "tags": ["shell", "history", "shortcuts"],
+      "answers": [
+        {"text": "!!", "is_correct": true},
+        {"text": "repeat", "is_correct": false},
+        {"text": "again", "is_correct": false},
+        {"text": "!lastcmdnow", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays your current username?",
+      "difficulty": 1,
+      "tags": ["shell", "whoami", "basics"],
+      "answers": [
+        {"text": "whoami", "is_correct": true},
+        {"text": "user", "is_correct": false},
+        {"text": "myname", "is_correct": false},
+        {"text": "idname", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command prints the current date and time?",
+      "difficulty": 1,
+      "tags": ["shell", "date", "basics"],
+      "answers": [
+        {"text": "date", "is_correct": true},
+        {"text": "time", "is_correct": false},
+        {"text": "calendar", "is_correct": false},
+        {"text": "now", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command prints the current month calendar in many systems?",
+      "difficulty": 1,
+      "tags": ["shell", "cal", "basics"],
+      "answers": [
+        {"text": "cal", "is_correct": true},
+        {"text": "calendar month", "is_correct": false},
+        {"text": "monthview", "is_correct": false},
+        {"text": "showcal", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays disk usage in a human-readable format?",
+      "difficulty": 2,
+      "tags": ["shell", "df", "disk"],
+      "answers": [
+        {"text": "df -h", "is_correct": true},
+        {"text": "du -h /", "is_correct": false},
+        {"text": "disk --human", "is_correct": false},
+        {"text": "space -h", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows the size of files and folders in the current directory?",
+      "difficulty": 2,
+      "tags": ["shell", "du", "disk"],
+      "answers": [
+        {"text": "du -sh *", "is_correct": true},
+        {"text": "df -sh *", "is_correct": false},
+        {"text": "ls -size *", "is_correct": false},
+        {"text": "size --all", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays running processes?",
+      "difficulty": 2,
+      "tags": ["shell", "ps", "processes"],
+      "answers": [
+        {"text": "ps", "is_correct": true},
+        {"text": "proc", "is_correct": false},
+        {"text": "tasks", "is_correct": false},
+        {"text": "running", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command terminates a process by process ID?",
+      "difficulty": 2,
+      "tags": ["shell", "kill", "processes"],
+      "answers": [
+        {"text": "kill <pid>", "is_correct": true},
+        {"text": "stop <pid>", "is_correct": false},
+        {"text": "end <pid>", "is_correct": false},
+        {"text": "close <pid>", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command changes file permissions?",
+      "difficulty": 2,
+      "tags": ["shell", "chmod", "permissions"],
+      "answers": [
+        {"text": "chmod", "is_correct": true},
+        {"text": "chown", "is_correct": false},
+        {"text": "perm", "is_correct": false},
+        {"text": "setperm", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command changes the owner of a file?",
+      "difficulty": 2,
+      "tags": ["shell", "chown", "permissions"],
+      "answers": [
+        {"text": "chown", "is_correct": true},
+        {"text": "chmod", "is_correct": false},
+        {"text": "owner", "is_correct": false},
+        {"text": "setowner", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the wildcard '*' usually match in shell patterns?",
+      "difficulty": 1,
+      "tags": ["shell", "wildcards", "globbing"],
+      "answers": [
+        {"text": "Zero or more characters", "is_correct": true},
+        {"text": "Exactly one character", "is_correct": false},
+        {"text": "Only digits", "is_correct": false},
+        {"text": "Only hidden files", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows the full path to an executable command?",
+      "difficulty": 2,
+      "tags": ["shell", "which", "commands"],
+      "answers": [
+        {"text": "which", "is_correct": true},
+        {"text": "whereispath", "is_correct": false},
+        {"text": "pathof", "is_correct": false},
+        {"text": "cmdpath", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command prints environment variables?",
+      "difficulty": 2,
+      "tags": ["shell", "env", "variables"],
+      "answers": [
+        {"text": "env", "is_correct": true},
+        {"text": "vars", "is_correct": false},
+        {"text": "printvars", "is_correct": false},
+        {"text": "setonly", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command sets an environment variable for the current shell session?",
+      "difficulty": 2,
+      "tags": ["shell", "export", "variables"],
+      "answers": [
+        {"text": "export NAME=value", "is_correct": true},
+        {"text": "env NAME=value", "is_correct": false},
+        {"text": "set NAME=value global", "is_correct": false},
+        {"text": "var NAME=value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does '$HOME' usually represent?",
+      "difficulty": 1,
+      "tags": ["shell", "environment", "variables"],
+      "answers": [
+        {"text": "Your home directory path", "is_correct": true},
+        {"text": "The root directory path", "is_correct": false},
+        {"text": "Current project path only", "is_correct": false},
+        {"text": "A command to go home", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command compares two files line by line?",
+      "difficulty": 2,
+      "tags": ["shell", "diff", "files"],
+      "answers": [
+        {"text": "diff file1 file2", "is_correct": true},
+        {"text": "cmpall file1 file2", "is_correct": false},
+        {"text": "compare file1 file2", "is_correct": false},
+        {"text": "git diff file1 file2 only", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command sorts lines of text alphabetically?",
+      "difficulty": 2,
+      "tags": ["shell", "sort", "text"],
+      "answers": [
+        {"text": "sort", "is_correct": true},
+        {"text": "order", "is_correct": false},
+        {"text": "arrange", "is_correct": false},
+        {"text": "alphasort", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command counts lines, words, and bytes in a file?",
+      "difficulty": 2,
+      "tags": ["shell", "wc", "text"],
+      "answers": [
+        {"text": "wc", "is_correct": true},
+        {"text": "count", "is_correct": false},
+        {"text": "stats", "is_correct": false},
+        {"text": "measure", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command can download files from a URL (commonly available on many systems)?",
+      "difficulty": 2,
+      "tags": ["shell", "curl", "network"],
+      "answers": [
+        {"text": "curl", "is_correct": true},
+        {"text": "fetchurl", "is_correct": false},
+        {"text": "download", "is_correct": false},
+        {"text": "netget", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command checks whether a host is reachable over the network (basic check)?",
+      "difficulty": 2,
+      "tags": ["shell", "ping", "network"],
+      "answers": [
+        {"text": "ping", "is_correct": true},
+        {"text": "reach", "is_correct": false},
+        {"text": "connect-test", "is_correct": false},
+        {"text": "netcheckhost", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command prints one line at a time and can pause output for reading?",
+      "difficulty": 2,
+      "tags": ["shell", "less", "files"],
+      "answers": [
+        {"text": "less", "is_correct": true},
+        {"text": "cat", "is_correct": false},
+        {"text": "showall", "is_correct": false},
+        {"text": "viewfile", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays currently logged-in users on many Unix-like systems?",
+      "difficulty": 2,
+      "tags": ["shell", "who", "system"],
+      "answers": [
+        {"text": "who", "is_correct": true},
+        {"text": "users-now", "is_correct": false},
+        {"text": "loggedin", "is_correct": false},
+        {"text": "sessions list", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command starts a command in the background in many shells?",
+      "difficulty": 2,
+      "tags": ["shell", "background", "processes"],
+      "answers": [
+        {"text": "Add '&' at the end, like: sleep 30 &", "is_correct": true},
+        {"text": "Use @@ at the end of command", "is_correct": false},
+        {"text": "Prefix command with bg:", "is_correct": false},
+        {"text": "Use run --background", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command creates all missing parent directories too (for example a/b/c)?",
+      "difficulty": 2,
+      "tags": ["shell", "mkdir", "directories"],
+      "answers": [
+        {"text": "mkdir -p a/b/c", "is_correct": true},
+        {"text": "mkdir --parents-only a/b/c", "is_correct": false},
+        {"text": "mkpath a/b/c", "is_correct": false},
+        {"text": "mkdir -all a/b/c", "is_correct": false}
+      ]
+    }
+  ]
+}
