@@ -35,6 +35,9 @@ go run ./cmd/loadquestions/main.go --db ./path/to/athena.db
 
 # Use a different questions directory
 go run ./cmd/loadquestions/main.go --dir ./path/to/questions
+
+## Use this one?
+go run ./cmd/loadquestions/main.go --dir ./questions --db ./data/athena.db
 ```
 
 Like, etc, etc:

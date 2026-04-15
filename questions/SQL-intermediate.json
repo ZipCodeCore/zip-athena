@@ -660,6 +660,545 @@
         {"text": "Checks if the subquery returns any rows at all", "is_correct": false},
         {"text": "Allows any data type in the comparison", "is_correct": false}
       ]
+    },
+    {
+      "text": "What is the ALL operator used for with subqueries?",
+      "difficulty": 3,
+      "tags": ["all", "subquery", "operators"],
+      "answers": [
+        {"text": "Selects all rows from the subquery without filtering", "is_correct": false},
+        {"text": "Returns TRUE if the comparison is true for all values returned by the subquery", "is_correct": true},
+        {"text": "Returns all columns from the subquery result", "is_correct": false},
+        {"text": "Combines all subquery results into one", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a Common Table Expression (CTE)?",
+      "difficulty": 3,
+      "tags": ["cte", "with", "advanced"],
+      "answers": [
+        {"text": "A permanent table stored in the database", "is_correct": false},
+        {"text": "A function that returns a table", "is_correct": false},
+        {"text": "A temporary named result set defined using the WITH clause", "is_correct": true},
+        {"text": "A shared query used across multiple databases", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a window function?",
+      "difficulty": 3,
+      "tags": ["window-function", "analytics", "advanced"],
+      "answers": [
+        {"text": "A function that displays results in a window", "is_correct": false},
+        {"text": "A function that performs calculations across a set of rows related to the current row", "is_correct": true},
+        {"text": "A function that limits the time period for queries", "is_correct": false},
+        {"text": "A function that filters rows within a range", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the ROW_NUMBER() function do?",
+      "difficulty": 3,
+      "tags": ["window-function", "row-number", "ranking"],
+      "answers": [
+        {"text": "Counts the total number of rows in a table", "is_correct": false},
+        {"text": "Returns the physical row position in storage", "is_correct": false},
+        {"text": "Assigns a unique sequential integer to each row within a partition", "is_correct": true},
+        {"text": "Numbers only duplicate rows", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between RANK() and DENSE_RANK()?",
+      "difficulty": 3,
+      "tags": ["window-function", "rank", "dense-rank"],
+      "answers": [
+        {"text": "DENSE_RANK() is faster than RANK()", "is_correct": false},
+        {"text": "RANK() works with numbers, DENSE_RANK() works with strings", "is_correct": false},
+        {"text": "RANK() skips numbers after ties, DENSE_RANK() does not skip", "is_correct": true},
+        {"text": "DENSE_RANK() removes duplicate values", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the PARTITION BY clause do in window functions?",
+      "difficulty": 3,
+      "tags": ["window-function", "partition-by", "grouping"],
+      "answers": [
+        {"text": "Physically divides the table into separate tables", "is_correct": false},
+        {"text": "Divides the result set into partitions where the window function is applied separately", "is_correct": true},
+        {"text": "Creates a backup partition of the data", "is_correct": false},
+        {"text": "Filters rows before applying the function", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the OVER() clause?",
+      "difficulty": 3,
+      "tags": ["window-function", "over", "syntax"],
+      "answers": [
+        {"text": "Overrides previous query results", "is_correct": false},
+        {"text": "Defines the window of rows for a window function to operate on", "is_correct": true},
+        {"text": "Indicates the query is complete", "is_correct": false},
+        {"text": "Specifies overflow handling for large results", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the LAG() function do?",
+      "difficulty": 3,
+      "tags": ["window-function", "lag", "analytics"],
+      "answers": [
+        {"text": "Delays query execution", "is_correct": false},
+        {"text": "Returns the last row of a partition", "is_correct": false},
+        {"text": "Accesses data from a previous row in the result set", "is_correct": true},
+        {"text": "Measures query performance time", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the LEAD() function do?",
+      "difficulty": 3,
+      "tags": ["window-function", "lead", "analytics"],
+      "answers": [
+        {"text": "Returns the first row of a partition", "is_correct": false},
+        {"text": "Prioritizes certain rows in results", "is_correct": false},
+        {"text": "Accesses data from a subsequent row in the result set", "is_correct": true},
+        {"text": "Guides the query optimizer", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the NTILE() function used for?",
+      "difficulty": 3,
+      "tags": ["window-function", "ntile", "distribution"],
+      "answers": [
+        {"text": "Returns the Nth row from a result set", "is_correct": false},
+        {"text": "Divides rows into a specified number of approximately equal groups", "is_correct": true},
+        {"text": "Tiles database tables for better performance", "is_correct": false},
+        {"text": "Creates N copies of each row", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the FIRST_VALUE() function return?",
+      "difficulty": 3,
+      "tags": ["window-function", "first-value", "analytics"],
+      "answers": [
+        {"text": "Returns the first row inserted into a table", "is_correct": false},
+        {"text": "Returns the first value in an ordered partition of the result set", "is_correct": true},
+        {"text": "Returns the minimum value in a column", "is_correct": false},
+        {"text": "Returns the first non-NULL value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the LAST_VALUE() function return?",
+      "difficulty": 3,
+      "tags": ["window-function", "last-value", "analytics"],
+      "answers": [
+        {"text": "Returns the most recently inserted row", "is_correct": false},
+        {"text": "Returns the maximum value in a column", "is_correct": false},
+        {"text": "Returns the last value in an ordered partition of the result set", "is_correct": true},
+        {"text": "Returns the last non-NULL value", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a materialized view?",
+      "difficulty": 3,
+      "tags": ["view", "materialized", "performance"],
+      "answers": [
+        {"text": "A view that appears as a physical object in the UI", "is_correct": false},
+        {"text": "A view that stores the query results physically for improved performance", "is_correct": true},
+        {"text": "A view that automatically updates in real-time", "is_correct": false},
+        {"text": "A view that can be edited directly", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between a view and a table?",
+      "difficulty": 3,
+      "tags": ["view", "table", "comparison"],
+      "answers": [
+        {"text": "A view is faster than a table", "is_correct": false},
+        {"text": "A view is a virtual table based on a query; a table stores actual data", "is_correct": true},
+        {"text": "A table is read-only; a view can be modified", "is_correct": false},
+        {"text": "Views use less memory than tables", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the LIMIT clause do?",
+      "difficulty": 3,
+      "tags": ["limit", "pagination", "syntax"],
+      "answers": [
+        {"text": "Sets a maximum value for numeric columns", "is_correct": false},
+        {"text": "Restricts the number of rows returned by a query", "is_correct": true},
+        {"text": "Limits the execution time of a query", "is_correct": false},
+        {"text": "Restricts which tables can be accessed", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of OFFSET in pagination?",
+      "difficulty": 3,
+      "tags": ["offset", "pagination", "syntax"],
+      "answers": [
+        {"text": "Sets the starting position for inserting rows", "is_correct": false},
+        {"text": "Adjusts time zone offsets in date queries", "is_correct": false},
+        {"text": "Skips a specified number of rows before returning results", "is_correct": true},
+        {"text": "Offsets numeric calculations by a fixed amount", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a stored procedure?",
+      "difficulty": 3,
+      "tags": ["stored-procedure", "programming", "database-objects"],
+      "answers": [
+        {"text": "A backup of query results", "is_correct": false},
+        {"text": "A prepared SQL code saved in the database that can be reused", "is_correct": true},
+        {"text": "A temporary query stored in memory", "is_correct": false},
+        {"text": "A log of all executed queries", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a trigger in SQL?",
+      "difficulty": 3,
+      "tags": ["trigger", "automation", "database-objects"],
+      "answers": [
+        {"text": "A function that starts a transaction", "is_correct": false},
+        {"text": "Code that automatically executes in response to certain events on a table", "is_correct": true},
+        {"text": "A command that forces query execution", "is_correct": false},
+        {"text": "A constraint that activates under certain conditions", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What are the common trigger events?",
+      "difficulty": 3,
+      "tags": ["trigger", "events", "dml"],
+      "answers": [
+        {"text": "SELECT, JOIN, GROUP", "is_correct": false},
+        {"text": "INSERT, UPDATE, DELETE", "is_correct": true},
+        {"text": "COMMIT, ROLLBACK, SAVEPOINT", "is_correct": false},
+        {"text": "CREATE, ALTER, DROP", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between a BEFORE and AFTER trigger?",
+      "difficulty": 3,
+      "tags": ["trigger", "timing", "comparison"],
+      "answers": [
+        {"text": "BEFORE triggers are faster; AFTER triggers are more reliable", "is_correct": false},
+        {"text": "BEFORE triggers execute before the event; AFTER triggers execute after", "is_correct": true},
+        {"text": "BEFORE triggers work with INSERT; AFTER triggers work with DELETE", "is_correct": false},
+        {"text": "BEFORE triggers can modify data; AFTER triggers cannot", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a savepoint in a transaction?",
+      "difficulty": 3,
+      "tags": ["transaction", "savepoint", "control"],
+      "answers": [
+        {"text": "A backup of the entire database", "is_correct": false},
+        {"text": "The point where a transaction automatically commits", "is_correct": false},
+        {"text": "A point within a transaction to which you can rollback without rolling back the entire transaction", "is_correct": true},
+        {"text": "A bookmark for resuming queries later", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does AUTO_INCREMENT do?",
+      "difficulty": 3,
+      "tags": ["auto-increment", "identity", "columns"],
+      "answers": [
+        {"text": "Automatically increases all numeric values in a column", "is_correct": false},
+        {"text": "Automatically generates a unique number for each new row", "is_correct": true},
+        {"text": "Increments a counter each time a query is run", "is_correct": false},
+        {"text": "Increases the size of a column as needed", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the EXPLAIN command?",
+      "difficulty": 3,
+      "tags": ["explain", "optimization", "performance"],
+      "answers": [
+        {"text": "Adds comments to explain what a query does", "is_correct": false},
+        {"text": "Shows the execution plan for a query to help optimize performance", "is_correct": true},
+        {"text": "Generates documentation for database schema", "is_correct": false},
+        {"text": "Explains error messages in queries", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is query optimization?",
+      "difficulty": 3,
+      "tags": ["optimization", "performance", "theory"],
+      "answers": [
+        {"text": "Making queries shorter by removing unnecessary words", "is_correct": false},
+        {"text": "The process of improving query performance by reducing execution time and resource usage", "is_correct": true},
+        {"text": "Converting queries to a standard format", "is_correct": false},
+        {"text": "Encrypting queries for security", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is denormalization?",
+      "difficulty": 3,
+      "tags": ["denormalization", "design", "performance"],
+      "answers": [
+        {"text": "Removing all constraints from a database", "is_correct": false},
+        {"text": "Converting normalized data back to its original format", "is_correct": false},
+        {"text": "Intentionally introducing redundancy to improve read performance", "is_correct": true},
+        {"text": "Corrupting the database structure", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is Third Normal Form (3NF)?",
+      "difficulty": 3,
+      "tags": ["normalization", "3nf", "design"],
+      "answers": [
+        {"text": "A table can have no more than 3 columns", "is_correct": false},
+        {"text": "A table is in 3NF if it's in 2NF and all non-key attributes depend only on the primary key", "is_correct": true},
+        {"text": "A table must have exactly 3 foreign keys", "is_correct": false},
+        {"text": "The third step in creating a database", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a candidate key?",
+      "difficulty": 3,
+      "tags": ["keys", "candidate", "design"],
+      "answers": [
+        {"text": "A key that is being considered for deletion", "is_correct": false},
+        {"text": "A temporary key used during data migration", "is_correct": false},
+        {"text": "A column or set of columns that could be chosen as the primary key", "is_correct": true},
+        {"text": "A key that is not yet validated", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a surrogate key?",
+      "difficulty": 3,
+      "tags": ["keys", "surrogate", "design"],
+      "answers": [
+        {"text": "A backup key used when the primary key fails", "is_correct": false},
+        {"text": "An artificial key created to uniquely identify records, typically an auto-incrementing number", "is_correct": true},
+        {"text": "A key that replaces a foreign key temporarily", "is_correct": false},
+        {"text": "A key shared between multiple tables", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a natural key?",
+      "difficulty": 3,
+      "tags": ["keys", "natural", "design"],
+      "answers": [
+        {"text": "A key that uses natural numbers only", "is_correct": false},
+        {"text": "A key created by the database automatically", "is_correct": false},
+        {"text": "A key based on real-world attributes that naturally uniquely identify a record", "is_correct": true},
+        {"text": "A key that doesn't require indexing", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the GROUP_CONCAT function?",
+      "difficulty": 3,
+      "tags": ["functions", "group-concat", "aggregation"],
+      "answers": [
+        {"text": "Groups rows and counts them", "is_correct": false},
+        {"text": "Concatenates values from multiple rows into a single string", "is_correct": true},
+        {"text": "Combines multiple GROUP BY clauses", "is_correct": false},
+        {"text": "Joins tables based on concatenated keys", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the HAVING clause filter?",
+      "difficulty": 3,
+      "tags": ["having", "filtering", "aggregation"],
+      "answers": [
+        {"text": "Individual rows before grouping", "is_correct": false},
+        {"text": "Groups created by GROUP BY based on aggregate conditions", "is_correct": true},
+        {"text": "Columns to include in the result", "is_correct": false},
+        {"text": "Tables to join", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a full-text index used for?",
+      "difficulty": 3,
+      "tags": ["index", "full-text", "search"],
+      "answers": [
+        {"text": "Indexing every single character in the database", "is_correct": false},
+        {"text": "Efficiently searching for words or phrases within text columns", "is_correct": true},
+        {"text": "Creating complete backups of text data", "is_correct": false},
+        {"text": "Storing full copies of all text fields", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the ISNULL function used for?",
+      "difficulty": 3,
+      "tags": ["functions", "null", "checking"],
+      "answers": [
+        {"text": "Converts all values to NULL", "is_correct": false},
+        {"text": "Removes NULL values from results", "is_correct": false},
+        {"text": "Checks if a value is NULL and returns a boolean or replacement value", "is_correct": true},
+        {"text": "Counts the number of NULL values", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between DROP and DELETE?",
+      "difficulty": 3,
+      "tags": ["drop", "delete", "ddl-dml"],
+      "answers": [
+        {"text": "DROP is faster; DELETE is safer", "is_correct": false},
+        {"text": "DROP removes the entire table structure; DELETE removes rows but keeps the table", "is_correct": true},
+        {"text": "DROP can be rolled back; DELETE cannot", "is_correct": false},
+        {"text": "DROP removes columns; DELETE removes rows", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the difference between DDL and DML?",
+      "difficulty": 3,
+      "tags": ["ddl", "dml", "sql-types"],
+      "answers": [
+        {"text": "DDL is for developers; DML is for administrators", "is_correct": false},
+        {"text": "DDL defines database structure (CREATE, ALTER); DML manipulates data (INSERT, UPDATE)", "is_correct": true},
+        {"text": "DDL is newer syntax; DML is legacy", "is_correct": false},
+        {"text": "DDL works with tables; DML works with views", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is DCL in SQL?",
+      "difficulty": 3,
+      "tags": ["dcl", "security", "sql-types"],
+      "answers": [
+        {"text": "Data Collection Language - commands for gathering statistics", "is_correct": false},
+        {"text": "Data Control Language - commands like GRANT and REVOKE for permissions", "is_correct": true},
+        {"text": "Database Configuration Language - commands for settings", "is_correct": false},
+        {"text": "Data Cleaning Language - commands for removing invalid data", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the GRANT command do?",
+      "difficulty": 3,
+      "tags": ["grant", "security", "permissions"],
+      "answers": [
+        {"text": "Allocates more storage space to tables", "is_correct": false},
+        {"text": "Gives specific privileges to users or roles", "is_correct": true},
+        {"text": "Approves pending transactions", "is_correct": false},
+        {"text": "Allows queries to run faster", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the REVOKE command do?",
+      "difficulty": 3,
+      "tags": ["revoke", "security", "permissions"],
+      "answers": [
+        {"text": "Cancels running queries", "is_correct": false},
+        {"text": "Reverses the last transaction", "is_correct": false},
+        {"text": "Removes specific privileges from users or roles", "is_correct": true},
+        {"text": "Removes rows from a table", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a schema in SQL?",
+      "difficulty": 3,
+      "tags": ["schema", "organization", "database-objects"],
+      "answers": [
+        {"text": "A template for creating tables", "is_correct": false},
+        {"text": "A backup of the database structure", "is_correct": false},
+        {"text": "A logical container for database objects like tables, views, and procedures", "is_correct": true},
+        {"text": "A diagram showing table relationships", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the DATE_ADD or DATEADD function?",
+      "difficulty": 3,
+      "tags": ["functions", "date", "date-manipulation"],
+      "answers": [
+        {"text": "Adds two dates together", "is_correct": false},
+        {"text": "Adds a specified time interval to a date", "is_correct": true},
+        {"text": "Inserts a new date into a table", "is_correct": false},
+        {"text": "Combines date and time into one field", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the DATEDIFF function calculate?",
+      "difficulty": 3,
+      "tags": ["functions", "date", "date-calculation"],
+      "answers": [
+        {"text": "The number of working days in a month", "is_correct": false},
+        {"text": "The difference between two dates", "is_correct": true},
+        {"text": "Time zone differences", "is_correct": false},
+        {"text": "Whether two dates are different", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the NOW() or GETDATE() function?",
+      "difficulty": 3,
+      "tags": ["functions", "date", "current-date"],
+      "answers": [
+        {"text": "Marks when a transaction started", "is_correct": false},
+        {"text": "Returns the current date and time", "is_correct": true},
+        {"text": "Returns when the database was created", "is_correct": false},
+        {"text": "Shows the last modification time of a table", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the EXTRACT function do with dates?",
+      "difficulty": 3,
+      "tags": ["functions", "date", "extract"],
+      "answers": [
+        {"text": "Pulls date records from archived tables", "is_correct": false},
+        {"text": "Removes dates from a dataset", "is_correct": false},
+        {"text": "Retrieves a specific part of a date like year, month, or day", "is_correct": true},
+        {"text": "Exports date data to a file", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a deadlock in database transactions?",
+      "difficulty": 3,
+      "tags": ["transaction", "deadlock", "concurrency"],
+      "answers": [
+        {"text": "A transaction that has stopped responding", "is_correct": false},
+        {"text": "A situation where two transactions are waiting for each other to release locks", "is_correct": true},
+        {"text": "A lock that cannot be removed", "is_correct": false},
+        {"text": "A security mechanism that prevents unauthorized access", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is a lock in database concurrency?",
+      "difficulty": 3,
+      "tags": ["lock", "concurrency", "transaction"],
+      "answers": [
+        {"text": "A security feature that encrypts data", "is_correct": false},
+        {"text": "A constraint that prevents data modification", "is_correct": false},
+        {"text": "A mechanism to control concurrent access to data to prevent conflicts", "is_correct": true},
+        {"text": "A backup that protects data from deletion", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the purpose of the ABS function?",
+      "difficulty": 3,
+      "tags": ["functions", "numeric", "absolute"],
+      "answers": [
+        {"text": "Abbreviates long numbers", "is_correct": false},
+        {"text": "Returns the absolute (positive) value of a number", "is_correct": true},
+        {"text": "Abstracts complex calculations", "is_correct": false},
+        {"text": "Absorbs NULL values", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the POWER or POW function do?",
+      "difficulty": 3,
+      "tags": ["functions", "numeric", "power"],
+      "answers": [
+        {"text": "Calculates the total power consumption of a query", "is_correct": false},
+        {"text": "Raises a number to a specified power (exponent)", "is_correct": true},
+        {"text": "Enables powerful query features", "is_correct": false},
+        {"text": "Multiplies all numbers in a column", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is the SQRT function used for?",
+      "difficulty": 3,
+      "tags": ["functions", "numeric", "sqrt"],
+      "answers": [
+        {"text": "Squares a number", "is_correct": false},
+        {"text": "Sorts numbers in quadrants", "is_correct": false},
+        {"text": "Returns the square root of a number", "is_correct": true},
+        {"text": "Calculates the area of a square", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What is an execution plan?",
+      "difficulty": 3,
+      "tags": ["execution-plan", "optimization", "performance"],
+      "answers": [
+        {"text": "A schedule for running automated queries", "is_correct": false},
+        {"text": "A plan for implementing database changes", "is_correct": false},
+        {"text": "A detailed description of how the database will execute a query", "is_correct": true},
+        {"text": "Documentation of query requirements", "is_correct": false}
+      ]
     }
   ]
 }

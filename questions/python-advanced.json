@@ -1,0 +1,5217 @@
+{
+  "topic": "Python Basics",
+  "questions": [
+    {
+      "text": "Q001. What is the main purpose of a Python virtual environment?",
+      "difficulty": 3,
+      "tags": [
+        "environment",
+        "packaging",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "Replace pip entirely",
+          "is_correct": false
+        },
+        {
+          "text": "Increase CPU performance",
+          "is_correct": false
+        },
+        {
+          "text": "Isolate project dependencies",
+          "is_correct": true
+        },
+        {
+          "text": "Compile Python to machine code",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q002. Which statement about mutable and immutable types is correct?",
+      "difficulty": 3,
+      "tags": [
+        "data-types",
+        "mutability"
+      ],
+      "answers": [
+        {
+          "text": "Both are mutable",
+          "is_correct": false
+        },
+        {
+          "text": "Lists are mutable, tuples are immutable",
+          "is_correct": true
+        },
+        {
+          "text": "Both are immutable",
+          "is_correct": false
+        },
+        {
+          "text": "Tuples are mutable, lists are immutable",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q003. What does the is operator compare?",
+      "difficulty": 3,
+      "tags": [
+        "operators",
+        "references"
+      ],
+      "answers": [
+        {
+          "text": "Object identity",
+          "is_correct": true
+        },
+        {
+          "text": "Object hash only",
+          "is_correct": false
+        },
+        {
+          "text": "Object value equality",
+          "is_correct": false
+        },
+        {
+          "text": "Object type only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q004. Which operator should generally be used for value comparison?",
+      "difficulty": 3,
+      "tags": [
+        "operators",
+        "comparison"
+      ],
+      "answers": [
+        {
+          "text": "=",
+          "is_correct": false
+        },
+        {
+          "text": "==",
+          "is_correct": true
+        },
+        {
+          "text": "=>",
+          "is_correct": false
+        },
+        {
+          "text": "is",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q005. Why is using a mutable default argument usually problematic?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "defaults",
+        "pitfalls"
+      ],
+      "answers": [
+        {
+          "text": "Mutable defaults are syntax errors",
+          "is_correct": false
+        },
+        {
+          "text": "They only fail in Python 2",
+          "is_correct": false
+        },
+        {
+          "text": "Defaults are recomputed on each call",
+          "is_correct": false
+        },
+        {
+          "text": "The same object is reused across calls",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q006. What is the common safe pattern for optional list parameters?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "defaults",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "Use tuple() for all cases",
+          "is_correct": false
+        },
+        {
+          "text": "Use None and create a new list inside",
+          "is_correct": true
+        },
+        {
+          "text": "Use global list variable",
+          "is_correct": false
+        },
+        {
+          "text": "Use [] directly in signature",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q007. What does *args capture in a function definition?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "arguments"
+      ],
+      "answers": [
+        {
+          "text": "Extra keyword arguments as a dict",
+          "is_correct": false
+        },
+        {
+          "text": "Extra positional arguments as a tuple",
+          "is_correct": true
+        },
+        {
+          "text": "Only one argument",
+          "is_correct": false
+        },
+        {
+          "text": "All arguments as a list",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q008. What does **kwargs capture in a function definition?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "arguments"
+      ],
+      "answers": [
+        {
+          "text": "Extra keyword arguments as a dict",
+          "is_correct": true
+        },
+        {
+          "text": "Only required arguments",
+          "is_correct": false
+        },
+        {
+          "text": "Only default arguments",
+          "is_correct": false
+        },
+        {
+          "text": "Extra positional arguments as a tuple",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q009. What is a closure in Python?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "scope",
+        "closures"
+      ],
+      "answers": [
+        {
+          "text": "A function that retains access to enclosing scope variables",
+          "is_correct": true
+        },
+        {
+          "text": "A class with private methods",
+          "is_correct": false
+        },
+        {
+          "text": "A function that has no parameters",
+          "is_correct": false
+        },
+        {
+          "text": "A loop that always terminates",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q010. Which keyword allows assignment to an enclosing non-global variable?",
+      "difficulty": 3,
+      "tags": [
+        "scope",
+        "keywords"
+      ],
+      "answers": [
+        {
+          "text": "local",
+          "is_correct": false
+        },
+        {
+          "text": "global",
+          "is_correct": false
+        },
+        {
+          "text": "nonlocal",
+          "is_correct": true
+        },
+        {
+          "text": "outer",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q011. Which keyword assigns to a module-level variable inside a function?",
+      "difficulty": 3,
+      "tags": [
+        "scope",
+        "keywords"
+      ],
+      "answers": [
+        {
+          "text": "nonlocal",
+          "is_correct": false
+        },
+        {
+          "text": "module",
+          "is_correct": false
+        },
+        {
+          "text": "global",
+          "is_correct": true
+        },
+        {
+          "text": "outer",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q012. What is LEGB in Python name resolution?",
+      "difficulty": 3,
+      "tags": [
+        "scope",
+        "names"
+      ],
+      "answers": [
+        {
+          "text": "Local, External, Global, Binary",
+          "is_correct": false
+        },
+        {
+          "text": "Lexical, Execution, Global, Base",
+          "is_correct": false
+        },
+        {
+          "text": "Local, Enclosing, Global, Built-in",
+          "is_correct": true
+        },
+        {
+          "text": "Linear, Embedded, Generic, Built-in",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q013. What is a Python decorator?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "decorators"
+      ],
+      "answers": [
+        {
+          "text": "A callable that takes and returns a callable",
+          "is_correct": true
+        },
+        {
+          "text": "A special import statement",
+          "is_correct": false
+        },
+        {
+          "text": "A keyword to optimize loops",
+          "is_correct": false
+        },
+        {
+          "text": "A class inheritance shortcut",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q014. Why use functools.wraps in a decorator?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "decorators",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "Preserve metadata like __name__ and __doc__",
+          "is_correct": true
+        },
+        {
+          "text": "Make decorator async",
+          "is_correct": false
+        },
+        {
+          "text": "Disable recursion",
+          "is_correct": false
+        },
+        {
+          "text": "Force function inlining",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q015. What does a generator function return when called?",
+      "difficulty": 3,
+      "tags": [
+        "generators",
+        "iterators"
+      ],
+      "answers": [
+        {
+          "text": "A list of all values",
+          "is_correct": false
+        },
+        {
+          "text": "None",
+          "is_correct": false
+        },
+        {
+          "text": "A generator iterator",
+          "is_correct": true
+        },
+        {
+          "text": "A tuple of yielded values",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q016. Which keyword is used inside a generator to produce values lazily?",
+      "difficulty": 3,
+      "tags": [
+        "generators",
+        "keywords"
+      ],
+      "answers": [
+        {
+          "text": "emit",
+          "is_correct": false
+        },
+        {
+          "text": "produce",
+          "is_correct": false
+        },
+        {
+          "text": "yield",
+          "is_correct": true
+        },
+        {
+          "text": "return",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q017. What happens when a generator function executes return value?",
+      "difficulty": 3,
+      "tags": [
+        "generators",
+        "exceptions"
+      ],
+      "answers": [
+        {
+          "text": "It causes SyntaxError",
+          "is_correct": false
+        },
+        {
+          "text": "It raises StopIteration with optional value",
+          "is_correct": true
+        },
+        {
+          "text": "It yields value and continues",
+          "is_correct": false
+        },
+        {
+          "text": "It restarts the generator",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q018. What is the benefit of generators compared to lists?",
+      "difficulty": 3,
+      "tags": [
+        "generators",
+        "performance"
+      ],
+      "answers": [
+        {
+          "text": "Always faster execution",
+          "is_correct": false
+        },
+        {
+          "text": "Lower memory usage via lazy evaluation",
+          "is_correct": true
+        },
+        {
+          "text": "Require less syntax",
+          "is_correct": false
+        },
+        {
+          "text": "Support random index access",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q019. Which built-in creates an iterator from an iterable?",
+      "difficulty": 3,
+      "tags": [
+        "iterators",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "list()",
+          "is_correct": false
+        },
+        {
+          "text": "yield()",
+          "is_correct": false
+        },
+        {
+          "text": "next()",
+          "is_correct": false
+        },
+        {
+          "text": "iter()",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q020. Which built-in advances an iterator by one element?",
+      "difficulty": 3,
+      "tags": [
+        "iterators",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "advance()",
+          "is_correct": false
+        },
+        {
+          "text": "next()",
+          "is_correct": true
+        },
+        {
+          "text": "step()",
+          "is_correct": false
+        },
+        {
+          "text": "iter()",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q021. Which exception signals that an iterator is exhausted?",
+      "difficulty": 3,
+      "tags": [
+        "iterators",
+        "exceptions"
+      ],
+      "answers": [
+        {
+          "text": "EOFError",
+          "is_correct": false
+        },
+        {
+          "text": "IteratorError",
+          "is_correct": false
+        },
+        {
+          "text": "IndexError",
+          "is_correct": false
+        },
+        {
+          "text": "StopIteration",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q022. What does enumerate(iterable) provide?",
+      "difficulty": 3,
+      "tags": [
+        "loops",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "Unique items only",
+          "is_correct": false
+        },
+        {
+          "text": "Pairs of (index, item)",
+          "is_correct": true
+        },
+        {
+          "text": "Sorted items only",
+          "is_correct": false
+        },
+        {
+          "text": "Reverse iterator only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q023. What does zip(a, b) produce?",
+      "difficulty": 3,
+      "tags": [
+        "iterators",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "Iterator of tuples pairing elements",
+          "is_correct": true
+        },
+        {
+          "text": "Cartesian product",
+          "is_correct": false
+        },
+        {
+          "text": "Merged dictionary",
+          "is_correct": false
+        },
+        {
+          "text": "Concatenated list",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q024. Which statement about list comprehensions is true?",
+      "difficulty": 3,
+      "tags": [
+        "comprehensions",
+        "lists"
+      ],
+      "answers": [
+        {
+          "text": "They are slower than equivalent loops in all cases",
+          "is_correct": false
+        },
+        {
+          "text": "They can include filtering with if",
+          "is_correct": true
+        },
+        {
+          "text": "They cannot call functions",
+          "is_correct": false
+        },
+        {
+          "text": "They always return generators",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q025. What does {x for x in items} create?",
+      "difficulty": 3,
+      "tags": [
+        "comprehensions",
+        "sets"
+      ],
+      "answers": [
+        {
+          "text": "A list comprehension result",
+          "is_correct": false
+        },
+        {
+          "text": "A set comprehension result",
+          "is_correct": true
+        },
+        {
+          "text": "A dict comprehension result",
+          "is_correct": false
+        },
+        {
+          "text": "A generator expression",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q026. What does {k: v for k, v in pairs} create?",
+      "difficulty": 3,
+      "tags": [
+        "comprehensions",
+        "dict"
+      ],
+      "answers": [
+        {
+          "text": "A list of tuples",
+          "is_correct": false
+        },
+        {
+          "text": "A set",
+          "is_correct": false
+        },
+        {
+          "text": "A namedtuple",
+          "is_correct": false
+        },
+        {
+          "text": "A dictionary",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q027. What does (x for x in items) create?",
+      "difficulty": 3,
+      "tags": [
+        "generators",
+        "comprehensions"
+      ],
+      "answers": [
+        {
+          "text": "A tuple",
+          "is_correct": false
+        },
+        {
+          "text": "A list",
+          "is_correct": false
+        },
+        {
+          "text": "A set",
+          "is_correct": false
+        },
+        {
+          "text": "A generator expression",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q028. What is true about dictionary key requirements?",
+      "difficulty": 3,
+      "tags": [
+        "dict",
+        "hashing"
+      ],
+      "answers": [
+        {
+          "text": "Keys must be mutable",
+          "is_correct": false
+        },
+        {
+          "text": "Keys must be hashable",
+          "is_correct": true
+        },
+        {
+          "text": "Keys can be lists",
+          "is_correct": false
+        },
+        {
+          "text": "Keys must always be strings",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q029. Why are lists not valid dictionary keys?",
+      "difficulty": 3,
+      "tags": [
+        "dict",
+        "hashing",
+        "mutability"
+      ],
+      "answers": [
+        {
+          "text": "Lists are too large",
+          "is_correct": false
+        },
+        {
+          "text": "Lists are mutable and unhashable",
+          "is_correct": true
+        },
+        {
+          "text": "Lists contain only numbers",
+          "is_correct": false
+        },
+        {
+          "text": "Lists are deprecated as keys",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q030. Which method returns a default if key is missing without raising KeyError?",
+      "difficulty": 3,
+      "tags": [
+        "dict",
+        "methods"
+      ],
+      "answers": [
+        {
+          "text": "dict.get(key, default)",
+          "is_correct": true
+        },
+        {
+          "text": "dict.read(key)",
+          "is_correct": false
+        },
+        {
+          "text": "dict.fetch(key)",
+          "is_correct": false
+        },
+        {
+          "text": "dict[key]",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q031. What does setdefault do in dictionaries?",
+      "difficulty": 3,
+      "tags": [
+        "dict",
+        "methods"
+      ],
+      "answers": [
+        {
+          "text": "Returns value for key, inserting default if absent",
+          "is_correct": true
+        },
+        {
+          "text": "Sorts dictionary by key",
+          "is_correct": false
+        },
+        {
+          "text": "Sets all values to default",
+          "is_correct": false
+        },
+        {
+          "text": "Removes key if missing",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q032. What does collections.defaultdict provide?",
+      "difficulty": 3,
+      "tags": [
+        "dict",
+        "collections"
+      ],
+      "answers": [
+        {
+          "text": "Read-only dictionary",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic default value creation for missing keys",
+          "is_correct": true
+        },
+        {
+          "text": "Sorted dictionary",
+          "is_correct": false
+        },
+        {
+          "text": "Weak-reference dictionary",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q033. Which data type guarantees uniqueness of elements?",
+      "difficulty": 3,
+      "tags": [
+        "sets",
+        "data-types"
+      ],
+      "answers": [
+        {
+          "text": "dict values",
+          "is_correct": false
+        },
+        {
+          "text": "set",
+          "is_correct": true
+        },
+        {
+          "text": "tuple",
+          "is_correct": false
+        },
+        {
+          "text": "list",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q034. Which operation computes elements in both sets?",
+      "difficulty": 3,
+      "tags": [
+        "sets",
+        "operations"
+      ],
+      "answers": [
+        {
+          "text": "union-only",
+          "is_correct": false
+        },
+        {
+          "text": "difference",
+          "is_correct": false
+        },
+        {
+          "text": "symmetric_difference",
+          "is_correct": false
+        },
+        {
+          "text": "intersection",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q035. Which operation returns elements in either set but not both?",
+      "difficulty": 3,
+      "tags": [
+        "sets",
+        "operations"
+      ],
+      "answers": [
+        {
+          "text": "symmetric_difference",
+          "is_correct": true
+        },
+        {
+          "text": "intersection",
+          "is_correct": false
+        },
+        {
+          "text": "issubset",
+          "is_correct": false
+        },
+        {
+          "text": "isdisjoint",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q036. What is a frozenset?",
+      "difficulty": 3,
+      "tags": [
+        "sets",
+        "immutability"
+      ],
+      "answers": [
+        {
+          "text": "A sorted set",
+          "is_correct": false
+        },
+        {
+          "text": "A set with only numbers",
+          "is_correct": false
+        },
+        {
+          "text": "A thread-safe set",
+          "is_correct": false
+        },
+        {
+          "text": "An immutable set",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q037. Which sequence type is immutable and ordered?",
+      "difficulty": 3,
+      "tags": [
+        "tuples",
+        "data-types"
+      ],
+      "answers": [
+        {
+          "text": "dict",
+          "is_correct": false
+        },
+        {
+          "text": "tuple",
+          "is_correct": true
+        },
+        {
+          "text": "list",
+          "is_correct": false
+        },
+        {
+          "text": "set",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q038. Why might a tuple be preferred over a list for fixed records?",
+      "difficulty": 3,
+      "tags": [
+        "tuples",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "It allows duplicate keys",
+          "is_correct": false
+        },
+        {
+          "text": "It supports append faster",
+          "is_correct": false
+        },
+        {
+          "text": "It is always sorted",
+          "is_correct": false
+        },
+        {
+          "text": "It signals immutability and can be hashable",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q039. What does tuple unpacking do?",
+      "difficulty": 3,
+      "tags": [
+        "tuples",
+        "assignment"
+      ],
+      "answers": [
+        {
+          "text": "Sorts tuple values",
+          "is_correct": false
+        },
+        {
+          "text": "Creates nested tuples",
+          "is_correct": false
+        },
+        {
+          "text": "Assigns multiple values from an iterable to variables",
+          "is_correct": true
+        },
+        {
+          "text": "Converts tuple to dict",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q040. What does a, *rest = [1,2,3,4] assign to rest?",
+      "difficulty": 3,
+      "tags": [
+        "assignment",
+        "unpacking"
+      ],
+      "answers": [
+        {
+          "text": "2",
+          "is_correct": false
+        },
+        {
+          "text": "[1, 2, 3, 4]",
+          "is_correct": false
+        },
+        {
+          "text": "(2, 3, 4)",
+          "is_correct": false
+        },
+        {
+          "text": "[2, 3, 4]",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q041. What does slicing sequence[::-1] commonly do?",
+      "difficulty": 3,
+      "tags": [
+        "slicing",
+        "sequences"
+      ],
+      "answers": [
+        {
+          "text": "Sorts ascending",
+          "is_correct": false
+        },
+        {
+          "text": "Returns a reversed copy",
+          "is_correct": true
+        },
+        {
+          "text": "Returns every second item forward",
+          "is_correct": false
+        },
+        {
+          "text": "Removes duplicates",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q042. What does list.copy() perform?",
+      "difficulty": 3,
+      "tags": [
+        "lists",
+        "copying"
+      ],
+      "answers": [
+        {
+          "text": "A shallow copy",
+          "is_correct": true
+        },
+        {
+          "text": "A tuple conversion",
+          "is_correct": false
+        },
+        {
+          "text": "A deep copy",
+          "is_correct": false
+        },
+        {
+          "text": "No copy, same object",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q043. Which module function is commonly used for deep copying nested objects?",
+      "difficulty": 3,
+      "tags": [
+        "copying",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "deep.copy",
+          "is_correct": false
+        },
+        {
+          "text": "copy.deepcopy",
+          "is_correct": true
+        },
+        {
+          "text": "copy.copyonly",
+          "is_correct": false
+        },
+        {
+          "text": "pickle.clone",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q044. What is aliasing in Python variables?",
+      "difficulty": 3,
+      "tags": [
+        "references",
+        "mutability"
+      ],
+      "answers": [
+        {
+          "text": "Multiple names refer to same object",
+          "is_correct": true
+        },
+        {
+          "text": "Variables stored twice in memory",
+          "is_correct": false
+        },
+        {
+          "text": "Importing with as keyword",
+          "is_correct": false
+        },
+        {
+          "text": "Two variables have equal values only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q045. Which statement about list.sort() is correct?",
+      "difficulty": 3,
+      "tags": [
+        "lists",
+        "sorting"
+      ],
+      "answers": [
+        {
+          "text": "It sorts the list in place and returns None",
+          "is_correct": true
+        },
+        {
+          "text": "It returns a new sorted list",
+          "is_correct": false
+        },
+        {
+          "text": "It is unstable",
+          "is_correct": false
+        },
+        {
+          "text": "It only sorts numbers",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q046. Which function returns a new sorted iterable as a list?",
+      "difficulty": 3,
+      "tags": [
+        "sorting",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "sorted()",
+          "is_correct": true
+        },
+        {
+          "text": "arrange()",
+          "is_correct": false
+        },
+        {
+          "text": "list.sort()",
+          "is_correct": false
+        },
+        {
+          "text": "order()",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q047. What does the key parameter in sorted() control?",
+      "difficulty": 3,
+      "tags": [
+        "sorting",
+        "functions"
+      ],
+      "answers": [
+        {
+          "text": "Final return type",
+          "is_correct": false
+        },
+        {
+          "text": "Whether duplicates are removed",
+          "is_correct": false
+        },
+        {
+          "text": "Sort algorithm selection",
+          "is_correct": false
+        },
+        {
+          "text": "Transformation used for comparison",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q048. Which call sorts strings case-insensitively?",
+      "difficulty": 3,
+      "tags": [
+        "sorting",
+        "strings"
+      ],
+      "answers": [
+        {
+          "text": "sorted(words, key=len.lower)",
+          "is_correct": false
+        },
+        {
+          "text": "sorted(words, key=str.lower)",
+          "is_correct": true
+        },
+        {
+          "text": "sort(words, lower=True)",
+          "is_correct": false
+        },
+        {
+          "text": "words.sort(case=False)",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q049. What does lambda x: x * 2 define?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "lambda"
+      ],
+      "answers": [
+        {
+          "text": "A generator",
+          "is_correct": false
+        },
+        {
+          "text": "A context manager",
+          "is_correct": false
+        },
+        {
+          "text": "A class",
+          "is_correct": false
+        },
+        {
+          "text": "An anonymous function",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q050. Which statement about lambda in Python is correct?",
+      "difficulty": 3,
+      "tags": [
+        "functions",
+        "lambda"
+      ],
+      "answers": [
+        {
+          "text": "Lambda cannot take arguments",
+          "is_correct": false
+        },
+        {
+          "text": "Lambda body is a single expression",
+          "is_correct": true
+        },
+        {
+          "text": "Lambda creates named functions only",
+          "is_correct": false
+        },
+        {
+          "text": "Lambda supports statements like for and try directly",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q051. What does map(func, iterable) return in Python 3?",
+      "difficulty": 3,
+      "tags": [
+        "functional",
+        "iterators"
+      ],
+      "answers": [
+        {
+          "text": "A tuple",
+          "is_correct": false
+        },
+        {
+          "text": "A lazy iterator",
+          "is_correct": true
+        },
+        {
+          "text": "A set",
+          "is_correct": false
+        },
+        {
+          "text": "A list",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q052. What does filter(func, iterable) return in Python 3?",
+      "difficulty": 3,
+      "tags": [
+        "functional",
+        "iterators"
+      ],
+      "answers": [
+        {
+          "text": "A boolean",
+          "is_correct": false
+        },
+        {
+          "text": "A list",
+          "is_correct": false
+        },
+        {
+          "text": "A dict",
+          "is_correct": false
+        },
+        {
+          "text": "A lazy iterator of matching elements",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q053. Which module provides reduce in Python 3?",
+      "difficulty": 3,
+      "tags": [
+        "functional",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "collections",
+          "is_correct": false
+        },
+        {
+          "text": "functools",
+          "is_correct": true
+        },
+        {
+          "text": "operator",
+          "is_correct": false
+        },
+        {
+          "text": "itertools",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q054. What is the result type of range(10)?",
+      "difficulty": 3,
+      "tags": [
+        "builtins",
+        "range"
+      ],
+      "answers": [
+        {
+          "text": "A range object (immutable sequence)",
+          "is_correct": true
+        },
+        {
+          "text": "A list",
+          "is_correct": false
+        },
+        {
+          "text": "A tuple",
+          "is_correct": false
+        },
+        {
+          "text": "A generator",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q055. What is true about membership testing in sets vs lists?",
+      "difficulty": 3,
+      "tags": [
+        "performance",
+        "sets",
+        "lists"
+      ],
+      "answers": [
+        {
+          "text": "Set membership is typically faster on average",
+          "is_correct": true
+        },
+        {
+          "text": "List membership is always O(1)",
+          "is_correct": false
+        },
+        {
+          "text": "Set membership requires sorting first",
+          "is_correct": false
+        },
+        {
+          "text": "Both are always same complexity",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q056. What does any(iterable) return?",
+      "difficulty": 3,
+      "tags": [
+        "builtins",
+        "boolean"
+      ],
+      "answers": [
+        {
+          "text": "True if at least one element is truthy",
+          "is_correct": true
+        },
+        {
+          "text": "First truthy element",
+          "is_correct": false
+        },
+        {
+          "text": "Count of truthy elements",
+          "is_correct": false
+        },
+        {
+          "text": "True only if all elements are truthy",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q057. What does all(iterable) return?",
+      "difficulty": 3,
+      "tags": [
+        "builtins",
+        "boolean"
+      ],
+      "answers": [
+        {
+          "text": "Only for numeric iterables",
+          "is_correct": false
+        },
+        {
+          "text": "True if all elements are truthy",
+          "is_correct": true
+        },
+        {
+          "text": "A list of booleans",
+          "is_correct": false
+        },
+        {
+          "text": "True if any element is truthy",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q058. Which statement about truthiness is correct?",
+      "difficulty": 3,
+      "tags": [
+        "boolean",
+        "data-types"
+      ],
+      "answers": [
+        {
+          "text": "Zero is truthy",
+          "is_correct": false
+        },
+        {
+          "text": "None is truthy",
+          "is_correct": false
+        },
+        {
+          "text": "All strings are truthy",
+          "is_correct": false
+        },
+        {
+          "text": "Empty containers are falsy",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q059. What does x or y return in Python?",
+      "difficulty": 3,
+      "tags": [
+        "boolean",
+        "operators"
+      ],
+      "answers": [
+        {
+          "text": "Always a bool",
+          "is_correct": false
+        },
+        {
+          "text": "Always x",
+          "is_correct": false
+        },
+        {
+          "text": "Always y",
+          "is_correct": false
+        },
+        {
+          "text": "First truthy operand, otherwise last operand",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q060. What does x and y return in Python?",
+      "difficulty": 3,
+      "tags": [
+        "boolean",
+        "operators"
+      ],
+      "answers": [
+        {
+          "text": "Always x",
+          "is_correct": false
+        },
+        {
+          "text": "Always y",
+          "is_correct": false
+        },
+        {
+          "text": "Always a bool",
+          "is_correct": false
+        },
+        {
+          "text": "First falsy operand, otherwise last operand",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q061. Which exception is raised for an invalid list index access?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "lists"
+      ],
+      "answers": [
+        {
+          "text": "ValueError",
+          "is_correct": false
+        },
+        {
+          "text": "IndexError",
+          "is_correct": true
+        },
+        {
+          "text": "KeyError",
+          "is_correct": false
+        },
+        {
+          "text": "TypeError",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q062. Which exception is raised for missing dict key via d[key]?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "dict"
+      ],
+      "answers": [
+        {
+          "text": "NameError",
+          "is_correct": false
+        },
+        {
+          "text": "LookupError",
+          "is_correct": false
+        },
+        {
+          "text": "IndexError",
+          "is_correct": false
+        },
+        {
+          "text": "KeyError",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q063. Which exception is raised when converting 'abc' to int?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "conversion"
+      ],
+      "answers": [
+        {
+          "text": "NameError",
+          "is_correct": false
+        },
+        {
+          "text": "RuntimeError",
+          "is_correct": false
+        },
+        {
+          "text": "ValueError",
+          "is_correct": true
+        },
+        {
+          "text": "TypeError",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q064. Which exception is raised when adding int and str directly?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "types"
+      ],
+      "answers": [
+        {
+          "text": "ValueError",
+          "is_correct": false
+        },
+        {
+          "text": "SyntaxError",
+          "is_correct": false
+        },
+        {
+          "text": "AssertionError",
+          "is_correct": false
+        },
+        {
+          "text": "TypeError",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q065. Which exception is raised for undefined variable access?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "scope"
+      ],
+      "answers": [
+        {
+          "text": "AttributeError",
+          "is_correct": false
+        },
+        {
+          "text": "ReferenceError",
+          "is_correct": false
+        },
+        {
+          "text": "KeyError",
+          "is_correct": false
+        },
+        {
+          "text": "NameError",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q066. Which exception is raised for missing object attribute access?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "oop"
+      ],
+      "answers": [
+        {
+          "text": "ImportError",
+          "is_correct": false
+        },
+        {
+          "text": "TypeError",
+          "is_correct": false
+        },
+        {
+          "text": "AttributeError",
+          "is_correct": true
+        },
+        {
+          "text": "NameError",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q067. What is best practice for exception handling?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "Catch specific exceptions, not broad except",
+          "is_correct": true
+        },
+        {
+          "text": "Never log exceptions",
+          "is_correct": false
+        },
+        {
+          "text": "Always use bare except",
+          "is_correct": false
+        },
+        {
+          "text": "Convert all exceptions to pass",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q068. What does finally block guarantee?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "control-flow"
+      ],
+      "answers": [
+        {
+          "text": "It runs only when no exception occurs",
+          "is_correct": false
+        },
+        {
+          "text": "It is optional and never executes",
+          "is_correct": false
+        },
+        {
+          "text": "It runs whether or not an exception occurs",
+          "is_correct": true
+        },
+        {
+          "text": "It runs only if exception occurs",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q069. How do you raise an exception manually?",
+      "difficulty": 3,
+      "tags": [
+        "exceptions",
+        "keywords"
+      ],
+      "answers": [
+        {
+          "text": "throw ValueError('message')",
+          "is_correct": false
+        },
+        {
+          "text": "error ValueError('message')",
+          "is_correct": false
+        },
+        {
+          "text": "except ValueError('message')",
+          "is_correct": false
+        },
+        {
+          "text": "raise ValueError('message')",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q070. What does assert condition, msg do when condition is False?",
+      "difficulty": 3,
+      "tags": [
+        "assertions",
+        "exceptions"
+      ],
+      "answers": [
+        {
+          "text": "Raises ValueError",
+          "is_correct": false
+        },
+        {
+          "text": "Silently continues",
+          "is_correct": false
+        },
+        {
+          "text": "Returns False",
+          "is_correct": false
+        },
+        {
+          "text": "Raises AssertionError",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q071. Which statement about with statement is correct?",
+      "difficulty": 3,
+      "tags": [
+        "context-manager",
+        "files"
+      ],
+      "answers": [
+        {
+          "text": "It automatically retries failures",
+          "is_correct": false
+        },
+        {
+          "text": "It only works with files",
+          "is_correct": false
+        },
+        {
+          "text": "It ensures resource cleanup via context manager protocol",
+          "is_correct": true
+        },
+        {
+          "text": "It suppresses all exceptions by default",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q072. Which methods define the context manager protocol?",
+      "difficulty": 3,
+      "tags": [
+        "context-manager",
+        "oop"
+      ],
+      "answers": [
+        {
+          "text": "__init__ and __del__",
+          "is_correct": false
+        },
+        {
+          "text": "start and stop",
+          "is_correct": false
+        },
+        {
+          "text": "__open__ and __close__",
+          "is_correct": false
+        },
+        {
+          "text": "__enter__ and __exit__",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q073. Which mode opens a file for reading text?",
+      "difficulty": 3,
+      "tags": [
+        "files",
+        "io"
+      ],
+      "answers": [
+        {
+          "text": "'x'",
+          "is_correct": false
+        },
+        {
+          "text": "'a'",
+          "is_correct": false
+        },
+        {
+          "text": "'r'",
+          "is_correct": true
+        },
+        {
+          "text": "'w'",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q074. Which mode opens a file for appending text?",
+      "difficulty": 3,
+      "tags": [
+        "files",
+        "io"
+      ],
+      "answers": [
+        {
+          "text": "'r+'",
+          "is_correct": false
+        },
+        {
+          "text": "'x'",
+          "is_correct": false
+        },
+        {
+          "text": "'a'",
+          "is_correct": true
+        },
+        {
+          "text": "'w'",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q075. Which mode creates file and fails if it already exists?",
+      "difficulty": 3,
+      "tags": [
+        "files",
+        "io"
+      ],
+      "answers": [
+        {
+          "text": "'r'",
+          "is_correct": false
+        },
+        {
+          "text": "'a'",
+          "is_correct": false
+        },
+        {
+          "text": "'x'",
+          "is_correct": true
+        },
+        {
+          "text": "'w'",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q076. Which mode opens file in binary read mode?",
+      "difficulty": 3,
+      "tags": [
+        "files",
+        "io",
+        "binary"
+      ],
+      "answers": [
+        {
+          "text": "'wb+'",
+          "is_correct": false
+        },
+        {
+          "text": "'br'",
+          "is_correct": false
+        },
+        {
+          "text": "'r'",
+          "is_correct": false
+        },
+        {
+          "text": "'rb'",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q077. What does pathlib.Path provide over plain string paths?",
+      "difficulty": 3,
+      "tags": [
+        "pathlib",
+        "files"
+      ],
+      "answers": [
+        {
+          "text": "Network-only path handling",
+          "is_correct": false
+        },
+        {
+          "text": "In-memory filesystem",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic file encryption",
+          "is_correct": false
+        },
+        {
+          "text": "Object-oriented, cross-platform path operations",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q078. Which pathlib method checks whether a path exists?",
+      "difficulty": 3,
+      "tags": [
+        "pathlib",
+        "files"
+      ],
+      "answers": [
+        {
+          "text": "Path.exists()",
+          "is_correct": true
+        },
+        {
+          "text": "Path.check()",
+          "is_correct": false
+        },
+        {
+          "text": "Path.ispresent()",
+          "is_correct": false
+        },
+        {
+          "text": "Path.found()",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q079. Which module is commonly used for JSON serialization/deserialization?",
+      "difficulty": 3,
+      "tags": [
+        "json",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "yaml",
+          "is_correct": false
+        },
+        {
+          "text": "marshal",
+          "is_correct": false
+        },
+        {
+          "text": "pickle",
+          "is_correct": false
+        },
+        {
+          "text": "json",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q080. Which function parses JSON string to Python object?",
+      "difficulty": 3,
+      "tags": [
+        "json",
+        "parsing"
+      ],
+      "answers": [
+        {
+          "text": "json.dump",
+          "is_correct": false
+        },
+        {
+          "text": "json.dumps",
+          "is_correct": false
+        },
+        {
+          "text": "json.loads",
+          "is_correct": true
+        },
+        {
+          "text": "json.load",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q081. Which function writes Python object as JSON to file-like object?",
+      "difficulty": 3,
+      "tags": [
+        "json",
+        "files"
+      ],
+      "answers": [
+        {
+          "text": "json.load",
+          "is_correct": false
+        },
+        {
+          "text": "json.loads",
+          "is_correct": false
+        },
+        {
+          "text": "json.dumps",
+          "is_correct": false
+        },
+        {
+          "text": "json.dump",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q082. Which function converts Python object to JSON string?",
+      "difficulty": 3,
+      "tags": [
+        "json",
+        "serialization"
+      ],
+      "answers": [
+        {
+          "text": "json.loads",
+          "is_correct": false
+        },
+        {
+          "text": "json.dumps",
+          "is_correct": true
+        },
+        {
+          "text": "json.reads",
+          "is_correct": false
+        },
+        {
+          "text": "json.dump",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q083. What is a dataclass in Python?",
+      "difficulty": 3,
+      "tags": [
+        "dataclasses",
+        "oop"
+      ],
+      "answers": [
+        {
+          "text": "A built-in database table",
+          "is_correct": false
+        },
+        {
+          "text": "A JSON schema object",
+          "is_correct": false
+        },
+        {
+          "text": "A class helper that auto-generates boilerplate methods",
+          "is_correct": true
+        },
+        {
+          "text": "A subclass of tuple only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q084. Which decorator marks a class as a dataclass?",
+      "difficulty": 3,
+      "tags": [
+        "dataclasses",
+        "decorators"
+      ],
+      "answers": [
+        {
+          "text": "@classdata",
+          "is_correct": false
+        },
+        {
+          "text": "@autoinit",
+          "is_correct": false
+        },
+        {
+          "text": "@dataclass",
+          "is_correct": true
+        },
+        {
+          "text": "@data",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q085. What does frozen=True in dataclass imply?",
+      "difficulty": 3,
+      "tags": [
+        "dataclasses",
+        "immutability"
+      ],
+      "answers": [
+        {
+          "text": "Class cannot be instantiated",
+          "is_correct": false
+        },
+        {
+          "text": "All fields become optional",
+          "is_correct": false
+        },
+        {
+          "text": "Instances are intended to be immutable",
+          "is_correct": true
+        },
+        {
+          "text": "Instances are thread-safe by default",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q086. Which built-in can generate hash for hashable objects?",
+      "difficulty": 3,
+      "tags": [
+        "hashing",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "ord()",
+          "is_correct": false
+        },
+        {
+          "text": "hash()",
+          "is_correct": true
+        },
+        {
+          "text": "id()",
+          "is_correct": false
+        },
+        {
+          "text": "repr()",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q087. What does id(obj) return?",
+      "difficulty": 3,
+      "tags": [
+        "builtins",
+        "references"
+      ],
+      "answers": [
+        {
+          "text": "An identity integer for the object during its lifetime",
+          "is_correct": true
+        },
+        {
+          "text": "Object memory size",
+          "is_correct": false
+        },
+        {
+          "text": "Object hash value",
+          "is_correct": false
+        },
+        {
+          "text": "Object type id string",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q088. What does isinstance(obj, cls) check?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "types"
+      ],
+      "answers": [
+        {
+          "text": "Whether cls is callable",
+          "is_correct": false
+        },
+        {
+          "text": "Whether obj has same attributes",
+          "is_correct": false
+        },
+        {
+          "text": "Whether object is instance of class or subclass",
+          "is_correct": true
+        },
+        {
+          "text": "Whether class equals type(obj) exactly",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q089. What does issubclass(A, B) check?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "inheritance"
+      ],
+      "answers": [
+        {
+          "text": "Whether A inherits from B",
+          "is_correct": true
+        },
+        {
+          "text": "Whether B is instance of A",
+          "is_correct": false
+        },
+        {
+          "text": "Whether A has attributes of B",
+          "is_correct": false
+        },
+        {
+          "text": "Whether instances of A equal B",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q090. Which dunder method customizes readable representation in repr(obj)?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "dunder-methods"
+      ],
+      "answers": [
+        {
+          "text": "__display__",
+          "is_correct": false
+        },
+        {
+          "text": "__str__only",
+          "is_correct": false
+        },
+        {
+          "text": "__format_repr__",
+          "is_correct": false
+        },
+        {
+          "text": "__repr__",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q091. Which dunder method customizes str(obj)?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "dunder-methods"
+      ],
+      "answers": [
+        {
+          "text": "__repr__",
+          "is_correct": false
+        },
+        {
+          "text": "__text__",
+          "is_correct": false
+        },
+        {
+          "text": "__str__",
+          "is_correct": true
+        },
+        {
+          "text": "__stringify__",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q092. Which dunder method controls addition with + for custom classes?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "operator-overloading"
+      ],
+      "answers": [
+        {
+          "text": "__concat__",
+          "is_correct": false
+        },
+        {
+          "text": "__plus__",
+          "is_correct": false
+        },
+        {
+          "text": "__add__",
+          "is_correct": true
+        },
+        {
+          "text": "__sum__",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q093. Which dunder method defines iteration behavior for objects?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "iterators"
+      ],
+      "answers": [
+        {
+          "text": "__nextitem__",
+          "is_correct": false
+        },
+        {
+          "text": "__loop__",
+          "is_correct": false
+        },
+        {
+          "text": "__iter__",
+          "is_correct": true
+        },
+        {
+          "text": "__scan__",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q094. Which dunder method returns next item for iterator protocol?",
+      "difficulty": 3,
+      "tags": [
+        "iterators",
+        "dunder-methods"
+      ],
+      "answers": [
+        {
+          "text": "__advance__",
+          "is_correct": false
+        },
+        {
+          "text": "__next__",
+          "is_correct": true
+        },
+        {
+          "text": "__iter__",
+          "is_correct": false
+        },
+        {
+          "text": "next",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q095. What should __iter__ return for an iterator object itself?",
+      "difficulty": 3,
+      "tags": [
+        "iterators",
+        "protocol"
+      ],
+      "answers": [
+        {
+          "text": "a list",
+          "is_correct": false
+        },
+        {
+          "text": "self",
+          "is_correct": true
+        },
+        {
+          "text": "None",
+          "is_correct": false
+        },
+        {
+          "text": "next method",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q096. What is method resolution order (MRO)?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "inheritance"
+      ],
+      "answers": [
+        {
+          "text": "Order imports are loaded",
+          "is_correct": false
+        },
+        {
+          "text": "Order Python searches classes for attributes/methods",
+          "is_correct": true
+        },
+        {
+          "text": "Order methods are compiled",
+          "is_correct": false
+        },
+        {
+          "text": "Order decorators execute only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q097. Which function can inspect class MRO?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "introspection"
+      ],
+      "answers": [
+        {
+          "text": "inspect.lineage()",
+          "is_correct": false
+        },
+        {
+          "text": "mro(ClassName)",
+          "is_correct": false
+        },
+        {
+          "text": "ClassName.order()",
+          "is_correct": false
+        },
+        {
+          "text": "ClassName.mro()",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q098. What is a class method in Python?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "methods"
+      ],
+      "answers": [
+        {
+          "text": "Method receiving instance as first argument",
+          "is_correct": false
+        },
+        {
+          "text": "Method with no arguments",
+          "is_correct": false
+        },
+        {
+          "text": "Method only for abstract classes",
+          "is_correct": false
+        },
+        {
+          "text": "Method receiving class as first argument (cls)",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q099. Which decorator defines a class method?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "decorators"
+      ],
+      "answers": [
+        {
+          "text": "@staticmethod",
+          "is_correct": false
+        },
+        {
+          "text": "@class",
+          "is_correct": false
+        },
+        {
+          "text": "@method",
+          "is_correct": false
+        },
+        {
+          "text": "@classmethod",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q100. What is a static method in Python classes?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "methods"
+      ],
+      "answers": [
+        {
+          "text": "Method always faster than instance methods",
+          "is_correct": false
+        },
+        {
+          "text": "Method that modifies class state only",
+          "is_correct": false
+        },
+        {
+          "text": "Method with no implicit self or cls",
+          "is_correct": true
+        },
+        {
+          "text": "Method that cannot be called on class",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q101. Which decorator defines a static method?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "decorators"
+      ],
+      "answers": [
+        {
+          "text": "@frozen",
+          "is_correct": false
+        },
+        {
+          "text": "@classmethod",
+          "is_correct": false
+        },
+        {
+          "text": "@property",
+          "is_correct": false
+        },
+        {
+          "text": "@staticmethod",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q102. What does @property enable?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "properties"
+      ],
+      "answers": [
+        {
+          "text": "Class immutability",
+          "is_correct": false
+        },
+        {
+          "text": "Thread-safe fields",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic private variables",
+          "is_correct": false
+        },
+        {
+          "text": "Attribute-style access to computed values",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q103. Which decorator pairs with @property to define assignment behavior?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "properties"
+      ],
+      "answers": [
+        {
+          "text": "@assign",
+          "is_correct": false
+        },
+        {
+          "text": "@setproperty",
+          "is_correct": false
+        },
+        {
+          "text": "@property.setter_all",
+          "is_correct": false
+        },
+        {
+          "text": "@prop_name.setter",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q104. What is name mangling for attributes like __value?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "encapsulation"
+      ],
+      "answers": [
+        {
+          "text": "Interpreter rewrites name to reduce accidental override",
+          "is_correct": true
+        },
+        {
+          "text": "Makes attribute truly private",
+          "is_correct": false
+        },
+        {
+          "text": "Encrypts attribute values",
+          "is_correct": false
+        },
+        {
+          "text": "Removes attribute from __dict__",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q105. What does __slots__ primarily do?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "memory"
+      ],
+      "answers": [
+        {
+          "text": "Prevents inheritance",
+          "is_correct": false
+        },
+        {
+          "text": "Makes class immutable",
+          "is_correct": false
+        },
+        {
+          "text": "Auto-generates methods",
+          "is_correct": false
+        },
+        {
+          "text": "Restricts instance attributes and can reduce memory",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q106. Which module supports abstract base classes?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "abc",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "abc",
+          "is_correct": true
+        },
+        {
+          "text": "types",
+          "is_correct": false
+        },
+        {
+          "text": "interfaces",
+          "is_correct": false
+        },
+        {
+          "text": "abstract",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q107. Which decorator marks abstract methods in ABCs?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "abc",
+        "decorators"
+      ],
+      "answers": [
+        {
+          "text": "@abstractmethod",
+          "is_correct": true
+        },
+        {
+          "text": "@abstract",
+          "is_correct": false
+        },
+        {
+          "text": "@required",
+          "is_correct": false
+        },
+        {
+          "text": "@mustimplement",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q108. What happens if abstract methods are unimplemented in subclass?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "abc"
+      ],
+      "answers": [
+        {
+          "text": "Only warnings are produced",
+          "is_correct": false
+        },
+        {
+          "text": "Runtime replaces with pass",
+          "is_correct": false
+        },
+        {
+          "text": "Methods become no-ops automatically",
+          "is_correct": false
+        },
+        {
+          "text": "Subclass cannot be instantiated",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q109. What does super() typically do in methods?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "inheritance"
+      ],
+      "answers": [
+        {
+          "text": "Calls global function with same name",
+          "is_correct": false
+        },
+        {
+          "text": "Bypasses parent methods",
+          "is_correct": false
+        },
+        {
+          "text": "Creates superclass instance",
+          "is_correct": false
+        },
+        {
+          "text": "Delegates method call to next class in MRO",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q110. What is duck typing?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "typing"
+      ],
+      "answers": [
+        {
+          "text": "Automatic runtime type conversion",
+          "is_correct": false
+        },
+        {
+          "text": "Behavior-based compatibility rather than explicit type",
+          "is_correct": true
+        },
+        {
+          "text": "Using only primitive types",
+          "is_correct": false
+        },
+        {
+          "text": "Requiring strict class inheritance",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q111. What does typing.Optional[T] mean?",
+      "difficulty": 3,
+      "tags": [
+        "typing",
+        "type-hints"
+      ],
+      "answers": [
+        {
+          "text": "T must be list",
+          "is_correct": false
+        },
+        {
+          "text": "T or None",
+          "is_correct": true
+        },
+        {
+          "text": "T must be optional parameter",
+          "is_correct": false
+        },
+        {
+          "text": "T is mutable",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q112. What does typing.Union[int, str] express?",
+      "difficulty": 3,
+      "tags": [
+        "typing",
+        "type-hints"
+      ],
+      "answers": [
+        {
+          "text": "Value is list of int and str",
+          "is_correct": false
+        },
+        {
+          "text": "Value must be both int and str",
+          "is_correct": false
+        },
+        {
+          "text": "Value may be int or str",
+          "is_correct": true
+        },
+        {
+          "text": "Value is always str",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q113. What does list[int] in Python 3.9+ type hints denote?",
+      "difficulty": 3,
+      "tags": [
+        "typing",
+        "type-hints"
+      ],
+      "answers": [
+        {
+          "text": "A fixed-size list of one int",
+          "is_correct": false
+        },
+        {
+          "text": "A runtime-enforced int-only list",
+          "is_correct": false
+        },
+        {
+          "text": "A tuple of ints",
+          "is_correct": false
+        },
+        {
+          "text": "A list whose items are ints",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q114. Are Python type hints enforced at runtime by default?",
+      "difficulty": 3,
+      "tags": [
+        "typing",
+        "runtime"
+      ],
+      "answers": [
+        {
+          "text": "Yes, always",
+          "is_correct": false
+        },
+        {
+          "text": "Only in async functions",
+          "is_correct": false
+        },
+        {
+          "text": "No, they are mainly for tooling and readability",
+          "is_correct": true
+        },
+        {
+          "text": "Only in classes",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q115. Which keyword defines an asynchronous function?",
+      "difficulty": 3,
+      "tags": [
+        "async",
+        "keywords"
+      ],
+      "answers": [
+        {
+          "text": "async def",
+          "is_correct": true
+        },
+        {
+          "text": "thread def",
+          "is_correct": false
+        },
+        {
+          "text": "defer def",
+          "is_correct": false
+        },
+        {
+          "text": "await def",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q116. Which keyword suspends coroutine until awaitable completes?",
+      "difficulty": 3,
+      "tags": [
+        "async",
+        "keywords"
+      ],
+      "answers": [
+        {
+          "text": "await",
+          "is_correct": true
+        },
+        {
+          "text": "sleep",
+          "is_correct": false
+        },
+        {
+          "text": "yield",
+          "is_correct": false
+        },
+        {
+          "text": "pause",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q117. Which module provides event loop tools for async programming?",
+      "difficulty": 3,
+      "tags": [
+        "async",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "asyncio",
+          "is_correct": true
+        },
+        {
+          "text": "concurrent",
+          "is_correct": false
+        },
+        {
+          "text": "multiprocessing",
+          "is_correct": false
+        },
+        {
+          "text": "threading",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q118. Which call commonly runs a top-level coroutine?",
+      "difficulty": 3,
+      "tags": [
+        "async",
+        "asyncio"
+      ],
+      "answers": [
+        {
+          "text": "coro().run()",
+          "is_correct": false
+        },
+        {
+          "text": "asyncio.run(coro())",
+          "is_correct": true
+        },
+        {
+          "text": "run(coro)",
+          "is_correct": false
+        },
+        {
+          "text": "await coro() at module top",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q119. What is a coroutine object?",
+      "difficulty": 3,
+      "tags": [
+        "async",
+        "coroutines"
+      ],
+      "answers": [
+        {
+          "text": "Object returned by calling async function",
+          "is_correct": true
+        },
+        {
+          "text": "A regular generator always",
+          "is_correct": false
+        },
+        {
+          "text": "An OS process",
+          "is_correct": false
+        },
+        {
+          "text": "A running thread",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q120. Which concurrency model does asyncio primarily use?",
+      "difficulty": 3,
+      "tags": [
+        "async",
+        "concurrency"
+      ],
+      "answers": [
+        {
+          "text": "Preemptive multithreading only",
+          "is_correct": false
+        },
+        {
+          "text": "Multiprocessing only",
+          "is_correct": false
+        },
+        {
+          "text": "Kernel-level green threads",
+          "is_correct": false
+        },
+        {
+          "text": "Single-threaded cooperative multitasking",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q121. Which module provides thread-based concurrency?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "threads",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "selectors",
+          "is_correct": false
+        },
+        {
+          "text": "asyncio",
+          "is_correct": false
+        },
+        {
+          "text": "threading",
+          "is_correct": true
+        },
+        {
+          "text": "subprocess",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q122. Which module provides process-based concurrency?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "processes",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "queue",
+          "is_correct": false
+        },
+        {
+          "text": "contextlib",
+          "is_correct": false
+        },
+        {
+          "text": "multiprocessing",
+          "is_correct": true
+        },
+        {
+          "text": "threading",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q123. What is the GIL in CPython?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "cpython"
+      ],
+      "answers": [
+        {
+          "text": "A lock allowing one thread to execute Python bytecode at a time",
+          "is_correct": true
+        },
+        {
+          "text": "A lock for file writes only",
+          "is_correct": false
+        },
+        {
+          "text": "A networking protocol",
+          "is_correct": false
+        },
+        {
+          "text": "A memory allocator",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q124. For CPU-bound tasks in CPython, which often performs better than threads?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "performance"
+      ],
+      "answers": [
+        {
+          "text": "asyncio only",
+          "is_correct": false
+        },
+        {
+          "text": "queue module",
+          "is_correct": false
+        },
+        {
+          "text": "multiprocessing",
+          "is_correct": true
+        },
+        {
+          "text": "threading",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q125. For I/O-bound tasks, which is often effective?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "performance"
+      ],
+      "answers": [
+        {
+          "text": "Only multiprocessing",
+          "is_correct": false
+        },
+        {
+          "text": "No concurrency model helps",
+          "is_correct": false
+        },
+        {
+          "text": "Only recursion",
+          "is_correct": false
+        },
+        {
+          "text": "threading or asyncio depending on architecture",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q126. Which class offers a lock for thread synchronization?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "threading"
+      ],
+      "answers": [
+        {
+          "text": "threading.Signal",
+          "is_correct": false
+        },
+        {
+          "text": "threading.GIL",
+          "is_correct": false
+        },
+        {
+          "text": "threading.Atomic",
+          "is_correct": false
+        },
+        {
+          "text": "threading.Lock",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q127. Which queue type is thread-safe for producer-consumer patterns?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "queue"
+      ],
+      "answers": [
+        {
+          "text": "set",
+          "is_correct": false
+        },
+        {
+          "text": "deque (always thread-safe operations for all use)",
+          "is_correct": false
+        },
+        {
+          "text": "queue.Queue",
+          "is_correct": true
+        },
+        {
+          "text": "list",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q128. What does threading.Thread(target=fn).start() do?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
+      "answers": [
+        {
+          "text": "Runs fn in a new thread",
+          "is_correct": true
+        },
+        {
+          "text": "Creates process automatically",
+          "is_correct": false
+        },
+        {
+          "text": "Runs fn in current thread",
+          "is_correct": false
+        },
+        {
+          "text": "Schedules fn only after join",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q129. What does thread.join() do?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
+      "answers": [
+        {
+          "text": "Blocks until the thread finishes",
+          "is_correct": true
+        },
+        {
+          "text": "Pauses all threads",
+          "is_correct": false
+        },
+        {
+          "text": "Starts the thread",
+          "is_correct": false
+        },
+        {
+          "text": "Kills the thread",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q130. Which module provides high-level executors for threads/processes?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "futures"
+      ],
+      "answers": [
+        {
+          "text": "parallel",
+          "is_correct": false
+        },
+        {
+          "text": "executor",
+          "is_correct": false
+        },
+        {
+          "text": "threadpool",
+          "is_correct": false
+        },
+        {
+          "text": "concurrent.futures",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q131. Which executor is intended for thread pools?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "futures"
+      ],
+      "answers": [
+        {
+          "text": "LockExecutor",
+          "is_correct": false
+        },
+        {
+          "text": "ThreadPoolExecutor",
+          "is_correct": true
+        },
+        {
+          "text": "ProcessThreadExecutor",
+          "is_correct": false
+        },
+        {
+          "text": "CoroutineExecutor",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q132. Which executor is intended for process pools?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "futures"
+      ],
+      "answers": [
+        {
+          "text": "AsyncPoolExecutor",
+          "is_correct": false
+        },
+        {
+          "text": "QueueExecutor",
+          "is_correct": false
+        },
+        {
+          "text": "ThreadPoolExecutor",
+          "is_correct": false
+        },
+        {
+          "text": "ProcessPoolExecutor",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q133. What does Future.result() do?",
+      "difficulty": 3,
+      "tags": [
+        "concurrency",
+        "futures"
+      ],
+      "answers": [
+        {
+          "text": "Starts the task",
+          "is_correct": false
+        },
+        {
+          "text": "Returns computation result, waiting if needed",
+          "is_correct": true
+        },
+        {
+          "text": "Returns thread id",
+          "is_correct": false
+        },
+        {
+          "text": "Cancels the task",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q134. Which module is used to run external commands?",
+      "difficulty": 3,
+      "tags": [
+        "subprocess",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "subprocess",
+          "is_correct": true
+        },
+        {
+          "text": "os.path",
+          "is_correct": false
+        },
+        {
+          "text": "sys",
+          "is_correct": false
+        },
+        {
+          "text": "shlex",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q135. Which function runs a command and returns CompletedProcess?",
+      "difficulty": 3,
+      "tags": [
+        "subprocess",
+        "commands"
+      ],
+      "answers": [
+        {
+          "text": "os.system",
+          "is_correct": false
+        },
+        {
+          "text": "shell.execute",
+          "is_correct": false
+        },
+        {
+          "text": "subprocess.run",
+          "is_correct": true
+        },
+        {
+          "text": "subprocess.popenrun",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q136. Why avoid shell=True with unsanitized user input?",
+      "difficulty": 3,
+      "tags": [
+        "security",
+        "subprocess"
+      ],
+      "answers": [
+        {
+          "text": "Risk of shell injection vulnerabilities",
+          "is_correct": true
+        },
+        {
+          "text": "It disables stderr capture",
+          "is_correct": false
+        },
+        {
+          "text": "It cannot run commands",
+          "is_correct": false
+        },
+        {
+          "text": "It always breaks on Windows",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q137. Which module provides portable filesystem functions like listdir?",
+      "difficulty": 3,
+      "tags": [
+        "os",
+        "files"
+      ],
+      "answers": [
+        {
+          "text": "sys",
+          "is_correct": false
+        },
+        {
+          "text": "os",
+          "is_correct": true
+        },
+        {
+          "text": "platform",
+          "is_correct": false
+        },
+        {
+          "text": "pathlib only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q138. Which object contains command-line arguments?",
+      "difficulty": 3,
+      "tags": [
+        "sys",
+        "cli"
+      ],
+      "answers": [
+        {
+          "text": "os.args",
+          "is_correct": false
+        },
+        {
+          "text": "sys.argv",
+          "is_correct": true
+        },
+        {
+          "text": "argparse.args",
+          "is_correct": false
+        },
+        {
+          "text": "sys.params",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q139. Which module is preferred for command-line parsing?",
+      "difficulty": 3,
+      "tags": [
+        "cli",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "sysparse",
+          "is_correct": false
+        },
+        {
+          "text": "getopt is always preferred",
+          "is_correct": false
+        },
+        {
+          "text": "opt",
+          "is_correct": false
+        },
+        {
+          "text": "argparse",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q140. What is __name__ == '__main__' commonly used for?",
+      "difficulty": 3,
+      "tags": [
+        "modules",
+        "entrypoint"
+      ],
+      "answers": [
+        {
+          "text": "Run code only when file executed directly",
+          "is_correct": true
+        },
+        {
+          "text": "Run code only when imported",
+          "is_correct": false
+        },
+        {
+          "text": "Define package metadata",
+          "is_correct": false
+        },
+        {
+          "text": "Enable type checking",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q141. What is a Python package in modern terms?",
+      "difficulty": 3,
+      "tags": [
+        "modules",
+        "packages"
+      ],
+      "answers": [
+        {
+          "text": "A single .py file only",
+          "is_correct": false
+        },
+        {
+          "text": "A directory of modules, usually with __init__.py",
+          "is_correct": true
+        },
+        {
+          "text": "A zipped dependency lock",
+          "is_correct": false
+        },
+        {
+          "text": "A compiled binary only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q142. What does from module import name do?",
+      "difficulty": 3,
+      "tags": [
+        "imports",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "Imports specific attribute into current namespace",
+          "is_correct": true
+        },
+        {
+          "text": "Copies source code into file",
+          "is_correct": false
+        },
+        {
+          "text": "Creates alias automatically",
+          "is_correct": false
+        },
+        {
+          "text": "Imports whole package recursively",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q143. Why is wildcard import (from x import *) often discouraged?",
+      "difficulty": 3,
+      "tags": [
+        "imports",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "It imports private names by default",
+          "is_correct": false
+        },
+        {
+          "text": "It pollutes namespace and reduces clarity",
+          "is_correct": true
+        },
+        {
+          "text": "It is syntax error in Python 3",
+          "is_correct": false
+        },
+        {
+          "text": "It is always slower than explicit imports",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q144. Which module helps with iterator building blocks like chain and islice?",
+      "difficulty": 3,
+      "tags": [
+        "itertools",
+        "iterators"
+      ],
+      "answers": [
+        {
+          "text": "itertools",
+          "is_correct": true
+        },
+        {
+          "text": "operator",
+          "is_correct": false
+        },
+        {
+          "text": "collections",
+          "is_correct": false
+        },
+        {
+          "text": "functools",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q145. What does itertools.chain do?",
+      "difficulty": 3,
+      "tags": [
+        "itertools",
+        "iterators"
+      ],
+      "answers": [
+        {
+          "text": "Repeats one item forever only",
+          "is_correct": false
+        },
+        {
+          "text": "Iterates over multiple iterables sequentially",
+          "is_correct": true
+        },
+        {
+          "text": "Creates linked list",
+          "is_correct": false
+        },
+        {
+          "text": "Computes cartesian product",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q146. What does itertools.product provide?",
+      "difficulty": 3,
+      "tags": [
+        "itertools",
+        "combinatorics"
+      ],
+      "answers": [
+        {
+          "text": "Pairwise zip",
+          "is_correct": false
+        },
+        {
+          "text": "Cartesian product of input iterables",
+          "is_correct": true
+        },
+        {
+          "text": "Only unique combinations",
+          "is_correct": false
+        },
+        {
+          "text": "Numeric multiplication of all values",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q147. Which function from operator module can replace lambda x: x.name for sorting?",
+      "difficulty": 3,
+      "tags": [
+        "operator",
+        "sorting"
+      ],
+      "answers": [
+        {
+          "text": "operator.ref('name')",
+          "is_correct": false
+        },
+        {
+          "text": "operator.get('name')",
+          "is_correct": false
+        },
+        {
+          "text": "operator.attrgetter('name')",
+          "is_correct": true
+        },
+        {
+          "text": "operator.member('name')",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q148. Which function from operator module is useful for dict key extraction in sorting?",
+      "difficulty": 3,
+      "tags": [
+        "operator",
+        "sorting"
+      ],
+      "answers": [
+        {
+          "text": "operator.valuegetter('key')",
+          "is_correct": false
+        },
+        {
+          "text": "operator.keygetter('key')",
+          "is_correct": false
+        },
+        {
+          "text": "operator.dictgetter('key')",
+          "is_correct": false
+        },
+        {
+          "text": "operator.itemgetter('key')",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q149. Which module provides Counter for frequency counting?",
+      "difficulty": 3,
+      "tags": [
+        "collections",
+        "counter"
+      ],
+      "answers": [
+        {
+          "text": "math",
+          "is_correct": false
+        },
+        {
+          "text": "statistics",
+          "is_correct": false
+        },
+        {
+          "text": "itertools",
+          "is_correct": false
+        },
+        {
+          "text": "collections",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q150. What does Counter.most_common(1) return?",
+      "difficulty": 3,
+      "tags": [
+        "collections",
+        "counter"
+      ],
+      "answers": [
+        {
+          "text": "Single key only",
+          "is_correct": false
+        },
+        {
+          "text": "Set",
+          "is_correct": false
+        },
+        {
+          "text": "List with the most frequent element/count tuple",
+          "is_correct": true
+        },
+        {
+          "text": "Dictionary",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q151. Which collection type supports efficient append/pop from both ends?",
+      "difficulty": 3,
+      "tags": [
+        "collections",
+        "deque"
+      ],
+      "answers": [
+        {
+          "text": "list",
+          "is_correct": false
+        },
+        {
+          "text": "array.array",
+          "is_correct": false
+        },
+        {
+          "text": "tuple",
+          "is_correct": false
+        },
+        {
+          "text": "collections.deque",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q152. What does deque.popleft() do?",
+      "difficulty": 3,
+      "tags": [
+        "collections",
+        "deque"
+      ],
+      "answers": [
+        {
+          "text": "Adds element to left",
+          "is_correct": false
+        },
+        {
+          "text": "Removes rightmost element",
+          "is_correct": false
+        },
+        {
+          "text": "Returns first without removing",
+          "is_correct": false
+        },
+        {
+          "text": "Removes and returns leftmost element",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q153. Which module provides high-level mathematical functions like sqrt and ceil?",
+      "difficulty": 3,
+      "tags": [
+        "math",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "decimal",
+          "is_correct": false
+        },
+        {
+          "text": "fractions",
+          "is_correct": false
+        },
+        {
+          "text": "math",
+          "is_correct": true
+        },
+        {
+          "text": "statistics",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q154. Which module provides precise decimal arithmetic?",
+      "difficulty": 3,
+      "tags": [
+        "decimal",
+        "numbers"
+      ],
+      "answers": [
+        {
+          "text": "decimal",
+          "is_correct": true
+        },
+        {
+          "text": "math",
+          "is_correct": false
+        },
+        {
+          "text": "random",
+          "is_correct": false
+        },
+        {
+          "text": "fractions",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q155. Why use decimal.Decimal for money calculations?",
+      "difficulty": 3,
+      "tags": [
+        "decimal",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "It disables rounding",
+          "is_correct": false
+        },
+        {
+          "text": "It uses less memory than int",
+          "is_correct": false
+        },
+        {
+          "text": "It is always faster than float",
+          "is_correct": false
+        },
+        {
+          "text": "Avoids many binary floating-point precision issues",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q156. Which module represents rational numbers exactly as fractions?",
+      "difficulty": 3,
+      "tags": [
+        "fractions",
+        "numbers"
+      ],
+      "answers": [
+        {
+          "text": "decimal",
+          "is_correct": false
+        },
+        {
+          "text": "numbers",
+          "is_correct": false
+        },
+        {
+          "text": "fractions",
+          "is_correct": true
+        },
+        {
+          "text": "math",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q157. Which module provides pseudorandom number generation?",
+      "difficulty": 3,
+      "tags": [
+        "random",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "uuid",
+          "is_correct": false
+        },
+        {
+          "text": "secrets",
+          "is_correct": false
+        },
+        {
+          "text": "random",
+          "is_correct": true
+        },
+        {
+          "text": "math",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q158. Which module should be preferred for security-sensitive tokens?",
+      "difficulty": 3,
+      "tags": [
+        "security",
+        "random"
+      ],
+      "answers": [
+        {
+          "text": "random",
+          "is_correct": false
+        },
+        {
+          "text": "uuid",
+          "is_correct": false
+        },
+        {
+          "text": "secrets",
+          "is_correct": true
+        },
+        {
+          "text": "hashlib",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q159. Which module provides cryptographic hash functions like sha256?",
+      "difficulty": 3,
+      "tags": [
+        "security",
+        "hashing"
+      ],
+      "answers": [
+        {
+          "text": "hmac",
+          "is_correct": false
+        },
+        {
+          "text": "hashlib",
+          "is_correct": true
+        },
+        {
+          "text": "secrets",
+          "is_correct": false
+        },
+        {
+          "text": "base64",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q160. Which module provides HMAC message authentication support?",
+      "difficulty": 3,
+      "tags": [
+        "security",
+        "crypto"
+      ],
+      "answers": [
+        {
+          "text": "hashlib",
+          "is_correct": false
+        },
+        {
+          "text": "hmac",
+          "is_correct": true
+        },
+        {
+          "text": "ssl",
+          "is_correct": false
+        },
+        {
+          "text": "tokenize",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q161. Which module encodes/decodes Base64 data?",
+      "difficulty": 3,
+      "tags": [
+        "encoding",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "base64",
+          "is_correct": true
+        },
+        {
+          "text": "hashlib",
+          "is_correct": false
+        },
+        {
+          "text": "binascii only",
+          "is_correct": false
+        },
+        {
+          "text": "codecs",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q162. Which module provides regular expressions in Python?",
+      "difficulty": 3,
+      "tags": [
+        "regex",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "regexlib",
+          "is_correct": false
+        },
+        {
+          "text": "re",
+          "is_correct": true
+        },
+        {
+          "text": "pattern",
+          "is_correct": false
+        },
+        {
+          "text": "match",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q163. Which re function checks pattern only at string start?",
+      "difficulty": 3,
+      "tags": [
+        "regex",
+        "re"
+      ],
+      "answers": [
+        {
+          "text": "re.finditer",
+          "is_correct": false
+        },
+        {
+          "text": "re.search",
+          "is_correct": false
+        },
+        {
+          "text": "re.findall",
+          "is_correct": false
+        },
+        {
+          "text": "re.match",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q164. Which re function finds first match anywhere in string?",
+      "difficulty": 3,
+      "tags": [
+        "regex",
+        "re"
+      ],
+      "answers": [
+        {
+          "text": "re.match",
+          "is_correct": false
+        },
+        {
+          "text": "re.fullmatch",
+          "is_correct": false
+        },
+        {
+          "text": "re.split",
+          "is_correct": false
+        },
+        {
+          "text": "re.search",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q165. Which re function returns all non-overlapping matches as list?",
+      "difficulty": 3,
+      "tags": [
+        "regex",
+        "re"
+      ],
+      "answers": [
+        {
+          "text": "re.searchall",
+          "is_correct": false
+        },
+        {
+          "text": "re.matchall",
+          "is_correct": false
+        },
+        {
+          "text": "re.collect",
+          "is_correct": false
+        },
+        {
+          "text": "re.findall",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q166. Which re function replaces pattern matches with replacement text?",
+      "difficulty": 3,
+      "tags": [
+        "regex",
+        "re"
+      ],
+      "answers": [
+        {
+          "text": "re.sub",
+          "is_correct": true
+        },
+        {
+          "text": "re.swap",
+          "is_correct": false
+        },
+        {
+          "text": "re.change",
+          "is_correct": false
+        },
+        {
+          "text": "re.replace",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q167. Which statement about raw strings for regex is correct?",
+      "difficulty": 3,
+      "tags": [
+        "regex",
+        "strings"
+      ],
+      "answers": [
+        {
+          "text": "Raw strings evaluate regex faster always",
+          "is_correct": false
+        },
+        {
+          "text": "r'...' helps avoid double escaping backslashes",
+          "is_correct": true
+        },
+        {
+          "text": "Raw strings cannot contain digits",
+          "is_correct": false
+        },
+        {
+          "text": "Raw strings are bytes",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q168. Which module provides date and time classes like datetime?",
+      "difficulty": 3,
+      "tags": [
+        "datetime",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "timeit",
+          "is_correct": false
+        },
+        {
+          "text": "datetime",
+          "is_correct": true
+        },
+        {
+          "text": "zone",
+          "is_correct": false
+        },
+        {
+          "text": "calendar only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q169. Which method returns current local date/time as datetime object?",
+      "difficulty": 3,
+      "tags": [
+        "datetime",
+        "api"
+      ],
+      "answers": [
+        {
+          "text": "datetime.datetime.now()",
+          "is_correct": true
+        },
+        {
+          "text": "time.now()",
+          "is_correct": false
+        },
+        {
+          "text": "datetime.today() only date",
+          "is_correct": false
+        },
+        {
+          "text": "date.now()",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q170. Which method parses date/time string with a format?",
+      "difficulty": 3,
+      "tags": [
+        "datetime",
+        "parsing"
+      ],
+      "answers": [
+        {
+          "text": "datetime.datetime.parse",
+          "is_correct": false
+        },
+        {
+          "text": "datetime.datetime.strptime",
+          "is_correct": true
+        },
+        {
+          "text": "datetime.datetime.read",
+          "is_correct": false
+        },
+        {
+          "text": "time.strptime only datetime",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q171. Which method formats datetime object to string by format code?",
+      "difficulty": 3,
+      "tags": [
+        "datetime",
+        "formatting"
+      ],
+      "answers": [
+        {
+          "text": "datetime_obj.to_string",
+          "is_correct": false
+        },
+        {
+          "text": "datetime_obj.strparse",
+          "is_correct": false
+        },
+        {
+          "text": "datetime_obj.format",
+          "is_correct": false
+        },
+        {
+          "text": "datetime_obj.strftime",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q172. Which module includes timezone support tools in stdlib?",
+      "difficulty": 3,
+      "tags": [
+        "datetime",
+        "timezone"
+      ],
+      "answers": [
+        {
+          "text": "timezone",
+          "is_correct": false
+        },
+        {
+          "text": "tzdata",
+          "is_correct": false
+        },
+        {
+          "text": "pytz",
+          "is_correct": false
+        },
+        {
+          "text": "zoneinfo",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q173. What does logging module provide compared to print debugging?",
+      "difficulty": 3,
+      "tags": [
+        "logging",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "No setup needed for files",
+          "is_correct": false
+        },
+        {
+          "text": "Faster execution always",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic exception suppression",
+          "is_correct": false
+        },
+        {
+          "text": "Levels, handlers, and configurable output",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q174. Which logging level is typically used for diagnostic details?",
+      "difficulty": 3,
+      "tags": [
+        "logging",
+        "levels"
+      ],
+      "answers": [
+        {
+          "text": "CRITICAL",
+          "is_correct": false
+        },
+        {
+          "text": "ERROR",
+          "is_correct": false
+        },
+        {
+          "text": "DEBUG",
+          "is_correct": true
+        },
+        {
+          "text": "WARNING only",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q175. Which logging level indicates a serious failure?",
+      "difficulty": 3,
+      "tags": [
+        "logging",
+        "levels"
+      ],
+      "answers": [
+        {
+          "text": "INFO",
+          "is_correct": false
+        },
+        {
+          "text": "NOTSET",
+          "is_correct": false
+        },
+        {
+          "text": "CRITICAL",
+          "is_correct": true
+        },
+        {
+          "text": "DEBUG",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q176. What is a common use of __repr__ output style?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "debugging"
+      ],
+      "answers": [
+        {
+          "text": "Regex-ready pattern only",
+          "is_correct": false
+        },
+        {
+          "text": "Binary serialization format",
+          "is_correct": false
+        },
+        {
+          "text": "Always user-friendly display text",
+          "is_correct": false
+        },
+        {
+          "text": "Unambiguous representation for developers",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q177. Which statement about __eq__ and __hash__ is correct?",
+      "difficulty": 3,
+      "tags": [
+        "oop",
+        "hashing"
+      ],
+      "answers": [
+        {
+          "text": "Objects need __eq__ only for sets",
+          "is_correct": false
+        },
+        {
+          "text": "Hash can vary during object lifetime safely",
+          "is_correct": false
+        },
+        {
+          "text": "__hash__ is ignored for dict keys",
+          "is_correct": false
+        },
+        {
+          "text": "If equality changes semantics, hash contract must stay consistent",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q178. What is monkey patching?",
+      "difficulty": 3,
+      "tags": [
+        "advanced",
+        "runtime"
+      ],
+      "answers": [
+        {
+          "text": "Changing classes/modules at runtime",
+          "is_correct": true
+        },
+        {
+          "text": "Running code in safe sandbox",
+          "is_correct": false
+        },
+        {
+          "text": "Static type checking",
+          "is_correct": false
+        },
+        {
+          "text": "Compiling Python to C",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q179. Why should monkey patching be used cautiously?",
+      "difficulty": 3,
+      "tags": [
+        "advanced",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "It always improves performance",
+          "is_correct": false
+        },
+        {
+          "text": "It can create hard-to-debug global side effects",
+          "is_correct": true
+        },
+        {
+          "text": "It prevents inheritance",
+          "is_correct": false
+        },
+        {
+          "text": "It is required for unit tests",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q180. Which module provides tools like patch for tests?",
+      "difficulty": 3,
+      "tags": [
+        "testing",
+        "mocking"
+      ],
+      "answers": [
+        {
+          "text": "pytest.mock builtin only",
+          "is_correct": false
+        },
+        {
+          "text": "inspect",
+          "is_correct": false
+        },
+        {
+          "text": "typing",
+          "is_correct": false
+        },
+        {
+          "text": "unittest.mock",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q181. What does patch target string usually reference?",
+      "difficulty": 3,
+      "tags": [
+        "testing",
+        "mocking"
+      ],
+      "answers": [
+        {
+          "text": "Only class declaration paths",
+          "is_correct": false
+        },
+        {
+          "text": "Name as looked up in module under test",
+          "is_correct": true
+        },
+        {
+          "text": "Filesystem path to source file",
+          "is_correct": false
+        },
+        {
+          "text": "Original definition module always",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q182. Which statement about unit tests is best practice?",
+      "difficulty": 3,
+      "tags": [
+        "testing",
+        "best-practices"
+      ],
+      "answers": [
+        {
+          "text": "Tests should be deterministic and isolated",
+          "is_correct": true
+        },
+        {
+          "text": "Tests should call production APIs over network always",
+          "is_correct": false
+        },
+        {
+          "text": "Tests should depend on execution order",
+          "is_correct": false
+        },
+        {
+          "text": "Tests should suppress all failures",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q183. Which built-in helps inspect available attributes of object?",
+      "difficulty": 3,
+      "tags": [
+        "introspection",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "inspectall()",
+          "is_correct": false
+        },
+        {
+          "text": "helpdir()",
+          "is_correct": false
+        },
+        {
+          "text": "vars_only()",
+          "is_correct": false
+        },
+        {
+          "text": "dir()",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q184. Which built-in returns attribute value by name with optional default?",
+      "difficulty": 3,
+      "tags": [
+        "introspection",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "getattr(obj, name, default)",
+          "is_correct": true
+        },
+        {
+          "text": "fetchattr(obj)",
+          "is_correct": false
+        },
+        {
+          "text": "obj[name]",
+          "is_correct": false
+        },
+        {
+          "text": "attribute(obj, name)",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q185. Which built-in sets attribute value by name?",
+      "difficulty": 3,
+      "tags": [
+        "introspection",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "setattr(obj, name, value)",
+          "is_correct": true
+        },
+        {
+          "text": "assignattr(obj, value)",
+          "is_correct": false
+        },
+        {
+          "text": "obj.set(name, value)",
+          "is_correct": false
+        },
+        {
+          "text": "putattr(obj, value)",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q186. Which built-in checks if object has named attribute?",
+      "difficulty": 3,
+      "tags": [
+        "introspection",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "containsattr(obj, name)",
+          "is_correct": false
+        },
+        {
+          "text": "inattr(obj, name)",
+          "is_correct": false
+        },
+        {
+          "text": "hasattr(obj, name)",
+          "is_correct": true
+        },
+        {
+          "text": "isattr(obj, name)",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q187. What does vars(obj) typically return?",
+      "difficulty": 3,
+      "tags": [
+        "introspection",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "Type hierarchy",
+          "is_correct": false
+        },
+        {
+          "text": "List of all methods",
+          "is_correct": false
+        },
+        {
+          "text": "Object __dict__ mapping when available",
+          "is_correct": true
+        },
+        {
+          "text": "Memory usage in bytes",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q188. Which function evaluates Python expression from string (use with caution)?",
+      "difficulty": 3,
+      "tags": [
+        "advanced",
+        "security"
+      ],
+      "answers": [
+        {
+          "text": "compileall",
+          "is_correct": false
+        },
+        {
+          "text": "literal",
+          "is_correct": false
+        },
+        {
+          "text": "eval",
+          "is_correct": true
+        },
+        {
+          "text": "execfile",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q189. Which function executes Python statements from string (use with caution)?",
+      "difficulty": 3,
+      "tags": [
+        "advanced",
+        "security"
+      ],
+      "answers": [
+        {
+          "text": "runpy",
+          "is_correct": false
+        },
+        {
+          "text": "exec",
+          "is_correct": true
+        },
+        {
+          "text": "eval",
+          "is_correct": false
+        },
+        {
+          "text": "importlib",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q190. Which module safely evaluates Python literals from strings?",
+      "difficulty": 3,
+      "tags": [
+        "security",
+        "parsing"
+      ],
+      "answers": [
+        {
+          "text": "json.loads for any Python literal",
+          "is_correct": false
+        },
+        {
+          "text": "eval",
+          "is_correct": false
+        },
+        {
+          "text": "pickle.loads",
+          "is_correct": false
+        },
+        {
+          "text": "ast.literal_eval",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q191. What is the risk of unpickling untrusted data?",
+      "difficulty": 3,
+      "tags": [
+        "security",
+        "serialization"
+      ],
+      "answers": [
+        {
+          "text": "Only encoding errors",
+          "is_correct": false
+        },
+        {
+          "text": "Only data truncation",
+          "is_correct": false
+        },
+        {
+          "text": "Arbitrary code execution",
+          "is_correct": true
+        },
+        {
+          "text": "No risk, pickle is safe",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q192. Which statement about pickle is correct?",
+      "difficulty": 3,
+      "tags": [
+        "serialization",
+        "pickle"
+      ],
+      "answers": [
+        {
+          "text": "It is human-readable text",
+          "is_correct": false
+        },
+        {
+          "text": "It stores only dictionaries",
+          "is_correct": false
+        },
+        {
+          "text": "It is language-independent like JSON",
+          "is_correct": false
+        },
+        {
+          "text": "It serializes Python objects to byte streams",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q193. Which module helps inspect source code metadata and signatures?",
+      "difficulty": 3,
+      "tags": [
+        "introspection",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "ast only",
+          "is_correct": false
+        },
+        {
+          "text": "types",
+          "is_correct": false
+        },
+        {
+          "text": "pdb",
+          "is_correct": false
+        },
+        {
+          "text": "inspect",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q194. Which built-in can display module/class/function help text?",
+      "difficulty": 3,
+      "tags": [
+        "introspection",
+        "builtins"
+      ],
+      "answers": [
+        {
+          "text": "info()",
+          "is_correct": false
+        },
+        {
+          "text": "manual()",
+          "is_correct": false
+        },
+        {
+          "text": "help()",
+          "is_correct": true
+        },
+        {
+          "text": "doc()",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q195. Which module provides debugger with breakpoints and stepping?",
+      "difficulty": 3,
+      "tags": [
+        "debugging",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "pdb",
+          "is_correct": true
+        },
+        {
+          "text": "traceback",
+          "is_correct": false
+        },
+        {
+          "text": "inspect",
+          "is_correct": false
+        },
+        {
+          "text": "logging",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q196. Which module measures execution time of small code snippets conveniently?",
+      "difficulty": 3,
+      "tags": [
+        "performance",
+        "modules"
+      ],
+      "answers": [
+        {
+          "text": "profile",
+          "is_correct": false
+        },
+        {
+          "text": "timing",
+          "is_correct": false
+        },
+        {
+          "text": "datetime",
+          "is_correct": false
+        },
+        {
+          "text": "timeit",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q197. Which module profiles Python code performance hotspots?",
+      "difficulty": 3,
+      "tags": [
+        "performance",
+        "profiling"
+      ],
+      "answers": [
+        {
+          "text": "timeit",
+          "is_correct": false
+        },
+        {
+          "text": "statistics",
+          "is_correct": false
+        },
+        {
+          "text": "inspect",
+          "is_correct": false
+        },
+        {
+          "text": "cProfile",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q198. Which statement about recursion depth in Python is true?",
+      "difficulty": 3,
+      "tags": [
+        "recursion",
+        "runtime"
+      ],
+      "answers": [
+        {
+          "text": "Deep recursion may hit RecursionError",
+          "is_correct": true
+        },
+        {
+          "text": "Recursion depth is unlimited",
+          "is_correct": false
+        },
+        {
+          "text": "Python optimizes all tail recursion",
+          "is_correct": false
+        },
+        {
+          "text": "Recursion is always faster than loops",
+          "is_correct": false
+        }
+      ]
+    },
+    {
+      "text": "Q199. Which module can adjust recursion limit (use carefully)?",
+      "difficulty": 3,
+      "tags": [
+        "recursion",
+        "sys"
+      ],
+      "answers": [
+        {
+          "text": "os.setrecursionlimit",
+          "is_correct": false
+        },
+        {
+          "text": "runtime.recursion",
+          "is_correct": false
+        },
+        {
+          "text": "limits.set_depth",
+          "is_correct": false
+        },
+        {
+          "text": "sys.setrecursionlimit",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "text": "Q200. What is the safest broad principle when writing advanced Python code?",
+      "difficulty": 3,
+      "tags": [
+        "best-practices",
+        "style"
+      ],
+      "answers": [
+        {
+          "text": "Avoid type hints and docstrings",
+          "is_correct": false
+        },
+        {
+          "text": "Prefer clear, explicit code over clever but obscure tricks",
+          "is_correct": true
+        },
+        {
+          "text": "Use eval whenever possible",
+          "is_correct": false
+        },
+        {
+          "text": "Rely on global mutable state",
+          "is_correct": false
+        }
+      ]
+    }
+  ]
+}

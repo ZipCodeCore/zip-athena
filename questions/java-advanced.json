@@ -4,2201 +4,5229 @@
     {
       "text": "Q001. Which OOP principle is primarily demonstrated by method overriding?",
       "difficulty": 3,
-      "tags": ["oop", "polymorphism", "methods"],
+      "tags": [
+        "oop",
+        "polymorphism",
+        "methods"
+      ],
       "answers": [
-        {"text": "Runtime polymorphism", "is_correct": true},
-        {"text": "Encapsulation", "is_correct": false},
-        {"text": "Abstraction only", "is_correct": false},
-        {"text": "Composition", "is_correct": false}
+        {
+          "text": "Composition",
+          "is_correct": false
+        },
+        {
+          "text": "Encapsulation",
+          "is_correct": false
+        },
+        {
+          "text": "Runtime polymorphism",
+          "is_correct": true
+        },
+        {
+          "text": "Abstraction only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q002. Which member is inherited by a subclass in another package?",
       "difficulty": 3,
-      "tags": ["oop", "access-modifiers", "inheritance"],
+      "tags": [
+        "oop",
+        "access-modifiers",
+        "inheritance"
+      ],
       "answers": [
-        {"text": "protected member", "is_correct": true},
-        {"text": "private member", "is_correct": false},
-        {"text": "package-private member", "is_correct": false},
-        {"text": "local variable", "is_correct": false}
+        {
+          "text": "local variable",
+          "is_correct": false
+        },
+        {
+          "text": "protected member",
+          "is_correct": true
+        },
+        {
+          "text": "package-private member",
+          "is_correct": false
+        },
+        {
+          "text": "private member",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q003. What is true about constructors in Java?",
       "difficulty": 3,
-      "tags": ["constructors", "oop"],
+      "tags": [
+        "constructors",
+        "oop"
+      ],
       "answers": [
-        {"text": "Constructors are not inherited", "is_correct": true},
-        {"text": "Constructors can be abstract", "is_correct": false},
-        {"text": "Constructors have a return type", "is_correct": false},
-        {"text": "Constructors are always private", "is_correct": false}
+        {
+          "text": "Constructors are not inherited",
+          "is_correct": true
+        },
+        {
+          "text": "Constructors are always private",
+          "is_correct": false
+        },
+        {
+          "text": "Constructors can be abstract",
+          "is_correct": false
+        },
+        {
+          "text": "Constructors have a return type",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q004. When can a class be declared final?",
       "difficulty": 3,
-      "tags": ["oop", "keywords", "final"],
+      "tags": [
+        "oop",
+        "keywords",
+        "final"
+      ],
       "answers": [
-        {"text": "When you want to prevent subclassing", "is_correct": true},
-        {"text": "When you want abstract methods", "is_correct": false},
-        {"text": "When you want multiple inheritance", "is_correct": false},
-        {"text": "When you want mutable fields", "is_correct": false}
+        {
+          "text": "When you want mutable fields",
+          "is_correct": false
+        },
+        {
+          "text": "When you want to prevent subclassing",
+          "is_correct": true
+        },
+        {
+          "text": "When you want multiple inheritance",
+          "is_correct": false
+        },
+        {
+          "text": "When you want abstract methods",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q005. What is the result of calling super() in a constructor?",
       "difficulty": 3,
-      "tags": ["constructors", "inheritance"],
+      "tags": [
+        "constructors",
+        "inheritance"
+      ],
       "answers": [
-        {"text": "It calls the parent class constructor", "is_correct": true},
-        {"text": "It calls the current class constructor", "is_correct": false},
-        {"text": "It calls a static initializer", "is_correct": false},
-        {"text": "It skips object initialization", "is_correct": false}
+        {
+          "text": "It calls a static initializer",
+          "is_correct": false
+        },
+        {
+          "text": "It skips object initialization",
+          "is_correct": false
+        },
+        {
+          "text": "It calls the current class constructor",
+          "is_correct": false
+        },
+        {
+          "text": "It calls the parent class constructor",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q006. Which statement about abstract classes is correct?",
       "difficulty": 3,
-      "tags": ["oop", "abstract"],
+      "tags": [
+        "oop",
+        "abstract"
+      ],
       "answers": [
-        {"text": "They can contain both abstract and concrete methods", "is_correct": true},
-        {"text": "They can be instantiated directly", "is_correct": false},
-        {"text": "They cannot have constructors", "is_correct": false},
-        {"text": "They cannot have fields", "is_correct": false}
+        {
+          "text": "They cannot have constructors",
+          "is_correct": false
+        },
+        {
+          "text": "They can contain both abstract and concrete methods",
+          "is_correct": true
+        },
+        {
+          "text": "They cannot have fields",
+          "is_correct": false
+        },
+        {
+          "text": "They can be instantiated directly",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q007. Which is true about interfaces in Java 11?",
       "difficulty": 3,
-      "tags": ["interfaces", "java11"],
+      "tags": [
+        "interfaces",
+        "java11"
+      ],
       "answers": [
-        {"text": "Interfaces may declare default and static methods", "is_correct": true},
-        {"text": "Interfaces may declare instance fields", "is_correct": false},
-        {"text": "Interfaces may have public constructors", "is_correct": false},
-        {"text": "Interfaces cannot be implemented", "is_correct": false}
+        {
+          "text": "Interfaces may declare instance fields",
+          "is_correct": false
+        },
+        {
+          "text": "Interfaces may declare default and static methods",
+          "is_correct": true
+        },
+        {
+          "text": "Interfaces may have public constructors",
+          "is_correct": false
+        },
+        {
+          "text": "Interfaces cannot be implemented",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q008. What does it mean to overload a method?",
       "difficulty": 3,
-      "tags": ["methods", "overloading"],
+      "tags": [
+        "methods",
+        "overloading"
+      ],
       "answers": [
-        {"text": "Same name, different parameter list", "is_correct": true},
-        {"text": "Same name, same parameters, different class", "is_correct": false},
-        {"text": "Same return type, different body only", "is_correct": false},
-        {"text": "Different name, same parameters", "is_correct": false}
+        {
+          "text": "Same name, different parameter list",
+          "is_correct": true
+        },
+        {
+          "text": "Same return type, different body only",
+          "is_correct": false
+        },
+        {
+          "text": "Different name, same parameters",
+          "is_correct": false
+        },
+        {
+          "text": "Same name, same parameters, different class",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q009. Which condition is required for overriding a method?",
       "difficulty": 3,
-      "tags": ["methods", "overriding"],
+      "tags": [
+        "methods",
+        "overriding"
+      ],
       "answers": [
-        {"text": "Same method signature in subclass", "is_correct": true},
-        {"text": "Different method name in subclass", "is_correct": false},
-        {"text": "Private method in parent", "is_correct": false},
-        {"text": "Static method in parent only", "is_correct": false}
+        {
+          "text": "Same method signature in subclass",
+          "is_correct": true
+        },
+        {
+          "text": "Private method in parent",
+          "is_correct": false
+        },
+        {
+          "text": "Different method name in subclass",
+          "is_correct": false
+        },
+        {
+          "text": "Static method in parent only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q010. What is true about private methods and overriding?",
       "difficulty": 3,
-      "tags": ["methods", "overriding", "access-modifiers"],
+      "tags": [
+        "methods",
+        "overriding",
+        "access-modifiers"
+      ],
       "answers": [
-        {"text": "Private methods are not overridden", "is_correct": true},
-        {"text": "Private methods must be overridden", "is_correct": false},
-        {"text": "Private methods become protected", "is_correct": false},
-        {"text": "Private methods are abstract by default", "is_correct": false}
+        {
+          "text": "Private methods become protected",
+          "is_correct": false
+        },
+        {
+          "text": "Private methods must be overridden",
+          "is_correct": false
+        },
+        {
+          "text": "Private methods are not overridden",
+          "is_correct": true
+        },
+        {
+          "text": "Private methods are abstract by default",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q011. Why use composition instead of inheritance in many designs?",
       "difficulty": 3,
-      "tags": ["oop", "design", "composition"],
+      "tags": [
+        "oop",
+        "design",
+        "composition"
+      ],
       "answers": [
-        {"text": "It promotes flexibility through object delegation", "is_correct": true},
-        {"text": "It forces deep class hierarchies", "is_correct": false},
-        {"text": "It disables polymorphism", "is_correct": false},
-        {"text": "It prevents code reuse", "is_correct": false}
+        {
+          "text": "It forces deep class hierarchies",
+          "is_correct": false
+        },
+        {
+          "text": "It prevents code reuse",
+          "is_correct": false
+        },
+        {
+          "text": "It promotes flexibility through object delegation",
+          "is_correct": true
+        },
+        {
+          "text": "It disables polymorphism",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q012. What is true about enum types in Java?",
       "difficulty": 3,
-      "tags": ["enum", "types"],
+      "tags": [
+        "enum",
+        "types"
+      ],
       "answers": [
-        {"text": "Each enum constant is a singleton instance", "is_correct": true},
-        {"text": "Enums cannot have methods", "is_correct": false},
-        {"text": "Enums cannot implement interfaces", "is_correct": false},
-        {"text": "Enums must be mutable", "is_correct": false}
+        {
+          "text": "Enums cannot have methods",
+          "is_correct": false
+        },
+        {
+          "text": "Enums cannot implement interfaces",
+          "is_correct": false
+        },
+        {
+          "text": "Each enum constant is a singleton instance",
+          "is_correct": true
+        },
+        {
+          "text": "Enums must be mutable",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q013. Which class is the direct superclass of all classes?",
       "difficulty": 3,
-      "tags": ["oop", "object-class"],
+      "tags": [
+        "oop",
+        "object-class"
+      ],
       "answers": [
-        {"text": "Object", "is_correct": true},
-        {"text": "Class", "is_correct": false},
-        {"text": "System", "is_correct": false},
-        {"text": "Runtime", "is_correct": false}
+        {
+          "text": "Object",
+          "is_correct": true
+        },
+        {
+          "text": "Runtime",
+          "is_correct": false
+        },
+        {
+          "text": "System",
+          "is_correct": false
+        },
+        {
+          "text": "Class",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q014. What does the @Override annotation help with?",
       "difficulty": 3,
-      "tags": ["annotations", "overriding"],
+      "tags": [
+        "annotations",
+        "overriding"
+      ],
       "answers": [
-        {"text": "Compiler validation that a method truly overrides", "is_correct": true},
-        {"text": "Automatic method inlining", "is_correct": false},
-        {"text": "Forcing static dispatch", "is_correct": false},
-        {"text": "Converting method to final", "is_correct": false}
+        {
+          "text": "Compiler validation that a method truly overrides",
+          "is_correct": true
+        },
+        {
+          "text": "Forcing static dispatch",
+          "is_correct": false
+        },
+        {
+          "text": "Converting method to final",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic method inlining",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q015. Which statement about static methods is correct?",
       "difficulty": 3,
-      "tags": ["methods", "static"],
+      "tags": [
+        "methods",
+        "static"
+      ],
       "answers": [
-        {"text": "They are resolved at compile time based on reference type", "is_correct": true},
-        {"text": "They participate in runtime overriding", "is_correct": false},
-        {"text": "They can use this directly", "is_correct": false},
-        {"text": "They require object instances", "is_correct": false}
+        {
+          "text": "They participate in runtime overriding",
+          "is_correct": false
+        },
+        {
+          "text": "They require object instances",
+          "is_correct": false
+        },
+        {
+          "text": "They are resolved at compile time based on reference type",
+          "is_correct": true
+        },
+        {
+          "text": "They can use this directly",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q016. What is required for a class to be immutable?",
       "difficulty": 3,
-      "tags": ["immutability", "design"],
+      "tags": [
+        "immutability",
+        "design"
+      ],
       "answers": [
-        {"text": "State cannot change after construction", "is_correct": true},
-        {"text": "All fields must be public", "is_correct": false},
-        {"text": "Class must extend Thread", "is_correct": false},
-        {"text": "Setters must be synchronized", "is_correct": false}
+        {
+          "text": "Class must extend Thread",
+          "is_correct": false
+        },
+        {
+          "text": "Setters must be synchronized",
+          "is_correct": false
+        },
+        {
+          "text": "State cannot change after construction",
+          "is_correct": true
+        },
+        {
+          "text": "All fields must be public",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q017. Which keyword prevents method overriding?",
       "difficulty": 3,
-      "tags": ["keywords", "final", "methods"],
+      "tags": [
+        "keywords",
+        "final",
+        "methods"
+      ],
       "answers": [
-        {"text": "final", "is_correct": true},
-        {"text": "static", "is_correct": false},
-        {"text": "private", "is_correct": false},
-        {"text": "transient", "is_correct": false}
+        {
+          "text": "transient",
+          "is_correct": false
+        },
+        {
+          "text": "final",
+          "is_correct": true
+        },
+        {
+          "text": "private",
+          "is_correct": false
+        },
+        {
+          "text": "static",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q018. What is the main role of encapsulation?",
       "difficulty": 3,
-      "tags": ["oop", "encapsulation"],
+      "tags": [
+        "oop",
+        "encapsulation"
+      ],
       "answers": [
-        {"text": "Hide internal state and expose controlled access", "is_correct": true},
-        {"text": "Allow multiple inheritance", "is_correct": false},
-        {"text": "Replace constructors", "is_correct": false},
-        {"text": "Eliminate interfaces", "is_correct": false}
+        {
+          "text": "Allow multiple inheritance",
+          "is_correct": false
+        },
+        {
+          "text": "Hide internal state and expose controlled access",
+          "is_correct": true
+        },
+        {
+          "text": "Eliminate interfaces",
+          "is_correct": false
+        },
+        {
+          "text": "Replace constructors",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q019. What does instanceof check?",
       "difficulty": 3,
-      "tags": ["operators", "type-checking"],
+      "tags": [
+        "operators",
+        "type-checking"
+      ],
       "answers": [
-        {"text": "Whether an object is compatible with a type", "is_correct": true},
-        {"text": "Whether two objects are equal by value", "is_correct": false},
-        {"text": "Whether a class has static fields", "is_correct": false},
-        {"text": "Whether a method is overloaded", "is_correct": false}
+        {
+          "text": "Whether a method is overloaded",
+          "is_correct": false
+        },
+        {
+          "text": "Whether a class has static fields",
+          "is_correct": false
+        },
+        {
+          "text": "Whether two objects are equal by value",
+          "is_correct": false
+        },
+        {
+          "text": "Whether an object is compatible with a type",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q020. Why should equals and hashCode usually be overridden together?",
       "difficulty": 3,
-      "tags": ["object-class", "collections", "hashing"],
+      "tags": [
+        "object-class",
+        "collections",
+        "hashing"
+      ],
       "answers": [
-        {"text": "To preserve hash-based collection contracts", "is_correct": true},
-        {"text": "To improve garbage collection speed", "is_correct": false},
-        {"text": "To avoid checked exceptions", "is_correct": false},
-        {"text": "To force class immutability", "is_correct": false}
+        {
+          "text": "To force class immutability",
+          "is_correct": false
+        },
+        {
+          "text": "To preserve hash-based collection contracts",
+          "is_correct": true
+        },
+        {
+          "text": "To avoid checked exceptions",
+          "is_correct": false
+        },
+        {
+          "text": "To improve garbage collection speed",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q021. Why is String immutable in Java?",
       "difficulty": 3,
-      "tags": ["strings", "immutability"],
+      "tags": [
+        "strings",
+        "immutability"
+      ],
       "answers": [
-        {"text": "For safety, caching, and thread-friendly behavior", "is_correct": true},
-        {"text": "Because JVM cannot mutate objects", "is_correct": false},
-        {"text": "Because char arrays are immutable", "is_correct": false},
-        {"text": "Because all classes are immutable", "is_correct": false}
+        {
+          "text": "Because all classes are immutable",
+          "is_correct": false
+        },
+        {
+          "text": "Because JVM cannot mutate objects",
+          "is_correct": false
+        },
+        {
+          "text": "Because char arrays are immutable",
+          "is_correct": false
+        },
+        {
+          "text": "For safety, caching, and thread-friendly behavior",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q022. Which class is preferred for repeated string concatenation in loops?",
       "difficulty": 3,
-      "tags": ["strings", "performance"],
+      "tags": [
+        "strings",
+        "performance"
+      ],
       "answers": [
-        {"text": "StringBuilder", "is_correct": true},
-        {"text": "String", "is_correct": false},
-        {"text": "Character", "is_correct": false},
-        {"text": "StringTokenizer", "is_correct": false}
+        {
+          "text": "StringTokenizer",
+          "is_correct": false
+        },
+        {
+          "text": "StringBuilder",
+          "is_correct": true
+        },
+        {
+          "text": "String",
+          "is_correct": false
+        },
+        {
+          "text": "Character",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q023. What does String.intern() return?",
       "difficulty": 3,
-      "tags": ["strings", "jvm"],
+      "tags": [
+        "strings",
+        "jvm"
+      ],
       "answers": [
-        {"text": "A canonical pooled string reference", "is_correct": true},
-        {"text": "A lowercase version of the string", "is_correct": false},
-        {"text": "A mutable copy", "is_correct": false},
-        {"text": "A UTF-8 byte array", "is_correct": false}
+        {
+          "text": "A canonical pooled string reference",
+          "is_correct": true
+        },
+        {
+          "text": "A mutable copy",
+          "is_correct": false
+        },
+        {
+          "text": "A lowercase version of the string",
+          "is_correct": false
+        },
+        {
+          "text": "A UTF-8 byte array",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q024. What does '==' compare for object references?",
       "difficulty": 3,
-      "tags": ["operators", "references"],
+      "tags": [
+        "operators",
+        "references"
+      ],
       "answers": [
-        {"text": "Reference identity", "is_correct": true},
-        {"text": "Logical equality always", "is_correct": false},
-        {"text": "String length", "is_correct": false},
-        {"text": "Hash codes only", "is_correct": false}
+        {
+          "text": "Hash codes only",
+          "is_correct": false
+        },
+        {
+          "text": "Reference identity",
+          "is_correct": true
+        },
+        {
+          "text": "Logical equality always",
+          "is_correct": false
+        },
+        {
+          "text": "String length",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q025. What does String.equals compare?",
       "difficulty": 3,
-      "tags": ["strings", "comparison"],
+      "tags": [
+        "strings",
+        "comparison"
+      ],
       "answers": [
-        {"text": "Character content", "is_correct": true},
-        {"text": "Reference addresses", "is_correct": false},
-        {"text": "Only case-insensitive content", "is_correct": false},
-        {"text": "Only hash code values", "is_correct": false}
+        {
+          "text": "Only case-insensitive content",
+          "is_correct": false
+        },
+        {
+          "text": "Character content",
+          "is_correct": true
+        },
+        {
+          "text": "Reference addresses",
+          "is_correct": false
+        },
+        {
+          "text": "Only hash code values",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q026. Which is true about wrapper classes like Integer?",
       "difficulty": 3,
-      "tags": ["wrappers", "primitives"],
+      "tags": [
+        "wrappers",
+        "primitives"
+      ],
       "answers": [
-        {"text": "They are immutable objects", "is_correct": true},
-        {"text": "They are primitive types", "is_correct": false},
-        {"text": "They cannot be null", "is_correct": false},
-        {"text": "They are mutable for performance", "is_correct": false}
+        {
+          "text": "They are primitive types",
+          "is_correct": false
+        },
+        {
+          "text": "They cannot be null",
+          "is_correct": false
+        },
+        {
+          "text": "They are mutable for performance",
+          "is_correct": false
+        },
+        {
+          "text": "They are immutable objects",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q027. What is autoboxing?",
       "difficulty": 3,
-      "tags": ["wrappers", "autoboxing"],
+      "tags": [
+        "wrappers",
+        "autoboxing"
+      ],
       "answers": [
-        {"text": "Automatic conversion from primitive to wrapper", "is_correct": true},
-        {"text": "Automatic conversion from String to int", "is_correct": false},
-        {"text": "Automatic memory allocation in heap", "is_correct": false},
-        {"text": "Automatic method inlining", "is_correct": false}
+        {
+          "text": "Automatic conversion from String to int",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic memory allocation in heap",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic method inlining",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic conversion from primitive to wrapper",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q028. What is unboxing?",
       "difficulty": 3,
-      "tags": ["wrappers", "autoboxing"],
+      "tags": [
+        "wrappers",
+        "autoboxing"
+      ],
       "answers": [
-        {"text": "Automatic conversion from wrapper to primitive", "is_correct": true},
-        {"text": "Converting primitive to wrapper", "is_correct": false},
-        {"text": "Converting object to String", "is_correct": false},
-        {"text": "Removing null values from collections", "is_correct": false}
+        {
+          "text": "Converting object to String",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic conversion from wrapper to primitive",
+          "is_correct": true
+        },
+        {
+          "text": "Removing null values from collections",
+          "is_correct": false
+        },
+        {
+          "text": "Converting primitive to wrapper",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q029. What risk exists with unboxing a null Integer?",
       "difficulty": 3,
-      "tags": ["wrappers", "null", "exceptions"],
+      "tags": [
+        "wrappers",
+        "null",
+        "exceptions"
+      ],
       "answers": [
-        {"text": "It throws NullPointerException", "is_correct": true},
-        {"text": "It returns 0 automatically", "is_correct": false},
-        {"text": "It throws ClassCastException", "is_correct": false},
-        {"text": "It compiles but skips assignment", "is_correct": false}
+        {
+          "text": "It throws ClassCastException",
+          "is_correct": false
+        },
+        {
+          "text": "It throws NullPointerException",
+          "is_correct": true
+        },
+        {
+          "text": "It returns 0 automatically",
+          "is_correct": false
+        },
+        {
+          "text": "It compiles but skips assignment",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q030. Which method converts a String to an int safely with exception handling?",
       "difficulty": 3,
-      "tags": ["parsing", "exceptions", "wrappers"],
+      "tags": [
+        "parsing",
+        "exceptions",
+        "wrappers"
+      ],
       "answers": [
-        {"text": "Integer.parseInt(text) inside try-catch", "is_correct": true},
-        {"text": "text.toInt() without checks", "is_correct": false},
-        {"text": "Math.parse(text)", "is_correct": false},
-        {"text": "Convert.int(text)", "is_correct": false}
+        {
+          "text": "Integer.parseInt(text) inside try-catch",
+          "is_correct": true
+        },
+        {
+          "text": "Convert.int(text)",
+          "is_correct": false
+        },
+        {
+          "text": "Math.parse(text)",
+          "is_correct": false
+        },
+        {
+          "text": "text.toInt() without checks",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q031. Which class provides arbitrary-precision integer arithmetic?",
       "difficulty": 3,
-      "tags": ["numbers", "biginteger"],
+      "tags": [
+        "numbers",
+        "biginteger"
+      ],
       "answers": [
-        {"text": "BigInteger", "is_correct": true},
-        {"text": "Long", "is_correct": false},
-        {"text": "BigDecimal", "is_correct": false},
-        {"text": "NumberFormat", "is_correct": false}
+        {
+          "text": "BigInteger",
+          "is_correct": true
+        },
+        {
+          "text": "BigDecimal",
+          "is_correct": false
+        },
+        {
+          "text": "NumberFormat",
+          "is_correct": false
+        },
+        {
+          "text": "Long",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q032. Which class is most suitable for precise currency calculations?",
       "difficulty": 3,
-      "tags": ["numbers", "bigdecimal"],
+      "tags": [
+        "numbers",
+        "bigdecimal"
+      ],
       "answers": [
-        {"text": "BigDecimal", "is_correct": true},
-        {"text": "double", "is_correct": false},
-        {"text": "float", "is_correct": false},
-        {"text": "short", "is_correct": false}
+        {
+          "text": "double",
+          "is_correct": false
+        },
+        {
+          "text": "BigDecimal",
+          "is_correct": true
+        },
+        {
+          "text": "float",
+          "is_correct": false
+        },
+        {
+          "text": "short",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q033. Which operation can cause loss of precision with floating-point types?",
       "difficulty": 3,
-      "tags": ["numbers", "floating-point"],
+      "tags": [
+        "numbers",
+        "floating-point"
+      ],
       "answers": [
-        {"text": "Representing decimal fractions like 0.1", "is_correct": true},
-        {"text": "Adding two ints", "is_correct": false},
-        {"text": "Using BigInteger", "is_correct": false},
-        {"text": "Comparing booleans", "is_correct": false}
+        {
+          "text": "Comparing booleans",
+          "is_correct": false
+        },
+        {
+          "text": "Representing decimal fractions like 0.1",
+          "is_correct": true
+        },
+        {
+          "text": "Using BigInteger",
+          "is_correct": false
+        },
+        {
+          "text": "Adding two ints",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q034. What does Math.floor return for 3.9?",
       "difficulty": 3,
-      "tags": ["math", "numbers"],
+      "tags": [
+        "math",
+        "numbers"
+      ],
       "answers": [
-        {"text": "3.0", "is_correct": true},
-        {"text": "4.0", "is_correct": false},
-        {"text": "3", "is_correct": false},
-        {"text": "Error", "is_correct": false}
+        {
+          "text": "Error",
+          "is_correct": false
+        },
+        {
+          "text": "4.0",
+          "is_correct": false
+        },
+        {
+          "text": "3",
+          "is_correct": false
+        },
+        {
+          "text": "3.0",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q035. Which operator performs short-circuit logical AND?",
       "difficulty": 3,
-      "tags": ["operators", "boolean"],
+      "tags": [
+        "operators",
+        "boolean"
+      ],
       "answers": [
-        {"text": "&&", "is_correct": true},
-        {"text": "&", "is_correct": false},
-        {"text": "and", "is_correct": false},
-        {"text": "::", "is_correct": false}
+        {
+          "text": "&&",
+          "is_correct": true
+        },
+        {
+          "text": "&",
+          "is_correct": false
+        },
+        {
+          "text": "and",
+          "is_correct": false
+        },
+        {
+          "text": "::",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q036. What is the effect of using '&' with boolean operands?",
       "difficulty": 3,
-      "tags": ["operators", "boolean"],
+      "tags": [
+        "operators",
+        "boolean"
+      ],
       "answers": [
-        {"text": "Evaluates both sides without short-circuiting", "is_correct": true},
-        {"text": "Short-circuits like &&", "is_correct": false},
-        {"text": "Performs string concatenation", "is_correct": false},
-        {"text": "Always returns true", "is_correct": false}
+        {
+          "text": "Short-circuits like &&",
+          "is_correct": false
+        },
+        {
+          "text": "Performs string concatenation",
+          "is_correct": false
+        },
+        {
+          "text": "Always returns true",
+          "is_correct": false
+        },
+        {
+          "text": "Evaluates both sides without short-circuiting",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q037. Which cast may lose data?",
       "difficulty": 3,
-      "tags": ["type-casting", "numbers"],
+      "tags": [
+        "type-casting",
+        "numbers"
+      ],
       "answers": [
-        {"text": "long to int", "is_correct": true},
-        {"text": "int to long", "is_correct": false},
-        {"text": "byte to int", "is_correct": false},
-        {"text": "char to int", "is_correct": false}
+        {
+          "text": "char to int",
+          "is_correct": false
+        },
+        {
+          "text": "long to int",
+          "is_correct": true
+        },
+        {
+          "text": "int to long",
+          "is_correct": false
+        },
+        {
+          "text": "byte to int",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q038. Which String method checks prefix match?",
       "difficulty": 3,
-      "tags": ["strings", "methods"],
+      "tags": [
+        "strings",
+        "methods"
+      ],
       "answers": [
-        {"text": "startsWith", "is_correct": true},
-        {"text": "contains", "is_correct": false},
-        {"text": "prefixOf", "is_correct": false},
-        {"text": "index", "is_correct": false}
+        {
+          "text": "prefixOf",
+          "is_correct": false
+        },
+        {
+          "text": "contains",
+          "is_correct": false
+        },
+        {
+          "text": "index",
+          "is_correct": false
+        },
+        {
+          "text": "startsWith",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q039. Which String method returns a new String without leading/trailing spaces?",
       "difficulty": 3,
-      "tags": ["strings", "methods"],
+      "tags": [
+        "strings",
+        "methods"
+      ],
       "answers": [
-        {"text": "trim", "is_correct": true},
-        {"text": "stripCenter", "is_correct": false},
-        {"text": "clear", "is_correct": false},
-        {"text": "compact", "is_correct": false}
+        {
+          "text": "clear",
+          "is_correct": false
+        },
+        {
+          "text": "compact",
+          "is_correct": false
+        },
+        {
+          "text": "trim",
+          "is_correct": true
+        },
+        {
+          "text": "stripCenter",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q040. Which statement about StringBuilder is correct?",
       "difficulty": 3,
-      "tags": ["strings", "stringbuilder"],
+      "tags": [
+        "strings",
+        "stringbuilder"
+      ],
       "answers": [
-        {"text": "It is mutable and not synchronized", "is_correct": true},
-        {"text": "It is immutable", "is_correct": false},
-        {"text": "It is always thread-safe", "is_correct": false},
-        {"text": "It cannot append numbers", "is_correct": false}
+        {
+          "text": "It is always thread-safe",
+          "is_correct": false
+        },
+        {
+          "text": "It cannot append numbers",
+          "is_correct": false
+        },
+        {
+          "text": "It is immutable",
+          "is_correct": false
+        },
+        {
+          "text": "It is mutable and not synchronized",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q041. Which collection allows duplicates and preserves insertion order?",
       "difficulty": 3,
-      "tags": ["collections", "list"],
+      "tags": [
+        "collections",
+        "list"
+      ],
       "answers": [
-        {"text": "ArrayList", "is_correct": true},
-        {"text": "HashSet", "is_correct": false},
-        {"text": "TreeSet", "is_correct": false},
-        {"text": "HashMap", "is_correct": false}
+        {
+          "text": "HashSet",
+          "is_correct": false
+        },
+        {
+          "text": "ArrayList",
+          "is_correct": true
+        },
+        {
+          "text": "HashMap",
+          "is_correct": false
+        },
+        {
+          "text": "TreeSet",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q042. Which Set implementation preserves insertion order?",
       "difficulty": 3,
-      "tags": ["collections", "set"],
+      "tags": [
+        "collections",
+        "set"
+      ],
       "answers": [
-        {"text": "LinkedHashSet", "is_correct": true},
-        {"text": "HashSet", "is_correct": false},
-        {"text": "TreeSet", "is_correct": false},
-        {"text": "EnumSet", "is_correct": false}
+        {
+          "text": "LinkedHashSet",
+          "is_correct": true
+        },
+        {
+          "text": "EnumSet",
+          "is_correct": false
+        },
+        {
+          "text": "HashSet",
+          "is_correct": false
+        },
+        {
+          "text": "TreeSet",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q043. Which Set implementation stores elements in sorted order?",
       "difficulty": 3,
-      "tags": ["collections", "set", "sorting"],
+      "tags": [
+        "collections",
+        "set",
+        "sorting"
+      ],
       "answers": [
-        {"text": "TreeSet", "is_correct": true},
-        {"text": "HashSet", "is_correct": false},
-        {"text": "LinkedHashSet", "is_correct": false},
-        {"text": "ArrayList", "is_correct": false}
+        {
+          "text": "LinkedHashSet",
+          "is_correct": false
+        },
+        {
+          "text": "TreeSet",
+          "is_correct": true
+        },
+        {
+          "text": "HashSet",
+          "is_correct": false
+        },
+        {
+          "text": "ArrayList",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q044. Which Map implementation preserves insertion order of keys?",
       "difficulty": 3,
-      "tags": ["collections", "map"],
+      "tags": [
+        "collections",
+        "map"
+      ],
       "answers": [
-        {"text": "LinkedHashMap", "is_correct": true},
-        {"text": "HashMap", "is_correct": false},
-        {"text": "TreeMap", "is_correct": false},
-        {"text": "Hashtable", "is_correct": false}
+        {
+          "text": "LinkedHashMap",
+          "is_correct": true
+        },
+        {
+          "text": "TreeMap",
+          "is_correct": false
+        },
+        {
+          "text": "Hashtable",
+          "is_correct": false
+        },
+        {
+          "text": "HashMap",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q045. Which Map implementation keeps keys sorted by natural order by default?",
       "difficulty": 3,
-      "tags": ["collections", "map", "sorting"],
+      "tags": [
+        "collections",
+        "map",
+        "sorting"
+      ],
       "answers": [
-        {"text": "TreeMap", "is_correct": true},
-        {"text": "HashMap", "is_correct": false},
-        {"text": "LinkedHashMap", "is_correct": false},
-        {"text": "WeakHashMap", "is_correct": false}
+        {
+          "text": "TreeMap",
+          "is_correct": true
+        },
+        {
+          "text": "HashMap",
+          "is_correct": false
+        },
+        {
+          "text": "WeakHashMap",
+          "is_correct": false
+        },
+        {
+          "text": "LinkedHashMap",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q046. Which collection operation is typically O(1) average in HashMap?",
       "difficulty": 3,
-      "tags": ["collections", "map", "complexity"],
+      "tags": [
+        "collections",
+        "map",
+        "complexity"
+      ],
       "answers": [
-        {"text": "get by key", "is_correct": true},
-        {"text": "iterate in sorted order", "is_correct": false},
-        {"text": "find minimum key", "is_correct": false},
-        {"text": "binary search by value", "is_correct": false}
+        {
+          "text": "get by key",
+          "is_correct": true
+        },
+        {
+          "text": "binary search by value",
+          "is_correct": false
+        },
+        {
+          "text": "iterate in sorted order",
+          "is_correct": false
+        },
+        {
+          "text": "find minimum key",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q047. What must keys in a HashMap provide for reliable lookups?",
       "difficulty": 3,
-      "tags": ["collections", "hashing", "map"],
+      "tags": [
+        "collections",
+        "hashing",
+        "map"
+      ],
       "answers": [
-        {"text": "Consistent equals and hashCode implementations", "is_correct": true},
-        {"text": "Only toString override", "is_correct": false},
-        {"text": "Serializable interface", "is_correct": false},
-        {"text": "Cloneable interface", "is_correct": false}
+        {
+          "text": "Only toString override",
+          "is_correct": false
+        },
+        {
+          "text": "Cloneable interface",
+          "is_correct": false
+        },
+        {
+          "text": "Serializable interface",
+          "is_correct": false
+        },
+        {
+          "text": "Consistent equals and hashCode implementations",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q048. Which method checks if a Map contains a specific key?",
       "difficulty": 3,
-      "tags": ["collections", "map", "methods"],
+      "tags": [
+        "collections",
+        "map",
+        "methods"
+      ],
       "answers": [
-        {"text": "containsKey", "is_correct": true},
-        {"text": "contains", "is_correct": false},
-        {"text": "hasKey", "is_correct": false},
-        {"text": "exists", "is_correct": false}
+        {
+          "text": "contains",
+          "is_correct": false
+        },
+        {
+          "text": "containsKey",
+          "is_correct": true
+        },
+        {
+          "text": "exists",
+          "is_correct": false
+        },
+        {
+          "text": "hasKey",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q049. Which method returns a default value when key is absent in Map?",
       "difficulty": 3,
-      "tags": ["collections", "map", "methods"],
+      "tags": [
+        "collections",
+        "map",
+        "methods"
+      ],
       "answers": [
-        {"text": "getOrDefault", "is_correct": true},
-        {"text": "getOrElse", "is_correct": false},
-        {"text": "defaultGet", "is_correct": false},
-        {"text": "fetchOrDefault", "is_correct": false}
+        {
+          "text": "getOrElse",
+          "is_correct": false
+        },
+        {
+          "text": "fetchOrDefault",
+          "is_correct": false
+        },
+        {
+          "text": "defaultGet",
+          "is_correct": false
+        },
+        {
+          "text": "getOrDefault",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q050. What does computeIfAbsent do in a Map?",
       "difficulty": 3,
-      "tags": ["collections", "map", "methods"],
+      "tags": [
+        "collections",
+        "map",
+        "methods"
+      ],
       "answers": [
-        {"text": "Computes and stores a value only if key is missing", "is_correct": true},
-        {"text": "Always recomputes existing values", "is_correct": false},
-        {"text": "Removes absent keys", "is_correct": false},
-        {"text": "Sorts keys by default", "is_correct": false}
+        {
+          "text": "Sorts keys by default",
+          "is_correct": false
+        },
+        {
+          "text": "Computes and stores a value only if key is missing",
+          "is_correct": true
+        },
+        {
+          "text": "Removes absent keys",
+          "is_correct": false
+        },
+        {
+          "text": "Always recomputes existing values",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q051. Which interface supports FIFO behavior?",
       "difficulty": 3,
-      "tags": ["collections", "queue"],
+      "tags": [
+        "collections",
+        "queue"
+      ],
       "answers": [
-        {"text": "Queue", "is_correct": true},
-        {"text": "Set", "is_correct": false},
-        {"text": "Map", "is_correct": false},
-        {"text": "Iterable", "is_correct": false}
+        {
+          "text": "Map",
+          "is_correct": false
+        },
+        {
+          "text": "Queue",
+          "is_correct": true
+        },
+        {
+          "text": "Iterable",
+          "is_correct": false
+        },
+        {
+          "text": "Set",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q052. Which Queue implementation is commonly used as a FIFO queue?",
       "difficulty": 3,
-      "tags": ["collections", "queue"],
+      "tags": [
+        "collections",
+        "queue"
+      ],
       "answers": [
-        {"text": "ArrayDeque", "is_correct": true},
-        {"text": "TreeSet", "is_correct": false},
-        {"text": "HashSet", "is_correct": false},
-        {"text": "Vector", "is_correct": false}
+        {
+          "text": "TreeSet",
+          "is_correct": false
+        },
+        {
+          "text": "HashSet",
+          "is_correct": false
+        },
+        {
+          "text": "Vector",
+          "is_correct": false
+        },
+        {
+          "text": "ArrayDeque",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q053. What is true about ArrayDeque?",
       "difficulty": 3,
-      "tags": ["collections", "deque"],
+      "tags": [
+        "collections",
+        "deque"
+      ],
       "answers": [
-        {"text": "It can act as both stack and queue", "is_correct": true},
-        {"text": "It allows null elements", "is_correct": false},
-        {"text": "It stores keys and values", "is_correct": false},
-        {"text": "It is always synchronized", "is_correct": false}
+        {
+          "text": "It is always synchronized",
+          "is_correct": false
+        },
+        {
+          "text": "It can act as both stack and queue",
+          "is_correct": true
+        },
+        {
+          "text": "It stores keys and values",
+          "is_correct": false
+        },
+        {
+          "text": "It allows null elements",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q054. Which List implementation gives O(1) random access typically?",
       "difficulty": 3,
-      "tags": ["collections", "list", "complexity"],
+      "tags": [
+        "collections",
+        "list",
+        "complexity"
+      ],
       "answers": [
-        {"text": "ArrayList", "is_correct": true},
-        {"text": "LinkedList", "is_correct": false},
-        {"text": "CopyOnWriteArrayList", "is_correct": false},
-        {"text": "Stack", "is_correct": false}
+        {
+          "text": "ArrayList",
+          "is_correct": true
+        },
+        {
+          "text": "LinkedList",
+          "is_correct": false
+        },
+        {
+          "text": "Stack",
+          "is_correct": false
+        },
+        {
+          "text": "CopyOnWriteArrayList",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q055. Which List implementation is efficient for inserting at the head frequently?",
       "difficulty": 3,
-      "tags": ["collections", "list", "complexity"],
+      "tags": [
+        "collections",
+        "list",
+        "complexity"
+      ],
       "answers": [
-        {"text": "LinkedList", "is_correct": true},
-        {"text": "ArrayList", "is_correct": false},
-        {"text": "Vector", "is_correct": false},
-        {"text": "ArrayDeque used as list", "is_correct": false}
+        {
+          "text": "LinkedList",
+          "is_correct": true
+        },
+        {
+          "text": "ArrayList",
+          "is_correct": false
+        },
+        {
+          "text": "Vector",
+          "is_correct": false
+        },
+        {
+          "text": "ArrayDeque used as list",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q056. Which utility method creates an unmodifiable list copy in Java 10+?",
       "difficulty": 3,
-      "tags": ["collections", "immutability", "java11"],
+      "tags": [
+        "collections",
+        "immutability",
+        "java11"
+      ],
       "answers": [
-        {"text": "List.copyOf", "is_correct": true},
-        {"text": "Collections.mutableList", "is_correct": false},
-        {"text": "List.unmodifiable", "is_correct": false},
-        {"text": "Arrays.asImmutableList", "is_correct": false}
+        {
+          "text": "List.copyOf",
+          "is_correct": true
+        },
+        {
+          "text": "Arrays.asImmutableList",
+          "is_correct": false
+        },
+        {
+          "text": "List.unmodifiable",
+          "is_correct": false
+        },
+        {
+          "text": "Collections.mutableList",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q057. What is true about List.of elements?",
       "difficulty": 3,
-      "tags": ["collections", "immutability"],
+      "tags": [
+        "collections",
+        "immutability"
+      ],
       "answers": [
-        {"text": "Returned list is immutable", "is_correct": true},
-        {"text": "List allows add and remove", "is_correct": false},
-        {"text": "Null elements are always accepted", "is_correct": false},
-        {"text": "Order is randomized", "is_correct": false}
+        {
+          "text": "Order is randomized",
+          "is_correct": false
+        },
+        {
+          "text": "Returned list is immutable",
+          "is_correct": true
+        },
+        {
+          "text": "Null elements are always accepted",
+          "is_correct": false
+        },
+        {
+          "text": "List allows add and remove",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q058. Which call sorts a List in natural order?",
       "difficulty": 3,
-      "tags": ["collections", "sorting"],
+      "tags": [
+        "collections",
+        "sorting"
+      ],
       "answers": [
-        {"text": "Collections.sort(list)", "is_correct": true},
-        {"text": "list.sorted()", "is_correct": false},
-        {"text": "Sort.apply(list)", "is_correct": false},
-        {"text": "Arrays.sortMap(list)", "is_correct": false}
+        {
+          "text": "Sort.apply(list)",
+          "is_correct": false
+        },
+        {
+          "text": "Arrays.sortMap(list)",
+          "is_correct": false
+        },
+        {
+          "text": "list.sorted()",
+          "is_correct": false
+        },
+        {
+          "text": "Collections.sort(list)",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q059. Which interface should a class implement for natural ordering?",
       "difficulty": 3,
-      "tags": ["collections", "sorting", "interfaces"],
+      "tags": [
+        "collections",
+        "sorting",
+        "interfaces"
+      ],
       "answers": [
-        {"text": "Comparable", "is_correct": true},
-        {"text": "Comparator", "is_correct": false},
-        {"text": "Iterable", "is_correct": false},
-        {"text": "Cloneable", "is_correct": false}
+        {
+          "text": "Comparator",
+          "is_correct": false
+        },
+        {
+          "text": "Iterable",
+          "is_correct": false
+        },
+        {
+          "text": "Cloneable",
+          "is_correct": false
+        },
+        {
+          "text": "Comparable",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q060. Which interface is used to define alternative sort orders externally?",
       "difficulty": 3,
-      "tags": ["collections", "sorting", "interfaces"],
+      "tags": [
+        "collections",
+        "sorting",
+        "interfaces"
+      ],
       "answers": [
-        {"text": "Comparator", "is_correct": true},
-        {"text": "Comparable", "is_correct": false},
-        {"text": "Function", "is_correct": false},
-        {"text": "Predicate", "is_correct": false}
+        {
+          "text": "Function",
+          "is_correct": false
+        },
+        {
+          "text": "Predicate",
+          "is_correct": false
+        },
+        {
+          "text": "Comparable",
+          "is_correct": false
+        },
+        {
+          "text": "Comparator",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q061. What happens if you modify a collection while iterating with for-each (most cases)?",
       "difficulty": 3,
-      "tags": ["collections", "iterators", "exceptions"],
+      "tags": [
+        "collections",
+        "iterators",
+        "exceptions"
+      ],
       "answers": [
-        {"text": "May throw ConcurrentModificationException", "is_correct": true},
-        {"text": "Always silently succeeds", "is_correct": false},
-        {"text": "Always compiles but skips elements", "is_correct": false},
-        {"text": "Throws IOException", "is_correct": false}
+        {
+          "text": "Always compiles but skips elements",
+          "is_correct": false
+        },
+        {
+          "text": "May throw ConcurrentModificationException",
+          "is_correct": true
+        },
+        {
+          "text": "Always silently succeeds",
+          "is_correct": false
+        },
+        {
+          "text": "Throws IOException",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q062. Which iterator method is safe for removal during iteration?",
       "difficulty": 3,
-      "tags": ["collections", "iterators"],
+      "tags": [
+        "collections",
+        "iterators"
+      ],
       "answers": [
-        {"text": "Iterator.remove", "is_correct": true},
-        {"text": "Collection.remove directly", "is_correct": false},
-        {"text": "List.delete", "is_correct": false},
-        {"text": "Iterator.deleteCurrent", "is_correct": false}
+        {
+          "text": "List.delete",
+          "is_correct": false
+        },
+        {
+          "text": "Iterator.deleteCurrent",
+          "is_correct": false
+        },
+        {
+          "text": "Collection.remove directly",
+          "is_correct": false
+        },
+        {
+          "text": "Iterator.remove",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q063. Which collection does NOT allow duplicates by contract?",
       "difficulty": 3,
-      "tags": ["collections", "set"],
+      "tags": [
+        "collections",
+        "set"
+      ],
       "answers": [
-        {"text": "Set", "is_correct": true},
-        {"text": "List", "is_correct": false},
-        {"text": "Queue", "is_correct": false},
-        {"text": "Deque", "is_correct": false}
+        {
+          "text": "Queue",
+          "is_correct": false
+        },
+        {
+          "text": "Deque",
+          "is_correct": false
+        },
+        {
+          "text": "Set",
+          "is_correct": true
+        },
+        {
+          "text": "List",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q064. Which collection permits one null key and multiple null values?",
       "difficulty": 3,
-      "tags": ["collections", "map"],
+      "tags": [
+        "collections",
+        "map"
+      ],
       "answers": [
-        {"text": "HashMap", "is_correct": true},
-        {"text": "Hashtable", "is_correct": false},
-        {"text": "TreeMap with natural ordering", "is_correct": false},
-        {"text": "ConcurrentHashMap", "is_correct": false}
+        {
+          "text": "Hashtable",
+          "is_correct": false
+        },
+        {
+          "text": "TreeMap with natural ordering",
+          "is_correct": false
+        },
+        {
+          "text": "ConcurrentHashMap",
+          "is_correct": false
+        },
+        {
+          "text": "HashMap",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q065. Which legacy Map class is synchronized by default?",
       "difficulty": 3,
-      "tags": ["collections", "map", "legacy"],
+      "tags": [
+        "collections",
+        "map",
+        "legacy"
+      ],
       "answers": [
-        {"text": "Hashtable", "is_correct": true},
-        {"text": "HashMap", "is_correct": false},
-        {"text": "TreeMap", "is_correct": false},
-        {"text": "WeakHashMap", "is_correct": false}
+        {
+          "text": "HashMap",
+          "is_correct": false
+        },
+        {
+          "text": "WeakHashMap",
+          "is_correct": false
+        },
+        {
+          "text": "TreeMap",
+          "is_correct": false
+        },
+        {
+          "text": "Hashtable",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q066. Which utility wraps a list with synchronized access?",
       "difficulty": 3,
-      "tags": ["collections", "thread-safety"],
+      "tags": [
+        "collections",
+        "thread-safety"
+      ],
       "answers": [
-        {"text": "Collections.synchronizedList", "is_correct": true},
-        {"text": "List.synchronized", "is_correct": false},
-        {"text": "Arrays.synchronizedList", "is_correct": false},
-        {"text": "Collections.concurrentList", "is_correct": false}
+        {
+          "text": "Arrays.synchronizedList",
+          "is_correct": false
+        },
+        {
+          "text": "List.synchronized",
+          "is_correct": false
+        },
+        {
+          "text": "Collections.synchronizedList",
+          "is_correct": true
+        },
+        {
+          "text": "Collections.concurrentList",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q067. Which list is optimized for many reads and few writes in concurrency scenarios?",
       "difficulty": 3,
-      "tags": ["collections", "concurrency"],
+      "tags": [
+        "collections",
+        "concurrency"
+      ],
       "answers": [
-        {"text": "CopyOnWriteArrayList", "is_correct": true},
-        {"text": "LinkedList", "is_correct": false},
-        {"text": "ArrayList", "is_correct": false},
-        {"text": "Vector", "is_correct": false}
+        {
+          "text": "CopyOnWriteArrayList",
+          "is_correct": true
+        },
+        {
+          "text": "ArrayList",
+          "is_correct": false
+        },
+        {
+          "text": "LinkedList",
+          "is_correct": false
+        },
+        {
+          "text": "Vector",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q068. What does Collections.unmodifiableList do?",
       "difficulty": 3,
-      "tags": ["collections", "immutability"],
+      "tags": [
+        "collections",
+        "immutability"
+      ],
       "answers": [
-        {"text": "Returns a read-only view of the original list", "is_correct": true},
-        {"text": "Creates a deep immutable copy always", "is_correct": false},
-        {"text": "Sorts the list permanently", "is_correct": false},
-        {"text": "Converts list to set", "is_correct": false}
+        {
+          "text": "Sorts the list permanently",
+          "is_correct": false
+        },
+        {
+          "text": "Converts list to set",
+          "is_correct": false
+        },
+        {
+          "text": "Returns a read-only view of the original list",
+          "is_correct": true
+        },
+        {
+          "text": "Creates a deep immutable copy always",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q069. Which method creates a fixed-size list backed by an array?",
       "difficulty": 3,
-      "tags": ["collections", "arrays"],
+      "tags": [
+        "collections",
+        "arrays"
+      ],
       "answers": [
-        {"text": "Arrays.asList", "is_correct": true},
-        {"text": "List.of", "is_correct": false},
-        {"text": "Collections.fixedList", "is_correct": false},
-        {"text": "ArrayList.ofArray", "is_correct": false}
+        {
+          "text": "List.of",
+          "is_correct": false
+        },
+        {
+          "text": "Collections.fixedList",
+          "is_correct": false
+        },
+        {
+          "text": "ArrayList.ofArray",
+          "is_correct": false
+        },
+        {
+          "text": "Arrays.asList",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q070. What is a key property of PriorityQueue?",
       "difficulty": 3,
-      "tags": ["collections", "queue", "priority"],
+      "tags": [
+        "collections",
+        "queue",
+        "priority"
+      ],
       "answers": [
-        {"text": "Head element follows priority ordering", "is_correct": true},
-        {"text": "Iteration is fully sorted always", "is_correct": false},
-        {"text": "It is LIFO", "is_correct": false},
-        {"text": "It disallows duplicate elements", "is_correct": false}
+        {
+          "text": "Iteration is fully sorted always",
+          "is_correct": false
+        },
+        {
+          "text": "It disallows duplicate elements",
+          "is_correct": false
+        },
+        {
+          "text": "It is LIFO",
+          "is_correct": false
+        },
+        {
+          "text": "Head element follows priority ordering",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q071. What is the purpose of Java generics?",
       "difficulty": 3,
-      "tags": ["generics", "type-safety"],
+      "tags": [
+        "generics",
+        "type-safety"
+      ],
       "answers": [
-        {"text": "Provide compile-time type safety", "is_correct": true},
-        {"text": "Provide runtime type creation", "is_correct": false},
-        {"text": "Replace all casting permanently at runtime", "is_correct": false},
-        {"text": "Enable primitive specialization automatically", "is_correct": false}
+        {
+          "text": "Provide runtime type creation",
+          "is_correct": false
+        },
+        {
+          "text": "Enable primitive specialization automatically",
+          "is_correct": false
+        },
+        {
+          "text": "Provide compile-time type safety",
+          "is_correct": true
+        },
+        {
+          "text": "Replace all casting permanently at runtime",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q072. What does List<?> represent?",
       "difficulty": 3,
-      "tags": ["generics", "wildcards"],
+      "tags": [
+        "generics",
+        "wildcards"
+      ],
       "answers": [
-        {"text": "A list of unknown element type", "is_correct": true},
-        {"text": "A list of Object only", "is_correct": false},
-        {"text": "A list of Number only", "is_correct": false},
-        {"text": "An empty list only", "is_correct": false}
+        {
+          "text": "An empty list only",
+          "is_correct": false
+        },
+        {
+          "text": "A list of Number only",
+          "is_correct": false
+        },
+        {
+          "text": "A list of Object only",
+          "is_correct": false
+        },
+        {
+          "text": "A list of unknown element type",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q073. Which wildcard is used when reading from a producer of Number values?",
       "difficulty": 3,
-      "tags": ["generics", "wildcards"],
+      "tags": [
+        "generics",
+        "wildcards"
+      ],
       "answers": [
-        {"text": "? extends Number", "is_correct": true},
-        {"text": "? super Number", "is_correct": false},
-        {"text": "? equals Number", "is_correct": false},
-        {"text": "? exact Number", "is_correct": false}
+        {
+          "text": "? exact Number",
+          "is_correct": false
+        },
+        {
+          "text": "? equals Number",
+          "is_correct": false
+        },
+        {
+          "text": "? extends Number",
+          "is_correct": true
+        },
+        {
+          "text": "? super Number",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q074. Which wildcard is useful when writing Number values into a sink?",
       "difficulty": 3,
-      "tags": ["generics", "wildcards"],
+      "tags": [
+        "generics",
+        "wildcards"
+      ],
       "answers": [
-        {"text": "? super Number", "is_correct": true},
-        {"text": "? extends Number", "is_correct": false},
-        {"text": "? wildcard", "is_correct": false},
-        {"text": "? implements Number", "is_correct": false}
+        {
+          "text": "? wildcard",
+          "is_correct": false
+        },
+        {
+          "text": "? implements Number",
+          "is_correct": false
+        },
+        {
+          "text": "? super Number",
+          "is_correct": true
+        },
+        {
+          "text": "? extends Number",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q075. What is type erasure in Java generics?",
       "difficulty": 3,
-      "tags": ["generics", "jvm"],
+      "tags": [
+        "generics",
+        "jvm"
+      ],
       "answers": [
-        {"text": "Generic type info is removed at runtime", "is_correct": true},
-        {"text": "Type parameters are expanded at runtime", "is_correct": false},
-        {"text": "All generic classes become Object arrays", "is_correct": false},
-        {"text": "Type checks happen only at runtime", "is_correct": false}
+        {
+          "text": "Type checks happen only at runtime",
+          "is_correct": false
+        },
+        {
+          "text": "All generic classes become Object arrays",
+          "is_correct": false
+        },
+        {
+          "text": "Generic type info is removed at runtime",
+          "is_correct": true
+        },
+        {
+          "text": "Type parameters are expanded at runtime",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q076. Why can you not use primitive types directly as generic type arguments?",
       "difficulty": 3,
-      "tags": ["generics", "primitives"],
+      "tags": [
+        "generics",
+        "primitives"
+      ],
       "answers": [
-        {"text": "Generics require reference types", "is_correct": true},
-        {"text": "Primitives are slower", "is_correct": false},
-        {"text": "Primitives are deprecated", "is_correct": false},
-        {"text": "JVM disallows primitive variables", "is_correct": false}
+        {
+          "text": "JVM disallows primitive variables",
+          "is_correct": false
+        },
+        {
+          "text": "Primitives are slower",
+          "is_correct": false
+        },
+        {
+          "text": "Primitives are deprecated",
+          "is_correct": false
+        },
+        {
+          "text": "Generics require reference types",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q077. What does Optional<T> primarily help avoid?",
       "difficulty": 3,
-      "tags": ["optional", "null-safety"],
+      "tags": [
+        "optional",
+        "null-safety"
+      ],
       "answers": [
-        {"text": "Unclear null handling in APIs", "is_correct": true},
-        {"text": "Compilation of interfaces", "is_correct": false},
-        {"text": "Use of exceptions entirely", "is_correct": false},
-        {"text": "All runtime errors", "is_correct": false}
+        {
+          "text": "Use of exceptions entirely",
+          "is_correct": false
+        },
+        {
+          "text": "All runtime errors",
+          "is_correct": false
+        },
+        {
+          "text": "Compilation of interfaces",
+          "is_correct": false
+        },
+        {
+          "text": "Unclear null handling in APIs",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q078. Which Optional method returns fallback value eagerly?",
       "difficulty": 3,
-      "tags": ["optional", "methods"],
+      "tags": [
+        "optional",
+        "methods"
+      ],
       "answers": [
-        {"text": "orElse", "is_correct": true},
-        {"text": "orElseGet", "is_correct": false},
-        {"text": "ifPresent", "is_correct": false},
-        {"text": "map", "is_correct": false}
+        {
+          "text": "orElse",
+          "is_correct": true
+        },
+        {
+          "text": "map",
+          "is_correct": false
+        },
+        {
+          "text": "orElseGet",
+          "is_correct": false
+        },
+        {
+          "text": "ifPresent",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q079. Which Optional method is lazy for fallback computation?",
       "difficulty": 3,
-      "tags": ["optional", "methods"],
+      "tags": [
+        "optional",
+        "methods"
+      ],
       "answers": [
-        {"text": "orElseGet", "is_correct": true},
-        {"text": "orElse", "is_correct": false},
-        {"text": "get", "is_correct": false},
-        {"text": "isPresent", "is_correct": false}
+        {
+          "text": "isPresent",
+          "is_correct": false
+        },
+        {
+          "text": "get",
+          "is_correct": false
+        },
+        {
+          "text": "orElse",
+          "is_correct": false
+        },
+        {
+          "text": "orElseGet",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q080. What does Optional.ofNullable(value) do when value is null?",
       "difficulty": 3,
-      "tags": ["optional", "null-safety"],
+      "tags": [
+        "optional",
+        "null-safety"
+      ],
       "answers": [
-        {"text": "Returns Optional.empty()", "is_correct": true},
-        {"text": "Throws NullPointerException", "is_correct": false},
-        {"text": "Returns Optional.of(null)", "is_correct": false},
-        {"text": "Returns a default String", "is_correct": false}
+        {
+          "text": "Returns a default String",
+          "is_correct": false
+        },
+        {
+          "text": "Returns Optional.of(null)",
+          "is_correct": false
+        },
+        {
+          "text": "Returns Optional.empty()",
+          "is_correct": true
+        },
+        {
+          "text": "Throws NullPointerException",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q081. Which functional interface represents a value supplier with no arguments?",
       "difficulty": 3,
-      "tags": ["functional-interfaces", "lambda"],
+      "tags": [
+        "functional-interfaces",
+        "lambda"
+      ],
       "answers": [
-        {"text": "Supplier<T>", "is_correct": true},
-        {"text": "Consumer<T>", "is_correct": false},
-        {"text": "Predicate<T>", "is_correct": false},
-        {"text": "BiFunction<T,U,R>", "is_correct": false}
+        {
+          "text": "Predicate<T>",
+          "is_correct": false
+        },
+        {
+          "text": "BiFunction<T,U,R>",
+          "is_correct": false
+        },
+        {
+          "text": "Consumer<T>",
+          "is_correct": false
+        },
+        {
+          "text": "Supplier<T>",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q082. Which functional interface takes T and returns boolean?",
       "difficulty": 3,
-      "tags": ["functional-interfaces", "lambda"],
+      "tags": [
+        "functional-interfaces",
+        "lambda"
+      ],
       "answers": [
-        {"text": "Predicate<T>", "is_correct": true},
-        {"text": "Function<T,R>", "is_correct": false},
-        {"text": "Consumer<T>", "is_correct": false},
-        {"text": "Supplier<T>", "is_correct": false}
+        {
+          "text": "Consumer<T>",
+          "is_correct": false
+        },
+        {
+          "text": "Predicate<T>",
+          "is_correct": true
+        },
+        {
+          "text": "Supplier<T>",
+          "is_correct": false
+        },
+        {
+          "text": "Function<T,R>",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q083. Which functional interface takes T and returns R?",
       "difficulty": 3,
-      "tags": ["functional-interfaces", "lambda"],
+      "tags": [
+        "functional-interfaces",
+        "lambda"
+      ],
       "answers": [
-        {"text": "Function<T,R>", "is_correct": true},
-        {"text": "Predicate<T>", "is_correct": false},
-        {"text": "Runnable", "is_correct": false},
-        {"text": "Consumer<T>", "is_correct": false}
+        {
+          "text": "Predicate<T>",
+          "is_correct": false
+        },
+        {
+          "text": "Runnable",
+          "is_correct": false
+        },
+        {
+          "text": "Function<T,R>",
+          "is_correct": true
+        },
+        {
+          "text": "Consumer<T>",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q084. Which functional interface consumes T and returns no result?",
       "difficulty": 3,
-      "tags": ["functional-interfaces", "lambda"],
+      "tags": [
+        "functional-interfaces",
+        "lambda"
+      ],
       "answers": [
-        {"text": "Consumer<T>", "is_correct": true},
-        {"text": "Function<T,R>", "is_correct": false},
-        {"text": "Predicate<T>", "is_correct": false},
-        {"text": "Supplier<T>", "is_correct": false}
+        {
+          "text": "Predicate<T>",
+          "is_correct": false
+        },
+        {
+          "text": "Supplier<T>",
+          "is_correct": false
+        },
+        {
+          "text": "Consumer<T>",
+          "is_correct": true
+        },
+        {
+          "text": "Function<T,R>",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q085. Which interface represents a task with no input and no return value?",
       "difficulty": 3,
-      "tags": ["functional-interfaces", "concurrency"],
+      "tags": [
+        "functional-interfaces",
+        "concurrency"
+      ],
       "answers": [
-        {"text": "Runnable", "is_correct": true},
-        {"text": "Callable<V>", "is_correct": false},
-        {"text": "Supplier<V>", "is_correct": false},
-        {"text": "Comparator<T>", "is_correct": false}
+        {
+          "text": "Comparator<T>",
+          "is_correct": false
+        },
+        {
+          "text": "Supplier<V>",
+          "is_correct": false
+        },
+        {
+          "text": "Runnable",
+          "is_correct": true
+        },
+        {
+          "text": "Callable<V>",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q086. Which interface can return a value and throw checked exceptions when submitted to ExecutorService?",
       "difficulty": 3,
-      "tags": ["concurrency", "functional-interfaces"],
+      "tags": [
+        "concurrency",
+        "functional-interfaces"
+      ],
       "answers": [
-        {"text": "Callable<V>", "is_correct": true},
-        {"text": "Runnable", "is_correct": false},
-        {"text": "Supplier<V>", "is_correct": false},
-        {"text": "Thread", "is_correct": false}
+        {
+          "text": "Thread",
+          "is_correct": false
+        },
+        {
+          "text": "Callable<V>",
+          "is_correct": true
+        },
+        {
+          "text": "Runnable",
+          "is_correct": false
+        },
+        {
+          "text": "Supplier<V>",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q087. What is the best description of a method reference?",
       "difficulty": 3,
-      "tags": ["lambda", "method-reference"],
+      "tags": [
+        "lambda",
+        "method-reference"
+      ],
       "answers": [
-        {"text": "A shorthand for certain lambda expressions", "is_correct": true},
-        {"text": "A pointer to any local variable", "is_correct": false},
-        {"text": "A replacement for interfaces", "is_correct": false},
-        {"text": "A compile-time annotation", "is_correct": false}
+        {
+          "text": "A shorthand for certain lambda expressions",
+          "is_correct": true
+        },
+        {
+          "text": "A replacement for interfaces",
+          "is_correct": false
+        },
+        {
+          "text": "A pointer to any local variable",
+          "is_correct": false
+        },
+        {
+          "text": "A compile-time annotation",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q088. Which form references an instance method of a specific object?",
       "difficulty": 3,
-      "tags": ["lambda", "method-reference"],
+      "tags": [
+        "lambda",
+        "method-reference"
+      ],
       "answers": [
-        {"text": "instance::methodName", "is_correct": true},
-        {"text": "ClassName::new", "is_correct": false},
-        {"text": "ClassName::staticMethod", "is_correct": false},
-        {"text": "method::instance", "is_correct": false}
+        {
+          "text": "method::instance",
+          "is_correct": false
+        },
+        {
+          "text": "ClassName::staticMethod",
+          "is_correct": false
+        },
+        {
+          "text": "instance::methodName",
+          "is_correct": true
+        },
+        {
+          "text": "ClassName::new",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q089. Which form references a constructor?",
       "difficulty": 3,
-      "tags": ["lambda", "method-reference"],
+      "tags": [
+        "lambda",
+        "method-reference"
+      ],
       "answers": [
-        {"text": "ClassName::new", "is_correct": true},
-        {"text": "new::ClassName", "is_correct": false},
-        {"text": "ClassName::init", "is_correct": false},
-        {"text": "constructor::ClassName", "is_correct": false}
+        {
+          "text": "ClassName::new",
+          "is_correct": true
+        },
+        {
+          "text": "ClassName::init",
+          "is_correct": false
+        },
+        {
+          "text": "constructor::ClassName",
+          "is_correct": false
+        },
+        {
+          "text": "new::ClassName",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q090. Which statement about generic methods is correct?",
       "difficulty": 3,
-      "tags": ["generics", "methods"],
+      "tags": [
+        "generics",
+        "methods"
+      ],
       "answers": [
-        {"text": "They declare type parameters before return type", "is_correct": true},
-        {"text": "They must be static", "is_correct": false},
-        {"text": "They cannot appear in generic classes", "is_correct": false},
-        {"text": "They require reflection", "is_correct": false}
+        {
+          "text": "They cannot appear in generic classes",
+          "is_correct": false
+        },
+        {
+          "text": "They must be static",
+          "is_correct": false
+        },
+        {
+          "text": "They require reflection",
+          "is_correct": false
+        },
+        {
+          "text": "They declare type parameters before return type",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q091. What is a checked exception?",
       "difficulty": 3,
-      "tags": ["exceptions"],
+      "tags": [
+        "exceptions"
+      ],
       "answers": [
-        {"text": "An exception that must be handled or declared", "is_correct": true},
-        {"text": "An exception thrown only at compile time", "is_correct": false},
-        {"text": "An exception that never occurs at runtime", "is_correct": false},
-        {"text": "An exception from Error class", "is_correct": false}
+        {
+          "text": "An exception thrown only at compile time",
+          "is_correct": false
+        },
+        {
+          "text": "An exception that never occurs at runtime",
+          "is_correct": false
+        },
+        {
+          "text": "An exception that must be handled or declared",
+          "is_correct": true
+        },
+        {
+          "text": "An exception from Error class",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q092. Which is an unchecked exception type hierarchy root?",
       "difficulty": 3,
-      "tags": ["exceptions"],
+      "tags": [
+        "exceptions"
+      ],
       "answers": [
-        {"text": "RuntimeException", "is_correct": true},
-        {"text": "Exception", "is_correct": false},
-        {"text": "Throwable", "is_correct": false},
-        {"text": "Error", "is_correct": false}
+        {
+          "text": "Error",
+          "is_correct": false
+        },
+        {
+          "text": "Exception",
+          "is_correct": false
+        },
+        {
+          "text": "RuntimeException",
+          "is_correct": true
+        },
+        {
+          "text": "Throwable",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q093. What does 'throw' do?",
       "difficulty": 3,
-      "tags": ["exceptions", "keywords"],
+      "tags": [
+        "exceptions",
+        "keywords"
+      ],
       "answers": [
-        {"text": "Creates and signals an exception occurrence", "is_correct": true},
-        {"text": "Declares possible exceptions in method signature", "is_correct": false},
-        {"text": "Suppresses all exceptions", "is_correct": false},
-        {"text": "Closes resources automatically", "is_correct": false}
+        {
+          "text": "Declares possible exceptions in method signature",
+          "is_correct": false
+        },
+        {
+          "text": "Suppresses all exceptions",
+          "is_correct": false
+        },
+        {
+          "text": "Creates and signals an exception occurrence",
+          "is_correct": true
+        },
+        {
+          "text": "Closes resources automatically",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q094. What does 'throws' in method signature indicate?",
       "difficulty": 3,
-      "tags": ["exceptions", "keywords"],
+      "tags": [
+        "exceptions",
+        "keywords"
+      ],
       "answers": [
-        {"text": "Method may propagate listed exceptions", "is_correct": true},
-        {"text": "Method always catches listed exceptions", "is_correct": false},
-        {"text": "Method cannot throw runtime exceptions", "is_correct": false},
-        {"text": "Method suppresses stack traces", "is_correct": false}
+        {
+          "text": "Method suppresses stack traces",
+          "is_correct": false
+        },
+        {
+          "text": "Method may propagate listed exceptions",
+          "is_correct": true
+        },
+        {
+          "text": "Method always catches listed exceptions",
+          "is_correct": false
+        },
+        {
+          "text": "Method cannot throw runtime exceptions",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q095. Which block is guaranteed to execute (except severe JVM termination cases)?",
       "difficulty": 3,
-      "tags": ["exceptions", "control-flow"],
+      "tags": [
+        "exceptions",
+        "control-flow"
+      ],
       "answers": [
-        {"text": "finally", "is_correct": true},
-        {"text": "catch", "is_correct": false},
-        {"text": "throw", "is_correct": false},
-        {"text": "assert", "is_correct": false}
+        {
+          "text": "catch",
+          "is_correct": false
+        },
+        {
+          "text": "finally",
+          "is_correct": true
+        },
+        {
+          "text": "throw",
+          "is_correct": false
+        },
+        {
+          "text": "assert",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q096. What is the primary benefit of try-with-resources?",
       "difficulty": 3,
-      "tags": ["exceptions", "io", "resources"],
+      "tags": [
+        "exceptions",
+        "io",
+        "resources"
+      ],
       "answers": [
-        {"text": "Automatic closing of AutoCloseable resources", "is_correct": true},
-        {"text": "Automatic retry on failure", "is_correct": false},
-        {"text": "Automatic logging configuration", "is_correct": false},
-        {"text": "Automatic transaction rollback", "is_correct": false}
+        {
+          "text": "Automatic transaction rollback",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic closing of AutoCloseable resources",
+          "is_correct": true
+        },
+        {
+          "text": "Automatic retry on failure",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic logging configuration",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q097. Which interface is required for try-with-resources variables?",
       "difficulty": 3,
-      "tags": ["exceptions", "io"],
+      "tags": [
+        "exceptions",
+        "io"
+      ],
       "answers": [
-        {"text": "AutoCloseable", "is_correct": true},
-        {"text": "ClosableResource", "is_correct": false},
-        {"text": "Serializable", "is_correct": false},
-        {"text": "Runnable", "is_correct": false}
+        {
+          "text": "Runnable",
+          "is_correct": false
+        },
+        {
+          "text": "ClosableResource",
+          "is_correct": false
+        },
+        {
+          "text": "Serializable",
+          "is_correct": false
+        },
+        {
+          "text": "AutoCloseable",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q098. What is exception chaining used for?",
       "difficulty": 3,
-      "tags": ["exceptions", "debugging"],
+      "tags": [
+        "exceptions",
+        "debugging"
+      ],
       "answers": [
-        {"text": "Wrap low-level cause with higher-level context", "is_correct": true},
-        {"text": "Run multiple exceptions in parallel", "is_correct": false},
-        {"text": "Disable stack traces", "is_correct": false},
-        {"text": "Convert checked to compile-time errors", "is_correct": false}
+        {
+          "text": "Run multiple exceptions in parallel",
+          "is_correct": false
+        },
+        {
+          "text": "Disable stack traces",
+          "is_correct": false
+        },
+        {
+          "text": "Convert checked to compile-time errors",
+          "is_correct": false
+        },
+        {
+          "text": "Wrap low-level cause with higher-level context",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q099. Which is the root type of all errors and exceptions?",
       "difficulty": 3,
-      "tags": ["exceptions", "jvm"],
+      "tags": [
+        "exceptions",
+        "jvm"
+      ],
       "answers": [
-        {"text": "Throwable", "is_correct": true},
-        {"text": "Exception", "is_correct": false},
-        {"text": "RuntimeException", "is_correct": false},
-        {"text": "Object", "is_correct": false}
+        {
+          "text": "Exception",
+          "is_correct": false
+        },
+        {
+          "text": "RuntimeException",
+          "is_correct": false
+        },
+        {
+          "text": "Object",
+          "is_correct": false
+        },
+        {
+          "text": "Throwable",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q100. What is the best practice for catching exceptions?",
       "difficulty": 3,
-      "tags": ["exceptions", "best-practices"],
+      "tags": [
+        "exceptions",
+        "best-practices"
+      ],
       "answers": [
-        {"text": "Catch the most specific exception type possible", "is_correct": true},
-        {"text": "Always catch Throwable", "is_correct": false},
-        {"text": "Always ignore exception message", "is_correct": false},
-        {"text": "Never use finally", "is_correct": false}
+        {
+          "text": "Never use finally",
+          "is_correct": false
+        },
+        {
+          "text": "Always catch Throwable",
+          "is_correct": false
+        },
+        {
+          "text": "Catch the most specific exception type possible",
+          "is_correct": true
+        },
+        {
+          "text": "Always ignore exception message",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q101. Which class reads character streams from files?",
       "difficulty": 3,
-      "tags": ["io", "files"],
+      "tags": [
+        "io",
+        "files"
+      ],
       "answers": [
-        {"text": "FileReader", "is_correct": true},
-        {"text": "FileInputStream", "is_correct": false},
-        {"text": "DataInputStream", "is_correct": false},
-        {"text": "ObjectOutputStream", "is_correct": false}
+        {
+          "text": "ObjectOutputStream",
+          "is_correct": false
+        },
+        {
+          "text": "FileInputStream",
+          "is_correct": false
+        },
+        {
+          "text": "DataInputStream",
+          "is_correct": false
+        },
+        {
+          "text": "FileReader",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q102. Which class reads binary bytes from files?",
       "difficulty": 3,
-      "tags": ["io", "files"],
+      "tags": [
+        "io",
+        "files"
+      ],
       "answers": [
-        {"text": "FileInputStream", "is_correct": true},
-        {"text": "FileReader", "is_correct": false},
-        {"text": "BufferedReader", "is_correct": false},
-        {"text": "PrintWriter", "is_correct": false}
+        {
+          "text": "BufferedReader",
+          "is_correct": false
+        },
+        {
+          "text": "PrintWriter",
+          "is_correct": false
+        },
+        {
+          "text": "FileReader",
+          "is_correct": false
+        },
+        {
+          "text": "FileInputStream",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q103. Which wrapper adds buffering to a Reader for efficient line reads?",
       "difficulty": 3,
-      "tags": ["io", "buffering"],
+      "tags": [
+        "io",
+        "buffering"
+      ],
       "answers": [
-        {"text": "BufferedReader", "is_correct": true},
-        {"text": "StringReader", "is_correct": false},
-        {"text": "InputStreamReader only", "is_correct": false},
-        {"text": "File", "is_correct": false}
+        {
+          "text": "File",
+          "is_correct": false
+        },
+        {
+          "text": "StringReader",
+          "is_correct": false
+        },
+        {
+          "text": "InputStreamReader only",
+          "is_correct": false
+        },
+        {
+          "text": "BufferedReader",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q104. Which method reads a line from BufferedReader?",
       "difficulty": 3,
-      "tags": ["io", "buffering"],
+      "tags": [
+        "io",
+        "buffering"
+      ],
       "answers": [
-        {"text": "readLine", "is_correct": true},
-        {"text": "nextLine", "is_correct": false},
-        {"text": "lineRead", "is_correct": false},
-        {"text": "readString", "is_correct": false}
+        {
+          "text": "readLine",
+          "is_correct": true
+        },
+        {
+          "text": "lineRead",
+          "is_correct": false
+        },
+        {
+          "text": "nextLine",
+          "is_correct": false
+        },
+        {
+          "text": "readString",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q105. Which package contains NIO file APIs like Files and Paths?",
       "difficulty": 3,
-      "tags": ["nio", "files"],
+      "tags": [
+        "nio",
+        "files"
+      ],
       "answers": [
-        {"text": "java.nio.file", "is_correct": true},
-        {"text": "java.io.file", "is_correct": false},
-        {"text": "java.util.file", "is_correct": false},
-        {"text": "java.net.file", "is_correct": false}
+        {
+          "text": "java.util.file",
+          "is_correct": false
+        },
+        {
+          "text": "java.io.file",
+          "is_correct": false
+        },
+        {
+          "text": "java.net.file",
+          "is_correct": false
+        },
+        {
+          "text": "java.nio.file",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q106. Which method reads all lines of a text file into a List<String>?",
       "difficulty": 3,
-      "tags": ["nio", "files"],
+      "tags": [
+        "nio",
+        "files"
+      ],
       "answers": [
-        {"text": "Files.readAllLines", "is_correct": true},
-        {"text": "Path.readLines", "is_correct": false},
-        {"text": "Files.readLinesAll", "is_correct": false},
-        {"text": "BufferedReader.readAll", "is_correct": false}
+        {
+          "text": "Files.readAllLines",
+          "is_correct": true
+        },
+        {
+          "text": "BufferedReader.readAll",
+          "is_correct": false
+        },
+        {
+          "text": "Files.readLinesAll",
+          "is_correct": false
+        },
+        {
+          "text": "Path.readLines",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q107. Which method writes bytes to a file in NIO?",
       "difficulty": 3,
-      "tags": ["nio", "files"],
+      "tags": [
+        "nio",
+        "files"
+      ],
       "answers": [
-        {"text": "Files.write", "is_correct": true},
-        {"text": "Path.writeBytes", "is_correct": false},
-        {"text": "File.writeAll", "is_correct": false},
-        {"text": "Files.put", "is_correct": false}
+        {
+          "text": "Files.write",
+          "is_correct": true
+        },
+        {
+          "text": "Path.writeBytes",
+          "is_correct": false
+        },
+        {
+          "text": "Files.put",
+          "is_correct": false
+        },
+        {
+          "text": "File.writeAll",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q108. What does StandardOpenOption.APPEND do?",
       "difficulty": 3,
-      "tags": ["nio", "files"],
+      "tags": [
+        "nio",
+        "files"
+      ],
       "answers": [
-        {"text": "Adds data to end of file instead of truncating", "is_correct": true},
-        {"text": "Deletes file before writing", "is_correct": false},
-        {"text": "Opens file read-only", "is_correct": false},
-        {"text": "Creates temporary file only", "is_correct": false}
+        {
+          "text": "Creates temporary file only",
+          "is_correct": false
+        },
+        {
+          "text": "Opens file read-only",
+          "is_correct": false
+        },
+        {
+          "text": "Deletes file before writing",
+          "is_correct": false
+        },
+        {
+          "text": "Adds data to end of file instead of truncating",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q109. Which class is used for object serialization output?",
       "difficulty": 3,
-      "tags": ["io", "serialization"],
+      "tags": [
+        "io",
+        "serialization"
+      ],
       "answers": [
-        {"text": "ObjectOutputStream", "is_correct": true},
-        {"text": "PrintWriter", "is_correct": false},
-        {"text": "BufferedWriter", "is_correct": false},
-        {"text": "DataOutput", "is_correct": false}
+        {
+          "text": "PrintWriter",
+          "is_correct": false
+        },
+        {
+          "text": "BufferedWriter",
+          "is_correct": false
+        },
+        {
+          "text": "DataOutput",
+          "is_correct": false
+        },
+        {
+          "text": "ObjectOutputStream",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q110. Which marker interface enables default Java serialization?",
       "difficulty": 3,
-      "tags": ["serialization", "interfaces"],
+      "tags": [
+        "serialization",
+        "interfaces"
+      ],
       "answers": [
-        {"text": "Serializable", "is_correct": true},
-        {"text": "ExternalizableOnly", "is_correct": false},
-        {"text": "Persistable", "is_correct": false},
-        {"text": "Cloneable", "is_correct": false}
+        {
+          "text": "Persistable",
+          "is_correct": false
+        },
+        {
+          "text": "Serializable",
+          "is_correct": true
+        },
+        {
+          "text": "Cloneable",
+          "is_correct": false
+        },
+        {
+          "text": "ExternalizableOnly",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q111. What does transient on a field mean in serialization context?",
       "difficulty": 3,
-      "tags": ["serialization", "keywords"],
+      "tags": [
+        "serialization",
+        "keywords"
+      ],
       "answers": [
-        {"text": "Field is skipped during default serialization", "is_correct": true},
-        {"text": "Field is stored twice", "is_correct": false},
-        {"text": "Field becomes final", "is_correct": false},
-        {"text": "Field is synchronized", "is_correct": false}
+        {
+          "text": "Field is synchronized",
+          "is_correct": false
+        },
+        {
+          "text": "Field is skipped during default serialization",
+          "is_correct": true
+        },
+        {
+          "text": "Field is stored twice",
+          "is_correct": false
+        },
+        {
+          "text": "Field becomes final",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q112. Which class reads typed primitive data from an input stream?",
       "difficulty": 3,
-      "tags": ["io", "streams"],
+      "tags": [
+        "io",
+        "streams"
+      ],
       "answers": [
-        {"text": "DataInputStream", "is_correct": true},
-        {"text": "FileReader", "is_correct": false},
-        {"text": "BufferedReader", "is_correct": false},
-        {"text": "ObjectInputFilter", "is_correct": false}
+        {
+          "text": "BufferedReader",
+          "is_correct": false
+        },
+        {
+          "text": "FileReader",
+          "is_correct": false
+        },
+        {
+          "text": "DataInputStream",
+          "is_correct": true
+        },
+        {
+          "text": "ObjectInputFilter",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q113. Which class writes formatted text conveniently?",
       "difficulty": 3,
-      "tags": ["io", "text"],
+      "tags": [
+        "io",
+        "text"
+      ],
       "answers": [
-        {"text": "PrintWriter", "is_correct": true},
-        {"text": "FileInputStream", "is_correct": false},
-        {"text": "ObjectInputStream", "is_correct": false},
-        {"text": "DataInputStream", "is_correct": false}
+        {
+          "text": "FileInputStream",
+          "is_correct": false
+        },
+        {
+          "text": "DataInputStream",
+          "is_correct": false
+        },
+        {
+          "text": "ObjectInputStream",
+          "is_correct": false
+        },
+        {
+          "text": "PrintWriter",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q114. What is Charset used for in file I/O?",
       "difficulty": 3,
-      "tags": ["io", "encoding"],
+      "tags": [
+        "io",
+        "encoding"
+      ],
       "answers": [
-        {"text": "Defines character encoding and decoding", "is_correct": true},
-        {"text": "Defines file permissions", "is_correct": false},
-        {"text": "Defines stream buffering size", "is_correct": false},
-        {"text": "Defines JVM heap size", "is_correct": false}
+        {
+          "text": "Defines file permissions",
+          "is_correct": false
+        },
+        {
+          "text": "Defines JVM heap size",
+          "is_correct": false
+        },
+        {
+          "text": "Defines character encoding and decoding",
+          "is_correct": true
+        },
+        {
+          "text": "Defines stream buffering size",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q115. Which API is preferred for modern file operations in Java 11?",
       "difficulty": 3,
-      "tags": ["nio", "java11", "files"],
+      "tags": [
+        "nio",
+        "java11",
+        "files"
+      ],
       "answers": [
-        {"text": "java.nio.file (Path/Files)", "is_correct": true},
-        {"text": "java.io.File only", "is_correct": false},
-        {"text": "java.net.URLConnection", "is_correct": false},
-        {"text": "java.beans", "is_correct": false}
+        {
+          "text": "java.nio.file (Path/Files)",
+          "is_correct": true
+        },
+        {
+          "text": "java.beans",
+          "is_correct": false
+        },
+        {
+          "text": "java.net.URLConnection",
+          "is_correct": false
+        },
+        {
+          "text": "java.io.File only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q116. What does Stream.filter do?",
       "difficulty": 3,
-      "tags": ["streams", "lambda"],
+      "tags": [
+        "streams",
+        "lambda"
+      ],
       "answers": [
-        {"text": "Keeps elements matching a predicate", "is_correct": true},
-        {"text": "Transforms each element", "is_correct": false},
-        {"text": "Sorts elements", "is_correct": false},
-        {"text": "Collects into map directly", "is_correct": false}
+        {
+          "text": "Keeps elements matching a predicate",
+          "is_correct": true
+        },
+        {
+          "text": "Collects into map directly",
+          "is_correct": false
+        },
+        {
+          "text": "Transforms each element",
+          "is_correct": false
+        },
+        {
+          "text": "Sorts elements",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q117. What does Stream.map do?",
       "difficulty": 3,
-      "tags": ["streams", "lambda"],
+      "tags": [
+        "streams",
+        "lambda"
+      ],
       "answers": [
-        {"text": "Transforms each element to another value", "is_correct": true},
-        {"text": "Filters null elements only", "is_correct": false},
-        {"text": "Combines all values into one", "is_correct": false},
-        {"text": "Sorts descending by default", "is_correct": false}
+        {
+          "text": "Transforms each element to another value",
+          "is_correct": true
+        },
+        {
+          "text": "Sorts descending by default",
+          "is_correct": false
+        },
+        {
+          "text": "Combines all values into one",
+          "is_correct": false
+        },
+        {
+          "text": "Filters null elements only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q118. Which stream operation is terminal?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "collect", "is_correct": true},
-        {"text": "filter", "is_correct": false},
-        {"text": "map", "is_correct": false},
-        {"text": "peek", "is_correct": false}
+        {
+          "text": "filter",
+          "is_correct": false
+        },
+        {
+          "text": "collect",
+          "is_correct": true
+        },
+        {
+          "text": "peek",
+          "is_correct": false
+        },
+        {
+          "text": "map",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q119. Which stream operation is intermediate?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "distinct", "is_correct": true},
-        {"text": "count", "is_correct": false},
-        {"text": "forEach", "is_correct": false},
-        {"text": "reduce with identity", "is_correct": false}
+        {
+          "text": "distinct",
+          "is_correct": true
+        },
+        {
+          "text": "forEach",
+          "is_correct": false
+        },
+        {
+          "text": "reduce with identity",
+          "is_correct": false
+        },
+        {
+          "text": "count",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q120. What does Stream.distinct rely on for objects?",
       "difficulty": 3,
-      "tags": ["streams", "collections", "hashing"],
+      "tags": [
+        "streams",
+        "collections",
+        "hashing"
+      ],
       "answers": [
-        {"text": "equals and hashCode", "is_correct": true},
-        {"text": "toString and compareTo", "is_correct": false},
-        {"text": "Reference equality only", "is_correct": false},
-        {"text": "Constructor order", "is_correct": false}
+        {
+          "text": "toString and compareTo",
+          "is_correct": false
+        },
+        {
+          "text": "Reference equality only",
+          "is_correct": false
+        },
+        {
+          "text": "Constructor order",
+          "is_correct": false
+        },
+        {
+          "text": "equals and hashCode",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q121. What does Stream.sorted() use by default?",
       "difficulty": 3,
-      "tags": ["streams", "sorting"],
+      "tags": [
+        "streams",
+        "sorting"
+      ],
       "answers": [
-        {"text": "Natural ordering of elements", "is_correct": true},
-        {"text": "Insertion order", "is_correct": false},
-        {"text": "Reverse order always", "is_correct": false},
-        {"text": "Randomized ordering", "is_correct": false}
+        {
+          "text": "Reverse order always",
+          "is_correct": false
+        },
+        {
+          "text": "Randomized ordering",
+          "is_correct": false
+        },
+        {
+          "text": "Natural ordering of elements",
+          "is_correct": true
+        },
+        {
+          "text": "Insertion order",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q122. Which collector accumulates stream values into a List?",
       "difficulty": 3,
-      "tags": ["streams", "collectors"],
+      "tags": [
+        "streams",
+        "collectors"
+      ],
       "answers": [
-        {"text": "Collectors.toList()", "is_correct": true},
-        {"text": "Collectors.list()", "is_correct": false},
-        {"text": "Collectors.toArrayList()", "is_correct": false},
-        {"text": "Collectors.sequence()", "is_correct": false}
+        {
+          "text": "Collectors.toArrayList()",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.sequence()",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.toList()",
+          "is_correct": true
+        },
+        {
+          "text": "Collectors.list()",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q123. Which collector groups elements by key?",
       "difficulty": 3,
-      "tags": ["streams", "collectors"],
+      "tags": [
+        "streams",
+        "collectors"
+      ],
       "answers": [
-        {"text": "Collectors.groupingBy", "is_correct": true},
-        {"text": "Collectors.partitioning", "is_correct": false},
-        {"text": "Collectors.mappingOnly", "is_correct": false},
-        {"text": "Collectors.joining", "is_correct": false}
+        {
+          "text": "Collectors.groupingBy",
+          "is_correct": true
+        },
+        {
+          "text": "Collectors.partitioning",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.mappingOnly",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.joining",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q124. Which collector splits data into two groups by predicate?",
       "difficulty": 3,
-      "tags": ["streams", "collectors"],
+      "tags": [
+        "streams",
+        "collectors"
+      ],
       "answers": [
-        {"text": "Collectors.partitioningBy", "is_correct": true},
-        {"text": "Collectors.groupingBy", "is_correct": false},
-        {"text": "Collectors.toMap", "is_correct": false},
-        {"text": "Collectors.reducing", "is_correct": false}
+        {
+          "text": "Collectors.toMap",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.reducing",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.partitioningBy",
+          "is_correct": true
+        },
+        {
+          "text": "Collectors.groupingBy",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q125. What does reduce do in streams?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "Combines elements into a single result", "is_correct": true},
-        {"text": "Removes duplicate elements", "is_correct": false},
-        {"text": "Converts stream to parallel", "is_correct": false},
-        {"text": "Converts elements to strings only", "is_correct": false}
+        {
+          "text": "Removes duplicate elements",
+          "is_correct": false
+        },
+        {
+          "text": "Converts stream to parallel",
+          "is_correct": false
+        },
+        {
+          "text": "Converts elements to strings only",
+          "is_correct": false
+        },
+        {
+          "text": "Combines elements into a single result",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q126. Which method creates an IntStream from int values?",
       "difficulty": 3,
-      "tags": ["streams", "primitives"],
+      "tags": [
+        "streams",
+        "primitives"
+      ],
       "answers": [
-        {"text": "IntStream.of(...)", "is_correct": true},
-        {"text": "Stream.intOf(...)", "is_correct": false},
-        {"text": "Collectors.toIntStream(...)", "is_correct": false},
-        {"text": "Arrays.streamInt(...)", "is_correct": false}
+        {
+          "text": "Stream.intOf(...)",
+          "is_correct": false
+        },
+        {
+          "text": "Arrays.streamInt(...)",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.toIntStream(...)",
+          "is_correct": false
+        },
+        {
+          "text": "IntStream.of(...)",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q127. Which stream operation can be useful for debugging pipeline values?",
       "difficulty": 3,
-      "tags": ["streams", "debugging"],
+      "tags": [
+        "streams",
+        "debugging"
+      ],
       "answers": [
-        {"text": "peek", "is_correct": true},
-        {"text": "dropWhile", "is_correct": false},
-        {"text": "skip", "is_correct": false},
-        {"text": "limit", "is_correct": false}
+        {
+          "text": "limit",
+          "is_correct": false
+        },
+        {
+          "text": "skip",
+          "is_correct": false
+        },
+        {
+          "text": "peek",
+          "is_correct": true
+        },
+        {
+          "text": "dropWhile",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q128. Which operation short-circuits and returns whether any element matches predicate?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "anyMatch", "is_correct": true},
-        {"text": "forEach", "is_correct": false},
-        {"text": "collect", "is_correct": false},
-        {"text": "sorted", "is_correct": false}
+        {
+          "text": "anyMatch",
+          "is_correct": true
+        },
+        {
+          "text": "collect",
+          "is_correct": false
+        },
+        {
+          "text": "forEach",
+          "is_correct": false
+        },
+        {
+          "text": "sorted",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q129. Which operation returns true only if all elements satisfy a predicate?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "allMatch", "is_correct": true},
-        {"text": "anyMatch", "is_correct": false},
-        {"text": "noneMatch", "is_correct": false},
-        {"text": "findAny", "is_correct": false}
+        {
+          "text": "allMatch",
+          "is_correct": true
+        },
+        {
+          "text": "findAny",
+          "is_correct": false
+        },
+        {
+          "text": "anyMatch",
+          "is_correct": false
+        },
+        {
+          "text": "noneMatch",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q130. Which operation returns an Optional with the first element in encounter order?",
       "difficulty": 3,
-      "tags": ["streams", "optional"],
+      "tags": [
+        "streams",
+        "optional"
+      ],
       "answers": [
-        {"text": "findFirst", "is_correct": true},
-        {"text": "findAny always ordered", "is_correct": false},
-        {"text": "head", "is_correct": false},
-        {"text": "get", "is_correct": false}
+        {
+          "text": "head",
+          "is_correct": false
+        },
+        {
+          "text": "get",
+          "is_correct": false
+        },
+        {
+          "text": "findAny always ordered",
+          "is_correct": false
+        },
+        {
+          "text": "findFirst",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q131. What is true about parallelStream()?",
       "difficulty": 3,
-      "tags": ["streams", "concurrency"],
+      "tags": [
+        "streams",
+        "concurrency"
+      ],
       "answers": [
-        {"text": "It may improve throughput for suitable workloads", "is_correct": true},
-        {"text": "It always runs faster", "is_correct": false},
-        {"text": "It guarantees deterministic timing", "is_correct": false},
-        {"text": "It preserves side effects safely by default", "is_correct": false}
+        {
+          "text": "It preserves side effects safely by default",
+          "is_correct": false
+        },
+        {
+          "text": "It may improve throughput for suitable workloads",
+          "is_correct": true
+        },
+        {
+          "text": "It always runs faster",
+          "is_correct": false
+        },
+        {
+          "text": "It guarantees deterministic timing",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q132. Why should side effects in stream operations be minimized?",
       "difficulty": 3,
-      "tags": ["streams", "best-practices"],
+      "tags": [
+        "streams",
+        "best-practices"
+      ],
       "answers": [
-        {"text": "They reduce readability and can break with parallel execution", "is_correct": true},
-        {"text": "They are required for collect", "is_correct": false},
-        {"text": "They improve determinism", "is_correct": false},
-        {"text": "They replace all terminal operations", "is_correct": false}
+        {
+          "text": "They improve determinism",
+          "is_correct": false
+        },
+        {
+          "text": "They replace all terminal operations",
+          "is_correct": false
+        },
+        {
+          "text": "They are required for collect",
+          "is_correct": false
+        },
+        {
+          "text": "They reduce readability and can break with parallel execution",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q133. What does Collectors.joining(\",\") produce from Stream<String>?",
       "difficulty": 3,
-      "tags": ["streams", "collectors", "strings"],
+      "tags": [
+        "streams",
+        "collectors",
+        "strings"
+      ],
       "answers": [
-        {"text": "A single concatenated string with commas", "is_correct": true},
-        {"text": "A List<String> split by commas", "is_correct": false},
-        {"text": "A Map<String,Integer>", "is_correct": false},
-        {"text": "A Stream<String> of commas", "is_correct": false}
+        {
+          "text": "A Map<String,Integer>",
+          "is_correct": false
+        },
+        {
+          "text": "A single concatenated string with commas",
+          "is_correct": true
+        },
+        {
+          "text": "A Stream<String> of commas",
+          "is_correct": false
+        },
+        {
+          "text": "A List<String> split by commas",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q134. Which collector is useful for counting grouped elements?",
       "difficulty": 3,
-      "tags": ["streams", "collectors"],
+      "tags": [
+        "streams",
+        "collectors"
+      ],
       "answers": [
-        {"text": "Collectors.counting()", "is_correct": true},
-        {"text": "Collectors.total()", "is_correct": false},
-        {"text": "Collectors.sum()", "is_correct": false},
-        {"text": "Collectors.sizeOf()", "is_correct": false}
+        {
+          "text": "Collectors.counting()",
+          "is_correct": true
+        },
+        {
+          "text": "Collectors.total()",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.sizeOf()",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.sum()",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q135. Which collector maps elements before downstream collection?",
       "difficulty": 3,
-      "tags": ["streams", "collectors"],
+      "tags": [
+        "streams",
+        "collectors"
+      ],
       "answers": [
-        {"text": "Collectors.mapping", "is_correct": true},
-        {"text": "Collectors.flat", "is_correct": false},
-        {"text": "Collectors.transformAll", "is_correct": false},
-        {"text": "Collectors.pipe", "is_correct": false}
+        {
+          "text": "Collectors.flat",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.pipe",
+          "is_correct": false
+        },
+        {
+          "text": "Collectors.mapping",
+          "is_correct": true
+        },
+        {
+          "text": "Collectors.transformAll",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q136. What does flatMap typically do in a stream pipeline?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "Flattens nested structures into one stream", "is_correct": true},
-        {"text": "Sorts nested lists", "is_correct": false},
-        {"text": "Filters null keys only", "is_correct": false},
-        {"text": "Converts stream to map", "is_correct": false}
+        {
+          "text": "Flattens nested structures into one stream",
+          "is_correct": true
+        },
+        {
+          "text": "Sorts nested lists",
+          "is_correct": false
+        },
+        {
+          "text": "Converts stream to map",
+          "is_correct": false
+        },
+        {
+          "text": "Filters null keys only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q137. Which stream factory creates a stream from a collection?",
       "difficulty": 3,
-      "tags": ["streams", "collections"],
+      "tags": [
+        "streams",
+        "collections"
+      ],
       "answers": [
-        {"text": "collection.stream()", "is_correct": true},
-        {"text": "Stream.collection(collection)", "is_correct": false},
-        {"text": "Streams.ofCollection(collection)", "is_correct": false},
-        {"text": "new Stream(collection)", "is_correct": false}
+        {
+          "text": "Stream.collection(collection)",
+          "is_correct": false
+        },
+        {
+          "text": "collection.stream()",
+          "is_correct": true
+        },
+        {
+          "text": "new Stream(collection)",
+          "is_correct": false
+        },
+        {
+          "text": "Streams.ofCollection(collection)",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q138. What does Stream.limit(n) do?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "Keeps at most first n elements", "is_correct": true},
-        {"text": "Skips first n elements", "is_correct": false},
-        {"text": "Sorts top n elements", "is_correct": false},
-        {"text": "Duplicates each element n times", "is_correct": false}
+        {
+          "text": "Skips first n elements",
+          "is_correct": false
+        },
+        {
+          "text": "Keeps at most first n elements",
+          "is_correct": true
+        },
+        {
+          "text": "Sorts top n elements",
+          "is_correct": false
+        },
+        {
+          "text": "Duplicates each element n times",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q139. What does Stream.skip(n) do?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "Drops first n elements", "is_correct": true},
-        {"text": "Drops last n elements", "is_correct": false},
-        {"text": "Keeps only n elements", "is_correct": false},
-        {"text": "Filters elements < n", "is_correct": false}
+        {
+          "text": "Drops last n elements",
+          "is_correct": false
+        },
+        {
+          "text": "Filters elements < n",
+          "is_correct": false
+        },
+        {
+          "text": "Keeps only n elements",
+          "is_correct": false
+        },
+        {
+          "text": "Drops first n elements",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q140. Which terminal operation performs action for each stream element?",
       "difficulty": 3,
-      "tags": ["streams", "operations"],
+      "tags": [
+        "streams",
+        "operations"
+      ],
       "answers": [
-        {"text": "forEach", "is_correct": true},
-        {"text": "map", "is_correct": false},
-        {"text": "filter", "is_correct": false},
-        {"text": "peek", "is_correct": false}
+        {
+          "text": "forEach",
+          "is_correct": true
+        },
+        {
+          "text": "map",
+          "is_correct": false
+        },
+        {
+          "text": "filter",
+          "is_correct": false
+        },
+        {
+          "text": "peek",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q141. Which method starts a new thread of execution?",
       "difficulty": 3,
-      "tags": ["concurrency", "threads"],
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
       "answers": [
-        {"text": "Thread.start()", "is_correct": true},
-        {"text": "Thread.run() directly", "is_correct": false},
-        {"text": "Thread.execute()", "is_correct": false},
-        {"text": "Thread.begin()", "is_correct": false}
+        {
+          "text": "Thread.run() directly",
+          "is_correct": false
+        },
+        {
+          "text": "Thread.start()",
+          "is_correct": true
+        },
+        {
+          "text": "Thread.begin()",
+          "is_correct": false
+        },
+        {
+          "text": "Thread.execute()",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q142. Why is calling run() directly on a Thread object different from start()?",
       "difficulty": 3,
-      "tags": ["concurrency", "threads"],
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
       "answers": [
-        {"text": "run() executes on current thread, no new thread created", "is_correct": true},
-        {"text": "run() creates two threads", "is_correct": false},
-        {"text": "start() is deprecated", "is_correct": false},
-        {"text": "Both are always equivalent", "is_correct": false}
+        {
+          "text": "run() executes on current thread, no new thread created",
+          "is_correct": true
+        },
+        {
+          "text": "start() is deprecated",
+          "is_correct": false
+        },
+        {
+          "text": "Both are always equivalent",
+          "is_correct": false
+        },
+        {
+          "text": "run() creates two threads",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q143. What does synchronized primarily provide?",
       "difficulty": 3,
-      "tags": ["concurrency", "synchronization"],
+      "tags": [
+        "concurrency",
+        "synchronization"
+      ],
       "answers": [
-        {"text": "Mutual exclusion and happens-before guarantees", "is_correct": true},
-        {"text": "Process-level locking across machines", "is_correct": false},
-        {"text": "Compile-time thread checks", "is_correct": false},
-        {"text": "Automatic deadlock prevention", "is_correct": false}
+        {
+          "text": "Automatic deadlock prevention",
+          "is_correct": false
+        },
+        {
+          "text": "Mutual exclusion and happens-before guarantees",
+          "is_correct": true
+        },
+        {
+          "text": "Compile-time thread checks",
+          "is_correct": false
+        },
+        {
+          "text": "Process-level locking across machines",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q144. What does volatile guarantee for a field?",
       "difficulty": 3,
-      "tags": ["concurrency", "volatile"],
+      "tags": [
+        "concurrency",
+        "volatile"
+      ],
       "answers": [
-        {"text": "Visibility of latest write across threads", "is_correct": true},
-        {"text": "Atomic increment operations", "is_correct": false},
-        {"text": "Mutual exclusion", "is_correct": false},
-        {"text": "Fair lock scheduling", "is_correct": false}
+        {
+          "text": "Visibility of latest write across threads",
+          "is_correct": true
+        },
+        {
+          "text": "Fair lock scheduling",
+          "is_correct": false
+        },
+        {
+          "text": "Mutual exclusion",
+          "is_correct": false
+        },
+        {
+          "text": "Atomic increment operations",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q145. Which class provides atomic increment without explicit synchronization?",
       "difficulty": 3,
-      "tags": ["concurrency", "atomic"],
+      "tags": [
+        "concurrency",
+        "atomic"
+      ],
       "answers": [
-        {"text": "AtomicInteger", "is_correct": true},
-        {"text": "Integer", "is_correct": false},
-        {"text": "Long", "is_correct": false},
-        {"text": "BigInteger", "is_correct": false}
+        {
+          "text": "BigInteger",
+          "is_correct": false
+        },
+        {
+          "text": "AtomicInteger",
+          "is_correct": true
+        },
+        {
+          "text": "Long",
+          "is_correct": false
+        },
+        {
+          "text": "Integer",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q146. What is a race condition?",
       "difficulty": 3,
-      "tags": ["concurrency", "threads"],
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
       "answers": [
-        {"text": "Program result depends on unpredictable thread interleaving", "is_correct": true},
-        {"text": "Two classes with same method name", "is_correct": false},
-        {"text": "A failed network request", "is_correct": false},
-        {"text": "A compiler optimization issue only", "is_correct": false}
+        {
+          "text": "A failed network request",
+          "is_correct": false
+        },
+        {
+          "text": "Program result depends on unpredictable thread interleaving",
+          "is_correct": true
+        },
+        {
+          "text": "A compiler optimization issue only",
+          "is_correct": false
+        },
+        {
+          "text": "Two classes with same method name",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q147. What is deadlock?",
       "difficulty": 3,
-      "tags": ["concurrency", "threads"],
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
       "answers": [
-        {"text": "Threads waiting indefinitely on each other's locks", "is_correct": true},
-        {"text": "Thread ending unexpectedly", "is_correct": false},
-        {"text": "CPU running at 100%", "is_correct": false},
-        {"text": "Garbage collector pause", "is_correct": false}
+        {
+          "text": "Garbage collector pause",
+          "is_correct": false
+        },
+        {
+          "text": "Thread ending unexpectedly",
+          "is_correct": false
+        },
+        {
+          "text": "Threads waiting indefinitely on each other's locks",
+          "is_correct": true
+        },
+        {
+          "text": "CPU running at 100%",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q148. Which API manages thread pools and task execution?",
       "difficulty": 3,
-      "tags": ["concurrency", "executor"],
+      "tags": [
+        "concurrency",
+        "executor"
+      ],
       "answers": [
-        {"text": "ExecutorService", "is_correct": true},
-        {"text": "ThreadGroup", "is_correct": false},
-        {"text": "ProcessBuilder", "is_correct": false},
-        {"text": "CompletableTask", "is_correct": false}
+        {
+          "text": "CompletableTask",
+          "is_correct": false
+        },
+        {
+          "text": "ThreadGroup",
+          "is_correct": false
+        },
+        {
+          "text": "ProcessBuilder",
+          "is_correct": false
+        },
+        {
+          "text": "ExecutorService",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q149. Which factory creates a fixed-size thread pool?",
       "difficulty": 3,
-      "tags": ["concurrency", "executor"],
+      "tags": [
+        "concurrency",
+        "executor"
+      ],
       "answers": [
-        {"text": "Executors.newFixedThreadPool", "is_correct": true},
-        {"text": "Executors.newSingleProcessPool", "is_correct": false},
-        {"text": "Thread.newPool", "is_correct": false},
-        {"text": "ExecutorService.fixed", "is_correct": false}
+        {
+          "text": "ExecutorService.fixed",
+          "is_correct": false
+        },
+        {
+          "text": "Thread.newPool",
+          "is_correct": false
+        },
+        {
+          "text": "Executors.newSingleProcessPool",
+          "is_correct": false
+        },
+        {
+          "text": "Executors.newFixedThreadPool",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q150. What does Future.get() do?",
       "difficulty": 3,
-      "tags": ["concurrency", "future"],
+      "tags": [
+        "concurrency",
+        "future"
+      ],
       "answers": [
-        {"text": "Waits for task completion and returns result", "is_correct": true},
-        {"text": "Cancels task immediately", "is_correct": false},
-        {"text": "Schedules periodic execution", "is_correct": false},
-        {"text": "Returns thread id", "is_correct": false}
+        {
+          "text": "Cancels task immediately",
+          "is_correct": false
+        },
+        {
+          "text": "Returns thread id",
+          "is_correct": false
+        },
+        {
+          "text": "Waits for task completion and returns result",
+          "is_correct": true
+        },
+        {
+          "text": "Schedules periodic execution",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q151. Which method attempts to stop executor accepting new tasks and lets submitted tasks finish?",
       "difficulty": 3,
-      "tags": ["concurrency", "executor"],
+      "tags": [
+        "concurrency",
+        "executor"
+      ],
       "answers": [
-        {"text": "shutdown", "is_correct": true},
-        {"text": "shutdownNow always graceful", "is_correct": false},
-        {"text": "closeAll", "is_correct": false},
-        {"text": "stopExecutor", "is_correct": false}
+        {
+          "text": "shutdownNow always graceful",
+          "is_correct": false
+        },
+        {
+          "text": "stopExecutor",
+          "is_correct": false
+        },
+        {
+          "text": "closeAll",
+          "is_correct": false
+        },
+        {
+          "text": "shutdown",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q152. What is true about shutdownNow()?",
       "difficulty": 3,
-      "tags": ["concurrency", "executor"],
+      "tags": [
+        "concurrency",
+        "executor"
+      ],
       "answers": [
-        {"text": "It attempts to interrupt running tasks", "is_correct": true},
-        {"text": "It guarantees immediate termination", "is_correct": false},
-        {"text": "It accepts new tasks briefly", "is_correct": false},
-        {"text": "It waits forever by default", "is_correct": false}
+        {
+          "text": "It accepts new tasks briefly",
+          "is_correct": false
+        },
+        {
+          "text": "It guarantees immediate termination",
+          "is_correct": false
+        },
+        {
+          "text": "It waits forever by default",
+          "is_correct": false
+        },
+        {
+          "text": "It attempts to interrupt running tasks",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q153. What does Thread.sleep do?",
       "difficulty": 3,
-      "tags": ["concurrency", "threads"],
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
       "answers": [
-        {"text": "Pauses current thread for at least given time", "is_correct": true},
-        {"text": "Releases all locks automatically", "is_correct": false},
-        {"text": "Stops JVM scheduler", "is_correct": false},
-        {"text": "Suspends another chosen thread", "is_correct": false}
+        {
+          "text": "Stops JVM scheduler",
+          "is_correct": false
+        },
+        {
+          "text": "Suspends another chosen thread",
+          "is_correct": false
+        },
+        {
+          "text": "Pauses current thread for at least given time",
+          "is_correct": true
+        },
+        {
+          "text": "Releases all locks automatically",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q154. Which object method releases monitor and waits to be notified?",
       "difficulty": 3,
-      "tags": ["concurrency", "wait-notify"],
+      "tags": [
+        "concurrency",
+        "wait-notify"
+      ],
       "answers": [
-        {"text": "wait", "is_correct": true},
-        {"text": "sleep", "is_correct": false},
-        {"text": "yield", "is_correct": false},
-        {"text": "join", "is_correct": false}
+        {
+          "text": "wait",
+          "is_correct": true
+        },
+        {
+          "text": "sleep",
+          "is_correct": false
+        },
+        {
+          "text": "join",
+          "is_correct": false
+        },
+        {
+          "text": "yield",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q155. Which object method wakes one waiting thread on same monitor?",
       "difficulty": 3,
-      "tags": ["concurrency", "wait-notify"],
+      "tags": [
+        "concurrency",
+        "wait-notify"
+      ],
       "answers": [
-        {"text": "notify", "is_correct": true},
-        {"text": "interrupt", "is_correct": false},
-        {"text": "resume", "is_correct": false},
-        {"text": "wake", "is_correct": false}
+        {
+          "text": "wake",
+          "is_correct": false
+        },
+        {
+          "text": "resume",
+          "is_correct": false
+        },
+        {
+          "text": "interrupt",
+          "is_correct": false
+        },
+        {
+          "text": "notify",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q156. Which object method wakes all waiting threads on same monitor?",
       "difficulty": 3,
-      "tags": ["concurrency", "wait-notify"],
+      "tags": [
+        "concurrency",
+        "wait-notify"
+      ],
       "answers": [
-        {"text": "notifyAll", "is_correct": true},
-        {"text": "notify", "is_correct": false},
-        {"text": "broadcast", "is_correct": false},
-        {"text": "signal", "is_correct": false}
+        {
+          "text": "notify",
+          "is_correct": false
+        },
+        {
+          "text": "signal",
+          "is_correct": false
+        },
+        {
+          "text": "notifyAll",
+          "is_correct": true
+        },
+        {
+          "text": "broadcast",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q157. Where must wait/notify/notifyAll be called?",
       "difficulty": 3,
-      "tags": ["concurrency", "wait-notify"],
+      "tags": [
+        "concurrency",
+        "wait-notify"
+      ],
       "answers": [
-        {"text": "Within synchronized context on same monitor", "is_correct": true},
-        {"text": "Anywhere in static method", "is_correct": false},
-        {"text": "Only inside constructor", "is_correct": false},
-        {"text": "Only in final classes", "is_correct": false}
+        {
+          "text": "Only inside constructor",
+          "is_correct": false
+        },
+        {
+          "text": "Anywhere in static method",
+          "is_correct": false
+        },
+        {
+          "text": "Within synchronized context on same monitor",
+          "is_correct": true
+        },
+        {
+          "text": "Only in final classes",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q158. Which lock implementation supports explicit lock/unlock operations?",
       "difficulty": 3,
-      "tags": ["concurrency", "locks"],
+      "tags": [
+        "concurrency",
+        "locks"
+      ],
       "answers": [
-        {"text": "ReentrantLock", "is_correct": true},
-        {"text": "ThreadLock", "is_correct": false},
-        {"text": "MonitorLock", "is_correct": false},
-        {"text": "AtomicLock", "is_correct": false}
+        {
+          "text": "ThreadLock",
+          "is_correct": false
+        },
+        {
+          "text": "AtomicLock",
+          "is_correct": false
+        },
+        {
+          "text": "ReentrantLock",
+          "is_correct": true
+        },
+        {
+          "text": "MonitorLock",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q159. Which concurrent map is designed for high concurrency access?",
       "difficulty": 3,
-      "tags": ["concurrency", "collections"],
+      "tags": [
+        "concurrency",
+        "collections"
+      ],
       "answers": [
-        {"text": "ConcurrentHashMap", "is_correct": true},
-        {"text": "HashMap", "is_correct": false},
-        {"text": "TreeMap", "is_correct": false},
-        {"text": "LinkedHashMap", "is_correct": false}
+        {
+          "text": "HashMap",
+          "is_correct": false
+        },
+        {
+          "text": "ConcurrentHashMap",
+          "is_correct": true
+        },
+        {
+          "text": "LinkedHashMap",
+          "is_correct": false
+        },
+        {
+          "text": "TreeMap",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q160. Which blocking queue is commonly used in producer-consumer patterns?",
       "difficulty": 3,
-      "tags": ["concurrency", "collections", "queue"],
+      "tags": [
+        "concurrency",
+        "collections",
+        "queue"
+      ],
       "answers": [
-        {"text": "LinkedBlockingQueue", "is_correct": true},
-        {"text": "ArrayList", "is_correct": false},
-        {"text": "HashSet", "is_correct": false},
-        {"text": "PriorityQueue (non-blocking)", "is_correct": false}
+        {
+          "text": "ArrayList",
+          "is_correct": false
+        },
+        {
+          "text": "LinkedBlockingQueue",
+          "is_correct": true
+        },
+        {
+          "text": "HashSet",
+          "is_correct": false
+        },
+        {
+          "text": "PriorityQueue (non-blocking)",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q161. What does Thread.join() do?",
       "difficulty": 3,
-      "tags": ["concurrency", "threads"],
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
       "answers": [
-        {"text": "Waits for target thread to finish", "is_correct": true},
-        {"text": "Starts target thread", "is_correct": false},
-        {"text": "Interrupts target thread", "is_correct": false},
-        {"text": "Detaches target thread", "is_correct": false}
+        {
+          "text": "Waits for target thread to finish",
+          "is_correct": true
+        },
+        {
+          "text": "Detaches target thread",
+          "is_correct": false
+        },
+        {
+          "text": "Interrupts target thread",
+          "is_correct": false
+        },
+        {
+          "text": "Starts target thread",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q162. What is thread starvation?",
       "difficulty": 3,
-      "tags": ["concurrency", "threads"],
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
       "answers": [
-        {"text": "A thread cannot gain regular access to needed resources", "is_correct": true},
-        {"text": "All threads complete too quickly", "is_correct": false},
-        {"text": "Thread memory leak only", "is_correct": false},
-        {"text": "JVM refuses to start threads", "is_correct": false}
+        {
+          "text": "All threads complete too quickly",
+          "is_correct": false
+        },
+        {
+          "text": "A thread cannot gain regular access to needed resources",
+          "is_correct": true
+        },
+        {
+          "text": "JVM refuses to start threads",
+          "is_correct": false
+        },
+        {
+          "text": "Thread memory leak only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q163. Which enum describes thread lifecycle states?",
       "difficulty": 3,
-      "tags": ["concurrency", "threads"],
+      "tags": [
+        "concurrency",
+        "threads"
+      ],
       "answers": [
-        {"text": "Thread.State", "is_correct": true},
-        {"text": "ThreadStatus", "is_correct": false},
-        {"text": "ThreadMode", "is_correct": false},
-        {"text": "LifecycleState", "is_correct": false}
+        {
+          "text": "LifecycleState",
+          "is_correct": false
+        },
+        {
+          "text": "ThreadStatus",
+          "is_correct": false
+        },
+        {
+          "text": "ThreadMode",
+          "is_correct": false
+        },
+        {
+          "text": "Thread.State",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q164. What does CompletableFuture supplyAsync enable?",
       "difficulty": 3,
-      "tags": ["concurrency", "completablefuture"],
+      "tags": [
+        "concurrency",
+        "completablefuture"
+      ],
       "answers": [
-        {"text": "Asynchronous computation returning a future result", "is_correct": true},
-        {"text": "Synchronous blocking call only", "is_correct": false},
-        {"text": "Guaranteed single-thread execution", "is_correct": false},
-        {"text": "Automatic transaction management", "is_correct": false}
+        {
+          "text": "Synchronous blocking call only",
+          "is_correct": false
+        },
+        {
+          "text": "Guaranteed single-thread execution",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic transaction management",
+          "is_correct": false
+        },
+        {
+          "text": "Asynchronous computation returning a future result",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q165. Which method combines CompletableFuture stages without blocking current thread immediately?",
       "difficulty": 3,
-      "tags": ["concurrency", "completablefuture"],
+      "tags": [
+        "concurrency",
+        "completablefuture"
+      ],
       "answers": [
-        {"text": "thenApply", "is_correct": true},
-        {"text": "get", "is_correct": false},
-        {"text": "joinThread", "is_correct": false},
-        {"text": "waitFor", "is_correct": false}
+        {
+          "text": "get",
+          "is_correct": false
+        },
+        {
+          "text": "joinThread",
+          "is_correct": false
+        },
+        {
+          "text": "waitFor",
+          "is_correct": false
+        },
+        {
+          "text": "thenApply",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q166. What area of memory typically stores object instances?",
       "difficulty": 3,
-      "tags": ["jvm", "memory"],
+      "tags": [
+        "jvm",
+        "memory"
+      ],
       "answers": [
-        {"text": "Heap", "is_correct": true},
-        {"text": "Call stack only", "is_correct": false},
-        {"text": "CPU cache only", "is_correct": false},
-        {"text": "Constant pool only", "is_correct": false}
+        {
+          "text": "Heap",
+          "is_correct": true
+        },
+        {
+          "text": "Constant pool only",
+          "is_correct": false
+        },
+        {
+          "text": "CPU cache only",
+          "is_correct": false
+        },
+        {
+          "text": "Call stack only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q167. What does garbage collection do?",
       "difficulty": 3,
-      "tags": ["jvm", "memory"],
+      "tags": [
+        "jvm",
+        "memory"
+      ],
       "answers": [
-        {"text": "Reclaims memory of unreachable objects", "is_correct": true},
-        {"text": "Optimizes SQL queries", "is_correct": false},
-        {"text": "Compiles Java source to bytecode", "is_correct": false},
-        {"text": "Manually frees stack frames", "is_correct": false}
+        {
+          "text": "Optimizes SQL queries",
+          "is_correct": false
+        },
+        {
+          "text": "Reclaims memory of unreachable objects",
+          "is_correct": true
+        },
+        {
+          "text": "Compiles Java source to bytecode",
+          "is_correct": false
+        },
+        {
+          "text": "Manually frees stack frames",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q168. Which method can suggest but not force garbage collection?",
       "difficulty": 3,
-      "tags": ["jvm", "memory"],
+      "tags": [
+        "jvm",
+        "memory"
+      ],
       "answers": [
-        {"text": "System.gc()", "is_correct": true},
-        {"text": "Object.free()", "is_correct": false},
-        {"text": "Runtime.collectNow()", "is_correct": false},
-        {"text": "GC.force()", "is_correct": false}
+        {
+          "text": "Object.free()",
+          "is_correct": false
+        },
+        {
+          "text": "System.gc()",
+          "is_correct": true
+        },
+        {
+          "text": "GC.force()",
+          "is_correct": false
+        },
+        {
+          "text": "Runtime.collectNow()",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q169. Where are local variables and method call frames stored?",
       "difficulty": 3,
-      "tags": ["jvm", "memory"],
+      "tags": [
+        "jvm",
+        "memory"
+      ],
       "answers": [
-        {"text": "Thread stack", "is_correct": true},
-        {"text": "Heap", "is_correct": false},
-        {"text": "Metaspace", "is_correct": false},
-        {"text": "String pool only", "is_correct": false}
+        {
+          "text": "Thread stack",
+          "is_correct": true
+        },
+        {
+          "text": "Metaspace",
+          "is_correct": false
+        },
+        {
+          "text": "Heap",
+          "is_correct": false
+        },
+        {
+          "text": "String pool only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q170. What does the class loader primarily do?",
       "difficulty": 3,
-      "tags": ["jvm", "classloading"],
+      "tags": [
+        "jvm",
+        "classloading"
+      ],
       "answers": [
-        {"text": "Loads class bytecode into JVM at runtime", "is_correct": true},
-        {"text": "Runs unit tests", "is_correct": false},
-        {"text": "Encrypts class files", "is_correct": false},
-        {"text": "Compiles source code", "is_correct": false}
+        {
+          "text": "Runs unit tests",
+          "is_correct": false
+        },
+        {
+          "text": "Loads class bytecode into JVM at runtime",
+          "is_correct": true
+        },
+        {
+          "text": "Compiles source code",
+          "is_correct": false
+        },
+        {
+          "text": "Encrypts class files",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q171. Which keyword delays object creation until first use in a simple singleton pattern?",
       "difficulty": 3,
-      "tags": ["design", "jvm", "singleton"],
+      "tags": [
+        "design",
+        "jvm",
+        "singleton"
+      ],
       "answers": [
-        {"text": "No keyword alone; use lazy initialization logic", "is_correct": true},
-        {"text": "transient", "is_correct": false},
-        {"text": "strictfp", "is_correct": false},
-        {"text": "native", "is_correct": false}
+        {
+          "text": "native",
+          "is_correct": false
+        },
+        {
+          "text": "transient",
+          "is_correct": false
+        },
+        {
+          "text": "strictfp",
+          "is_correct": false
+        },
+        {
+          "text": "No keyword alone; use lazy initialization logic",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q172. What does final on a reference variable mean?",
       "difficulty": 3,
-      "tags": ["keywords", "final"],
+      "tags": [
+        "keywords",
+        "final"
+      ],
       "answers": [
-        {"text": "Reference cannot point to another object", "is_correct": true},
-        {"text": "Object state cannot change", "is_correct": false},
-        {"text": "Variable is compile-time constant always", "is_correct": false},
-        {"text": "Variable becomes static automatically", "is_correct": false}
+        {
+          "text": "Variable becomes static automatically",
+          "is_correct": false
+        },
+        {
+          "text": "Object state cannot change",
+          "is_correct": false
+        },
+        {
+          "text": "Variable is compile-time constant always",
+          "is_correct": false
+        },
+        {
+          "text": "Reference cannot point to another object",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q173. What is true about static initialization blocks?",
       "difficulty": 3,
-      "tags": ["classes", "static"],
+      "tags": [
+        "classes",
+        "static"
+      ],
       "answers": [
-        {"text": "They run when the class is initialized", "is_correct": true},
-        {"text": "They run for every object construction", "is_correct": false},
-        {"text": "They can access instance this directly", "is_correct": false},
-        {"text": "They run after main exits", "is_correct": false}
+        {
+          "text": "They run after main exits",
+          "is_correct": false
+        },
+        {
+          "text": "They run for every object construction",
+          "is_correct": false
+        },
+        {
+          "text": "They can access instance this directly",
+          "is_correct": false
+        },
+        {
+          "text": "They run when the class is initialized",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q174. Which keyword indicates a method implemented in non-Java code?",
       "difficulty": 3,
-      "tags": ["keywords", "jni"],
+      "tags": [
+        "keywords",
+        "jni"
+      ],
       "answers": [
-        {"text": "native", "is_correct": true},
-        {"text": "foreign", "is_correct": false},
-        {"text": "external", "is_correct": false},
-        {"text": "interop", "is_correct": false}
+        {
+          "text": "external",
+          "is_correct": false
+        },
+        {
+          "text": "foreign",
+          "is_correct": false
+        },
+        {
+          "text": "native",
+          "is_correct": true
+        },
+        {
+          "text": "interop",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q175. What does strictfp control?",
       "difficulty": 3,
-      "tags": ["keywords", "floating-point"],
+      "tags": [
+        "keywords",
+        "floating-point"
+      ],
       "answers": [
-        {"text": "Consistent floating-point behavior across platforms", "is_correct": true},
-        {"text": "String formatting rules", "is_correct": false},
-        {"text": "Thread scheduling fairness", "is_correct": false},
-        {"text": "HashMap key ordering", "is_correct": false}
+        {
+          "text": "Thread scheduling fairness",
+          "is_correct": false
+        },
+        {
+          "text": "HashMap key ordering",
+          "is_correct": false
+        },
+        {
+          "text": "Consistent floating-point behavior across platforms",
+          "is_correct": true
+        },
+        {
+          "text": "String formatting rules",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q176. Which access modifier is the most restrictive?",
       "difficulty": 3,
-      "tags": ["access-modifiers"],
+      "tags": [
+        "access-modifiers"
+      ],
       "answers": [
-        {"text": "private", "is_correct": true},
-        {"text": "protected", "is_correct": false},
-        {"text": "public", "is_correct": false},
-        {"text": "package-private", "is_correct": false}
+        {
+          "text": "package-private",
+          "is_correct": false
+        },
+        {
+          "text": "public",
+          "is_correct": false
+        },
+        {
+          "text": "protected",
+          "is_correct": false
+        },
+        {
+          "text": "private",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q177. What does package-private visibility mean?",
       "difficulty": 3,
-      "tags": ["access-modifiers", "packages"],
+      "tags": [
+        "access-modifiers",
+        "packages"
+      ],
       "answers": [
-        {"text": "Accessible only within same package", "is_correct": true},
-        {"text": "Accessible from any subclass", "is_correct": false},
-        {"text": "Accessible globally", "is_correct": false},
-        {"text": "Accessible only in same class", "is_correct": false}
+        {
+          "text": "Accessible globally",
+          "is_correct": false
+        },
+        {
+          "text": "Accessible only in same class",
+          "is_correct": false
+        },
+        {
+          "text": "Accessible from any subclass",
+          "is_correct": false
+        },
+        {
+          "text": "Accessible only within same package",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q178. Which statement about assertions is correct?",
       "difficulty": 3,
-      "tags": ["debugging", "assert"],
+      "tags": [
+        "debugging",
+        "assert"
+      ],
       "answers": [
-        {"text": "They are typically enabled in testing, disabled in production", "is_correct": true},
-        {"text": "They replace exception handling", "is_correct": false},
-        {"text": "They always execute regardless of flags", "is_correct": false},
-        {"text": "They are compile-time only comments", "is_correct": false}
+        {
+          "text": "They are typically enabled in testing, disabled in production",
+          "is_correct": true
+        },
+        {
+          "text": "They always execute regardless of flags",
+          "is_correct": false
+        },
+        {
+          "text": "They are compile-time only comments",
+          "is_correct": false
+        },
+        {
+          "text": "They replace exception handling",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q179. What does javac produce from Java source files?",
       "difficulty": 3,
-      "tags": ["jvm", "tooling"],
+      "tags": [
+        "jvm",
+        "tooling"
+      ],
       "answers": [
-        {"text": ".class bytecode files", "is_correct": true},
-        {"text": "Native machine code binaries", "is_correct": false},
-        {"text": "JAR files automatically", "is_correct": false},
-        {"text": "XML descriptors", "is_correct": false}
+        {
+          "text": "Native machine code binaries",
+          "is_correct": false
+        },
+        {
+          "text": ".class bytecode files",
+          "is_correct": true
+        },
+        {
+          "text": "XML descriptors",
+          "is_correct": false
+        },
+        {
+          "text": "JAR files automatically",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q180. Which command-line option enables assertions at runtime?",
       "difficulty": 3,
-      "tags": ["jvm", "tooling"],
+      "tags": [
+        "jvm",
+        "tooling"
+      ],
       "answers": [
-        {"text": "-ea", "is_correct": true},
-        {"text": "-da", "is_correct": false},
-        {"text": "-Xassert", "is_correct": false},
-        {"text": "-enable:assert", "is_correct": false}
+        {
+          "text": "-da",
+          "is_correct": false
+        },
+        {
+          "text": "-Xassert",
+          "is_correct": false
+        },
+        {
+          "text": "-enable:assert",
+          "is_correct": false
+        },
+        {
+          "text": "-ea",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q181. Which class represents a date without time zone in java.time?",
       "difficulty": 3,
-      "tags": ["datetime", "java-time"],
+      "tags": [
+        "datetime",
+        "java-time"
+      ],
       "answers": [
-        {"text": "LocalDate", "is_correct": true},
-        {"text": "Date", "is_correct": false},
-        {"text": "Calendar", "is_correct": false},
-        {"text": "InstantZone", "is_correct": false}
+        {
+          "text": "Calendar",
+          "is_correct": false
+        },
+        {
+          "text": "LocalDate",
+          "is_correct": true
+        },
+        {
+          "text": "InstantZone",
+          "is_correct": false
+        },
+        {
+          "text": "Date",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q182. Which class represents date and time without zone in java.time?",
       "difficulty": 3,
-      "tags": ["datetime", "java-time"],
+      "tags": [
+        "datetime",
+        "java-time"
+      ],
       "answers": [
-        {"text": "LocalDateTime", "is_correct": true},
-        {"text": "ZonedClock", "is_correct": false},
-        {"text": "SimpleDateFormat", "is_correct": false},
-        {"text": "DateTime", "is_correct": false}
+        {
+          "text": "LocalDateTime",
+          "is_correct": true
+        },
+        {
+          "text": "SimpleDateFormat",
+          "is_correct": false
+        },
+        {
+          "text": "ZonedClock",
+          "is_correct": false
+        },
+        {
+          "text": "DateTime",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q183. Which class represents an instant on UTC timeline?",
       "difficulty": 3,
-      "tags": ["datetime", "java-time"],
+      "tags": [
+        "datetime",
+        "java-time"
+      ],
       "answers": [
-        {"text": "Instant", "is_correct": true},
-        {"text": "LocalDate", "is_correct": false},
-        {"text": "ZoneId", "is_correct": false},
-        {"text": "Period", "is_correct": false}
+        {
+          "text": "ZoneId",
+          "is_correct": false
+        },
+        {
+          "text": "Period",
+          "is_correct": false
+        },
+        {
+          "text": "LocalDate",
+          "is_correct": false
+        },
+        {
+          "text": "Instant",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q184. Which class represents a region-based time zone ID?",
       "difficulty": 3,
-      "tags": ["datetime", "java-time"],
+      "tags": [
+        "datetime",
+        "java-time"
+      ],
       "answers": [
-        {"text": "ZoneId", "is_correct": true},
-        {"text": "TimeZoneRegion", "is_correct": false},
-        {"text": "LocalTime", "is_correct": false},
-        {"text": "OffsetDate", "is_correct": false}
+        {
+          "text": "ZoneId",
+          "is_correct": true
+        },
+        {
+          "text": "OffsetDate",
+          "is_correct": false
+        },
+        {
+          "text": "TimeZoneRegion",
+          "is_correct": false
+        },
+        {
+          "text": "LocalTime",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q185. Which class models a date-based amount like years/months/days?",
       "difficulty": 3,
-      "tags": ["datetime", "java-time"],
+      "tags": [
+        "datetime",
+        "java-time"
+      ],
       "answers": [
-        {"text": "Period", "is_correct": true},
-        {"text": "Duration", "is_correct": false},
-        {"text": "Instant", "is_correct": false},
-        {"text": "Chronology", "is_correct": false}
+        {
+          "text": "Period",
+          "is_correct": true
+        },
+        {
+          "text": "Instant",
+          "is_correct": false
+        },
+        {
+          "text": "Duration",
+          "is_correct": false
+        },
+        {
+          "text": "Chronology",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q186. Which class models a time-based amount like seconds/nanos?",
       "difficulty": 3,
-      "tags": ["datetime", "java-time"],
+      "tags": [
+        "datetime",
+        "java-time"
+      ],
       "answers": [
-        {"text": "Duration", "is_correct": true},
-        {"text": "Period", "is_correct": false},
-        {"text": "LocalDate", "is_correct": false},
-        {"text": "Date", "is_correct": false}
+        {
+          "text": "Period",
+          "is_correct": false
+        },
+        {
+          "text": "LocalDate",
+          "is_correct": false
+        },
+        {
+          "text": "Duration",
+          "is_correct": true
+        },
+        {
+          "text": "Date",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q187. Which formatter class is used in java.time API?",
       "difficulty": 3,
-      "tags": ["datetime", "formatting"],
+      "tags": [
+        "datetime",
+        "formatting"
+      ],
       "answers": [
-        {"text": "DateTimeFormatter", "is_correct": true},
-        {"text": "SimpleDateFormatter", "is_correct": false},
-        {"text": "TimePrinter", "is_correct": false},
-        {"text": "DateFormatter2", "is_correct": false}
+        {
+          "text": "DateFormatter2",
+          "is_correct": false
+        },
+        {
+          "text": "SimpleDateFormatter",
+          "is_correct": false
+        },
+        {
+          "text": "DateTimeFormatter",
+          "is_correct": true
+        },
+        {
+          "text": "TimePrinter",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q188. What is a key benefit of java.time classes?",
       "difficulty": 3,
-      "tags": ["datetime", "design"],
+      "tags": [
+        "datetime",
+        "design"
+      ],
       "answers": [
-        {"text": "They are immutable and thread-safe", "is_correct": true},
-        {"text": "They require synchronization for every use", "is_correct": false},
-        {"text": "They are legacy-only wrappers", "is_correct": false},
-        {"text": "They replace all locale support", "is_correct": false}
+        {
+          "text": "They are legacy-only wrappers",
+          "is_correct": false
+        },
+        {
+          "text": "They replace all locale support",
+          "is_correct": false
+        },
+        {
+          "text": "They are immutable and thread-safe",
+          "is_correct": true
+        },
+        {
+          "text": "They require synchronization for every use",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q189. Which API should be preferred over java.util.Date for new code?",
       "difficulty": 3,
-      "tags": ["datetime", "best-practices"],
+      "tags": [
+        "datetime",
+        "best-practices"
+      ],
       "answers": [
-        {"text": "java.time API", "is_correct": true},
-        {"text": "java.sql.Date", "is_correct": false},
-        {"text": "Calendar only", "is_correct": false},
-        {"text": "Timestamp only", "is_correct": false}
+        {
+          "text": "Calendar only",
+          "is_correct": false
+        },
+        {
+          "text": "java.time API",
+          "is_correct": true
+        },
+        {
+          "text": "java.sql.Date",
+          "is_correct": false
+        },
+        {
+          "text": "Timestamp only",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q190. Which class is used to build HTTP requests in Java 11 HttpClient API?",
       "difficulty": 3,
-      "tags": ["java11", "http"],
+      "tags": [
+        "java11",
+        "http"
+      ],
       "answers": [
-        {"text": "HttpRequest", "is_correct": true},
-        {"text": "URLConnectionRequest", "is_correct": false},
-        {"text": "NetRequest", "is_correct": false},
-        {"text": "HttpPacket", "is_correct": false}
+        {
+          "text": "NetRequest",
+          "is_correct": false
+        },
+        {
+          "text": "URLConnectionRequest",
+          "is_correct": false
+        },
+        {
+          "text": "HttpPacket",
+          "is_correct": false
+        },
+        {
+          "text": "HttpRequest",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q191. Which class sends HTTP requests in Java 11 standard library?",
       "difficulty": 3,
-      "tags": ["java11", "http"],
+      "tags": [
+        "java11",
+        "http"
+      ],
       "answers": [
-        {"text": "HttpClient", "is_correct": true},
-        {"text": "HttpSender", "is_correct": false},
-        {"text": "WebClientCore", "is_correct": false},
-        {"text": "RequestExecutor", "is_correct": false}
+        {
+          "text": "WebClientCore",
+          "is_correct": false
+        },
+        {
+          "text": "HttpSender",
+          "is_correct": false
+        },
+        {
+          "text": "HttpClient",
+          "is_correct": true
+        },
+        {
+          "text": "RequestExecutor",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q192. Which class holds HTTP response data in Java 11 HttpClient API?",
       "difficulty": 3,
-      "tags": ["java11", "http"],
+      "tags": [
+        "java11",
+        "http"
+      ],
       "answers": [
-        {"text": "HttpResponse<T>", "is_correct": true},
-        {"text": "HttpResult", "is_correct": false},
-        {"text": "ResponseEntity", "is_correct": false},
-        {"text": "HttpPayload", "is_correct": false}
+        {
+          "text": "ResponseEntity",
+          "is_correct": false
+        },
+        {
+          "text": "HttpPayload",
+          "is_correct": false
+        },
+        {
+          "text": "HttpResult",
+          "is_correct": false
+        },
+        {
+          "text": "HttpResponse<T>",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q193. Which Java 11 feature allows running single-file source code directly?",
       "difficulty": 3,
-      "tags": ["java11", "tooling"],
+      "tags": [
+        "java11",
+        "tooling"
+      ],
       "answers": [
-        {"text": "Launching source files with java command", "is_correct": true},
-        {"text": "Automatic JAR generation for every file", "is_correct": false},
-        {"text": "No-compile runtime bytecode editing", "is_correct": false},
-        {"text": "Built-in Maven replacement", "is_correct": false}
+        {
+          "text": "No-compile runtime bytecode editing",
+          "is_correct": false
+        },
+        {
+          "text": "Automatic JAR generation for every file",
+          "is_correct": false
+        },
+        {
+          "text": "Built-in Maven replacement",
+          "is_correct": false
+        },
+        {
+          "text": "Launching source files with java command",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q194. What does var in local variable declarations do?",
       "difficulty": 3,
-      "tags": ["java11", "syntax"],
+      "tags": [
+        "java11",
+        "syntax"
+      ],
       "answers": [
-        {"text": "Uses local variable type inference at compile time", "is_correct": true},
-        {"text": "Creates dynamically typed variables", "is_correct": false},
-        {"text": "Allows null-only assignment", "is_correct": false},
-        {"text": "Can be used for fields and method params", "is_correct": false}
+        {
+          "text": "Can be used for fields and method params",
+          "is_correct": false
+        },
+        {
+          "text": "Allows null-only assignment",
+          "is_correct": false
+        },
+        {
+          "text": "Uses local variable type inference at compile time",
+          "is_correct": true
+        },
+        {
+          "text": "Creates dynamically typed variables",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q195. Where can var NOT be used in Java 11?",
       "difficulty": 3,
-      "tags": ["java11", "syntax"],
+      "tags": [
+        "java11",
+        "syntax"
+      ],
       "answers": [
-        {"text": "Class fields", "is_correct": true},
-        {"text": "Local variables with initializer", "is_correct": false},
-        {"text": "Enhanced for-loop variables", "is_correct": false},
-        {"text": "Index variables in for-loop", "is_correct": false}
+        {
+          "text": "Class fields",
+          "is_correct": true
+        },
+        {
+          "text": "Local variables with initializer",
+          "is_correct": false
+        },
+        {
+          "text": "Index variables in for-loop",
+          "is_correct": false
+        },
+        {
+          "text": "Enhanced for-loop variables",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q196. Which keyword prevents a variable from being reassigned after initialization?",
       "difficulty": 3,
-      "tags": ["keywords", "final"],
+      "tags": [
+        "keywords",
+        "final"
+      ],
       "answers": [
-        {"text": "final", "is_correct": true},
-        {"text": "const", "is_correct": false},
-        {"text": "immutable", "is_correct": false},
-        {"text": "sealed", "is_correct": false}
+        {
+          "text": "immutable",
+          "is_correct": false
+        },
+        {
+          "text": "sealed",
+          "is_correct": false
+        },
+        {
+          "text": "const",
+          "is_correct": false
+        },
+        {
+          "text": "final",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q197. Which statement about switch on String is correct in modern Java?",
       "difficulty": 3,
-      "tags": ["control-flow", "strings"],
+      "tags": [
+        "control-flow",
+        "strings"
+      ],
       "answers": [
-        {"text": "switch can use String case labels", "is_correct": true},
-        {"text": "switch only accepts int types", "is_correct": false},
-        {"text": "switch on String requires reflection", "is_correct": false},
-        {"text": "switch on String is compile-time error", "is_correct": false}
+        {
+          "text": "switch only accepts int types",
+          "is_correct": false
+        },
+        {
+          "text": "switch on String is compile-time error",
+          "is_correct": false
+        },
+        {
+          "text": "switch on String requires reflection",
+          "is_correct": false
+        },
+        {
+          "text": "switch can use String case labels",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q198. What does break in a switch statement typically do?",
       "difficulty": 3,
-      "tags": ["control-flow", "switch"],
+      "tags": [
+        "control-flow",
+        "switch"
+      ],
       "answers": [
-        {"text": "Stops fall-through and exits switch", "is_correct": true},
-        {"text": "Skips next case but continues switch", "is_correct": false},
-        {"text": "Restarts switch from first case", "is_correct": false},
-        {"text": "Ends the whole JVM", "is_correct": false}
+        {
+          "text": "Stops fall-through and exits switch",
+          "is_correct": true
+        },
+        {
+          "text": "Restarts switch from first case",
+          "is_correct": false
+        },
+        {
+          "text": "Skips next case but continues switch",
+          "is_correct": false
+        },
+        {
+          "text": "Ends the whole JVM",
+          "is_correct": false
+        }
       ]
     },
     {
       "text": "Q199. Which keyword skips to next loop iteration?",
       "difficulty": 3,
-      "tags": ["control-flow", "loops"],
+      "tags": [
+        "control-flow",
+        "loops"
+      ],
       "answers": [
-        {"text": "continue", "is_correct": true},
-        {"text": "break", "is_correct": false},
-        {"text": "next", "is_correct": false},
-        {"text": "pass", "is_correct": false}
+        {
+          "text": "break",
+          "is_correct": false
+        },
+        {
+          "text": "next",
+          "is_correct": false
+        },
+        {
+          "text": "pass",
+          "is_correct": false
+        },
+        {
+          "text": "continue",
+          "is_correct": true
+        }
       ]
     },
     {
       "text": "Q200. Which statement is true about Java pass-by-value semantics?",
       "difficulty": 3,
-      "tags": ["methods", "references", "basics"],
+      "tags": [
+        "methods",
+        "references",
+        "basics"
+      ],
       "answers": [
-        {"text": "Java passes copies of values, including object references", "is_correct": true},
-        {"text": "Java passes objects by reference", "is_correct": false},
-        {"text": "Primitives are pass-by-value, objects pass-by-reference", "is_correct": false},
-        {"text": "Java decides pass style dynamically", "is_correct": false}
+        {
+          "text": "Primitives are pass-by-value, objects pass-by-reference",
+          "is_correct": false
+        },
+        {
+          "text": "Java passes copies of values, including object references",
+          "is_correct": true
+        },
+        {
+          "text": "Java passes objects by reference",
+          "is_correct": false
+        },
+        {
+          "text": "Java decides pass style dynamically",
+          "is_correct": false
+        }
       ]
     }
   ]

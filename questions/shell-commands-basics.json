@@ -550,6 +550,556 @@
         {"text": "mkpath a/b/c", "is_correct": false},
         {"text": "mkdir -all a/b/c", "is_correct": false}
       ]
+    },
+    {
+      "text": "Which command searches for files modified in the last 7 days?",
+      "difficulty": 3,
+      "tags": ["shell", "find", "advanced"],
+      "answers": [
+        {"text": "find . -days 7", "is_correct": false},
+        {"text": "find . -modified 7d", "is_correct": false},
+        {"text": "find . -mtime -7", "is_correct": true},
+        {"text": "find . -recent 7", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command removes a directory and all its contents recursively?",
+      "difficulty": 3,
+      "tags": ["shell", "rm", "directories"],
+      "answers": [
+        {"text": "rmdir -all directory", "is_correct": false},
+        {"text": "rm -r directory", "is_correct": true},
+        {"text": "delete -recursive directory", "is_correct": false},
+        {"text": "rm directory", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the command 'ln -s target link' create?",
+      "difficulty": 3,
+      "tags": ["shell", "ln", "symbolic-links"],
+      "answers": [
+        {"text": "A hard link to target", "is_correct": false},
+        {"text": "A copy of target", "is_correct": false},
+        {"text": "A symbolic (soft) link pointing to target", "is_correct": true},
+        {"text": "A new directory", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays real-time system resource usage and processes?",
+      "difficulty": 3,
+      "tags": ["shell", "top", "monitoring"],
+      "answers": [
+        {"text": "ps -all", "is_correct": false},
+        {"text": "top", "is_correct": true},
+        {"text": "monitor", "is_correct": false},
+        {"text": "syswatch", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command finds all files larger than 100MB?",
+      "difficulty": 3,
+      "tags": ["shell", "find", "size"],
+      "answers": [
+        {"text": "find . -bigger 100M", "is_correct": false},
+        {"text": "find . -filesize 100M+", "is_correct": false},
+        {"text": "find . -size +100M", "is_correct": true},
+        {"text": "ls -size +100M", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command compresses files into a tar.gz archive?",
+      "difficulty": 3,
+      "tags": ["shell", "tar", "compression"],
+      "answers": [
+        {"text": "zip -tar archive.tar.gz files/", "is_correct": false},
+        {"text": "tar -czf archive.tar.gz files/", "is_correct": true},
+        {"text": "compress -gz files/ archive.tar.gz", "is_correct": false},
+        {"text": "gzip -tar files/ archive.tar.gz", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command extracts a tar.gz archive?",
+      "difficulty": 3,
+      "tags": ["shell", "tar", "extraction"],
+      "answers": [
+        {"text": "untar archive.tar.gz", "is_correct": false},
+        {"text": "extract archive.tar.gz", "is_correct": false},
+        {"text": "tar -xzf archive.tar.gz", "is_correct": true},
+        {"text": "tar -open archive.tar.gz", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command replaces text in a file using stream editing?",
+      "difficulty": 3,
+      "tags": ["shell", "sed", "text-processing"],
+      "answers": [
+        {"text": "replace old new file", "is_correct": false},
+        {"text": "sed 's/old/new/g' file", "is_correct": true},
+        {"text": "edit file old new", "is_correct": false},
+        {"text": "change 's/old/new/' file", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command processes and analyzes text using pattern scanning and processing?",
+      "difficulty": 3,
+      "tags": ["shell", "awk", "text-processing"],
+      "answers": [
+        {"text": "awk-process", "is_correct": false},
+        {"text": "textproc", "is_correct": false},
+        {"text": "awk", "is_correct": true},
+        {"text": "scan", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the command 'grep -r pattern .' do?",
+      "difficulty": 3,
+      "tags": ["shell", "grep", "recursive"],
+      "answers": [
+        {"text": "Searches only in the current directory file", "is_correct": false},
+        {"text": "Recursively searches for pattern in all files in current directory", "is_correct": true},
+        {"text": "Removes lines matching pattern recursively", "is_correct": false},
+        {"text": "Replaces pattern recursively", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command passes arguments from stdin to another command?",
+      "difficulty": 3,
+      "tags": ["shell", "xargs", "piping"],
+      "answers": [
+        {"text": "passargs", "is_correct": false},
+        {"text": "xargs", "is_correct": true},
+        {"text": "argsend", "is_correct": false},
+        {"text": "stdin-to-cmd", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'chmod 755 file' do?",
+      "difficulty": 3,
+      "tags": ["shell", "chmod", "permissions"],
+      "answers": [
+        {"text": "Sets read-only for everyone", "is_correct": false},
+        {"text": "Sets write permission for owner only", "is_correct": false},
+        {"text": "Sets rwx for owner, rx for group and others", "is_correct": true},
+        {"text": "Sets execute permission for everyone", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which wildcard matches exactly one character?",
+      "difficulty": 3,
+      "tags": ["shell", "wildcards", "globbing"],
+      "answers": [
+        {"text": "*", "is_correct": false},
+        {"text": "?", "is_correct": true},
+        {"text": ".", "is_correct": false},
+        {"text": "+", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the command 'uniq' do?",
+      "difficulty": 3,
+      "tags": ["shell", "uniq", "text-processing"],
+      "answers": [
+        {"text": "Removes all duplicate lines anywhere in file", "is_correct": false},
+        {"text": "Makes all lines unique by adding numbers", "is_correct": false},
+        {"text": "Removes adjacent duplicate lines from input", "is_correct": true},
+        {"text": "Counts unique words", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays the beginning of a file with 20 lines instead of default 10?",
+      "difficulty": 3,
+      "tags": ["shell", "head", "options"],
+      "answers": [
+        {"text": "head -lines 20 file", "is_correct": false},
+        {"text": "head -n 20 file", "is_correct": true},
+        {"text": "head -20lines file", "is_correct": false},
+        {"text": "top 20 file", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'tail -f logfile' do?",
+      "difficulty": 3,
+      "tags": ["shell", "tail", "monitoring"],
+      "answers": [
+        {"text": "Displays the file and exits", "is_correct": false},
+        {"text": "Filters the last 10 lines", "is_correct": false},
+        {"text": "Continuously displays new lines appended to the file", "is_correct": true},
+        {"text": "Freezes the file output", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows network connections and listening ports?",
+      "difficulty": 3,
+      "tags": ["shell", "netstat", "network"],
+      "answers": [
+        {"text": "netview", "is_correct": false},
+        {"text": "netstat", "is_correct": true},
+        {"text": "connections", "is_correct": false},
+        {"text": "ports", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command securely copies files to a remote server?",
+      "difficulty": 3,
+      "tags": ["shell", "scp", "network"],
+      "answers": [
+        {"text": "copy-secure file user@host:/path", "is_correct": false},
+        {"text": "ssh-copy file user@host:/path", "is_correct": false},
+        {"text": "scp file user@host:/path", "is_correct": true},
+        {"text": "remote-cp file user@host:/path", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command establishes an SSH connection to a remote server?",
+      "difficulty": 3,
+      "tags": ["shell", "ssh", "network"],
+      "answers": [
+        {"text": "connect user@hostname", "is_correct": false},
+        {"text": "ssh user@hostname", "is_correct": true},
+        {"text": "remote user@hostname", "is_correct": false},
+        {"text": "login user@hostname", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the command 'jobs' display?",
+      "difficulty": 3,
+      "tags": ["shell", "jobs", "processes"],
+      "answers": [
+        {"text": "All running processes system-wide", "is_correct": false},
+        {"text": "Background and suspended jobs in current shell", "is_correct": true},
+        {"text": "Scheduled cron jobs", "is_correct": false},
+        {"text": "Available job opportunities", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command brings a background job to foreground?",
+      "difficulty": 3,
+      "tags": ["shell", "fg", "job-control"],
+      "answers": [
+        {"text": "foreground", "is_correct": false},
+        {"text": "front", "is_correct": false},
+        {"text": "fg", "is_correct": true},
+        {"text": "bring-forward", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command sends a suspended job to background?",
+      "difficulty": 3,
+      "tags": ["shell", "bg", "job-control"],
+      "answers": [
+        {"text": "background", "is_correct": false},
+        {"text": "bg", "is_correct": true},
+        {"text": "send-back", "is_correct": false},
+        {"text": "resume-bg", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does Ctrl+Z do in a terminal?",
+      "difficulty": 3,
+      "tags": ["shell", "shortcuts", "job-control"],
+      "answers": [
+        {"text": "Terminates the current process", "is_correct": false},
+        {"text": "Undoes the last command", "is_correct": false},
+        {"text": "Suspends the current foreground process", "is_correct": true},
+        {"text": "Zooms the terminal", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command finds files by name pattern case-insensitively?",
+      "difficulty": 3,
+      "tags": ["shell", "find", "case-insensitive"],
+      "answers": [
+        {"text": "find . -name 'pattern' -nocase", "is_correct": false},
+        {"text": "find . -iname 'pattern'", "is_correct": true},
+        {"text": "find . -caseless 'pattern'", "is_correct": false},
+        {"text": "find . -name-ignore-case 'pattern'", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'grep -v pattern file' do?",
+      "difficulty": 3,
+      "tags": ["shell", "grep", "invert"],
+      "answers": [
+        {"text": "Shows only the matching pattern", "is_correct": false},
+        {"text": "Shows lines that do NOT match the pattern", "is_correct": true},
+        {"text": "Verifies the pattern exists", "is_correct": false},
+        {"text": "Shows line numbers with matches", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows only unique lines after sorting?",
+      "difficulty": 3,
+      "tags": ["shell", "sort", "uniq"],
+      "answers": [
+        {"text": "uniq file", "is_correct": false},
+        {"text": "sort -unique file", "is_correct": false},
+        {"text": "sort file | uniq", "is_correct": true},
+        {"text": "unique-sort file", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'wc -l file' count?",
+      "difficulty": 3,
+      "tags": ["shell", "wc", "lines"],
+      "answers": [
+        {"text": "Number of words in the file", "is_correct": false},
+        {"text": "Number of lines in the file", "is_correct": true},
+        {"text": "File size in bytes", "is_correct": false},
+        {"text": "Number of characters", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command finds files and executes a command on each?",
+      "difficulty": 3,
+      "tags": ["shell", "find", "exec"],
+      "answers": [
+        {"text": "find . -name '*.txt' | run cmd", "is_correct": false},
+        {"text": "find . -name '*.txt' --execute cmd", "is_correct": false},
+        {"text": "find . -name '*.txt' -exec cmd {} \\;", "is_correct": true},
+        {"text": "exec cmd find . -name '*.txt'", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the command 'alias ll=\"ls -la\"' do?",
+      "difficulty": 3,
+      "tags": ["shell", "alias", "shortcuts"],
+      "answers": [
+        {"text": "Renames the ls command permanently", "is_correct": false},
+        {"text": "Links ll to ls binary", "is_correct": false},
+        {"text": "Creates a shortcut command 'll' that runs 'ls -la'", "is_correct": true},
+        {"text": "Creates a new file called ll", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays disk usage for a specific directory?",
+      "difficulty": 3,
+      "tags": ["shell", "du", "disk"],
+      "answers": [
+        {"text": "df -h /path/to/dir", "is_correct": false},
+        {"text": "du -sh /path/to/dir", "is_correct": true},
+        {"text": "diskusage /path/to/dir", "is_correct": false},
+        {"text": "size /path/to/dir", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does '2>&1' do in a shell command?",
+      "difficulty": 3,
+      "tags": ["shell", "redirection", "stderr"],
+      "answers": [
+        {"text": "Redirects stdout to stderr", "is_correct": false},
+        {"text": "Redirects stderr to stdout", "is_correct": true},
+        {"text": "Creates two output files", "is_correct": false},
+        {"text": "Runs command twice", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows the type of a file?",
+      "difficulty": 3,
+      "tags": ["shell", "file", "identification"],
+      "answers": [
+        {"text": "type filename", "is_correct": false},
+        {"text": "filetype filename", "is_correct": false},
+        {"text": "file filename", "is_correct": true},
+        {"text": "what filename", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'tee' command do?",
+      "difficulty": 3,
+      "tags": ["shell", "tee", "redirection"],
+      "answers": [
+        {"text": "Splits input into three parts", "is_correct": false},
+        {"text": "Reads stdin and writes to both stdout and files", "is_correct": true},
+        {"text": "Tests file existence", "is_correct": false},
+        {"text": "Creates T-shaped directory structure", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows command history with timestamps (in bash with HISTTIMEFORMAT set)?",
+      "difficulty": 3,
+      "tags": ["shell", "history", "timestamps"],
+      "answers": [
+        {"text": "history -t", "is_correct": false},
+        {"text": "history", "is_correct": true},
+        {"text": "history --time", "is_correct": false},
+        {"text": "timestamped-history", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'chmod +x script.sh' do?",
+      "difficulty": 3,
+      "tags": ["shell", "chmod", "execute"],
+      "answers": [
+        {"text": "Removes all permissions", "is_correct": false},
+        {"text": "Makes file read-only", "is_correct": false},
+        {"text": "Adds execute permission for all users", "is_correct": true},
+        {"text": "Adds extra metadata", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays your shell configuration file for bash?",
+      "difficulty": 3,
+      "tags": ["shell", "bash", "config"],
+      "answers": [
+        {"text": "show-config bash", "is_correct": false},
+        {"text": "cat ~/.bashrc or cat ~/.bash_profile", "is_correct": true},
+        {"text": "bash --config", "is_correct": false},
+        {"text": "view-shell-settings", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the command 'source ~/.bashrc' do?",
+      "difficulty": 3,
+      "tags": ["shell", "source", "config"],
+      "answers": [
+        {"text": "Edits the bashrc file", "is_correct": false},
+        {"text": "Reloads the bash configuration in current shell", "is_correct": true},
+        {"text": "Creates a new bashrc file", "is_correct": false},
+        {"text": "Backs up the bashrc file", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows the last 50 commands from history?",
+      "difficulty": 3,
+      "tags": ["shell", "history", "options"],
+      "answers": [
+        {"text": "history -n 50", "is_correct": false},
+        {"text": "last 50", "is_correct": false},
+        {"text": "history 50", "is_correct": true},
+        {"text": "history --count 50", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does command substitution $(command) or `command` do?",
+      "difficulty": 3,
+      "tags": ["shell", "substitution", "advanced"],
+      "answers": [
+        {"text": "Comments out the command", "is_correct": false},
+        {"text": "Executes command and replaces it with its output", "is_correct": true},
+        {"text": "Creates a variable named command", "is_correct": false},
+        {"text": "Runs command in a subshell permanently", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command compresses files using gzip?",
+      "difficulty": 3,
+      "tags": ["shell", "gzip", "compression"],
+      "answers": [
+        {"text": "compress file", "is_correct": false},
+        {"text": "zip file", "is_correct": false},
+        {"text": "gzip file", "is_correct": true},
+        {"text": "tar -z file", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command decompresses a .gz file?",
+      "difficulty": 3,
+      "tags": ["shell", "gunzip", "compression"],
+      "answers": [
+        {"text": "ungzip file.gz", "is_correct": false},
+        {"text": "decompress file.gz", "is_correct": false},
+        {"text": "gunzip file.gz", "is_correct": true},
+        {"text": "untar file.gz", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'grep -i pattern file' do?",
+      "difficulty": 3,
+      "tags": ["shell", "grep", "case-insensitive"],
+      "answers": [
+        {"text": "Shows line numbers with matches", "is_correct": false},
+        {"text": "Inverts the match", "is_correct": false},
+        {"text": "Searches case-insensitively for pattern", "is_correct": true},
+        {"text": "Includes hidden files", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command displays only filenames containing a pattern with grep?",
+      "difficulty": 3,
+      "tags": ["shell", "grep", "filenames"],
+      "answers": [
+        {"text": "grep -f pattern files", "is_correct": false},
+        {"text": "grep -l pattern files", "is_correct": true},
+        {"text": "grep --names pattern files", "is_correct": false},
+        {"text": "grep -files pattern", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'ps aux' display?",
+      "difficulty": 3,
+      "tags": ["shell", "ps", "processes"],
+      "answers": [
+        {"text": "Only user processes", "is_correct": false},
+        {"text": "Auxiliary system files", "is_correct": false},
+        {"text": "All running processes with detailed information", "is_correct": true},
+        {"text": "Scheduled processes only", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which signal does 'kill -9 PID' send?",
+      "difficulty": 3,
+      "tags": ["shell", "kill", "signals"],
+      "answers": [
+        {"text": "SIGTERM - graceful termination", "is_correct": false},
+        {"text": "SIGKILL - forcefully terminates process", "is_correct": true},
+        {"text": "SIGHUP - hang up signal", "is_correct": false},
+        {"text": "SIGSTOP - pause signal", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command lists all currently loaded environment variables?",
+      "difficulty": 3,
+      "tags": ["shell", "printenv", "environment"],
+      "answers": [
+        {"text": "showvars", "is_correct": false},
+        {"text": "printenv", "is_correct": true},
+        {"text": "listvars", "is_correct": false},
+        {"text": "env-list", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does 'curl -O URL' do?",
+      "difficulty": 3,
+      "tags": ["shell", "curl", "download"],
+      "answers": [
+        {"text": "Opens URL in browser", "is_correct": false},
+        {"text": "Downloads file with its original name", "is_correct": true},
+        {"text": "Outputs URL content to stdout only", "is_correct": false},
+        {"text": "Overwrites local file with URL", "is_correct": false}
+      ]
+    },
+    {
+      "text": "Which command shows listening network ports and services?",
+      "difficulty": 3,
+      "tags": ["shell", "lsof", "network"],
+      "answers": [
+        {"text": "listen -ports", "is_correct": false},
+        {"text": "show-ports", "is_correct": false},
+        {"text": "lsof -i", "is_correct": true},
+        {"text": "network -listening", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'basename' command do?",
+      "difficulty": 3,
+      "tags": ["shell", "basename", "path"],
+      "answers": [
+        {"text": "Creates a base directory", "is_correct": false},
+        {"text": "Extracts the filename from a full path", "is_correct": true},
+        {"text": "Shows the base URL", "is_correct": false},
+        {"text": "Renames a file to base name", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What does the 'dirname' command do?",
+      "difficulty": 3,
+      "tags": ["shell", "dirname", "path"],
+      "answers": [
+        {"text": "Creates a new directory", "is_correct": false},
+        {"text": "Shows directory size", "is_correct": false},
+        {"text": "Extracts the directory path from a full path", "is_correct": true},
+        {"text": "Lists directory contents", "is_correct": false}
+      ]
     }
   ]
 }
