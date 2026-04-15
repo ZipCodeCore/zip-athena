@@ -51,3 +51,4 @@ loadquestions
 seed
 static/js/admin.js.backup
 server.log
+.DS_Store
