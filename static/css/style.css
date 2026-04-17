@@ -44,6 +44,85 @@ body {
     font-size: 1.5rem;
 }
 
+.navbar-theme-switch {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-theme-switch .form-check-input,
+.navbar-theme-switch .form-check-label {
+    cursor: pointer;
+}
+
+body.dark-mode {
+    --bs-body-bg: #121212;
+    --bs-body-color: #e9ecef;
+    --bs-border-color: #3d3d3d;
+    background-color: #121212;
+    color: #e9ecef;
+}
+
+body.dark-mode .card,
+body.dark-mode .list-group-item,
+body.dark-mode .modal-content {
+    background-color: #1f1f1f;
+    color: #e9ecef;
+    border-color: #3d3d3d;
+}
+
+body.dark-mode .card-header,
+body.dark-mode .card-footer,
+body.dark-mode .action-buttons {
+    background-color: #2a2a2a;
+    color: #e9ecef;
+    border-color: #3d3d3d;
+}
+
+body.dark-mode .table {
+    --bs-table-bg: #1f1f1f;
+    --bs-table-color: #e9ecef;
+    --bs-table-striped-bg: #252525;
+    --bs-table-striped-color: #e9ecef;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #252525;
+    color: #e9ecef;
+    border-color: #4a4a4a;
+}
+
+body.dark-mode .form-control:focus,
+body.dark-mode .form-select:focus {
+    background-color: #252525;
+    color: #e9ecef;
+    border-color: #6c757d;
+    box-shadow: none;
+}
+
+body.dark-mode .outline-pane {
+    background-color: #1a1a1a;
+    border-right-color: #3d3d3d;
+}
+
+body.dark-mode .content-pane {
+    background-color: #121212;
+}
+
+body.dark-mode .markdown-content pre,
+body.dark-mode .markdown-content code {
+    background-color: #252525;
+    color: #e9ecef;
+}
+
+body.dark-mode .markdown-content h1 {
+    border-bottom-color: #3d3d3d;
+}
+
+body.dark-mode .text-muted {
+    color: #adb5bd !important;
+}
+
 .topic-card {
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;

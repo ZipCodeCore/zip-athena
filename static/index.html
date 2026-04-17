@@ -13,9 +13,15 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/index.html">
-                <img src="/images/logo.png" alt="Athena Logo" style="height: 24px; margin-right: 8px;"><strong>Athena</strong> <span class="badge bg-danger">(Beta-1)</span>
-            </a>
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand mb-0" href="/index.html">
+                    <img src="/images/logo.png" alt="Athena Logo" style="height: 24px; margin-right: 8px;"><strong>Athena</strong> <span class="badge bg-danger">(Beta-1)</span>
+                </a>
+                <div class="form-check form-switch navbar-theme-switch ms-2">
+                    <input class="form-check-input theme-toggle" type="checkbox" id="themeToggle" aria-label="Toggle dark mode">
+                    <label class="form-check-label text-white small" for="themeToggle">Dark</label>
+                </div>
+            </div>
             <span class="navbar-text text-white d-none d-lg-inline">Quiz Platform</span>
         </div>
     </nav>
@@ -82,6 +88,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/theme.js"></script>
     <script src="/js/auth.js"></script>
     <script>
         if ("serviceWorker" in navigator) {
