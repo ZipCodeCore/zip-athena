@@ -13,9 +13,15 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/dashboard.html">
-                <img src="/images/logo.png" alt="Athena Logo" style="height: 24px; margin-right: 8px;"><strong>Athena</strong> <span class="badge bg-danger">(Beta-1)</span>
-            </a>
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand mb-0" href="/dashboard.html">
+                    <img src="/images/logo.png" alt="Athena Logo" style="height: 24px; margin-right: 8px;"><strong>Athena</strong> <span class="badge bg-danger">(Beta-1)</span>
+                </a>
+                <div class="form-check form-switch navbar-theme-switch ms-2">
+                    <input class="form-check-input theme-toggle" type="checkbox" id="themeToggle" aria-label="Toggle dark mode">
+                    <label class="form-check-label text-white small" for="themeToggle">Dark</label>
+                </div>
+            </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -154,6 +160,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/theme.js"></script>
     <script src="/js/dashboard.js"></script>
     <script>
         if ("serviceWorker" in navigator) {
