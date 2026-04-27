@@ -1,0 +1,643 @@
+{
+  "topic": "Python Code Tracing - Medium",
+  "questions": [
+    {
+      "text": "What value is printed?\n\n```python\nx = [1, 2, 3]\ny = x\ny.append(4)\nprint(len(x))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "references"],
+      "answers": [
+        {"text": "3", "is_correct": false},
+        {"text": "4", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"python\"\nprint(s[::2])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "slicing"],
+      "answers": [
+        {"text": "pto", "is_correct": false},
+        {"text": "yhn", "is_correct": false},
+        {"text": "pto", "is_correct": false},
+        {"text": "pto", "is_correct": true}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [1, 2, 3, 4, 5]\nresult = [x * 2 for x in nums if x % 2 == 1]\nprint(sum(result))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "list-comprehension", "conditionals"],
+      "answers": [
+        {"text": "30", "is_correct": false},
+        {"text": "18", "is_correct": true},
+        {"text": "15", "is_correct": false},
+        {"text": "9", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nd = {'a': 1, 'b': 2, 'c': 3}\nprint(d.get('d', 0) + d.get('a', 0))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "dictionaries", "methods"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "0", "is_correct": false},
+        {"text": "None", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ncount = 0\nfor i in range(5):\n    for j in range(i):\n        count += 1\nprint(count)\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "nested-loops"],
+      "answers": [
+        {"text": "15", "is_correct": false},
+        {"text": "10", "is_correct": true},
+        {"text": "20", "is_correct": false},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"abcdefgh\"\nprint(s[-4:-1])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "slicing"],
+      "answers": [
+        {"text": "efg", "is_correct": true},
+        {"text": "efgh", "is_correct": false},
+        {"text": "defg", "is_correct": false},
+        {"text": "fgh", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nx = 5\ny = 2\nprint(x ** y + x % y)\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arithmetic", "operators"],
+      "answers": [
+        {"text": "27", "is_correct": false},
+        {"text": "26", "is_correct": true},
+        {"text": "25", "is_correct": false},
+        {"text": "24", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [3, 1, 4, 1, 5, 9, 2, 6]\nprint(nums.index(5))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "methods"],
+      "answers": [
+        {"text": "5", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "4", "is_correct": true},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\na = [1, 2, 3]\nb = [4, 5, 6]\nprint(sum(a) + sum(b[:2]))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "slicing"],
+      "answers": [
+        {"text": "21", "is_correct": false},
+        {"text": "15", "is_correct": true},
+        {"text": "16", "is_correct": false},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ntext = \"Hello World\"\nprint(text.lower().count('l'))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "methods"],
+      "answers": [
+        {"text": "2", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "3", "is_correct": true},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nresult = 0\nn = 100\nwhile n > 0:\n    result += n % 10\n    n //= 10\nprint(result)\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "digits"],
+      "answers": [
+        {"text": "1", "is_correct": true},
+        {"text": "100", "is_correct": false},
+        {"text": "10", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = set([1, 2, 2, 3, 3, 3, 4])\nprint(sum(s))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "sets", "built-ins"],
+      "answers": [
+        {"text": "18", "is_correct": false},
+        {"text": "10", "is_correct": true},
+        {"text": "7", "is_correct": false},
+        {"text": "4", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [10, 20, 30, 40, 50]\nnums[1:4] = [99]\nprint(len(nums))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "lists", "slicing"],
+      "answers": [
+        {"text": "5", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "3", "is_correct": true},
+        {"text": "2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nx = 7\ny = 3\nprint((x | y) - (x & y))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "bitwise", "operators"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "7", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "10", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nwords = ['cat', 'dog', 'elephant']\nresult = '-'.join(words)\nprint(len(result))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "join"],
+      "answers": [
+        {"text": "14", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "16", "is_correct": true},
+        {"text": "13", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ndef f(x, y=[]):\n    y.append(x)\n    return len(y)\n\nprint(f(1) + f(2))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "functions", "mutable-defaults"],
+      "answers": [
+        {"text": "2", "is_correct": false},
+        {"text": "3", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nmatrix = [[1, 2], [3, 4], [5, 6]]\nprint(matrix[1][0] + matrix[2][1])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "nested-lists", "indexing"],
+      "answers": [
+        {"text": "8", "is_correct": false},
+        {"text": "9", "is_correct": true},
+        {"text": "7", "is_correct": false},
+        {"text": "10", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"abcabc\"\nprint(s.find('bc') + s.rfind('bc'))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "methods"],
+      "answers": [
+        {"text": "5", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ncount = 0\nfor i in range(1, 10):\n    if i % 2 == 0:\n        continue\n    count += i\nprint(count)\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "continue"],
+      "answers": [
+        {"text": "20", "is_correct": false},
+        {"text": "25", "is_correct": true},
+        {"text": "45", "is_correct": false},
+        {"text": "30", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [5, 2, 8, 1, 9]\nnums.sort(reverse=True)\nprint(nums[2])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "sorting"],
+      "answers": [
+        {"text": "8", "is_correct": false},
+        {"text": "2", "is_correct": false},
+        {"text": "5", "is_correct": true},
+        {"text": "9", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nx = 123\ny = int(str(x)[::-1])\nprint(y)\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "type-conversion"],
+      "answers": [
+        {"text": "321", "is_correct": true},
+        {"text": "123", "is_correct": false},
+        {"text": "231", "is_correct": false},
+        {"text": "312", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\na = [1, 2, 3]\nb = a.copy()\nb.append(4)\nprint(len(a) + len(b))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "copy"],
+      "answers": [
+        {"text": "6", "is_correct": false},
+        {"text": "7", "is_correct": true},
+        {"text": "8", "is_correct": false},
+        {"text": "4", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nresult = 1\nfor i in range(1, 6):\n    result = result * i if i % 2 == 1 else result + i\nprint(result)\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "loops", "ternary"],
+      "answers": [
+        {"text": "120", "is_correct": false},
+        {"text": "21", "is_correct": true},
+        {"text": "15", "is_correct": false},
+        {"text": "30", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"The quick brown fox\"\nwords = s.split()\nprint(max(len(w) for w in words))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "comprehension"],
+      "answers": [
+        {"text": "4", "is_correct": false},
+        {"text": "5", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nd = {}\nfor i in range(1, 6):\n    d[i] = i ** 2\nprint(d[3] + d[4])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "dictionaries", "loops"],
+      "answers": [
+        {"text": "25", "is_correct": true},
+        {"text": "12", "is_correct": false},
+        {"text": "7", "is_correct": false},
+        {"text": "49", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = list(range(10))\nprint(sum(nums[::3]))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "lists", "slicing"],
+      "answers": [
+        {"text": "12", "is_correct": false},
+        {"text": "18", "is_correct": true},
+        {"text": "15", "is_correct": false},
+        {"text": "9", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\na = 10\nb = 20\na, b = b + 5, a + 5\nprint(a - b)\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "variables", "assignment"],
+      "answers": [
+        {"text": "5", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "10", "is_correct": true},
+        {"text": "-10", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"abcdef\"\nprint(s[1:5:2])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "slicing"],
+      "answers": [
+        {"text": "bd", "is_correct": true},
+        {"text": "bdf", "is_correct": false},
+        {"text": "ace", "is_correct": false},
+        {"text": "bc", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ndef mystery(n):\n    if n == 0:\n        return 1\n    return n * mystery(n - 1)\n\nprint(mystery(4))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "recursion", "functions"],
+      "answers": [
+        {"text": "4", "is_correct": false},
+        {"text": "10", "is_correct": false},
+        {"text": "24", "is_correct": true},
+        {"text": "120", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [1, 2, 3, 4, 5]\nresult = list(filter(lambda x: x > 2, nums))\nprint(len(result))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lambda", "filter"],
+      "answers": [
+        {"text": "2", "is_correct": false},
+        {"text": "3", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nx = 15\nresult = \"\"\nwhile x > 0:\n    result = str(x % 2) + result\n    x //= 2\nprint(len(result))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "loops", "binary"],
+      "answers": [
+        {"text": "3", "is_correct": false},
+        {"text": "4", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "15", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\na = [1, 2, 3]\nb = [4, 5]\nprint(len(a + b) + len(a * 2))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "operators"],
+      "answers": [
+        {"text": "10", "is_correct": false},
+        {"text": "8", "is_correct": false},
+        {"text": "11", "is_correct": true},
+        {"text": "12", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"hello world\"\nprint(s.title().count('l'))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "methods"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ncount = 0\nfor i in range(10):\n    for j in range(10):\n        if i + j == 10:\n            count += 1\nprint(count)\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "nested-loops", "conditionals"],
+      "answers": [
+        {"text": "10", "is_correct": false},
+        {"text": "9", "is_correct": true},
+        {"text": "11", "is_correct": false},
+        {"text": "100", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ndef f(a, b=2, c=3):\n    return a * b + c\n\nprint(f(5, c=1))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "functions", "parameters"],
+      "answers": [
+        {"text": "11", "is_correct": true},
+        {"text": "18", "is_correct": false},
+        {"text": "16", "is_correct": false},
+        {"text": "8", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nmatrix = [[i * j for j in range(1, 4)] for i in range(1, 4)]\nprint(matrix[2][2])\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "nested-comprehension", "lists"],
+      "answers": [
+        {"text": "6", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "9", "is_correct": true},
+        {"text": "8", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"abcde\"\nresult = s[:2] + s[3:]\nprint(result)\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "slicing"],
+      "answers": [
+        {"text": "abde", "is_correct": true},
+        {"text": "abcde", "is_correct": false},
+        {"text": "abce", "is_correct": false},
+        {"text": "acde", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nprint(sum(x for x in nums if x % 3 == 0 or x % 5 == 0))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "comprehension", "conditionals"],
+      "answers": [
+        {"text": "33", "is_correct": true},
+        {"text": "23", "is_correct": false},
+        {"text": "18", "is_correct": false},
+        {"text": "30", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nd = {'a': 1, 'b': 2, 'c': 3}\nd['b'] = d['a'] + d['c']\nprint(d['b'])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "dictionaries"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "2", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "3", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\na, *b, c = [1, 2, 3, 4, 5]\nprint(sum(b))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "unpacking", "lists"],
+      "answers": [
+        {"text": "6", "is_correct": false},
+        {"text": "9", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "15", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"hello\"\nprint(s.replace('l', 'x', 1))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "replace"],
+      "answers": [
+        {"text": "hexxo", "is_correct": false},
+        {"text": "hexlo", "is_correct": true},
+        {"text": "hello", "is_correct": false},
+        {"text": "xello", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nresult = 0\nfor i in range(1, 11):\n    if i == 7:\n        break\n    result += i\nprint(result)\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "break"],
+      "answers": [
+        {"text": "28", "is_correct": false},
+        {"text": "21", "is_correct": true},
+        {"text": "55", "is_correct": false},
+        {"text": "15", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [1, 2, 3, 4, 5]\nnums.insert(2, 10)\nprint(nums[3])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "methods"],
+      "answers": [
+        {"text": "4", "is_correct": false},
+        {"text": "10", "is_correct": false},
+        {"text": "3", "is_correct": true},
+        {"text": "2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\na = 5\nb = 10\nprint(a if a > b else b if b < 15 else 0)\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "ternary", "conditionals"],
+      "answers": [
+        {"text": "5", "is_correct": false},
+        {"text": "10", "is_correct": true},
+        {"text": "15", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns1 = set([1, 2, 3, 4])\ns2 = set([3, 4, 5, 6])\nprint(len(s1 & s2))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "sets", "intersection"],
+      "answers": [
+        {"text": "4", "is_correct": false},
+        {"text": "2", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "8", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ndef outer(x):\n    def inner(y):\n        return x + y\n    return inner\n\nf = outer(10)\nprint(f(5))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "closures", "functions"],
+      "answers": [
+        {"text": "15", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "5", "is_correct": false},
+        {"text": "Error", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [4, 2, 7, 1, 9, 3]\nprint(sorted(nums)[3])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "sorting"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "7", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nresult = []\nfor i in range(3):\n    result.append([])\n    for j in range(3):\n        result[i].append(i + j)\nprint(result[1][2])\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "nested-lists", "loops"],
+      "answers": [
+        {"text": "2", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "3", "is_correct": true},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"Python Programming\"\nprint(sum(1 for c in s if c.isupper()))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "comprehension"],
+      "answers": [
+        {"text": "1", "is_correct": false},
+        {"text": "2", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "18", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = list(map(lambda x: x ** 2, range(1, 6)))\nprint(nums[2] + nums[4])\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lambda", "map"],
+      "answers": [
+        {"text": "34", "is_correct": true},
+        {"text": "25", "is_correct": false},
+        {"text": "16", "is_correct": false},
+        {"text": "41", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nd = {'x': 1, 'y': 2, 'z': 3}\nprint(sum(d.values()) * len(d.keys()))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "dictionaries", "methods"],
+      "answers": [
+        {"text": "18", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "9", "is_correct": false},
+        {"text": "12", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\na = [1, 2, 3]\na.extend([4, 5])\na.pop()\nprint(sum(a))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "methods"],
+      "answers": [
+        {"text": "15", "is_correct": false},
+        {"text": "10", "is_correct": true},
+        {"text": "14", "is_correct": false},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nx = 0\nfor i in range(5):\n    x = x * 10 + (i + 1)\nprint(x)\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "arithmetic"],
+      "answers": [
+        {"text": "15", "is_correct": false},
+        {"text": "12345", "is_correct": true},
+        {"text": "54321", "is_correct": false},
+        {"text": "1234", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nfrom functools import reduce\nnums = [1, 2, 3, 4]\nprint(reduce(lambda a, b: a * b, nums))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "reduce", "lambda"],
+      "answers": [
+        {"text": "10", "is_correct": false},
+        {"text": "24", "is_correct": true},
+        {"text": "4", "is_correct": false},
+        {"text": "12", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ns = \"abcdefghij\"\nprint(s[2:8:3])\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "strings", "slicing"],
+      "answers": [
+        {"text": "cf", "is_correct": true},
+        {"text": "cfi", "is_correct": false},
+        {"text": "ceg", "is_correct": false},
+        {"text": "dfh", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\nnums = [3, 1, 4, 1, 5, 9, 2, 6]\nprint(nums.count(1) + nums.count(9))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "lists", "methods"],
+      "answers": [
+        {"text": "2", "is_correct": false},
+        {"text": "3", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ndef f(n):\n    if n <= 1:\n        return n\n    return f(n - 1) + f(n - 2)\n\nprint(f(7))\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "recursion", "fibonacci"],
+      "answers": [
+        {"text": "8", "is_correct": false},
+        {"text": "21", "is_correct": false},
+        {"text": "13", "is_correct": true},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```python\ntext = \"aAbBcCdD\"\nresult = ''.join(c for c in text if c.islower())\nprint(len(result))\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "comprehension"],
+      "answers": [
+        {"text": "4", "is_correct": true},
+        {"text": "8", "is_correct": false},
+        {"text": "2", "is_correct": false},
+        {"text": "6", "is_correct": false}
+      ]
+    }
+  ]
+}

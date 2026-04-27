@@ -1,0 +1,632 @@
+{
+  "topic": "Java Code Tracing - Medium",
+  "questions": [
+    {
+      "text": "What value is printed?\n\n```java\nint x = 5;\nint y = ++x + x++;\nSystem.out.println(y);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "operators", "increment"],
+      "answers": [
+        {"text": "11", "is_correct": false},
+        {"text": "12", "is_correct": true},
+        {"text": "10", "is_correct": false},
+        {"text": "13", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[] arr = {1, 2, 3, 4, 5};\nfor (int i = 0; i < arr.length / 2; i++) {\n    int temp = arr[i];\n    arr[i] = arr[arr.length - 1 - i];\n    arr[arr.length - 1 - i] = temp;\n}\nSystem.out.println(arr[1]);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "arrays", "reverse"],
+      "answers": [
+        {"text": "2", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "4", "is_correct": true},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"abcdefg\";\nString result = \"\";\nfor (int i = s.length() - 1; i >= 0; i -= 2) {\n    result += s.charAt(i);\n}\nSystem.out.println(result);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "loops"],
+      "answers": [
+        {"text": "geca", "is_correct": true},
+        {"text": "gfed", "is_correct": false},
+        {"text": "aceg", "is_correct": false},
+        {"text": "bdfg", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint a = 15;\nint b = 4;\nSystem.out.println(a / b + a % b);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arithmetic", "modulo"],
+      "answers": [
+        {"text": "5", "is_correct": false},
+        {"text": "6", "is_correct": true},
+        {"text": "7", "is_correct": false},
+        {"text": "4", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint count = 0;\nfor (int i = 100; i > 0; i /= 2) {\n    count++;\n}\nSystem.out.println(count);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "integer-division"],
+      "answers": [
+        {"text": "6", "is_correct": false},
+        {"text": "8", "is_correct": false},
+        {"text": "7", "is_correct": true},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[][] matrix = {{1, 2}, {3, 4}, {5, 6}};\nint sum = 0;\nfor (int i = 0; i < matrix.length; i++) {\n    sum += matrix[i][0];\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "2d-arrays", "loops"],
+      "answers": [
+        {"text": "9", "is_correct": true},
+        {"text": "12", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "21", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"Mississippi\";\nSystem.out.println(s.lastIndexOf('s'));\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "indexOf"],
+      "answers": [
+        {"text": "5", "is_correct": false},
+        {"text": "2", "is_correct": false},
+        {"text": "6", "is_correct": true},
+        {"text": "7", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint n = 5;\nint result = 1;\nwhile (n > 0) {\n    result *= n;\n    n -= 2;\n}\nSystem.out.println(result);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "loops", "while"],
+      "answers": [
+        {"text": "120", "is_correct": false},
+        {"text": "15", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "30", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 8;\nint y = 3;\nSystem.out.println((x & y) + (x | y));\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "bitwise", "operators"],
+      "answers": [
+        {"text": "10", "is_correct": false},
+        {"text": "8", "is_correct": false},
+        {"text": "11", "is_correct": true},
+        {"text": "9", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString[] words = {\"cat\", \"elephant\", \"dog\", \"ant\"};\nString longest = words[0];\nfor (String w : words) {\n    if (w.length() > longest.length()) {\n        longest = w;\n    }\n}\nSystem.out.println(longest.length());\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arrays", "strings"],
+      "answers": [
+        {"text": "8", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "7", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint sum = 0;\nfor (int i = 1; i <= 5; i++) {\n    for (int j = 1; j <= i; j++) {\n        if (j % 2 == 1) sum++;\n    }\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "nested-loops", "conditionals"],
+      "answers": [
+        {"text": "10", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "9", "is_correct": true},
+        {"text": "8", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint n = 12345;\nint reversed = 0;\nwhile (n > 0) {\n    reversed = reversed * 10 + n % 10;\n    n /= 10;\n}\nSystem.out.println(reversed % 100);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "loops", "digits"],
+      "answers": [
+        {"text": "21", "is_correct": true},
+        {"text": "12", "is_correct": false},
+        {"text": "54", "is_correct": false},
+        {"text": "45", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"programming\";\nint count = 0;\nfor (int i = 0; i < s.length() - 1; i++) {\n    if (s.charAt(i) == s.charAt(i + 1)) {\n        count++;\n    }\n}\nSystem.out.println(count);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "loops"],
+      "answers": [
+        {"text": "1", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "2", "is_correct": true},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[] arr = {5, 10, 15, 20, 25};\nint left = 0, right = arr.length - 1;\nint sum = 0;\nwhile (left < right) {\n    sum += arr[left] + arr[right];\n    left++;\n    right--;\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arrays", "two-pointers"],
+      "answers": [
+        {"text": "75", "is_correct": false},
+        {"text": "60", "is_correct": true},
+        {"text": "55", "is_correct": false},
+        {"text": "45", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 7;\nswitch (x % 4) {\n    case 0: System.out.println(\"A\"); break;\n    case 1: System.out.println(\"B\"); break;\n    case 2: System.out.println(\"C\"); break;\n    case 3: System.out.println(\"D\"); break;\n}\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "switch", "modulo"],
+      "answers": [
+        {"text": "A", "is_correct": false},
+        {"text": "B", "is_correct": false},
+        {"text": "D", "is_correct": true},
+        {"text": "C", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[][] grid = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};\nint sum = 0;\nfor (int i = 0; i < 3; i++) {\n    sum += grid[i][i];\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "2d-arrays", "diagonal"],
+      "answers": [
+        {"text": "12", "is_correct": false},
+        {"text": "15", "is_correct": true},
+        {"text": "18", "is_correct": false},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"Hello World\";\nString[] parts = s.split(\" \");\nSystem.out.println(parts[0].charAt(parts[1].length() - 1));\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "strings", "split"],
+      "answers": [
+        {"text": "o", "is_correct": true},
+        {"text": "e", "is_correct": false},
+        {"text": "l", "is_correct": false},
+        {"text": "H", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint count = 0;\nfor (int i = 2; i <= 20; i++) {\n    boolean isPrime = true;\n    for (int j = 2; j < i; j++) {\n        if (i % j == 0) {\n            isPrime = false;\n            break;\n        }\n    }\n    if (isPrime) count++;\n}\nSystem.out.println(count);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "loops", "prime"],
+      "answers": [
+        {"text": "9", "is_correct": false},
+        {"text": "7", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "8", "is_correct": true}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint a = 5, b = 3;\na ^= b;\nb ^= a;\na ^= b;\nSystem.out.println(a + \" \" + b);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "bitwise", "swap"],
+      "answers": [
+        {"text": "5 3", "is_correct": false},
+        {"text": "3 5", "is_correct": true},
+        {"text": "8 8", "is_correct": false},
+        {"text": "0 0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint n = 1000;\nint digits = 0;\nwhile (n > 0) {\n    digits++;\n    n /= 10;\n}\nSystem.out.println(digits);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "digits"],
+      "answers": [
+        {"text": "3", "is_correct": false},
+        {"text": "4", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "1000", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"java\";\nchar[] chars = s.toCharArray();\nfor (int i = 0; i < chars.length; i++) {\n    chars[i] = (char)(chars[i] - 32);\n}\nSystem.out.println(new String(chars));\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "char", "ascii"],
+      "answers": [
+        {"text": "JAVA", "is_correct": true},
+        {"text": "java", "is_correct": false},
+        {"text": "Java", "is_correct": false},
+        {"text": "jAVA", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[] arr = {3, 1, 4, 1, 5, 9, 2, 6};\nint count = 0;\nfor (int i = 1; i < arr.length; i++) {\n    if (arr[i] > arr[i - 1]) {\n        count++;\n    }\n}\nSystem.out.println(count);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arrays", "loops"],
+      "answers": [
+        {"text": "5", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "4", "is_correct": true},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 10;\nfor (int i = 0; i < 3; i++) {\n    x += x;\n}\nSystem.out.println(x);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "arithmetic"],
+      "answers": [
+        {"text": "60", "is_correct": false},
+        {"text": "80", "is_correct": true},
+        {"text": "40", "is_correct": false},
+        {"text": "30", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"racecar\";\nboolean isPalindrome = true;\nfor (int i = 0; i < s.length() / 2; i++) {\n    if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {\n        isPalindrome = false;\n        break;\n    }\n}\nSystem.out.println(isPalindrome);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "palindrome"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "7", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint sum = 0;\nint n = 5;\nfor (int i = 1; i <= n; i++) {\n    sum += i * i * i;\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "arithmetic"],
+      "answers": [
+        {"text": "55", "is_correct": false},
+        {"text": "125", "is_correct": false},
+        {"text": "225", "is_correct": true},
+        {"text": "100", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[][] arr = {{1, 2, 3}, {4, 5, 6}};\nSystem.out.println(arr.length + arr[0].length);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "2d-arrays", "length"],
+      "answers": [
+        {"text": "6", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "5", "is_correct": true},
+        {"text": "2", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint gcd = 48;\nint b = 18;\nwhile (b != 0) {\n    int temp = b;\n    b = gcd % b;\n    gcd = temp;\n}\nSystem.out.println(gcd);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "loops", "gcd"],
+      "answers": [
+        {"text": "2", "is_correct": false},
+        {"text": "6", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "18", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"abcABC123\";\nint letters = 0, digits = 0;\nfor (char c : s.toCharArray()) {\n    if (Character.isLetter(c)) letters++;\n    else if (Character.isDigit(c)) digits++;\n}\nSystem.out.println(letters + digits);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "character"],
+      "answers": [
+        {"text": "9", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "3", "is_correct": false},
+        {"text": "12", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 5;\nx = x-- - --x;\nSystem.out.println(x);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "operators", "decrement"],
+      "answers": [
+        {"text": "0", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "2", "is_correct": true},
+        {"text": "-1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[] arr = {2, 4, 6, 8, 10};\nint index = -1;\nfor (int i = 0; i < arr.length; i++) {\n    if (arr[i] == 6) {\n        index = i;\n        break;\n    }\n}\nSystem.out.println(index);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arrays", "search"],
+      "answers": [
+        {"text": "3", "is_correct": false},
+        {"text": "2", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "-1", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint product = 1;\nfor (int i = 1; i <= 4; i++) {\n    product *= (i + 1);\n}\nSystem.out.println(product);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "arithmetic"],
+      "answers": [
+        {"text": "24", "is_correct": false},
+        {"text": "120", "is_correct": true},
+        {"text": "60", "is_correct": false},
+        {"text": "100", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"The quick brown fox\";\nString[] words = s.split(\" \");\nint total = 0;\nfor (String word : words) {\n    total += word.length();\n}\nSystem.out.println(total);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "split"],
+      "answers": [
+        {"text": "19", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "16", "is_correct": true},
+        {"text": "20", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint n = 7;\nint fib1 = 0, fib2 = 1;\nfor (int i = 2; i <= n; i++) {\n    int temp = fib1 + fib2;\n    fib1 = fib2;\n    fib2 = temp;\n}\nSystem.out.println(fib2);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "loops", "fibonacci"],
+      "answers": [
+        {"text": "8", "is_correct": false},
+        {"text": "21", "is_correct": false},
+        {"text": "13", "is_correct": true},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 100;\nint y = 0;\nwhile (x > 0) {\n    y += x % 10;\n    x /= 10;\n}\nSystem.out.println(y);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "digits"],
+      "answers": [
+        {"text": "100", "is_correct": false},
+        {"text": "10", "is_correct": false},
+        {"text": "0", "is_correct": false},
+        {"text": "1", "is_correct": true}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[] arr = {1, 2, 3, 4, 5};\nint sum = 0;\nfor (int i = 0; i < arr.length; i++) {\n    if (i % 2 == 0) {\n        sum += arr[i];\n    } else {\n        sum -= arr[i];\n    }\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arrays", "conditionals"],
+      "answers": [
+        {"text": "3", "is_correct": true},
+        {"text": "-3", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"aabbccdd\";\nint count = 1;\nint maxCount = 1;\nfor (int i = 1; i < s.length(); i++) {\n    if (s.charAt(i) == s.charAt(i - 1)) {\n        count++;\n        if (count > maxCount) maxCount = count;\n    } else {\n        count = 1;\n    }\n}\nSystem.out.println(maxCount);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "strings", "loops"],
+      "answers": [
+        {"text": "4", "is_correct": false},
+        {"text": "2", "is_correct": true},
+        {"text": "1", "is_correct": false},
+        {"text": "8", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 0;\nfor (int i = 0; i < 5; i++) {\n    for (int j = 0; j < 5; j++) {\n        if (i == j) x++;\n    }\n}\nSystem.out.println(x);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "nested-loops", "conditionals"],
+      "answers": [
+        {"text": "25", "is_correct": false},
+        {"text": "10", "is_correct": false},
+        {"text": "5", "is_correct": true},
+        {"text": "4", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint n = 6;\nint result = 1;\nfor (int i = 2; i <= n; i += 2) {\n    result *= i;\n}\nSystem.out.println(result);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "arithmetic"],
+      "answers": [
+        {"text": "720", "is_correct": false},
+        {"text": "48", "is_correct": true},
+        {"text": "24", "is_correct": false},
+        {"text": "12", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"hello\";\nStringBuilder sb = new StringBuilder();\nfor (int i = 0; i < s.length(); i++) {\n    sb.insert(0, s.charAt(i));\n}\nSystem.out.println(sb.toString());\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "StringBuilder"],
+      "answers": [
+        {"text": "hello", "is_correct": false},
+        {"text": "olleh", "is_correct": true},
+        {"text": "oellh", "is_correct": false},
+        {"text": "lleho", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[] arr = {10, 20, 30, 40, 50};\nint target = 35;\nint closest = arr[0];\nfor (int x : arr) {\n    if (Math.abs(x - target) < Math.abs(closest - target)) {\n        closest = x;\n    }\n}\nSystem.out.println(closest);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "arrays", "math"],
+      "answers": [
+        {"text": "30", "is_correct": true},
+        {"text": "40", "is_correct": false},
+        {"text": "35", "is_correct": false},
+        {"text": "20", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint count = 0;\nfor (int i = 1; i <= 100; i++) {\n    if (i % 3 == 0 && i % 5 == 0) {\n        count++;\n    }\n}\nSystem.out.println(count);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "modulo"],
+      "answers": [
+        {"text": "6", "is_correct": true},
+        {"text": "7", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "20", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 1;\nwhile (x * x < 50) {\n    x++;\n}\nSystem.out.println(x);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "while"],
+      "answers": [
+        {"text": "7", "is_correct": false},
+        {"text": "8", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "49", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[][] arr = {{1, 2}, {3, 4}, {5, 6}};\nint sum = 0;\nfor (int i = 0; i < arr.length; i++) {\n    for (int j = 0; j < arr[i].length; j++) {\n        if (i + j == 1) sum += arr[i][j];\n    }\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "2d-arrays", "conditionals"],
+      "answers": [
+        {"text": "8", "is_correct": false},
+        {"text": "5", "is_correct": true},
+        {"text": "6", "is_correct": false},
+        {"text": "4", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"Java Programming\";\nint spaces = 0;\nfor (int i = 0; i < s.length(); i++) {\n    if (s.charAt(i) == ' ') spaces++;\n}\nSystem.out.println(s.length() - spaces);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "loops"],
+      "answers": [
+        {"text": "16", "is_correct": false},
+        {"text": "14", "is_correct": false},
+        {"text": "15", "is_correct": true},
+        {"text": "17", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint sum = 0;\nfor (int i = 1; i <= 10; i++) {\n    if (i % 2 == 0) continue;\n    sum += i;\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "continue"],
+      "answers": [
+        {"text": "30", "is_correct": false},
+        {"text": "55", "is_correct": false},
+        {"text": "25", "is_correct": true},
+        {"text": "20", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint a = 10;\nfor (int i = 0; i < 3; i++) {\n    a = a + (a >> 1);\n}\nSystem.out.println(a);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "bitwise", "loops"],
+      "answers": [
+        {"text": "33", "is_correct": true},
+        {"text": "30", "is_correct": false},
+        {"text": "40", "is_correct": false},
+        {"text": "25", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"abcdef\";\nSystem.out.println(s.substring(1, 4).toUpperCase());\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "substring"],
+      "answers": [
+        {"text": "BCD", "is_correct": true},
+        {"text": "ABCD", "is_correct": false},
+        {"text": "bcd", "is_correct": false},
+        {"text": "CDE", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[] arr = {5, 3, 8, 1, 9};\nint secondMax = Integer.MIN_VALUE;\nint max = Integer.MIN_VALUE;\nfor (int x : arr) {\n    if (x > max) {\n        secondMax = max;\n        max = x;\n    } else if (x > secondMax && x != max) {\n        secondMax = x;\n    }\n}\nSystem.out.println(secondMax);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "arrays", "max"],
+      "answers": [
+        {"text": "5", "is_correct": false},
+        {"text": "9", "is_correct": false},
+        {"text": "8", "is_correct": true},
+        {"text": "3", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 5;\nint y = 10;\nboolean result = !(x > 3) || (y < 15);\nSystem.out.println(result);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "boolean", "operators"],
+      "answers": [
+        {"text": "true", "is_correct": true},
+        {"text": "false", "is_correct": false},
+        {"text": "1", "is_correct": false},
+        {"text": "0", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint result = 0;\nfor (int i = 1; i <= 4; i++) {\n    for (int j = i; j <= 4; j++) {\n        result++;\n    }\n}\nSystem.out.println(result);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "nested-loops"],
+      "answers": [
+        {"text": "16", "is_correct": false},
+        {"text": "10", "is_correct": true},
+        {"text": "12", "is_correct": false},
+        {"text": "8", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"ABCDE\";\nchar[] c = s.toCharArray();\nint sum = 0;\nfor (int i = 0; i < c.length; i++) {\n    sum += c[i] - 'A';\n}\nSystem.out.println(sum);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "strings", "char", "ascii"],
+      "answers": [
+        {"text": "15", "is_correct": false},
+        {"text": "4", "is_correct": false},
+        {"text": "10", "is_correct": true},
+        {"text": "5", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint power = 1;\nint base = 2;\nint exp = 10;\nfor (int i = 0; i < exp; i++) {\n    power *= base;\n}\nSystem.out.println(power);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "loops", "arithmetic"],
+      "answers": [
+        {"text": "1024", "is_correct": true},
+        {"text": "512", "is_correct": false},
+        {"text": "2048", "is_correct": false},
+        {"text": "256", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint n = 123;\nint first = n / 100;\nint last = n % 10;\nSystem.out.println(first + last);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arithmetic", "digits"],
+      "answers": [
+        {"text": "3", "is_correct": false},
+        {"text": "4", "is_correct": true},
+        {"text": "5", "is_correct": false},
+        {"text": "6", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint[] arr = new int[5];\narr[0] = 1;\narr[1] = 1;\nfor (int i = 2; i < arr.length; i++) {\n    arr[i] = arr[i-1] + arr[i-2];\n}\nSystem.out.println(arr[4]);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "arrays", "fibonacci"],
+      "answers": [
+        {"text": "3", "is_correct": false},
+        {"text": "8", "is_correct": false},
+        {"text": "5", "is_correct": true},
+        {"text": "13", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nString s = \"121\";\nint val = 0;\nfor (int i = 0; i < s.length(); i++) {\n    val = val * 10 + (s.charAt(i) - '0');\n}\nSystem.out.println(val + 1);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "strings", "parsing"],
+      "answers": [
+        {"text": "122", "is_correct": true},
+        {"text": "121", "is_correct": false},
+        {"text": "1211", "is_correct": false},
+        {"text": "4", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint x = 7;\nint y = x << 2;\nSystem.out.println(y);\n```",
+      "difficulty": 2,
+      "tags": ["code-tracing", "bitwise", "shift"],
+      "answers": [
+        {"text": "14", "is_correct": false},
+        {"text": "28", "is_correct": true},
+        {"text": "3", "is_correct": false},
+        {"text": "56", "is_correct": false}
+      ]
+    },
+    {
+      "text": "What value is printed?\n\n```java\nint count = 0;\nfor (int i = 1; i < 10; i++) {\n    for (int j = 1; j < 10; j++) {\n        if (i * j == 24) count++;\n    }\n}\nSystem.out.println(count);\n```",
+      "difficulty": 3,
+      "tags": ["code-tracing", "nested-loops", "arithmetic"],
+      "answers": [
+        {"text": "2", "is_correct": false},
+        {"text": "6", "is_correct": false},
+        {"text": "4", "is_correct": true},
+        {"text": "8", "is_correct": false}
+      ]
+    }
+  ]
+}
