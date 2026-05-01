@@ -18,8 +18,8 @@
       "tags": ["code-tracing", "nested-comprehension", "enumerate"],
       "answers": [
         {"text": "12", "is_correct": false},
-        {"text": "15", "is_correct": true},
-        {"text": "18", "is_correct": false},
+        {"text": "15", "is_correct": false},
+        {"text": "14", "is_correct": true},
         {"text": "9", "is_correct": false}
       ]
     },
@@ -72,8 +72,8 @@
       "difficulty": 3,
       "tags": ["code-tracing", "dictionaries", "loops"],
       "answers": [
-        {"text": "8", "is_correct": false},
-        {"text": "7", "is_correct": true},
+        {"text": "8", "is_correct": true},
+        {"text": "7", "is_correct": false},
         {"text": "5", "is_correct": false},
         {"text": "13", "is_correct": false}
       ]
@@ -182,10 +182,10 @@
       "difficulty": 3,
       "tags": ["code-tracing", "loops", "tribonacci"],
       "answers": [
-        {"text": "81", "is_correct": true},
-        {"text": "44", "is_correct": false},
-        {"text": "149", "is_correct": false},
-        {"text": "56", "is_correct": false}
+        {"text": "105", "is_correct": true},
+        {"text": "57", "is_correct": false},
+        {"text": "81", "is_correct": false},
+        {"text": "31", "is_correct": false}
       ]
     },
     {

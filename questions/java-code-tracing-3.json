@@ -2,7 +2,7 @@
   "topic": "Java Code Tracing - Hard",
   "questions": [
     {
-      "text": "What value is printed?\n\n```java\nint a = 5, b = 3, c = 7;\nint result = a++ + ++b - c-- + --a;\nSystem.out.println(result);\n```",
+      "text": "What value is printed?\n\n```java\nint a = 5, b = 3, c = 7;\nint result = a++ + ++b - c--;\nSystem.out.println(result);\n```",
       "difficulty": 3,
       "tags": ["code-tracing", "operators", "increment", "decrement"],
       "answers": [
@@ -40,8 +40,8 @@
       "tags": ["code-tracing", "2d-arrays", "conditionals"],
       "answers": [
         {"text": "35", "is_correct": false},
-        {"text": "39", "is_correct": true},
-        {"text": "30", "is_correct": false},
+        {"text": "39", "is_correct": false},
+        {"text": "38", "is_correct": true},
         {"text": "24", "is_correct": false}
       ]
     },
@@ -50,7 +50,7 @@
       "difficulty": 3,
       "tags": ["code-tracing", "strings", "ascii", "arithmetic"],
       "answers": [
-        {"text": "84", "is_correct": true},
+        {"text": "140", "is_correct": true},
         {"text": "28", "is_correct": false},
         {"text": "56", "is_correct": false},
         {"text": "112", "is_correct": false}
@@ -62,9 +62,9 @@
       "tags": ["code-tracing", "bitwise", "binary"],
       "answers": [
         {"text": "5", "is_correct": false},
-        {"text": "4", "is_correct": true},
+        {"text": "4", "is_correct": false},
         {"text": "6", "is_correct": false},
-        {"text": "3", "is_correct": false}
+        {"text": "3", "is_correct": true}
       ]
     },
     {
@@ -94,8 +94,8 @@
       "difficulty": 3,
       "tags": ["code-tracing", "loops", "conditionals"],
       "answers": [
-        {"text": "12", "is_correct": false},
-        {"text": "6", "is_correct": true},
+        {"text": "12", "is_correct": true},
+        {"text": "6", "is_correct": false},
         {"text": "18", "is_correct": false},
         {"text": "24", "is_correct": false}
       ]
@@ -105,8 +105,8 @@
       "difficulty": 3,
       "tags": ["code-tracing", "loops", "digits", "reverse"],
       "answers": [
-        {"text": "5555", "is_correct": false},
-        {"text": "5565", "is_correct": true},
+        {"text": "5555", "is_correct": true},
+        {"text": "5565", "is_correct": false},
         {"text": "2468", "is_correct": false},
         {"text": "4321", "is_correct": false}
       ]

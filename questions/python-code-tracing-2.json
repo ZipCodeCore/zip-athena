@@ -17,10 +17,10 @@
       "difficulty": 2,
       "tags": ["code-tracing", "strings", "slicing"],
       "answers": [
-        {"text": "pto", "is_correct": false},
+        {"text": "pto", "is_correct": true},
         {"text": "yhn", "is_correct": false},
-        {"text": "pto", "is_correct": false},
-        {"text": "pto", "is_correct": true}
+        {"text": "pyo", "is_correct": false},
+        {"text": "ytn", "is_correct": false}
       ]
     },
     {

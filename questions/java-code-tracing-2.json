@@ -138,9 +138,9 @@
       "difficulty": 2,
       "tags": ["code-tracing", "strings", "loops"],
       "answers": [
-        {"text": "1", "is_correct": false},
+        {"text": "1", "is_correct": true},
         {"text": "3", "is_correct": false},
-        {"text": "2", "is_correct": true},
+        {"text": "2", "is_correct": false},
         {"text": "0", "is_correct": false}
       ]
     },
