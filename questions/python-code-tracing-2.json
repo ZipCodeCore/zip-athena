@@ -249,7 +249,7 @@
       "tags": ["code-tracing", "loops", "ternary"],
       "answers": [
         {"text": "120", "is_correct": false},
-        {"text": "21", "is_correct": true},
+        {"text": "65", "is_correct": true},
         {"text": "15", "is_correct": false},
         {"text": "30", "is_correct": false}
       ]
