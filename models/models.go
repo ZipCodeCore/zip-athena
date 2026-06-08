@@ -434,6 +434,74 @@ type FlaggedQuestion struct {
 	TotalAttempts   int       `json:"total_attempts,omitempty"`
 }
 
+// Exam represents a named assigned exam generated from random questions
+// filtered by category and difficulty level.
+type Exam struct {
+	ID              int       `json:"id"`
+	Name            string    `json:"name"`
+	Categories      []string  `json:"categories"`       // e.g. ["java","python"]
+	DifficultyLevels []int    `json:"difficulty_levels"` // 1=easy,2=medium,3=hard
+	QuestionIDs     []int     `json:"question_ids"`      // IDs chosen at generation time
+	QuestionCount   int       `json:"question_count"`
+	AccessToken     string    `json:"access_token"`
+	CreatedBy       int       `json:"created_by"`
+	CreatedAt       time.Time `json:"created_at"`
+}
+
+// ExamAssignment represents an exam assigned to a specific student
+type ExamAssignment struct {
+	ID         int       `json:"id"`
+	ExamID     int       `json:"exam_id"`
+	UserID     int       `json:"user_id"`
+	AssignedAt time.Time `json:"assigned_at"`
+	AssignedBy int       `json:"assigned_by"`
+}
+
+// ExamAttempt records a student's attempt at an exam
+type ExamAttempt struct {
+	ID              int             `json:"id"`
+	ExamID          int             `json:"exam_id"`
+	UserID          int             `json:"user_id"`
+	StartedAt       time.Time       `json:"started_at"`
+	CompletedAt     *time.Time      `json:"completed_at,omitempty"`
+	TotalQuestions  int             `json:"total_questions"`
+	CorrectAnswers  int             `json:"correct_answers"`
+	Score           float64         `json:"score"`
+	Answers         map[string]int  `json:"answers"`          // question_id -> answer_id
+	QuestionResults map[string]bool `json:"question_results"` // question_id -> correct
+}
+
+// ExamStudentResult summarises one student's result for an exam
+type ExamStudentResult struct {
+	UserID         int        `json:"user_id"`
+	Username       string     `json:"username"`
+	AssignedAt     time.Time  `json:"assigned_at"`
+	CompletedAt    *time.Time `json:"completed_at,omitempty"`
+	Score          *float64   `json:"score,omitempty"`
+	CorrectAnswers *int       `json:"correct_answers,omitempty"`
+	TotalQuestions *int       `json:"total_questions,omitempty"`
+}
+
+// ExamStatus is the instructor view of an exam and all student results
+type ExamStatus struct {
+	ExamID         int                 `json:"exam_id"`
+	ExamName       string              `json:"exam_name"`
+	QuestionCount  int                 `json:"question_count"`
+	StudentResults []ExamStudentResult `json:"student_results"`
+}
+
+// ExamInfo combines exam info with assignment details for the student view
+type ExamInfo struct {
+	ExamAssignment
+	ExamName       string     `json:"exam_name"`
+	QuestionCount  int        `json:"question_count"`
+	AccessToken    string     `json:"access_token"`
+	CompletedAt    *time.Time `json:"completed_at,omitempty"`
+	Score          *float64   `json:"score,omitempty"`
+	CorrectAnswers *int       `json:"correct_answers,omitempty"`
+	TotalQuestions *int       `json:"total_questions,omitempty"`
+}
+
 // FlagReason constants (Phase 5)
 const (
 	FlagReasonTooHard         = "TOO_HARD"         // <30% accuracy

@@ -67,6 +67,9 @@
                         <a class="nav-link" href="#assigned-quizzes">Assigned Quizzes</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="#assigned-exams">Assigned Exams</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#import-export">Import/Export</a>
                     </li>
                     <li class="nav-item">
@@ -468,6 +471,125 @@
                 </div>
             </div>
         </section>
+
+        <!-- Assigned Exams Section -->
+        <section id="assigned-exams" class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2><i class="bi bi-journals"></i> Assigned Exams</h2>
+                <button class="btn btn-primary" onclick="loadExamStatus()">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+            </div>
+
+            <div class="row mb-4">
+                <!-- Generate Exam Form -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="bi bi-lightning-fill"></i> Generate New Exam</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Select categories and difficulty levels to randomly generate questions for a named exam. Default is 30 questions (configurable below).</p>
+                            <div class="mb-2">
+                                <label class="form-label">Exam Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="newExamName" placeholder="e.g. Java Final Exam" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Categories <span class="text-danger">*</span></label>
+                                <div id="examCategoriesCheckboxes" class="border rounded p-2">
+                                    <small class="text-muted">Loading categories...</small>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Difficulty Levels <span class="text-danger">*</span></label>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input exam-difficulty-check" type="checkbox" value="1" id="examDiff1">
+                                        <label class="form-check-label" for="examDiff1">Level 1 (Easy)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input exam-difficulty-check" type="checkbox" value="2" id="examDiff2">
+                                        <label class="form-check-label" for="examDiff2">Level 2 (Medium)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input exam-difficulty-check" type="checkbox" value="3" id="examDiff3">
+                                        <label class="form-check-label" for="examDiff3">Level 3 (Hard)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Number of Questions</label>
+                                <input type="number" class="form-control" id="examQuestionCount" value="30" min="1" max="100">
+                            </div>
+                            <button type="button" class="btn btn-danger" onclick="generateExam()">
+                                <i class="bi bi-lightning"></i> Generate Exam
+                            </button>
+                            <div id="generateExamResult" class="mt-3" style="display:none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assign Exam to Students Form -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="bi bi-person-check-fill"></i> Assign Exam to Students</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Select an exam and choose students to assign it to.</p>
+                            <div class="mb-2">
+                                <label class="form-label">Select Exam</label>
+                                <select class="form-select" id="assignExamSelect">
+                                    <option value="">-- Select an exam --</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Exam URL (share with students)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="examUrlDisplay" readonly placeholder="Select an exam above">
+                                    <button class="btn btn-outline-secondary" onclick="copyExamUrl()" title="Copy URL"><i class="bi bi-clipboard"></i></button>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Select Students</label>
+                                <div id="examAssignStudentsList" class="border rounded p-2" style="max-height:200px; overflow-y:auto;">
+                                    <small class="text-muted">Loading students...</small>
+                                </div>
+                                <div class="mt-1">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="selectAllExamStudents()">Select All</button>
+                                    <button class="btn btn-sm btn-outline-secondary ms-1" onclick="deselectAllExamStudents()">Deselect All</button>
+                                </div>
+                            </div>
+                            <button class="btn btn-info text-white" onclick="assignExamToStudents()">
+                                <i class="bi bi-person-check"></i> Assign Exam
+                            </button>
+                            <div id="assignExamResult" class="mt-3" style="display:none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exam Status Table -->
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill"></i> Exam Status &amp; Scores</h5>
+                </div>
+                <div class="card-body">
+                    <div id="examSummaryTable">
+                        <p class="text-muted">Click Refresh to load status.</p>
+                    </div>
+                    <!-- Detailed Results Panel -->
+                    <div id="examDetailPanel" style="display:none;" class="mt-4">
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 id="examDetailTitle">Exam Results</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="hideExamDetail()">✕ Close</button>
+                        </div>
+                        <div id="examDetailContent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -511,6 +633,10 @@
                     loadStudentList();
                     loadAssignedQuizDropdown();
                     loadAssignStudentsList();
+                    // Exam section
+                    loadExamCategories();
+                    loadAssignedExamDropdown();
+                    loadExamAssignStudentsList();
                 }
             } catch (e) {
                 console.error('Failed to parse user data:', e);
@@ -1076,6 +1202,290 @@
 
         function hideQuizDetail() {
             document.getElementById('quizDetailPanel').style.display = 'none';
+        }
+
+        // ============ Assigned Exams Functions ============
+
+        async function loadExamCategories() {
+            const container = document.getElementById('examCategoriesCheckboxes');
+            try {
+                const response = await fetch('/instructor/exams/categories', {headers: {'X-User-ID': userId}});
+                const categories = await response.json();
+                if (!categories || categories.length === 0) {
+                    container.innerHTML = '<small class="text-muted">No categories available.</small>';
+                    return;
+                }
+                container.innerHTML = '';
+                categories.forEach(cat => {
+                    const div = document.createElement('div');
+                    div.className = 'form-check form-check-inline';
+                    div.innerHTML = `<input class="form-check-input exam-category-check" type="checkbox" value="${escapeHtml(cat)}" id="examCat_${escapeHtml(cat)}">
+                        <label class="form-check-label" for="examCat_${escapeHtml(cat)}">${escapeHtml(cat.toUpperCase())}</label>`;
+                    container.appendChild(div);
+                });
+            } catch (e) {
+                container.innerHTML = '<small class="text-danger">Error loading categories.</small>';
+            }
+        }
+
+        async function generateExam() {
+            const name = document.getElementById('newExamName').value.trim();
+            const resultDiv = document.getElementById('generateExamResult');
+
+            if (!name) {
+                alert('Exam name is required.');
+                return;
+            }
+
+            const checkedCats = Array.from(document.querySelectorAll('.exam-category-check:checked')).map(cb => cb.value);
+            if (checkedCats.length === 0) {
+                alert('Please select at least one category.');
+                return;
+            }
+
+            const checkedDiffs = Array.from(document.querySelectorAll('.exam-difficulty-check:checked')).map(cb => parseInt(cb.value));
+            if (checkedDiffs.length === 0) {
+                alert('Please select at least one difficulty level.');
+                return;
+            }
+
+            const questionCount = parseInt(document.getElementById('examQuestionCount').value) || 30;
+
+            resultDiv.style.display = 'none';
+            try {
+                const response = await fetch('/instructor/exams/generate', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'X-User-ID': userId},
+                    body: JSON.stringify({
+                        name: name,
+                        categories: checkedCats,
+                        difficulty_levels: checkedDiffs,
+                        question_count: questionCount
+                    })
+                });
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    const examUrl = window.location.origin + result.exam_url;
+                    resultDiv.className = 'alert alert-success';
+                    resultDiv.innerHTML = `✅ Exam "<strong>${escapeHtml(result.exam_name)}</strong>" created with ${result.question_count} questions.<br>
+                        <strong>Exam URL:</strong> <a href="${escapeHtml(result.exam_url)}" target="_blank">${escapeHtml(examUrl)}</a>`;
+                    resultDiv.style.display = 'block';
+                    document.getElementById('newExamName').value = '';
+                    loadAssignedExamDropdown();
+                } else {
+                    resultDiv.className = 'alert alert-danger';
+                    resultDiv.innerHTML = `❌ Failed to generate exam: ${escapeHtml(result.error || JSON.stringify(result))}`;
+                    resultDiv.style.display = 'block';
+                }
+            } catch (e) {
+                resultDiv.className = 'alert alert-danger';
+                resultDiv.innerHTML = '❌ Network error: ' + e.message;
+                resultDiv.style.display = 'block';
+            }
+        }
+
+        async function loadAssignedExamDropdown() {
+            const select = document.getElementById('assignExamSelect');
+            select.innerHTML = '<option value="">-- Select an exam --</option>';
+            try {
+                const response = await fetch('/instructor/exams', {headers: {'X-User-ID': userId}});
+                const exams = await response.json();
+                exams.forEach(e => {
+                    const opt = document.createElement('option');
+                    opt.value = e.id;
+                    opt.dataset.token = e.access_token;
+                    opt.textContent = `${e.name} (${e.question_count} questions)`;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error('Error loading exams for dropdown:', e);
+            }
+        }
+
+        document.getElementById('assignExamSelect') && document.getElementById('assignExamSelect').addEventListener('change', function() {
+            const opt = this.options[this.selectedIndex];
+            const token = opt ? opt.dataset.token : '';
+            const urlInput = document.getElementById('examUrlDisplay');
+            if (token) {
+                urlInput.value = window.location.origin + '/exam.html?token=' + token;
+            } else {
+                urlInput.value = '';
+            }
+        });
+
+        function copyExamUrl() {
+            const urlInput = document.getElementById('examUrlDisplay');
+            if (urlInput.value) {
+                navigator.clipboard.writeText(urlInput.value).then(() => {
+                    alert('URL copied to clipboard!');
+                }).catch(() => {
+                    urlInput.select();
+                    document.execCommand('copy');
+                });
+            }
+        }
+
+        async function loadExamAssignStudentsList() {
+            const container = document.getElementById('examAssignStudentsList');
+            container.innerHTML = '<small class="text-muted">Loading...</small>';
+            try {
+                const response = await fetch('/instructor/students', {headers: {'X-User-ID': userId}});
+                const students = await response.json();
+                if (!students || students.length === 0) {
+                    container.innerHTML = '<small class="text-muted">No students found.</small>';
+                    return;
+                }
+                container.innerHTML = '';
+                students.forEach(s => {
+                    if (s.is_admin) return;
+                    const div = document.createElement('div');
+                    div.className = 'form-check';
+                    div.innerHTML = `<input class="form-check-input exam-student-check" type="checkbox" value="${s.id}" id="examStudent_${s.id}">
+                        <label class="form-check-label" for="examStudent_${s.id}">${escapeHtml(s.username)}</label>`;
+                    container.appendChild(div);
+                });
+            } catch (e) {
+                container.innerHTML = '<small class="text-danger">Error loading students.</small>';
+            }
+        }
+
+        function selectAllExamStudents() {
+            document.querySelectorAll('.exam-student-check').forEach(cb => cb.checked = true);
+        }
+        function deselectAllExamStudents() {
+            document.querySelectorAll('.exam-student-check').forEach(cb => cb.checked = false);
+        }
+
+        async function assignExamToStudents() {
+            const examId = parseInt(document.getElementById('assignExamSelect').value);
+            const resultDiv = document.getElementById('assignExamResult');
+
+            if (!examId) {
+                alert('Please select an exam.');
+                return;
+            }
+
+            const checked = document.querySelectorAll('.exam-student-check:checked');
+            if (checked.length === 0) {
+                alert('Please select at least one student.');
+                return;
+            }
+
+            const userIds = Array.from(checked).map(cb => parseInt(cb.value));
+            resultDiv.style.display = 'none';
+            try {
+                const response = await fetch(`/instructor/exams/assign?exam_id=${examId}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'X-User-ID': userId},
+                    body: JSON.stringify({user_ids: userIds})
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    resultDiv.className = 'alert alert-success';
+                    resultDiv.innerHTML = `✅ Exam assigned to ${result.assigned} student(s).`;
+                    resultDiv.style.display = 'block';
+                    loadExamStatus();
+                } else {
+                    resultDiv.className = 'alert alert-danger';
+                    resultDiv.innerHTML = '❌ Failed to assign exam.';
+                    resultDiv.style.display = 'block';
+                }
+            } catch (e) {
+                resultDiv.className = 'alert alert-danger';
+                resultDiv.innerHTML = '❌ Network error: ' + e.message;
+                resultDiv.style.display = 'block';
+            }
+        }
+
+        async function loadExamStatus() {
+            const container = document.getElementById('examSummaryTable');
+            container.innerHTML = '<p class="text-muted">Loading...</p>';
+            try {
+                const response = await fetch('/instructor/exams', {headers: {'X-User-ID': userId}});
+                const exams = await response.json();
+
+                if (!exams || exams.length === 0) {
+                    container.innerHTML = '<p class="text-muted">No exams have been created yet.</p>';
+                    return;
+                }
+
+                let html = `<div class="table-responsive"><table class="table table-striped">
+                    <thead><tr>
+                        <th>Exam Name</th><th>Categories</th><th>Difficulty Levels</th>
+                        <th>Questions</th><th>Exam URL</th><th>Actions</th>
+                    </tr></thead><tbody>`;
+                exams.forEach(e => {
+                    const cats = Array.isArray(e.categories) ? e.categories.join(', ') : '';
+                    const diffs = Array.isArray(e.difficulty_levels) ? e.difficulty_levels.map(d => 'Level ' + d).join(', ') : '';
+                    const examUrl = window.location.origin + '/exam.html?token=' + e.access_token;
+                    html += `<tr>
+                        <td><strong>${escapeHtml(e.name)}</strong></td>
+                        <td><span class="badge bg-secondary">${escapeHtml(cats)}</span></td>
+                        <td>${escapeHtml(diffs)}</td>
+                        <td>${e.question_count}</td>
+                        <td><a href="/exam.html?token=${encodeURIComponent(e.access_token)}" target="_blank" class="small">${escapeHtml(examUrl)}</a></td>
+                        <td><button class="btn btn-sm btn-primary" data-exam-id="${e.id}" data-exam-name="${escapeHtml(e.name)}" onclick="showExamDetail(parseInt(this.dataset.examId), this.dataset.examName)">View Scores</button></td>
+                    </tr>`;
+                });
+                html += '</tbody></table></div>';
+                container.innerHTML = html;
+            } catch (e) {
+                container.innerHTML = '<p class="text-danger">Error loading exam status: ' + e.message + '</p>';
+            }
+        }
+
+        async function showExamDetail(examId, examName) {
+            const panel = document.getElementById('examDetailPanel');
+            const title = document.getElementById('examDetailTitle');
+            const content = document.getElementById('examDetailContent');
+
+            title.textContent = `Scores: ${examName}`;
+            content.innerHTML = '<p class="text-muted">Loading...</p>';
+            panel.style.display = 'block';
+            panel.scrollIntoView({behavior: 'smooth'});
+
+            try {
+                const response = await fetch(`/instructor/exams/status?exam_id=${examId}`, {headers: {'X-User-ID': userId}});
+                const status = await response.json();
+
+                if (!status.student_results || status.student_results.length === 0) {
+                    content.innerHTML = '<p class="text-muted">No students assigned to this exam yet.</p>';
+                    return;
+                }
+
+                let html = `<div class="table-responsive"><table class="table table-striped">
+                    <thead><tr>
+                        <th>Student</th><th>Assigned</th><th>Completed</th><th>Score</th><th>Correct / Total</th>
+                    </tr></thead><tbody>`;
+                status.student_results.forEach(r => {
+                    const completed = r.completed_at
+                        ? new Date(r.completed_at).toLocaleString()
+                        : '<span class="text-muted">Not completed</span>';
+                    const scoreHtml = r.score !== undefined && r.score !== null
+                        ? `<span class="badge ${r.score >= 80 ? 'bg-success' : r.score >= 60 ? 'bg-warning' : 'bg-danger'}">${r.score.toFixed(0)}%</span>`
+                        : '<span class="text-muted">—</span>';
+                    const correct = r.correct_answers !== undefined && r.correct_answers !== null
+                        ? `${r.correct_answers} / ${r.total_questions}`
+                        : '—';
+                    html += `<tr>
+                        <td>${escapeHtml(r.username)}</td>
+                        <td>${new Date(r.assigned_at).toLocaleDateString()}</td>
+                        <td>${completed}</td>
+                        <td>${scoreHtml}</td>
+                        <td>${correct}</td>
+                    </tr>`;
+                });
+                html += '</tbody></table></div>';
+                content.innerHTML = html;
+            } catch (e) {
+                content.innerHTML = '<p class="text-danger">Error loading results: ' + e.message + '</p>';
+            }
+        }
+
+        function hideExamDetail() {
+            document.getElementById('examDetailPanel').style.display = 'none';
         }
     </script>
     <script>
