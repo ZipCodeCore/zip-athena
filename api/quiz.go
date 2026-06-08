@@ -280,9 +280,11 @@ func (h *Handler) SubmitAnswerHandler(w http.ResponseWriter, r *http.Request) {
 		quizAttempt.QuestionResults = make(map[string]bool)
 	}
 	quizAttempt.QuestionResults[question.TopicQuestionID] = correct
-
-	if correct {
-		quizAttempt.CorrectAnswers++
+	quizAttempt.CorrectAnswers = 0
+	for _, wasCorrect := range quizAttempt.QuestionResults {
+		if wasCorrect {
+			quizAttempt.CorrectAnswers++
+		}
 	}
 
 	// Save quiz attempt updates to database
