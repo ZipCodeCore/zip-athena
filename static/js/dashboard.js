@@ -439,7 +439,8 @@ async function loadAssignedExamsList() {
 
             if (e.completed_at) {
                 const scoreVal = e.score !== undefined && e.score !== null ? e.score.toFixed(0) : '?';
-                const scoreClass = e.score >= 80 ? 'bg-success' : e.score >= 60 ? 'bg-warning' : 'bg-danger';
+                const scoreNum = e.score !== undefined && e.score !== null ? e.score : 0;
+                const scoreClass = scoreNum >= 80 ? 'bg-success' : scoreNum >= 60 ? 'bg-warning' : 'bg-danger';
                 statusHtml = `<span class="badge bg-success">Completed</span>
                     <span class="badge ${scoreClass} ms-1">${scoreVal}%</span>
                     <small class="text-muted ms-2">(${e.correct_answers}/${e.total_questions} correct)</small>`;
