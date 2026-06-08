@@ -64,6 +64,11 @@ func New(h *api.Handler) *chi.Mux {
 	r.Get("/assigned-quizzes", h.GetAssignedQuizzesHandler)
 	r.Post("/assigned-quizzes/start", h.TakeAssignedQuizHandler)
 
+	// Assigned Exam routes (student)
+	r.Get("/assigned-exams", h.GetAssignedExamsHandler)
+	r.Post("/exam/start", h.StartExamHandler)
+	r.Post("/exam/submit", h.SubmitExamHandler)
+
 	r.Route("/quizzes", func(r chi.Router) {
 		r.Get("/", h.GetQuizHandler)
 	})
@@ -220,6 +225,13 @@ func New(h *api.Handler) *chi.Mux {
 		r.Delete("/assigned-quizzes/unassign", h.UnassignQuizFromStudentHandler)
 		r.Get("/assigned-quizzes/status", h.ListAssignedQuizzesStatusHandler)
 		r.Get("/assigned-quizzes/status/quiz", h.GetAssignedQuizStatusHandler)
+
+		// Assigned Exam routes
+		r.Post("/exams/generate", h.GenerateExamHandler)
+		r.Get("/exams", h.ListExamsHandler)
+		r.Post("/exams/assign", h.AssignExamToStudentsHandler)
+		r.Get("/exams/status", h.GetExamStatusHandler)
+		r.Get("/exams/categories", h.GetAvailableExamCategoriesHandler)
 
 		// Topic Management routes
 		r.Route("/topics", func(r chi.Router) {

@@ -252,6 +252,9 @@ loadDashboard();
 // Load assigned quizzes on startup to check for pending quizzes
 loadAssignedQuizzesBadge();
 
+// Load assigned exams on startup to check for pending exams
+loadAssignedExamsBadge();
+
 // Show the assigned quizzes panel
 function showAssignedQuizzes() {
     document.getElementById('assignedQuizzesSection').style.display = 'block';
@@ -371,5 +374,124 @@ async function startAssignedQuiz(quizId) {
     } catch (error) {
         console.error('Error starting assigned quiz:', error);
         alert('Error starting quiz. Please try again.');
+    }
+}
+
+// ============ Assigned Exams Functions ============
+
+// Load assigned exams badge (count of pending/incomplete exams)
+async function loadAssignedExamsBadge() {
+    if (user.is_admin) return; // admins don't take assigned exams
+
+    try {
+        const response = await fetch(`/assigned-exams?user_id=${user.id}`);
+        if (!response.ok) return;
+
+        const exams = await response.json();
+        if (!exams || exams.length === 0) return;
+
+        document.getElementById('assignedExamsBtn').style.display = 'inline-block';
+
+        const pending = exams.filter(e => !e.completed_at).length;
+        const badge = document.getElementById('assignedExamsBadge');
+        if (pending > 0) {
+            badge.textContent = pending;
+            badge.style.display = 'inline-block';
+        }
+    } catch (error) {
+        console.error('Error loading assigned exams badge:', error);
+    }
+}
+
+// Show the assigned exams panel
+function showAssignedExams() {
+    document.getElementById('assignedExamsSection').style.display = 'block';
+    loadAssignedExamsList();
+}
+
+// Hide the assigned exams panel
+function hideAssignedExams() {
+    document.getElementById('assignedExamsSection').style.display = 'none';
+}
+
+// Load and display the list of assigned exams
+async function loadAssignedExamsList() {
+    const container = document.getElementById('assignedExamsList');
+    container.innerHTML = '<div class="text-center text-muted">Loading...</div>';
+
+    try {
+        const response = await fetch(`/assigned-exams?user_id=${user.id}`);
+        if (!response.ok) {
+            container.innerHTML = '<div class="alert alert-danger">Failed to load assigned exams.</div>';
+            return;
+        }
+
+        const exams = await response.json();
+        if (!exams || exams.length === 0) {
+            container.innerHTML = '<div class="text-center text-muted">No exams have been assigned to you yet.</div>';
+            return;
+        }
+
+        let html = '<div class="list-group">';
+        exams.forEach(e => {
+            let statusHtml = '';
+            let actionBtn = '';
+
+            if (e.completed_at) {
+                const scoreVal = e.score !== undefined && e.score !== null ? e.score.toFixed(0) : '?';
+                const scoreClass = e.score >= 80 ? 'bg-success' : e.score >= 60 ? 'bg-warning' : 'bg-danger';
+                statusHtml = `<span class="badge bg-success">Completed</span>
+                    <span class="badge ${scoreClass} ms-1">${scoreVal}%</span>
+                    <small class="text-muted ms-2">(${e.correct_answers}/${e.total_questions} correct)</small>`;
+                actionBtn = `<button class="btn btn-sm btn-outline-primary" onclick="startAssignedExam(${e.exam_id}, '${e.access_token}')">Retake</button>`;
+            } else {
+                statusHtml = '<span class="badge bg-warning text-dark">Not Started</span>';
+                actionBtn = `<button class="btn btn-sm btn-danger" onclick="startAssignedExam(${e.exam_id}, '${e.access_token}')">Start Exam</button>`;
+            }
+
+            html += `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${e.exam_name}</strong>
+                            <span class="badge bg-danger ms-1">${e.question_count} questions</span>
+                            <br>
+                            ${statusHtml}
+                        </div>
+                        <div>
+                            ${actionBtn}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading assigned exams list:', error);
+        container.innerHTML = '<div class="alert alert-danger">Error loading assigned exams.</div>';
+    }
+}
+
+// Start an assigned exam
+async function startAssignedExam(examId, token) {
+    try {
+        const response = await fetch(`/exam/start?token=${encodeURIComponent(token)}&user_id=${user.id}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            alert('Failed to start exam: ' + errorText);
+            return;
+        }
+
+        const examData = await response.json();
+        localStorage.setItem('currentExam', JSON.stringify(examData));
+        window.location.href = '/exam.html?token=' + encodeURIComponent(token);
+    } catch (error) {
+        console.error('Error starting assigned exam:', error);
+        alert('Error starting exam. Please try again.');
     }
 }

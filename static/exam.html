@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a3a5c">
+    <link rel="manifest" href="/manifest.json">
+    <title>Exam - Athena</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/classic.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand mb-0" href="/dashboard.html">
+                    <img src="/images/logo.png" alt="Athena Logo" style="height: 24px; margin-right: 8px;"><strong>Athena</strong> <span class="badge bg-warning text-dark">(Beta-1)</span>
+                </a>
+                <div class="form-check form-switch navbar-theme-switch ms-2">
+                    <input class="form-check-input theme-toggle" type="checkbox" id="themeToggle" aria-label="Toggle dark mode">
+                    <label class="form-check-label text-white small" for="themeToggle">Dark</label>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <span class="navbar-text text-white me-3">
+                        <span id="userDisplay"></span>
+                    </span>
+                    <button class="btn btn-sm btn-outline-light" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+
+        <!-- Login Required Panel -->
+        <div id="loginRequiredPanel" style="display:none;">
+            <div class="card text-center" style="max-width: 500px; margin: auto; margin-top: 80px;">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">📝 Login Required</h5>
+                </div>
+                <div class="card-body">
+                    <p>You must be logged in to take this exam.</p>
+                    <a href="/index.html" class="btn btn-primary">Go to Login</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Loading Panel -->
+        <div id="examLoadingPanel" style="display:none;">
+            <div class="text-center mt-5">
+                <div class="spinner-border text-danger" role="status"></div>
+                <p class="mt-3 text-muted">Loading exam...</p>
+            </div>
+        </div>
+
+        <!-- Exam Error Panel -->
+        <div id="examErrorPanel" style="display:none;">
+            <div class="card text-center border-danger" style="max-width: 500px; margin: auto; margin-top: 80px;">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Exam Error</h5>
+                </div>
+                <div class="card-body">
+                    <p id="examErrorMsg">An error occurred loading the exam.</p>
+                    <a href="/dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Questions Panel -->
+        <div id="examPanel" style="display:none;">
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 id="examTitle" class="mb-0">📝 Exam</h2>
+                            <small class="text-muted" id="examSubtitle"></small>
+                        </div>
+                        <a href="/dashboard.html" class="btn btn-outline-secondary btn-sm">← Back to Dashboard</a>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="text-muted">Progress</small>
+                        <small class="text-muted" id="progressText">0 / 0 answered</small>
+                    </div>
+                    <div class="progress" style="height: 8px;">
+                        <div class="progress-bar bg-danger" id="examProgressBar" role="progressbar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="row mt-4 mb-5">
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-danger btn-lg" id="submitExamBtn" onclick="submitExam()">
+                        🎯 Submit Exam
+                    </button>
+                    <p class="text-muted mt-2 small" id="submitWarning">Please answer all questions before submitting.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exam Results Panel -->
+        <div id="resultsPanel" style="display:none;">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header text-center" id="resultCardHeader">
+                            <h3 class="mb-0" id="resultTitle">Exam Complete!</h3>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="display-1 mb-3" id="resultScore"></div>
+                            <p class="lead" id="resultDetails"></p>
+                            <hr>
+                            <div id="questionResults"></div>
+                            <hr>
+                            <a href="/dashboard.html" class="btn btn-primary mt-3">← Back to Dashboard</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <script>
+        // ============ Auth ============
+        const user = JSON.parse(localStorage.getItem('user'));
+        let examData = null;
+        let attemptId = null;
+
+        function logout() {
+            localStorage.removeItem('user');
+            window.location.href = '/index.html';
+        }
+
+        function showPanel(id) {
+            ['loginRequiredPanel', 'examLoadingPanel', 'examErrorPanel', 'examPanel', 'resultsPanel']
+                .forEach(p => document.getElementById(p).style.display = p === id ? 'block' : 'none');
+        }
+
+        function showError(msg) {
+            document.getElementById('examErrorMsg').textContent = msg;
+            showPanel('examErrorPanel');
+        }
+
+        // ============ Init ============
+        (async function init() {
+            if (!user) {
+                showPanel('loginRequiredPanel');
+                return;
+            }
+
+            document.getElementById('userDisplay').textContent = `Welcome, ${user.username}!`;
+
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+
+            if (!token) {
+                // Try loading from localStorage (set by dashboard startAssignedExam)
+                const stored = localStorage.getItem('currentExam');
+                if (stored) {
+                    examData = JSON.parse(stored);
+                    localStorage.removeItem('currentExam');
+                    attemptId = examData.attempt_id;
+                    renderExam();
+                    return;
+                }
+                showError('No exam token provided. Please use the link given to you by your instructor.');
+                return;
+            }
+
+            showPanel('examLoadingPanel');
+            try {
+                const response = await fetch(`/exam/start?token=${encodeURIComponent(token)}&user_id=${user.id}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'}
+                });
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    showError('Could not start exam: ' + errText);
+                    return;
+                }
+
+                examData = await response.json();
+                attemptId = examData.attempt_id;
+                renderExam();
+            } catch (e) {
+                showError('Network error: ' + e.message);
+            }
+        })();
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ============ Render Exam ============
+        // Questions from API: { id, question_text, difficulty, answers: [{id, answer_text}] }
+        function renderExam() {
+            if (!examData || !examData.questions || examData.questions.length === 0) {
+                showError('Exam has no questions.');
+                return;
+            }
+
+            document.getElementById('examTitle').textContent = '📝 ' + (examData.exam_name || 'Exam');
+            document.getElementById('examSubtitle').textContent = examData.questions.length + ' questions';
+            document.getElementById('progressText').textContent = `0 / ${examData.questions.length} answered`;
+
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            examData.questions.forEach((q, idx) => {
+                const div = document.createElement('div');
+                div.className = 'card mb-3';
+                div.id = `qCard_${q.id}`;
+
+                // answers is [{id, answer_text}]
+                const answers = q.answers || [];
+                let answersHtml = answers.map(a => `
+                    <div class="form-check mb-2">
+                        <input class="form-check-input exam-answer" type="radio"
+                            name="q_${q.id}" value="${a.id}"
+                            data-answer-text="${escapeHtml(a.answer_text)}"
+                            id="q${q.id}_a${a.id}"
+                            onchange="onAnswerChange()">
+                        <label class="form-check-label" for="q${q.id}_a${a.id}">${escapeHtml(a.answer_text)}</label>
+                    </div>
+                `).join('');
+
+                div.innerHTML = `
+                    <div class="card-body">
+                        <p class="mb-2">
+                            <span class="badge bg-secondary me-2">${idx + 1}</span>
+                            <strong>${escapeHtml(q.question_text)}</strong>
+                        </p>
+                        ${answersHtml}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            showPanel('examPanel');
+        }
+
+        function onAnswerChange() {
+            if (!examData) return;
+            const total = examData.questions.length;
+            let answered = 0;
+            examData.questions.forEach(q => {
+                const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                if (selected) answered++;
+            });
+            document.getElementById('progressText').textContent = `${answered} / ${total} answered`;
+            const pct = total > 0 ? Math.round(answered / total * 100) : 0;
+            document.getElementById('examProgressBar').style.width = pct + '%';
+
+            if (answered === total) {
+                document.getElementById('submitWarning').style.display = 'none';
+            } else {
+                document.getElementById('submitWarning').style.display = 'block';
+                document.getElementById('submitWarning').textContent =
+                    `${total - answered} question(s) not yet answered. You can still submit.`;
+            }
+        }
+
+        // ============ Submit Exam ============
+        // Answers submitted as { "questionID": answerID (int) }
+        async function submitExam() {
+            if (!examData || !attemptId) {
+                alert('Exam data not loaded. Please reload the page.');
+                return;
+            }
+
+            const answers = {};
+            examData.questions.forEach(q => {
+                const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                if (selected) {
+                    answers[String(q.id)] = parseInt(selected.value, 10);
+                }
+            });
+
+            const total = examData.questions.length;
+            const answered = Object.keys(answers).length;
+            if (answered < total) {
+                const proceed = confirm(`You have only answered ${answered} of ${total} questions. Submit anyway?`);
+                if (!proceed) return;
+            }
+
+            document.getElementById('submitExamBtn').disabled = true;
+            document.getElementById('submitExamBtn').textContent = 'Submitting...';
+
+            try {
+                const response = await fetch('/exam/submit', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        attempt_id: attemptId,
+                        answers: answers
+                    })
+                });
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    alert('Error submitting exam: ' + errText);
+                    document.getElementById('submitExamBtn').disabled = false;
+                    document.getElementById('submitExamBtn').textContent = '🎯 Submit Exam';
+                    return;
+                }
+
+                const result = await response.json();
+                showResults(result);
+            } catch (e) {
+                alert('Network error: ' + e.message);
+                document.getElementById('submitExamBtn').disabled = false;
+                document.getElementById('submitExamBtn').textContent = '🎯 Submit Exam';
+            }
+        }
+
+        // ============ Show Results ============
+        // result.question_results is map[string]bool (questionID -> correct)
+        function showResults(result) {
+            const score = result.score || 0;
+            const correct = result.correct_answers || 0;
+            const total = result.total_questions || 0;
+
+            const scoreClass = score >= 80 ? 'text-success' : score >= 60 ? 'text-warning' : 'text-danger';
+            const scoreEmoji = score >= 80 ? '🏆' : score >= 60 ? '👍' : '📖';
+            const headerClass = score >= 80 ? 'bg-success text-white' : score >= 60 ? 'bg-warning text-dark' : 'bg-danger text-white';
+
+            document.getElementById('resultCardHeader').className = `card-header text-center ${headerClass}`;
+            document.getElementById('resultTitle').textContent = score >= 80 ? '🏆 Excellent Work!' : score >= 60 ? '👍 Good Job!' : '📖 Keep Practicing!';
+            document.getElementById('resultScore').innerHTML = `<span class="${scoreClass}">${scoreEmoji} ${score.toFixed(0)}%</span>`;
+            document.getElementById('resultDetails').textContent = `You got ${correct} out of ${total} questions correct.`;
+
+            // Question-by-question breakdown using the original exam question data
+            const qResults = result.question_results || {};
+            if (examData && examData.questions && examData.questions.length > 0) {
+                let html = '<h5 class="text-start mb-3">Question Breakdown</h5><div class="text-start">';
+                examData.questions.forEach((q, idx) => {
+                    const isCorrect = qResults[String(q.id)] === true;
+                    const icon = isCorrect ? '✅' : '❌';
+                    const cardClass = isCorrect ? 'border-success' : 'border-danger';
+
+                    // Find the student's selected answer text
+                    const selectedEl = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                    const yourAnswerText = selectedEl ? selectedEl.dataset.answerText : '(not answered)';
+
+                    // Find the correct answer text from the answers list
+                    let correctAnswerText = '';
+                    if (!isCorrect && q.answers) {
+                        // We don't know which answer is correct from the client side without extra API call
+                        // Just show what they answered
+                    }
+
+                    html += `
+                        <div class="card mb-2 ${cardClass}">
+                            <div class="card-body py-2 px-3">
+                                <p class="mb-1"><span class="badge bg-secondary me-2">${idx + 1}</span>
+                                    ${icon} <strong>${escapeHtml(q.question_text)}</strong></p>
+                                <p class="mb-0 small">Your answer: <span class="${isCorrect ? 'text-success' : 'text-danger'}">${escapeHtml(yourAnswerText)}</span></p>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                document.getElementById('questionResults').innerHTML = html;
+            }
+
+            showPanel('resultsPanel');
+        }
+    </script>
+</body>
+</html>
