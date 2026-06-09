@@ -21,11 +21,24 @@ async function loadExamCategories() {
         }
         container.innerHTML = '';
         categories.forEach((cat) => {
-            const escapedCategory = escapeHtml(cat);
+            const categoryValue = String(cat);
+            const categoryId = `examCat_${categoryValue.replace(/[^a-zA-Z0-9_-]+/g, '_')}`;
             const div = document.createElement('div');
             div.className = 'form-check form-check-inline';
-            div.innerHTML = `<input class="form-check-input exam-category-check" type="checkbox" value="${escapedCategory}" id="examCat_${escapedCategory}">
-                <label class="form-check-label" for="examCat_${escapedCategory}">${escapeHtml(String(cat).toUpperCase())}</label>`;
+
+            const input = document.createElement('input');
+            input.className = 'form-check-input exam-category-check';
+            input.type = 'checkbox';
+            input.value = categoryValue;
+            input.id = categoryId;
+
+            const label = document.createElement('label');
+            label.className = 'form-check-label';
+            label.htmlFor = categoryId;
+            label.textContent = categoryValue.toUpperCase();
+
+            div.appendChild(input);
+            div.appendChild(label);
             container.appendChild(div);
         });
     } catch (e) {
@@ -48,8 +61,8 @@ async function generateExam() {
         return;
     }
 
-    const checkedDiffs = Array.from(document.querySelectorAll('.exam-difficulty-check:checked')).map((cb) => parseInt(cb.value, 10));
-    if (checkedDiffs.length === 0) {
+    const checkedDifficultyLevels = Array.from(document.querySelectorAll('.exam-difficulty-check:checked')).map((cb) => parseInt(cb.value, 10));
+    if (checkedDifficultyLevels.length === 0) {
         alert('Please select at least one difficulty level.');
         return;
     }
@@ -64,7 +77,7 @@ async function generateExam() {
             body: JSON.stringify({
                 name,
                 categories: checkedCats,
-                difficulty_levels: checkedDiffs,
+                difficulty_levels: checkedDifficultyLevels,
                 question_count: questionCount,
             }),
         });
@@ -228,13 +241,13 @@ async function loadExamStatus() {
                 <th>Questions</th><th>Exam URL</th><th>Actions</th>
             </tr></thead><tbody>`;
         exams.forEach((exam) => {
-            const cats = Array.isArray(exam.categories) ? exam.categories.join(', ') : '';
-            const diffs = Array.isArray(exam.difficulty_levels) ? exam.difficulty_levels.map((d) => 'Level ' + d).join(', ') : '';
+            const categoriesDisplay = Array.isArray(exam.categories) ? exam.categories.join(', ') : '';
+            const difficultyLevelsDisplay = Array.isArray(exam.difficulty_levels) ? exam.difficulty_levels.map((d) => 'Level ' + d).join(', ') : '';
             const examUrl = window.location.origin + '/exam.html?token=' + exam.access_token;
             html += `<tr>
                 <td><strong>${escapeHtml(exam.name)}</strong></td>
-                <td><span class="badge bg-secondary">${escapeHtml(cats)}</span></td>
-                <td>${escapeHtml(diffs)}</td>
+                <td><span class="badge bg-secondary">${escapeHtml(categoriesDisplay)}</span></td>
+                <td>${escapeHtml(difficultyLevelsDisplay)}</td>
                 <td>${exam.question_count}</td>
                 <td><a href="/exam.html?token=${encodeURIComponent(exam.access_token)}" target="_blank" class="small">${escapeHtml(examUrl)}</a></td>
                 <td><button class="btn btn-sm btn-primary" data-exam-id="${exam.id}" data-exam-name="${escapeHtml(exam.name)}" onclick="showExamDetail(parseInt(this.dataset.examId, 10), this.dataset.examName)">View Scores</button></td>
