@@ -20,8 +20,8 @@ async function loadExamCategories() {
             return;
         }
         container.innerHTML = '';
-        categories.forEach((cat) => {
-            const categoryValue = String(cat);
+        categories.forEach((category) => {
+            const categoryValue = String(category);
             const categoryId = `examCat_${categoryValue.replace(/[^a-zA-Z0-9_-]+/g, '_')}`;
             const div = document.createElement('div');
             div.className = 'form-check form-check-inline';
@@ -158,10 +158,26 @@ async function loadExamAssignStudentsList() {
         container.innerHTML = '';
         students.forEach((student) => {
             if (student.is_admin) return;
+
+            const studentId = Number(student.id);
+            if (!Number.isFinite(studentId)) return;
+
             const div = document.createElement('div');
             div.className = 'form-check';
-            div.innerHTML = `<input class="form-check-input exam-student-check" type="checkbox" value="${student.id}" id="examStudent_${student.id}">
-                <label class="form-check-label" for="examStudent_${student.id}">${escapeHtml(student.username)}</label>`;
+
+            const input = document.createElement('input');
+            input.className = 'form-check-input exam-student-check';
+            input.type = 'checkbox';
+            input.value = String(studentId);
+            input.id = `examStudent_${studentId}`;
+
+            const label = document.createElement('label');
+            label.className = 'form-check-label';
+            label.htmlFor = input.id;
+            label.textContent = student.username;
+
+            div.appendChild(input);
+            div.appendChild(label);
             container.appendChild(div);
         });
     } catch (e) {
@@ -241,6 +257,11 @@ async function loadExamStatus() {
                 <th>Questions</th><th>Exam URL</th><th>Actions</th>
             </tr></thead><tbody>`;
         exams.forEach((exam) => {
+            const examId = Number(exam.id);
+            if (!Number.isFinite(examId)) {
+                return;
+            }
+
             const categoriesDisplay = Array.isArray(exam.categories) ? exam.categories.join(', ') : '';
             const difficultyLevelsDisplay = Array.isArray(exam.difficulty_levels) ? exam.difficulty_levels.map((d) => 'Level ' + d).join(', ') : '';
             const examUrl = window.location.origin + '/exam.html?token=' + exam.access_token;
@@ -250,7 +271,7 @@ async function loadExamStatus() {
                 <td>${escapeHtml(difficultyLevelsDisplay)}</td>
                 <td>${exam.question_count}</td>
                 <td><a href="/exam.html?token=${encodeURIComponent(exam.access_token)}" target="_blank" class="small">${escapeHtml(examUrl)}</a></td>
-                <td><button class="btn btn-sm btn-primary" data-exam-id="${exam.id}" data-exam-name="${escapeHtml(exam.name)}" onclick="showExamDetail(parseInt(this.dataset.examId, 10), this.dataset.examName)">View Scores</button></td>
+                <td><button class="btn btn-sm btn-primary" data-exam-id="${examId}" data-exam-name="${escapeHtml(exam.name)}" onclick="showExamDetail(parseInt(this.dataset.examId, 10), this.dataset.examName)">View Scores</button></td>
             </tr>`;
         });
         html += '</tbody></table></div>';
