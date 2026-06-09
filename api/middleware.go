@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"path"
 	"strings"
 	"sync"
 	"time"
@@ -212,6 +213,11 @@ func (rl *RateLimiter) cleanupVisitors() {
 func RateLimitMiddleware(limiter *RateLimiter) Middleware {
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
+			if isStaticContentRequest(r) {
+				next(w, r)
+				return
+			}
+
 			ip := getClientIP(r)
 
 			if !limiter.Allow(ip) {
@@ -222,6 +228,14 @@ func RateLimitMiddleware(limiter *RateLimiter) Middleware {
 			next(w, r)
 		}
 	}
+}
+
+func isStaticContentRequest(r *http.Request) bool {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		return false
+	}
+
+	return r.URL.Path == "/" || path.Ext(r.URL.Path) != ""
 }
 
 // getClientIP extracts the real client IP from the request
