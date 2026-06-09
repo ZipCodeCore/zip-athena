@@ -271,7 +271,7 @@ async function loadExamStatus() {
                 <td>${escapeHtml(difficultyLevelsDisplay)}</td>
                 <td>${exam.question_count}</td>
                 <td><a href="/exam.html?token=${encodeURIComponent(exam.access_token)}" target="_blank" class="small">${escapeHtml(examUrl)}</a></td>
-                <td><button class="btn btn-sm btn-primary" data-exam-id="${examId}" data-exam-name="${escapeHtml(exam.name)}" onclick="showExamDetail(parseInt(this.dataset.examId, 10), this.dataset.examName)">View Scores</button></td>
+                <td><button class="btn btn-sm btn-primary" data-exam-id="${examId}" data-exam-name="${encodeURIComponent(exam.name)}" onclick="showExamDetail(parseInt(this.dataset.examId, 10), decodeURIComponent(this.dataset.examName))">View Scores</button></td>
             </tr>`;
         });
         html += '</tbody></table></div>';
