@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a3a5c">
+    <link rel="manifest" href="/manifest.json">
+    <title>Admin – Exams - Athena</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/classic.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Top-level navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/images/logo.png" alt="Athena Logo" style="height: 24px; margin-right: 8px;">Athena
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <span class="navbar-text text-white me-3">Admin: <span id="username"></span></span>
+                    <a href="/dashboard.html" class="btn btn-outline-warning btn-sm me-2">Dashboard</a>
+                    <a href="/admin.html" class="btn btn-outline-info btn-sm me-2">Administration</a>
+                    <button class="btn btn-outline-light btn-sm" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Local admin navigation -->
+    <div class="bg-light border-bottom py-2">
+        <div class="container-fluid">
+            <ul class="nav nav-pills nav-sm mb-0">
+                <li class="nav-item"><a class="nav-link" href="/admin.html">Users</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin-questions.html">Questions</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin-quizzes.html">Quizzes</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/admin-exams.html">Exams</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin-topics.html">Topics</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <section id="assigned-exams" class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2><i class="bi bi-journals"></i> Assigned Exams</h2>
+                <button class="btn btn-primary" onclick="loadExamStatus()">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0"><i class="bi bi-lightning-fill"></i> Generate New Exam</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Select categories and difficulty levels to randomly generate questions for a named exam. Default is 30 questions (configurable below).</p>
+                            <div class="mb-2">
+                                <label class="form-label">Exam Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="newExamName" placeholder="e.g. Java Final Exam" required>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Categories <span class="text-danger">*</span></label>
+                                <div id="examCategoriesCheckboxes" class="border rounded p-2">
+                                    <small class="text-muted">Loading categories...</small>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Difficulty Levels <span class="text-danger">*</span></label>
+                                <div class="d-flex gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input exam-difficulty-check" type="checkbox" value="1" id="examDiff1">
+                                        <label class="form-check-label" for="examDiff1">Level 1 (Easy)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input exam-difficulty-check" type="checkbox" value="2" id="examDiff2">
+                                        <label class="form-check-label" for="examDiff2">Level 2 (Medium)</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input exam-difficulty-check" type="checkbox" value="3" id="examDiff3">
+                                        <label class="form-check-label" for="examDiff3">Level 3 (Hard)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Number of Questions</label>
+                                <input type="number" class="form-control" id="examQuestionCount" value="30" min="1" max="100">
+                            </div>
+                            <button type="button" class="btn btn-danger" onclick="generateExam()">
+                                <i class="bi bi-lightning"></i> Generate Exam
+                            </button>
+                            <div id="generateExamResult" class="mt-3" style="display:none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="bi bi-person-check-fill"></i> Assign Exam to Students</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small">Select an exam and choose students to assign it to.</p>
+                            <div class="mb-2">
+                                <label class="form-label">Select Exam</label>
+                                <select class="form-select" id="assignExamSelect">
+                                    <option value="">-- Select an exam --</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Exam URL (share with students)</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="examUrlDisplay" readonly placeholder="Select an exam above">
+                                    <button class="btn btn-outline-secondary" onclick="copyExamUrl()" title="Copy URL"><i class="bi bi-clipboard"></i></button>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Select Students</label>
+                                <div id="examAssignStudentsList" class="border rounded p-2" style="max-height:200px; overflow-y:auto;">
+                                    <small class="text-muted">Loading students...</small>
+                                </div>
+                                <div class="mt-1">
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="selectAllExamStudents()">Select All</button>
+                                    <button class="btn btn-sm btn-outline-secondary ms-1" onclick="deselectAllExamStudents()">Deselect All</button>
+                                </div>
+                            </div>
+                            <button class="btn btn-info text-white" onclick="assignExamToStudents()">
+                                <i class="bi bi-person-check"></i> Assign Exam
+                            </button>
+                            <div id="assignExamResult" class="mt-3" style="display:none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart-fill"></i> Exam Status &amp; Scores</h5>
+                </div>
+                <div class="card-body">
+                    <div id="examSummaryTable">
+                        <p class="text-muted">Click Refresh to load status.</p>
+                    </div>
+                    <div id="examDetailPanel" style="display:none;" class="mt-4">
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 id="examDetailTitle">Exam Results</h5>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="hideExamDetail()">✕ Close</button>
+                        </div>
+                        <div id="examDetailContent"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="js/admin/exams-page.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/sw.js");
+        }
+    </script>
+</body>
+</html>
