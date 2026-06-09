@@ -279,22 +279,37 @@ func (h *Handler) StartExamHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Verify the exam is assigned to this user
-	assignedExams, err := h.db.GetAssignedExamsForUser(userID)
+	user, err := h.db.GetUser(userID)
 	if err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return
+		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	assigned := false
-	for _, ae := range assignedExams {
-		if ae.ExamID == exam.ID {
-			assigned = true
-			break
-		}
-	}
-	if !assigned {
-		http.Error(w, "Exam not assigned to this user", http.StatusForbidden)
+	if !user.IsActive {
+		http.Error(w, "User account is inactive", http.StatusForbidden)
 		return
+	}
+
+	if !user.IsAdmin {
+		assignedExams, err := h.db.GetAssignedExamsForUser(userID)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		assigned := false
+		for _, ae := range assignedExams {
+			if ae.ExamID == exam.ID {
+				assigned = true
+				break
+			}
+		}
+		if !assigned {
+			http.Error(w, "Exam not assigned to this user", http.StatusForbidden)
+			return
+		}
 	}
 
 	// Build question list with answers
@@ -400,12 +415,12 @@ func (h *Handler) SubmitExamHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"attempt_id":      attempt.ID,
-		"exam_id":         attempt.ExamID,
-		"score":           attempt.Score,
-		"correct_answers": attempt.CorrectAnswers,
-		"total_questions": attempt.TotalQuestions,
-		"completed_at":    attempt.CompletedAt,
+		"attempt_id":       attempt.ID,
+		"exam_id":          attempt.ExamID,
+		"score":            attempt.Score,
+		"correct_answers":  attempt.CorrectAnswers,
+		"total_questions":  attempt.TotalQuestions,
+		"completed_at":     attempt.CompletedAt,
 		"question_results": attempt.QuestionResults,
 	})
 }

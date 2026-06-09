@@ -22,6 +22,7 @@ func TestCreateUserHandler(t *testing.T) {
 		Username: "testuser",
 		Email:    "test@example.com",
 		IsAdmin:  false,
+		IsActive: true,
 	}
 
 	body, _ := json.Marshal(user)
@@ -654,6 +655,7 @@ func TestCreateUserWithPasswordHashing(t *testing.T) {
 		Email:    "test@example.com",
 		Password: testPassword,
 		IsAdmin:  false,
+		IsActive: true,
 	}
 
 	body, _ := json.Marshal(user)
@@ -739,6 +741,7 @@ func TestUpdateUserPasswordHashing(t *testing.T) {
 		Email:    "test@example.com",
 		Password: initialPassword,
 		IsAdmin:  false,
+		IsActive: true,
 	}
 
 	createBody, _ := json.Marshal(user)
@@ -777,6 +780,7 @@ func TestUpdateUserPasswordHashing(t *testing.T) {
 		Email:       "test@example.com",
 		Password:    newPassword,
 		IsAdmin:     false,
+		IsActive:    true,
 		TotalPoints: 0,
 	}
 
@@ -830,6 +834,77 @@ func TestUpdateUserPasswordHashing(t *testing.T) {
 
 	if authResp.Message != "Login successful" {
 		t.Errorf("Expected message 'Login successful', got '%s'", authResp.Message)
+	}
+}
+
+func TestInactiveUserCannotLoginAfterAdminUpdate(t *testing.T) {
+	tmpDir := t.TempDir()
+	dbPath := tmpDir + "/test_inactive_login.db"
+
+	db, err := database.NewSQLiteDB(dbPath)
+	if err != nil {
+		t.Fatalf("Failed to create SQLite database: %v", err)
+	}
+	defer db.Close()
+
+	handler := NewHandler(db)
+
+	admin := &models.User{
+		Username:    "admin",
+		Email:       "admin@example.com",
+		Password:    "ignored",
+		IsAdmin:     true,
+		IsActive:    true,
+		IsActiveSet: true,
+		CreatedAt:   time.Now(),
+	}
+	if err := db.CreateUser(admin); err != nil {
+		t.Fatalf("failed to create admin: %v", err)
+	}
+
+	createBody, _ := json.Marshal(models.User{
+		Username: "inactive-user",
+		Email:    "inactive@example.com",
+		Password: "password123",
+	})
+	createReq := httptest.NewRequest(http.MethodPost, "/users", bytes.NewBuffer(createBody))
+	createW := httptest.NewRecorder()
+	handler.CreateUserHandler(createW, createReq)
+	if createW.Code != http.StatusCreated {
+		t.Fatalf("Expected status %d, got %d. Body: %s", http.StatusCreated, createW.Code, createW.Body.String())
+	}
+
+	var created models.User
+	if err := json.NewDecoder(createW.Body).Decode(&created); err != nil {
+		t.Fatalf("failed to decode created user: %v", err)
+	}
+
+	updateBody, _ := json.Marshal(map[string]interface{}{
+		"username":     created.Username,
+		"email":        created.Email,
+		"is_admin":     false,
+		"is_active":    false,
+		"category":     created.Category,
+		"total_points": created.TotalPoints,
+	})
+	updateReq := httptest.NewRequest(http.MethodPut, "/admin/users?id="+strconv.Itoa(created.ID), bytes.NewBuffer(updateBody))
+	updateReq.Header.Set("X-User-ID", strconv.Itoa(admin.ID))
+	updateW := httptest.NewRecorder()
+	handler.AdminMiddleware(handler.UpdateUserHandler)(updateW, updateReq)
+	if updateW.Code != http.StatusOK {
+		t.Fatalf("Expected status %d, got %d. Body: %s", http.StatusOK, updateW.Code, updateW.Body.String())
+	}
+
+	loginBody, _ := json.Marshal(LoginRequest{
+		Username: created.Username,
+		Password: "password123",
+	})
+	loginReq := httptest.NewRequest(http.MethodPost, "/auth/login", bytes.NewBuffer(loginBody))
+	loginW := httptest.NewRecorder()
+	handler.LoginHandler(loginW, loginReq)
+
+	if loginW.Code != http.StatusUnauthorized {
+		t.Fatalf("Expected status %d, got %d. Body: %s", http.StatusUnauthorized, loginW.Code, loginW.Body.String())
 	}
 }
 

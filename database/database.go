@@ -316,6 +316,9 @@ func (db *InMemoryDB) CreateUser(user *models.User) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
 
+	if !user.IsActiveSet {
+		user.IsActive = true
+	}
 	user.ID = db.nextUserID
 	db.nextUserID++
 	db.users[user.ID] = user
@@ -1336,7 +1339,7 @@ func (db *InMemoryDB) ListStudentsWithMetrics(searchQuery string, sortBy string,
 
 	for _, user := range db.users {
 		// Skip admin users
-		if user.IsAdmin {
+		if user.IsAdmin || !user.IsActive {
 			continue
 		}
 
@@ -2559,438 +2562,448 @@ func (db *InMemoryDB) AutoFlagQuestions() error {
 // AssignedQuiz operations (InMemoryDB)
 
 func (db *InMemoryDB) AssignQuizToUser(quizID, userID, assignedBy int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-// Check if already assigned
-for _, aq := range db.assignedQuizzes {
-if aq.QuizID == quizID && aq.UserID == userID {
-return nil // already assigned, idempotent
-}
-}
+	// Check if already assigned
+	for _, aq := range db.assignedQuizzes {
+		if aq.QuizID == quizID && aq.UserID == userID {
+			return nil // already assigned, idempotent
+		}
+	}
 
-aq := &models.AssignedQuiz{
-ID:         db.nextAssignedQuizID,
-QuizID:     quizID,
-UserID:     userID,
-AssignedAt: time.Now(),
-AssignedBy: assignedBy,
-}
-db.nextAssignedQuizID++
-db.assignedQuizzes[aq.ID] = aq
-return nil
+	aq := &models.AssignedQuiz{
+		ID:         db.nextAssignedQuizID,
+		QuizID:     quizID,
+		UserID:     userID,
+		AssignedAt: time.Now(),
+		AssignedBy: assignedBy,
+	}
+	db.nextAssignedQuizID++
+	db.assignedQuizzes[aq.ID] = aq
+	return nil
 }
 
 func (db *InMemoryDB) UnassignQuizFromUser(quizID, userID int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-for id, aq := range db.assignedQuizzes {
-if aq.QuizID == quizID && aq.UserID == userID {
-delete(db.assignedQuizzes, id)
-return nil
-}
-}
-return ErrNotFound
+	for id, aq := range db.assignedQuizzes {
+		if aq.QuizID == quizID && aq.UserID == userID {
+			delete(db.assignedQuizzes, id)
+			return nil
+		}
+	}
+	return ErrNotFound
 }
 
 func (db *InMemoryDB) GetAssignedQuizzesForUser(userID int) ([]*models.AssignedQuizInfo, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var result []*models.AssignedQuizInfo
-for _, aq := range db.assignedQuizzes {
-if aq.UserID != userID {
-continue
-}
+	var result []*models.AssignedQuizInfo
+	for _, aq := range db.assignedQuizzes {
+		if aq.UserID != userID {
+			continue
+		}
 
-quiz, exists := db.quizzes[aq.QuizID]
-if !exists {
-continue
-}
+		quiz, exists := db.quizzes[aq.QuizID]
+		if !exists {
+			continue
+		}
 
-info := &models.AssignedQuizInfo{
-AssignedQuiz:    *aq,
-QuizName:        quiz.Name,
-QuizDescription: quiz.Description,
-QuizCategory:    quiz.Category,
-}
+		info := &models.AssignedQuizInfo{
+			AssignedQuiz:    *aq,
+			QuizName:        quiz.Name,
+			QuizDescription: quiz.Description,
+			QuizCategory:    quiz.Category,
+		}
 
-// Find the latest completed quiz attempt for this quiz+user
-for _, attempt := range db.quizAttempts {
-if attempt.QuizID != nil && *attempt.QuizID == aq.QuizID && attempt.UserID == userID && attempt.CompletedTime != nil {
-if info.CompletedAt == nil || attempt.CompletedTime.After(*info.CompletedAt) {
-info.CompletedAt = attempt.CompletedTime
-ca := attempt.CorrectAnswers
-tq := attempt.TotalQuestions
-info.CorrectAnswers = &ca
-info.TotalQuestions = &tq
-if tq > 0 {
-score := float64(ca) / float64(tq) * 100.0
-info.Score = &score
-}
-}
-}
-}
+		// Find the latest completed quiz attempt for this quiz+user
+		for _, attempt := range db.quizAttempts {
+			if attempt.QuizID != nil && *attempt.QuizID == aq.QuizID && attempt.UserID == userID && attempt.CompletedTime != nil {
+				if info.CompletedAt == nil || attempt.CompletedTime.After(*info.CompletedAt) {
+					info.CompletedAt = attempt.CompletedTime
+					ca := attempt.CorrectAnswers
+					tq := attempt.TotalQuestions
+					info.CorrectAnswers = &ca
+					info.TotalQuestions = &tq
+					if tq > 0 {
+						score := float64(ca) / float64(tq) * 100.0
+						info.Score = &score
+					}
+				}
+			}
+		}
 
-result = append(result, info)
-}
-return result, nil
+		result = append(result, info)
+	}
+	return result, nil
 }
 
 func (db *InMemoryDB) GetAssignedQuizUserIDs(quizID int) ([]int, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var userIDs []int
-for _, aq := range db.assignedQuizzes {
-if aq.QuizID == quizID {
-userIDs = append(userIDs, aq.UserID)
-}
-}
-return userIDs, nil
+	var userIDs []int
+	for _, aq := range db.assignedQuizzes {
+		if aq.QuizID == quizID {
+			userIDs = append(userIDs, aq.UserID)
+		}
+	}
+	return userIDs, nil
 }
 
 func (db *InMemoryDB) GetAssignedQuizStatus(quizID int) (*models.AssignedQuizStatus, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-quiz, exists := db.quizzes[quizID]
-if !exists {
-return nil, ErrNotFound
-}
+	quiz, exists := db.quizzes[quizID]
+	if !exists {
+		return nil, ErrNotFound
+	}
 
-status := &models.AssignedQuizStatus{
-QuizID:          quiz.ID,
-QuizName:        quiz.Name,
-QuizCategory:    quiz.Category,
-QuizDescription: quiz.Description,
-StudentResults:  []models.AssignedQuizStudentResult{},
-}
+	status := &models.AssignedQuizStatus{
+		QuizID:          quiz.ID,
+		QuizName:        quiz.Name,
+		QuizCategory:    quiz.Category,
+		QuizDescription: quiz.Description,
+		StudentResults:  []models.AssignedQuizStudentResult{},
+	}
 
-for _, aq := range db.assignedQuizzes {
-if aq.QuizID != quizID {
-continue
-}
+	for _, aq := range db.assignedQuizzes {
+		if aq.QuizID != quizID {
+			continue
+		}
 
-user, exists := db.users[aq.UserID]
-if !exists {
-continue
-}
+		user, exists := db.users[aq.UserID]
+		if !exists {
+			continue
+		}
 
-r := models.AssignedQuizStudentResult{
-UserID:     user.ID,
-Username:   user.Username,
-AssignedAt: aq.AssignedAt,
-}
+		r := models.AssignedQuizStudentResult{
+			UserID:     user.ID,
+			Username:   user.Username,
+			AssignedAt: aq.AssignedAt,
+		}
 
-// Find latest completed attempt
-for _, attempt := range db.quizAttempts {
-if attempt.QuizID != nil && *attempt.QuizID == quizID && attempt.UserID == aq.UserID && attempt.CompletedTime != nil {
-if r.CompletedAt == nil || attempt.CompletedTime.After(*r.CompletedAt) {
-r.CompletedAt = attempt.CompletedTime
-ca := attempt.CorrectAnswers
-tq := attempt.TotalQuestions
-r.CorrectAnswers = &ca
-r.TotalQuestions = &tq
-if tq > 0 {
-score := float64(ca) / float64(tq) * 100.0
-r.Score = &score
-}
-}
-}
-}
+		// Find latest completed attempt
+		for _, attempt := range db.quizAttempts {
+			if attempt.QuizID != nil && *attempt.QuizID == quizID && attempt.UserID == aq.UserID && attempt.CompletedTime != nil {
+				if r.CompletedAt == nil || attempt.CompletedTime.After(*r.CompletedAt) {
+					r.CompletedAt = attempt.CompletedTime
+					ca := attempt.CorrectAnswers
+					tq := attempt.TotalQuestions
+					r.CorrectAnswers = &ca
+					r.TotalQuestions = &tq
+					if tq > 0 {
+						score := float64(ca) / float64(tq) * 100.0
+						r.Score = &score
+					}
+				}
+			}
+		}
 
-status.StudentResults = append(status.StudentResults, r)
-}
+		status.StudentResults = append(status.StudentResults, r)
+	}
 
-return status, nil
+	return status, nil
 }
 
 func (db *InMemoryDB) ListAssignedQuizzes() ([]*models.AssignedQuiz, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-result := make([]*models.AssignedQuiz, 0, len(db.assignedQuizzes))
-for _, aq := range db.assignedQuizzes {
-result = append(result, aq)
-}
-return result, nil
+	result := make([]*models.AssignedQuiz, 0, len(db.assignedQuizzes))
+	for _, aq := range db.assignedQuizzes {
+		result = append(result, aq)
+	}
+	return result, nil
 }
 
 // ---- InMemoryDB implementation of ExamRepository ----
 
 func (db *InMemoryDB) CreateExam(exam *models.Exam) error {
-db.mu.Lock()
-defer db.mu.Unlock()
-exam.ID = db.nextExamID
-db.nextExamID++
-cp := *exam
-db.exams[cp.ID] = &cp
-return nil
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	exam.ID = db.nextExamID
+	db.nextExamID++
+	cp := *exam
+	db.exams[cp.ID] = &cp
+	return nil
 }
 
 func (db *InMemoryDB) GetExam(id int) (*models.Exam, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
-e, ok := db.exams[id]
-if !ok {
-return nil, ErrNotFound
-}
-cp := *e
-return &cp, nil
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+	e, ok := db.exams[id]
+	if !ok {
+		return nil, ErrNotFound
+	}
+	cp := *e
+	return &cp, nil
 }
 
 func (db *InMemoryDB) GetExamByToken(token string) (*models.Exam, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
-for _, e := range db.exams {
-if e.AccessToken == token {
-cp := *e
-return &cp, nil
-}
-}
-return nil, ErrNotFound
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+	for _, e := range db.exams {
+		if e.AccessToken == token {
+			cp := *e
+			return &cp, nil
+		}
+	}
+	return nil, ErrNotFound
 }
 
 func (db *InMemoryDB) ListExams() ([]*models.Exam, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
-result := make([]*models.Exam, 0, len(db.exams))
-for _, e := range db.exams {
-cp := *e
-result = append(result, &cp)
-}
-return result, nil
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+	result := make([]*models.Exam, 0, len(db.exams))
+	for _, e := range db.exams {
+		cp := *e
+		result = append(result, &cp)
+	}
+	return result, nil
 }
 
 func (db *InMemoryDB) GetQuestionsByCategories(categories []string, difficultyLevels []int, limit int) ([]*models.Question, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-catSet := map[string]bool{}
-for _, c := range categories {
-catSet[c] = true
-}
+	catSet := map[string]bool{}
+	for _, c := range categories {
+		catSet[c] = true
+	}
 
-diffRanges := difficultyRanges(difficultyLevels)
+	diffRanges := difficultyRanges(difficultyLevels)
 
-inDiff := func(d int) bool {
-if len(diffRanges) == 0 {
-return true
-}
-for _, r := range diffRanges {
-if d >= r[0] && d <= r[1] {
-return true
-}
-}
-return false
-}
+	inDiff := func(d int) bool {
+		if len(diffRanges) == 0 {
+			return true
+		}
+		for _, r := range diffRanges {
+			if d >= r[0] && d <= r[1] {
+				return true
+			}
+		}
+		return false
+	}
 
-var result []*models.Question
-for _, q := range db.questions {
-topic, ok := db.topics[q.TopicID]
-if !ok || !topic.IsActive {
-continue
-}
-if len(catSet) > 0 && !catSet[topic.Category] && topic.Category != "all" {
-continue
-}
-if !inDiff(q.Difficulty) {
-continue
-}
-cp := *q
-result = append(result, &cp)
-}
+	var result []*models.Question
+	for _, q := range db.questions {
+		topic, ok := db.topics[q.TopicID]
+		if !ok || !topic.IsActive {
+			continue
+		}
+		if len(catSet) > 0 && !catSet[topic.Category] && topic.Category != "all" {
+			continue
+		}
+		if !inDiff(q.Difficulty) {
+			continue
+		}
+		cp := *q
+		result = append(result, &cp)
+	}
 
-// shuffle
-for i := len(result) - 1; i > 0; i-- {
-j := i // simple deterministic shuffle for tests
-result[i], result[j] = result[j], result[i]
-}
-if limit > 0 && len(result) > limit {
-result = result[:limit]
-}
-return result, nil
+	// shuffle
+	for i := len(result) - 1; i > 0; i-- {
+		j := i // simple deterministic shuffle for tests
+		result[i], result[j] = result[j], result[i]
+	}
+	if limit > 0 && len(result) > limit {
+		result = result[:limit]
+	}
+	return result, nil
 }
 
 func (db *InMemoryDB) AssignExamToUser(examID, userID, assignedBy int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
-// check for duplicates
-for _, a := range db.examAssignments {
-if a.ExamID == examID && a.UserID == userID {
-return nil // ignore duplicate
-}
-}
-a := &models.ExamAssignment{
-ID:         db.nextExamAssignID,
-ExamID:     examID,
-UserID:     userID,
-AssignedAt: time.Now(),
-AssignedBy: assignedBy,
-}
-db.nextExamAssignID++
-db.examAssignments[a.ID] = a
-return nil
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	user, exists := db.users[userID]
+	if !exists {
+		return ErrNotFound
+	}
+	if user.IsAdmin {
+		return fmt.Errorf("cannot assign exam to admin user")
+	}
+	if !user.IsActive {
+		return fmt.Errorf("user is inactive")
+	}
+	// check for duplicates
+	for _, a := range db.examAssignments {
+		if a.ExamID == examID && a.UserID == userID {
+			return nil // ignore duplicate
+		}
+	}
+	a := &models.ExamAssignment{
+		ID:         db.nextExamAssignID,
+		ExamID:     examID,
+		UserID:     userID,
+		AssignedAt: time.Now(),
+		AssignedBy: assignedBy,
+	}
+	db.nextExamAssignID++
+	db.examAssignments[a.ID] = a
+	return nil
 }
 
 func (db *InMemoryDB) GetAssignedExamsForUser(userID int) ([]*models.ExamInfo, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-var result []*models.ExamInfo
-for _, a := range db.examAssignments {
-if a.UserID != userID {
-continue
-}
-exam, ok := db.exams[a.ExamID]
-if !ok {
-continue
-}
-info := &models.ExamInfo{
-ExamAssignment: *a,
-ExamName:       exam.Name,
-QuestionCount:  exam.QuestionCount,
-AccessToken:    exam.AccessToken,
-}
-// Find most recent completed attempt
-var bestAttempt *models.ExamAttempt
-for _, att := range db.examAttempts {
-if att.ExamID == a.ExamID && att.UserID == userID && att.CompletedAt != nil {
-if bestAttempt == nil || att.ID > bestAttempt.ID {
-bestAttempt = att
-}
-}
-}
-if bestAttempt != nil {
-info.CompletedAt = bestAttempt.CompletedAt
-ca := bestAttempt.CorrectAnswers
-info.CorrectAnswers = &ca
-tq := bestAttempt.TotalQuestions
-info.TotalQuestions = &tq
-s := bestAttempt.Score
-info.Score = &s
-}
-result = append(result, info)
-}
-if result == nil {
-result = []*models.ExamInfo{}
-}
-return result, nil
+	var result []*models.ExamInfo
+	for _, a := range db.examAssignments {
+		if a.UserID != userID {
+			continue
+		}
+		exam, ok := db.exams[a.ExamID]
+		if !ok {
+			continue
+		}
+		info := &models.ExamInfo{
+			ExamAssignment: *a,
+			ExamName:       exam.Name,
+			QuestionCount:  exam.QuestionCount,
+			AccessToken:    exam.AccessToken,
+		}
+		// Find most recent completed attempt
+		var bestAttempt *models.ExamAttempt
+		for _, att := range db.examAttempts {
+			if att.ExamID == a.ExamID && att.UserID == userID && att.CompletedAt != nil {
+				if bestAttempt == nil || att.ID > bestAttempt.ID {
+					bestAttempt = att
+				}
+			}
+		}
+		if bestAttempt != nil {
+			info.CompletedAt = bestAttempt.CompletedAt
+			ca := bestAttempt.CorrectAnswers
+			info.CorrectAnswers = &ca
+			tq := bestAttempt.TotalQuestions
+			info.TotalQuestions = &tq
+			s := bestAttempt.Score
+			info.Score = &s
+		}
+		result = append(result, info)
+	}
+	if result == nil {
+		result = []*models.ExamInfo{}
+	}
+	return result, nil
 }
 
 func (db *InMemoryDB) CreateExamAttempt(attempt *models.ExamAttempt) error {
-db.mu.Lock()
-defer db.mu.Unlock()
-attempt.ID = db.nextExamAttemptID
-db.nextExamAttemptID++
-cp := *attempt
-if cp.Answers == nil {
-cp.Answers = map[string]int{}
-}
-if cp.QuestionResults == nil {
-cp.QuestionResults = map[string]bool{}
-}
-db.examAttempts[cp.ID] = &cp
-return nil
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	attempt.ID = db.nextExamAttemptID
+	db.nextExamAttemptID++
+	cp := *attempt
+	if cp.Answers == nil {
+		cp.Answers = map[string]int{}
+	}
+	if cp.QuestionResults == nil {
+		cp.QuestionResults = map[string]bool{}
+	}
+	db.examAttempts[cp.ID] = &cp
+	return nil
 }
 
 func (db *InMemoryDB) GetExamAttempt(id int) (*models.ExamAttempt, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
-a, ok := db.examAttempts[id]
-if !ok {
-return nil, ErrNotFound
-}
-cp := *a
-return &cp, nil
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+	a, ok := db.examAttempts[id]
+	if !ok {
+		return nil, ErrNotFound
+	}
+	cp := *a
+	return &cp, nil
 }
 
 func (db *InMemoryDB) SubmitExamAttempt(attemptID int, answers map[string]int) error {
-db.mu.Lock()
-defer db.mu.Unlock()
+	db.mu.Lock()
+	defer db.mu.Unlock()
 
-attempt, ok := db.examAttempts[attemptID]
-if !ok {
-return ErrNotFound
-}
-exam, ok := db.exams[attempt.ExamID]
-if !ok {
-return ErrNotFound
-}
+	attempt, ok := db.examAttempts[attemptID]
+	if !ok {
+		return ErrNotFound
+	}
+	exam, ok := db.exams[attempt.ExamID]
+	if !ok {
+		return ErrNotFound
+	}
 
-attempt.Answers = answers
-attempt.QuestionResults = map[string]bool{}
-attempt.CorrectAnswers = 0
-attempt.TotalQuestions = len(exam.QuestionIDs)
+	attempt.Answers = answers
+	attempt.QuestionResults = map[string]bool{}
+	attempt.CorrectAnswers = 0
+	attempt.TotalQuestions = len(exam.QuestionIDs)
 
-for _, qid := range exam.QuestionIDs {
-key := fmt.Sprintf("%d", qid)
-answerID, ok := answers[key]
-if !ok {
-attempt.QuestionResults[key] = false
-continue
-}
-answer, ok := db.answers[answerID]
-if ok && answer.QuestionID == qid && answer.IsCorrect {
-attempt.CorrectAnswers++
-attempt.QuestionResults[key] = true
-} else {
-attempt.QuestionResults[key] = false
-}
-}
+	for _, qid := range exam.QuestionIDs {
+		key := fmt.Sprintf("%d", qid)
+		answerID, ok := answers[key]
+		if !ok {
+			attempt.QuestionResults[key] = false
+			continue
+		}
+		answer, ok := db.answers[answerID]
+		if ok && answer.QuestionID == qid && answer.IsCorrect {
+			attempt.CorrectAnswers++
+			attempt.QuestionResults[key] = true
+		} else {
+			attempt.QuestionResults[key] = false
+		}
+	}
 
-if attempt.TotalQuestions > 0 {
-attempt.Score = float64(attempt.CorrectAnswers) / float64(attempt.TotalQuestions) * 100
-}
-now := time.Now()
-attempt.CompletedAt = &now
-return nil
+	if attempt.TotalQuestions > 0 {
+		attempt.Score = float64(attempt.CorrectAnswers) / float64(attempt.TotalQuestions) * 100
+	}
+	now := time.Now()
+	attempt.CompletedAt = &now
+	return nil
 }
 
 func (db *InMemoryDB) GetExamStatus(examID int) (*models.ExamStatus, error) {
-db.mu.RLock()
-defer db.mu.RUnlock()
+	db.mu.RLock()
+	defer db.mu.RUnlock()
 
-exam, ok := db.exams[examID]
-if !ok {
-return nil, ErrNotFound
-}
+	exam, ok := db.exams[examID]
+	if !ok {
+		return nil, ErrNotFound
+	}
 
-status := &models.ExamStatus{
-ExamID:         exam.ID,
-ExamName:       exam.Name,
-QuestionCount:  exam.QuestionCount,
-StudentResults: []models.ExamStudentResult{},
-}
+	status := &models.ExamStatus{
+		ExamID:         exam.ID,
+		ExamName:       exam.Name,
+		QuestionCount:  exam.QuestionCount,
+		StudentResults: []models.ExamStudentResult{},
+	}
 
-for _, a := range db.examAssignments {
-if a.ExamID != examID {
-continue
-}
-user, ok := db.users[a.UserID]
-if !ok {
-continue
-}
-r := models.ExamStudentResult{
-UserID:     a.UserID,
-Username:   user.Username,
-AssignedAt: a.AssignedAt,
-}
-// Find most recent completed attempt
-for _, att := range db.examAttempts {
-if att.ExamID == examID && att.UserID == a.UserID && att.CompletedAt != nil {
-r.CompletedAt = att.CompletedAt
-ca := att.CorrectAnswers
-r.CorrectAnswers = &ca
-tq := att.TotalQuestions
-r.TotalQuestions = &tq
-s := att.Score
-r.Score = &s
-}
-}
-status.StudentResults = append(status.StudentResults, r)
-}
-return status, nil
+	for _, a := range db.examAssignments {
+		if a.ExamID != examID {
+			continue
+		}
+		user, ok := db.users[a.UserID]
+		if !ok {
+			continue
+		}
+		r := models.ExamStudentResult{
+			UserID:     a.UserID,
+			Username:   user.Username,
+			AssignedAt: a.AssignedAt,
+		}
+		// Find most recent completed attempt
+		for _, att := range db.examAttempts {
+			if att.ExamID == examID && att.UserID == a.UserID && att.CompletedAt != nil {
+				r.CompletedAt = att.CompletedAt
+				ca := att.CorrectAnswers
+				r.CorrectAnswers = &ca
+				tq := att.TotalQuestions
+				r.TotalQuestions = &tq
+				s := att.Score
+				r.Score = &s
+			}
+		}
+		status.StudentResults = append(status.StudentResults, r)
+	}
+	return status, nil
 }

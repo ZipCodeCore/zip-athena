@@ -152,14 +152,14 @@ async function loadExamAssignStudentsList() {
         const response = await fetch('/instructor/students', {headers: {'X-User-ID': userId}});
         const students = await response.json();
         if (!students || students.length === 0) {
-            container.innerHTML = '<small class="text-muted">No students found.</small>';
+            container.innerHTML = '<small class="text-muted">No active students found.</small>';
             return;
         }
         container.innerHTML = '';
         students.forEach((student) => {
             if (student.is_admin) return;
 
-            const studentId = Number(student.id);
+            const studentId = Number(student.user_id ?? student.id);
             if (!Number.isFinite(studentId)) return;
 
             const div = document.createElement('div');

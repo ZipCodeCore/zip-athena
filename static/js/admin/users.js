@@ -26,6 +26,7 @@ export async function loadUsers() {
                 <td>${escapeHtml(user.email)}</td>
                 <td>${escapeHtml(normalizeCategory(user.category))}</td>
                 <td>${user.is_admin ? 'Yes' : 'No'}</td>
+                <td>${user.is_active ? 'Yes' : 'No'}</td>
                 <td>${user.total_points}</td>
                 <td>${new Date(user.created_at).toLocaleDateString()}</td>
                 <td>
@@ -38,7 +39,7 @@ export async function loadUsers() {
         });
     } catch (error) {
         console.error('Error loading users:', error);
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-danger py-3">Failed to load users. Please refresh the page to try again.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-danger py-3">Failed to load users. Please refresh the page to try again.</td></tr>';
     }
 }
 
@@ -68,6 +69,7 @@ export async function editUser(userId) {
     document.getElementById('userTotalPoints').value = user.total_points;
     document.getElementById('userCategory').value = normalizeCategory(user.category);
     document.getElementById('userIsAdmin').checked = user.is_admin;
+    document.getElementById('userIsActive').checked = user.is_active !== false;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
 
@@ -81,6 +83,7 @@ export function showCreateUserModal() {
     document.getElementById('userTotalPoints').value = '0';
     document.getElementById('userCategory').value = DEFAULT_CATEGORY;
     document.getElementById('userIsAdmin').checked = false;
+    document.getElementById('userIsActive').checked = true;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
 
@@ -99,7 +102,8 @@ export async function saveUser() {
         email: document.getElementById('userEmail').value,
         total_points: totalPoints,
         category: document.getElementById('userCategory').value,
-        is_admin: document.getElementById('userIsAdmin').checked
+        is_admin: document.getElementById('userIsAdmin').checked,
+        is_active: document.getElementById('userIsActive').checked
     };
 
     // Add password if creating or if it's been changed
