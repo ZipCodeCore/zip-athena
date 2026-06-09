@@ -10,13 +10,17 @@ export function setCurrentUser(user) {
 }
 
 export async function loadUsers() {
-    const tbody = document.getElementById('usersTable');
-    if (!tbody) return;
+    const adminsTable = document.getElementById('adminsTable');
+    const activeStudentsTable = document.getElementById('activeStudentsTable');
+    const inactiveStudentsTable = document.getElementById('inactiveStudentsTable');
+    if (!adminsTable || !activeStudentsTable || !inactiveStudentsTable) return;
     try {
         console.log('Loading users with X-User-ID:', currentUser.id.toString());
         const users = await API.get('/admin/users');
         console.log('Loaded users:', users.length, 'users');
-        tbody.innerHTML = '';
+        adminsTable.innerHTML = '';
+        activeStudentsTable.innerHTML = '';
+        inactiveStudentsTable.innerHTML = '';
 
         users.forEach(user => {
             const row = document.createElement('tr');
@@ -25,7 +29,6 @@ export async function loadUsers() {
                 <td>${escapeHtml(user.username)}</td>
                 <td>${escapeHtml(user.email)}</td>
                 <td>${escapeHtml(normalizeCategory(user.category))}</td>
-                <td>${user.is_admin ? 'Yes' : 'No'}</td>
                 <td>${user.total_points}</td>
                 <td>${new Date(user.created_at).toLocaleDateString()}</td>
                 <td>
@@ -34,11 +37,20 @@ export async function loadUsers() {
                             ${user.id === currentUser.id ? 'disabled' : ''}>Delete</button>
                 </td>
             `;
-            tbody.appendChild(row);
+            if (user.is_admin) {
+                adminsTable.appendChild(row);
+            } else if (user.is_active) {
+                activeStudentsTable.appendChild(row);
+            } else {
+                inactiveStudentsTable.appendChild(row);
+            }
         });
     } catch (error) {
         console.error('Error loading users:', error);
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-danger py-3">Failed to load users. Please refresh the page to try again.</td></tr>';
+        const msg = '<tr><td colspan="7" class="text-center text-danger py-3">Failed to load users. Please refresh the page to try again.</td></tr>';
+        if (adminsTable) adminsTable.innerHTML = msg;
+        if (activeStudentsTable) activeStudentsTable.innerHTML = msg;
+        if (inactiveStudentsTable) inactiveStudentsTable.innerHTML = msg;
     }
 }
 
@@ -68,6 +80,7 @@ export async function editUser(userId) {
     document.getElementById('userTotalPoints').value = user.total_points;
     document.getElementById('userCategory').value = normalizeCategory(user.category);
     document.getElementById('userIsAdmin').checked = user.is_admin;
+    document.getElementById('userIsActive').checked = user.is_active;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
 
@@ -81,6 +94,7 @@ export function showCreateUserModal() {
     document.getElementById('userTotalPoints').value = '0';
     document.getElementById('userCategory').value = DEFAULT_CATEGORY;
     document.getElementById('userIsAdmin').checked = false;
+    document.getElementById('userIsActive').checked = true;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
 
@@ -99,7 +113,8 @@ export async function saveUser() {
         email: document.getElementById('userEmail').value,
         total_points: totalPoints,
         category: document.getElementById('userCategory').value,
-        is_admin: document.getElementById('userIsAdmin').checked
+        is_admin: document.getElementById('userIsAdmin').checked,
+        is_active: document.getElementById('userIsActive').checked
     };
 
     // Add password if creating or if it's been changed

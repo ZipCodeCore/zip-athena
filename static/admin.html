@@ -49,22 +49,80 @@
             <h2>User Management</h2>
             <button class="btn btn-primary" onclick="showCreateUserModal()">Add User</button>
         </div>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Category</th>
-                        <th>Is Admin</th>
-                        <th>Total Points</th>
-                        <th>Created At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="usersTable"></tbody>
-            </table>
+
+        <!-- User tabs -->
+        <ul class="nav nav-tabs mb-3" id="userTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="admins-tab" data-bs-toggle="tab" data-bs-target="#admins-pane" type="button" role="tab" aria-controls="admins-pane" aria-selected="true">Admins</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="active-students-tab" data-bs-toggle="tab" data-bs-target="#active-students-pane" type="button" role="tab" aria-controls="active-students-pane" aria-selected="false">Active Students</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="inactive-students-tab" data-bs-toggle="tab" data-bs-target="#inactive-students-pane" type="button" role="tab" aria-controls="inactive-students-pane" aria-selected="false">Inactive Students</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="userTabsContent">
+            <!-- Admins Tab -->
+            <div class="tab-pane fade show active" id="admins-pane" role="tabpanel" aria-labelledby="admins-tab">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Category</th>
+                                <th>Total Points</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Active Students Tab -->
+            <div class="tab-pane fade" id="active-students-pane" role="tabpanel" aria-labelledby="active-students-tab">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Category</th>
+                                <th>Total Points</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activeStudentsTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Inactive Students Tab -->
+            <div class="tab-pane fade" id="inactive-students-pane" role="tabpanel" aria-labelledby="inactive-students-tab">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Category</th>
+                                <th>Total Points</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inactiveStudentsTable"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -106,6 +164,10 @@
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="userIsAdmin">
                             <label class="form-check-label" for="userIsAdmin">Is Admin</label>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="userIsActive" checked>
+                            <label class="form-check-label" for="userIsActive">Is Active</label>
                         </div>
                     </form>
                 </div>
