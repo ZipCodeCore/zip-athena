@@ -162,7 +162,7 @@ func (db *SQLiteDB) AssignExamToUser(examID, userID, assignedBy int) error {
 		return err
 	}
 	if user.IsAdmin {
-		return fmt.Errorf("user is not a student")
+		return fmt.Errorf("cannot assign exam to admin user")
 	}
 	if !user.IsActive {
 		return fmt.Errorf("user is inactive")
