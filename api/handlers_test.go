@@ -22,6 +22,7 @@ func TestCreateUserHandler(t *testing.T) {
 		Username: "testuser",
 		Email:    "test@example.com",
 		IsAdmin:  false,
+		IsActive: true,
 	}
 
 	body, _ := json.Marshal(user)
@@ -654,6 +655,7 @@ func TestCreateUserWithPasswordHashing(t *testing.T) {
 		Email:    "test@example.com",
 		Password: testPassword,
 		IsAdmin:  false,
+		IsActive: true,
 	}
 
 	body, _ := json.Marshal(user)
@@ -739,6 +741,7 @@ func TestUpdateUserPasswordHashing(t *testing.T) {
 		Email:    "test@example.com",
 		Password: initialPassword,
 		IsAdmin:  false,
+		IsActive: true,
 	}
 
 	createBody, _ := json.Marshal(user)
@@ -777,6 +780,7 @@ func TestUpdateUserPasswordHashing(t *testing.T) {
 		Email:       "test@example.com",
 		Password:    newPassword,
 		IsAdmin:     false,
+		IsActive:    true,
 		TotalPoints: 0,
 	}
 
