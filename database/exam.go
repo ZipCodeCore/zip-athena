@@ -157,7 +157,17 @@ func (db *SQLiteDB) GetQuestionsByCategories(categories []string, difficultyLeve
 }
 
 func (db *SQLiteDB) AssignExamToUser(examID, userID, assignedBy int) error {
-	_, err := db.db.Exec(
+	user, err := db.GetUser(userID)
+	if err != nil {
+		return err
+	}
+	if user.IsAdmin {
+		return fmt.Errorf("user is not a student")
+	}
+	if !user.IsActive {
+		return fmt.Errorf("user is inactive")
+	}
+	_, err = db.db.Exec(
 		`INSERT OR IGNORE INTO exam_assignments (exam_id, user_id, assigned_by, assigned_at) VALUES (?, ?, ?, ?)`,
 		examID, userID, assignedBy, time.Now(),
 	)

@@ -46,10 +46,32 @@ func (h *Handler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user models.User
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+	var body struct {
+		Username    string `json:"username"`
+		Email       string `json:"email"`
+		Password    string `json:"password"`
+		IsAdmin     bool   `json:"is_admin"`
+		IsActive    *bool  `json:"is_active"`
+		Category    string `json:"category"`
+		TotalPoints int    `json:"total_points"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
+	}
+
+	user := models.User{
+		Username:    body.Username,
+		Email:       body.Email,
+		Password:    body.Password,
+		IsAdmin:     body.IsAdmin,
+		IsActive:    true,
+		IsActiveSet: body.IsActive != nil,
+		Category:    body.Category,
+		TotalPoints: body.TotalPoints,
+	}
+	if body.IsActive != nil {
+		user.IsActive = *body.IsActive
 	}
 
 	// Hash password if provided

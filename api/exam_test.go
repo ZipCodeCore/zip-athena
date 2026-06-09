@@ -32,7 +32,7 @@ func setupExamDB(t *testing.T) (*database.InMemoryDB, *models.User, *models.User
 		q := &models.Question{
 			TopicID:         topic.ID,
 			QuestionText:    fmt.Sprintf("Question %d?", i),
-			Difficulty:      i % 3 + 1, // cycles through 2,3,1
+			Difficulty:      i%3 + 1, // cycles through 2,3,1
 			Tags:            []string{"java"},
 			TopicQuestionID: fmt.Sprintf("%d.%d", topic.ID, i),
 			IsActive:        true,
@@ -167,6 +167,44 @@ func TestAssignExamToStudentsHandler(t *testing.T) {
 	}
 }
 
+func TestAssignExamToStudentsHandler_InactiveStudentRejected(t *testing.T) {
+	db, admin, student := setupExamDB(t)
+	handler := NewHandler(db)
+
+	student.IsActive = false
+	if err := db.UpdateUser(student); err != nil {
+		t.Fatalf("failed to deactivate student: %v", err)
+	}
+
+	exam := &models.Exam{
+		Name: "Assigned Exam", Categories: []string{"java"}, DifficultyLevels: []int{1},
+		QuestionIDs: []int{1}, QuestionCount: 1, AccessToken: "inactive-token",
+		CreatedBy: admin.ID, CreatedAt: time.Now(),
+	}
+	db.CreateExam(exam)
+
+	body, _ := json.Marshal(map[string]interface{}{
+		"user_ids": []int{student.ID},
+	})
+
+	req := httptest.NewRequest(http.MethodPost, fmt.Sprintf("/instructor/exams/assign?exam_id=%d", exam.ID), bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-User-ID", fmt.Sprintf("%d", admin.ID))
+	w := httptest.NewRecorder()
+
+	handler.AssignExamToStudentsHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d: %s", w.Code, w.Body.String())
+	}
+
+	var result map[string]interface{}
+	json.NewDecoder(w.Body).Decode(&result)
+	if result["assigned"].(float64) != 0 {
+		t.Errorf("Expected assigned=0, got %v", result["assigned"])
+	}
+}
+
 func TestGetAssignedExamsHandler(t *testing.T) {
 	db, admin, student := setupExamDB(t)
 	handler := NewHandler(db)
@@ -260,6 +298,29 @@ func TestStartExamHandler_NotAssigned(t *testing.T) {
 
 	if w.Code != http.StatusForbidden {
 		t.Errorf("Expected status 403, got %d", w.Code)
+	}
+}
+
+func TestStartExamHandler_AllowsAdminPreview(t *testing.T) {
+	db, admin, student := setupExamDB(t)
+	handler := NewHandler(db)
+
+	exam := &models.Exam{
+		Name: "Preview Exam", Categories: []string{"java"}, DifficultyLevels: []int{1, 2, 3},
+		QuestionIDs: []int{1}, QuestionCount: 1, AccessToken: "preview-token",
+		CreatedBy: admin.ID, CreatedAt: time.Now(),
+	}
+	db.CreateExam(exam)
+	db.AssignExamToUser(exam.ID, student.ID, admin.ID)
+
+	req := httptest.NewRequest(http.MethodPost,
+		fmt.Sprintf("/exam/start?token=%s&user_id=%d", exam.AccessToken, admin.ID), nil)
+	w := httptest.NewRecorder()
+
+	handler.StartExamHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d: %s", w.Code, w.Body.String())
 	}
 }
 
