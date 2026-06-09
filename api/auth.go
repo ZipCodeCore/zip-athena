@@ -86,6 +86,8 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		Email:       req.Email,
 		Password:    hashedPassword,
 		IsAdmin:     false,
+		IsActive:    true,
+		IsActiveSet: true,
 		TotalPoints: 0,
 		CreatedAt:   time.Now(),
 	}
@@ -93,8 +95,8 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	// Try to create the user in SQLite database
 	if sqlDB, ok := h.db.(*database.SQLiteDB); ok {
 		result, err := sqlDB.DB().Exec(
-			"INSERT INTO users (username, email, password, is_admin, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-			user.Username, user.Email, user.Password, user.IsAdmin, user.TotalPoints, user.CreatedAt,
+			"INSERT INTO users (username, email, password, is_admin, is_active, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+			user.Username, user.Email, user.Password, user.IsAdmin, user.IsActive, user.TotalPoints, user.CreatedAt,
 		)
 		if err != nil {
 			h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
@@ -190,6 +192,11 @@ func (h *Handler) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if !checkPasswordHash(req.Password, user.Password) {
 		h.logger.LogAuthentication(r.Context(), req.Username, false, "invalid password")
 		http.Error(w, "Invalid username or password", http.StatusUnauthorized)
+		return
+	}
+	if !user.IsActive {
+		h.logger.LogAuthentication(r.Context(), req.Username, false, "inactive user")
+		http.Error(w, "Account is inactive", http.StatusUnauthorized)
 		return
 	}
 

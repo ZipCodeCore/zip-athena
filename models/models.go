@@ -9,6 +9,8 @@ type User struct {
 	Email       string    `json:"email"`
 	Password    string    `json:"password,omitempty"` // Only used for auth, not returned in API
 	IsAdmin     bool      `json:"is_admin"`
+	IsActive    bool      `json:"is_active"`
+	IsActiveSet bool      `json:"-"`
 	Category    string    `json:"category"` // "java" or "data" - determines accessible topics and resources
 	TotalPoints int       `json:"total_points"`
 	CreatedAt   time.Time `json:"created_at"`
@@ -58,9 +60,9 @@ type QuizAttempt struct {
 	CompletedTime     *time.Time      `json:"completed_time,omitempty"`
 	TotalQuestions    int             `json:"total_questions"`
 	CorrectAnswers    int             `json:"correct_answers"`
-	DifficultyAverage float64         `json:"difficulty_average"`  // Average difficulty of all questions in quiz (1-7 scale)
-	Description       string          `json:"quiz_description"`    // Human-readable description (e.g., "Python Basics Quiz")
-	QuestionIDs       []string        `json:"question_ids"`        // List of topic_question_id
+	DifficultyAverage float64         `json:"difficulty_average"` // Average difficulty of all questions in quiz (1-7 scale)
+	Description       string          `json:"quiz_description"`   // Human-readable description (e.g., "Python Basics Quiz")
+	QuestionIDs       []string        `json:"question_ids"`       // List of topic_question_id
 	QuestionResults   map[string]bool `json:"question_results"`   // topic_question_id -> correct/incorrect
 }
 
@@ -121,11 +123,11 @@ type AssignedQuizStudentResult struct {
 
 // AssignedQuizStatus represents the instructor status view for an assigned quiz
 type AssignedQuizStatus struct {
-	QuizID         int                         `json:"quiz_id"`
-	QuizName       string                      `json:"quiz_name"`
-	QuizCategory   string                      `json:"quiz_category"`
-	QuizDescription string                     `json:"quiz_description"`
-	StudentResults []AssignedQuizStudentResult `json:"student_results"`
+	QuizID          int                         `json:"quiz_id"`
+	QuizName        string                      `json:"quiz_name"`
+	QuizCategory    string                      `json:"quiz_category"`
+	QuizDescription string                      `json:"quiz_description"`
+	StudentResults  []AssignedQuizStudentResult `json:"student_results"`
 }
 
 // UserQuestionState tracks FSRS state for each user-question pair
@@ -437,15 +439,15 @@ type FlaggedQuestion struct {
 // Exam represents a named assigned exam generated from random questions
 // filtered by category and difficulty level.
 type Exam struct {
-	ID              int       `json:"id"`
-	Name            string    `json:"name"`
-	Categories      []string  `json:"categories"`       // e.g. ["java","python"]
-	DifficultyLevels []int    `json:"difficulty_levels"` // 1=easy,2=medium,3=hard
-	QuestionIDs     []int     `json:"question_ids"`      // IDs chosen at generation time
-	QuestionCount   int       `json:"question_count"`
-	AccessToken     string    `json:"access_token"`
-	CreatedBy       int       `json:"created_by"`
-	CreatedAt       time.Time `json:"created_at"`
+	ID               int       `json:"id"`
+	Name             string    `json:"name"`
+	Categories       []string  `json:"categories"`        // e.g. ["java","python"]
+	DifficultyLevels []int     `json:"difficulty_levels"` // 1=easy,2=medium,3=hard
+	QuestionIDs      []int     `json:"question_ids"`      // IDs chosen at generation time
+	QuestionCount    int       `json:"question_count"`
+	AccessToken      string    `json:"access_token"`
+	CreatedBy        int       `json:"created_by"`
+	CreatedAt        time.Time `json:"created_at"`
 }
 
 // ExamAssignment represents an exam assigned to a specific student

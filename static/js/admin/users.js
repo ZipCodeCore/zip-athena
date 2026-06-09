@@ -80,7 +80,7 @@ export async function editUser(userId) {
     document.getElementById('userTotalPoints').value = user.total_points;
     document.getElementById('userCategory').value = normalizeCategory(user.category);
     document.getElementById('userIsAdmin').checked = user.is_admin;
-    document.getElementById('userIsActive').checked = user.is_active;
+    document.getElementById('userIsActive').checked = user.is_active !== false;
     new bootstrap.Modal(document.getElementById('userModal')).show();
 }
 

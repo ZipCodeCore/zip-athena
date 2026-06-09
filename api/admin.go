@@ -37,6 +37,10 @@ func (h *Handler) AdminMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "Forbidden: Admin access required", http.StatusForbidden)
 			return
 		}
+		if !user.IsActive {
+			http.Error(w, "Forbidden: Inactive user", http.StatusForbidden)
+			return
+		}
 
 		next(w, r)
 	}
@@ -79,10 +83,40 @@ func (h *Handler) UpdateUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user models.User
-	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+	var body struct {
+		Username    string `json:"username"`
+		Email       string `json:"email"`
+		Password    string `json:"password"`
+		IsAdmin     bool   `json:"is_admin"`
+		IsActive    *bool  `json:"is_active"`
+		Category    string `json:"category"`
+		TotalPoints int    `json:"total_points"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
+	}
+
+	existing, err := h.db.GetUser(id)
+	if err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "User not found", http.StatusNotFound)
+			return
+		}
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get user for update")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	user := *existing
+	user.Username = body.Username
+	user.Email = body.Email
+	user.Password = body.Password
+	user.IsAdmin = body.IsAdmin
+	user.Category = body.Category
+	user.TotalPoints = body.TotalPoints
+	if body.IsActive != nil {
+		user.IsActive = *body.IsActive
 	}
 
 	// Hash password if provided

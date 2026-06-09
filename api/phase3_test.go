@@ -826,6 +826,46 @@ func TestListStudents(t *testing.T) {
 	}
 }
 
+func TestListStudentsFiltersInactiveUsers(t *testing.T) {
+	db := database.NewInMemoryDB()
+	handler := NewHandler(db)
+
+	admin := &models.User{Username: "admin", Email: "admin@test.com", IsAdmin: true, CreatedAt: time.Now()}
+	db.CreateUser(admin)
+
+	activeStudent := &models.User{Username: "active", Email: "active@test.com", CreatedAt: time.Now()}
+	db.CreateUser(activeStudent)
+
+	inactiveStudent := &models.User{Username: "inactive", Email: "inactive@test.com", CreatedAt: time.Now()}
+	db.CreateUser(inactiveStudent)
+	inactiveStudent.IsActive = false
+	if err := db.UpdateUser(inactiveStudent); err != nil {
+		t.Fatalf("failed to update inactive student: %v", err)
+	}
+
+	req := httptest.NewRequest("GET", "/instructor/students", nil)
+	req.Header.Set("X-User-ID", "1")
+	w := httptest.NewRecorder()
+
+	handler.AdminMiddleware(handler.ListStudentsHandler)(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d", w.Code)
+	}
+
+	var students []*models.StudentProgress
+	if err := json.NewDecoder(w.Body).Decode(&students); err != nil {
+		t.Fatalf("failed to decode students: %v", err)
+	}
+
+	if len(students) != 1 {
+		t.Fatalf("Expected 1 active student, got %d", len(students))
+	}
+	if students[0].Username != activeStudent.Username {
+		t.Fatalf("Expected active student %q, got %q", activeStudent.Username, students[0].Username)
+	}
+}
+
 func TestSearchStudents(t *testing.T) {
 	db := database.NewInMemoryDB()
 	handler := NewHandler(db)

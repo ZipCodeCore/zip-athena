@@ -236,7 +236,7 @@ func (db *SQLiteDB) GetCohortAnalytics() (*models.CohortAnalytics, error) {
 
 func (db *SQLiteDB) ListStudentsWithMetrics(searchQuery string, sortBy string, filterCohort string) ([]*models.StudentProgress, error) {
 	// Get all non-admin users
-	query := "SELECT id FROM users WHERE is_admin = 0"
+	query := "SELECT id FROM users WHERE is_admin = 0 AND is_active = 1"
 	args := []interface{}{}
 
 	// Add search filter if provided
@@ -562,4 +562,3 @@ func (db *SQLiteDB) UpdateQuestionDifficultyFromAnalytics(questionID int, newDif
 	_, err := db.db.Exec("UPDATE questions SET difficulty = ? WHERE id = ?", newDifficulty, questionID)
 	return err
 }
-
