@@ -1039,3 +1039,81 @@ func TestDashboardStatsArePerUser(t *testing.T) {
 		}
 	}
 }
+
+// TestGetProgressHandlerQuizzesLast7Days verifies the quizzes_last_7_days field
+// counts only quiz attempts started within the last 7 days.
+func TestGetProgressHandlerQuizzesLast7Days(t *testing.T) {
+db := database.NewInMemoryDB()
+handler := NewHandler(db)
+
+user := &models.User{Username: "testuser7days", Email: "7days@example.com"}
+if err := db.CreateUser(user); err != nil {
+t.Fatalf("Failed to create user: %v", err)
+}
+
+now := time.Now()
+
+// Attempt started 3 days ago (within last 7 days)
+recent1 := &models.QuizAttempt{
+UserID:          user.ID,
+StartTime:       now.AddDate(0, 0, -3),
+TotalQuestions:  5,
+CorrectAnswers:  3,
+QuestionIDs:     []string{},
+QuestionResults: map[string]bool{},
+}
+if err := db.CreateQuizAttempt(recent1); err != nil {
+t.Fatalf("Failed to create recent quiz attempt: %v", err)
+}
+
+// Attempt started 6 days ago (within last 7 days)
+recent2 := &models.QuizAttempt{
+UserID:          user.ID,
+StartTime:       now.AddDate(0, 0, -6),
+TotalQuestions:  5,
+CorrectAnswers:  4,
+QuestionIDs:     []string{},
+QuestionResults: map[string]bool{},
+}
+if err := db.CreateQuizAttempt(recent2); err != nil {
+t.Fatalf("Failed to create recent quiz attempt: %v", err)
+}
+
+// Attempt started 10 days ago (older than 7 days, should NOT be counted)
+old := &models.QuizAttempt{
+UserID:          user.ID,
+StartTime:       now.AddDate(0, 0, -10),
+TotalQuestions:  5,
+CorrectAnswers:  2,
+QuestionIDs:     []string{},
+QuestionResults: map[string]bool{},
+}
+if err := db.CreateQuizAttempt(old); err != nil {
+t.Fatalf("Failed to create old quiz attempt: %v", err)
+}
+
+req := httptest.NewRequest(http.MethodGet, "/progress?user_id="+strconv.Itoa(user.ID), nil)
+w := httptest.NewRecorder()
+handler.GetProgressHandler(w, req)
+
+if w.Code != http.StatusOK {
+t.Errorf("Expected status %d, got %d", http.StatusOK, w.Code)
+}
+
+var progress map[string]interface{}
+if err := json.NewDecoder(w.Body).Decode(&progress); err != nil {
+t.Fatalf("Failed to decode response: %v", err)
+}
+
+// total_quizzes should include all 3 attempts
+totalQuizzes := int(progress["total_quizzes"].(float64))
+if totalQuizzes != 3 {
+t.Errorf("Expected total_quizzes to be 3, got %d", totalQuizzes)
+}
+
+// quizzes_last_7_days should only count the 2 recent ones
+quizzesLast7Days := int(progress["quizzes_last_7_days"].(float64))
+if quizzesLast7Days != 2 {
+t.Errorf("Expected quizzes_last_7_days to be 2 (3-day and 6-day old), got %d", quizzesLast7Days)
+}
+}

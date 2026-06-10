@@ -715,7 +715,13 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 	// Calculate statistics
 	totalQuestions := 0
 	totalCorrect := 0
+	sevenDaysAgo := time.Now().AddDate(0, 0, -7)
+	quizzesLast7Days := 0
 	for _, qa := range quizAttempts {
+		// Count quizzes started in the last 7 days (inclusive of exactly 7 days ago)
+		if !qa.StartTime.Before(sevenDaysAgo) {
+			quizzesLast7Days++
+		}
 		// Count questions answered from all quizzes (completed and in-progress)
 		// For completed quizzes, all questions were answered
 		// For in-progress quizzes, count only the questions that have been answered
@@ -732,13 +738,14 @@ func (h *Handler) GetProgressHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	progress := map[string]interface{}{
-		"user":              user,
-		"total_points":      user.TotalPoints,
-		"total_quizzes":     len(quizAttempts),
-		"total_questions":   totalQuestions,
-		"total_correct":     totalCorrect,
-		"quiz_attempts":     quizAttempts,
-		"question_attempts": questionAttempts,
+		"user":                 user,
+		"total_points":         user.TotalPoints,
+		"total_quizzes":        len(quizAttempts),
+		"quizzes_last_7_days":  quizzesLast7Days,
+		"total_questions":      totalQuestions,
+		"total_correct":        totalCorrect,
+		"quiz_attempts":        quizAttempts,
+		"question_attempts":    questionAttempts,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
