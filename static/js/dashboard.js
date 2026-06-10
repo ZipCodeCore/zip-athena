@@ -30,6 +30,7 @@ async function loadDashboard() {
         // Update stats
         document.getElementById('totalPoints').textContent = progressData.total_points || 0;
         document.getElementById('totalQuizzes').textContent = progressData.total_quizzes || 0;
+        document.getElementById('quizzesLast7Days').textContent = progressData.quizzes_last_7_days || 0;
         document.getElementById('totalQuestions').textContent = progressData.total_questions || 0;
         document.getElementById('totalCorrect').textContent = progressData.total_correct || 0;
 
