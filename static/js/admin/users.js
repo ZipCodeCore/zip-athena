@@ -16,7 +16,8 @@ export async function loadUsers() {
     if (!adminsTable || !activeStudentsTable || !inactiveStudentsTable) return;
     try {
         console.log('Loading users with X-User-ID:', currentUser.id.toString());
-        const users = await API.get('/admin/users');
+        const rawUsers = await API.get('/admin/users');
+        const users = Array.isArray(rawUsers) ? rawUsers : [];
         console.log('Loaded users:', users.length, 'users');
         adminsTable.innerHTML = '';
         activeStudentsTable.innerHTML = '';

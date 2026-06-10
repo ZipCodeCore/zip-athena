@@ -80,7 +80,9 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Create user with hashed password
+	// Create user with hashed password.
+	// Category defaults to "java" since the public registration form does not
+	// collect a category; an admin can change it via the User Management page.
 	user := &models.User{
 		Username:    req.Username,
 		Email:       req.Email,
@@ -88,37 +90,20 @@ func (h *Handler) RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		IsAdmin:     false,
 		IsActive:    true,
 		IsActiveSet: true,
+		Category:    "java",
 		TotalPoints: 0,
 		CreatedAt:   time.Now(),
 	}
 
-	// Try to create the user in SQLite database
-	if sqlDB, ok := h.db.(*database.SQLiteDB); ok {
-		result, err := sqlDB.DB().Exec(
-			"INSERT INTO users (username, email, password, is_admin, is_active, total_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-			user.Username, user.Email, user.Password, user.IsAdmin, user.IsActive, user.TotalPoints, user.CreatedAt,
-		)
-		if err != nil {
-			h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
-				"username": user.Username,
-				"email":    user.Email,
-				"error":    err.Error(),
-			}).Error("Failed to create user in database")
-			http.Error(w, "Username or email already exists", http.StatusConflict)
-			return
-		}
-		id, _ := result.LastInsertId()
-		user.ID = int(id)
-	} else {
-		// Fallback for in-memory DB
-		if err := h.db.CreateUser(user); err != nil {
-			h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
-				"username": user.Username,
-				"error":    err.Error(),
-			}).Error("Failed to create user in in-memory database")
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+	// Create the user in the database using the shared interface
+	if err := h.db.CreateUser(user); err != nil {
+		h.logger.WithContext(r.Context()).WithFields(map[string]interface{}{
+			"username": user.Username,
+			"email":    user.Email,
+			"error":    err.Error(),
+		}).Error("Failed to create user in database")
+		http.Error(w, "Username or email already exists", http.StatusConflict)
+		return
 	}
 
 	// Don't send password back
