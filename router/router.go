@@ -21,9 +21,6 @@ func New(h *api.Handler) *chi.Mux {
 	r.Get("/ready", h.ReadyHandler)
 	r.Get("/metrics", h.MetricsHandler)
 
-	// Serve static files
-	r.Handle("/*", http.FileServer(http.Dir("./static")))
-
 	// Authentication routes (no auth required)
 	r.Post("/auth/register", h.RegisterHandler)
 	r.Post("/auth/login", h.LoginHandler)
@@ -260,6 +257,9 @@ func New(h *api.Handler) *chi.Mux {
 			r.Get("/{id}/preview", h.PreviewInstructorQuestionHandler)
 		})
 	})
+
+	// Serve static files after dynamic routes so pages and APIs don't get shadowed.
+	r.Handle("/*", http.FileServer(http.Dir("./static")))
 
 	return r
 }
