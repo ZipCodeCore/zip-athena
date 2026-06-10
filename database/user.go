@@ -87,7 +87,7 @@ func (db *SQLiteDB) ListUsers() ([]*models.User, error) {
 	}
 	defer rows.Close()
 
-	var users []*models.User
+	users := make([]*models.User, 0)
 	for rows.Next() {
 		user := &models.User{}
 		if err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.IsAdmin, &user.IsActive, &user.Category, &user.TotalPoints, &user.CreatedAt); err != nil {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'athena-v9';
+const CACHE_NAME = 'athena-v10';
 
 const SHELL_FILES = [
     '/index.html',
