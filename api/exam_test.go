@@ -276,6 +276,17 @@ func TestStartExamHandler(t *testing.T) {
 	if result["questions"] == nil {
 		t.Error("Expected questions in response")
 	}
+	questionsResult, ok := result["questions"].([]interface{})
+	if !ok || len(questionsResult) == 0 {
+		t.Fatalf("Expected at least one question in response, got %v", result["questions"])
+	}
+	firstQuestion, ok := questionsResult[0].(map[string]interface{})
+	if !ok {
+		t.Fatalf("Expected first question to be an object, got %T", questionsResult[0])
+	}
+	if firstQuestion["category"] != "Java Basics" {
+		t.Errorf("Expected question category %q, got %v", "Java Basics", firstQuestion["category"])
+	}
 }
 
 func TestStartExamHandler_NotAssigned(t *testing.T) {
