@@ -349,6 +349,8 @@ func (h *Handler) StartExamHandler(w http.ResponseWriter, r *http.Request) {
 			if categoryLabel == "" {
 				categoryLabel = strings.TrimSpace(topic.Category)
 			}
+		} else {
+			h.logger.WithContext(r.Context()).WithError(err).WithField("question_id", q.ID).WithField("topic_id", q.TopicID).Warn("Failed to load topic for exam question")
 		}
 		if categoryLabel == "" && len(q.Tags) > 0 {
 			categoryLabel = strings.TrimSpace(q.Tags[0])

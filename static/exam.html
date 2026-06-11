@@ -218,8 +218,10 @@
             const codeBlockRegex = /```(\w+)?\r?\n?([\s\S]*?)```/g;
             let lastIndex = 0;
             let match;
+            let foundCodeBlock = false;
 
             while ((match = codeBlockRegex.exec(text)) !== null) {
+                foundCodeBlock = true;
                 if (match.index > lastIndex) {
                     const preamble = text.substring(lastIndex, match.index).trim();
                     if (preamble) {
@@ -231,7 +233,7 @@
                 }
 
                 const language = match[1] || '';
-                const code = match[2];
+                const code = match[2].replace(/^(?:\r?\n)+/, '').trimEnd();
                 const pre = document.createElement('pre');
                 pre.className = 'code-block';
                 const codeEl = document.createElement('code');
@@ -243,6 +245,11 @@
                 lastIndex = match.index + match[0].length;
             }
 
+            if (!foundCodeBlock) {
+                container.textContent = text;
+                return;
+            }
+
             if (lastIndex < text.length) {
                 const remaining = text.substring(lastIndex).trim();
                 if (remaining) {
@@ -251,10 +258,6 @@
                     p.textContent = remaining;
                     container.appendChild(p);
                 }
-            }
-
-            if (lastIndex === 0) {
-                container.textContent = text;
             }
         }
 
