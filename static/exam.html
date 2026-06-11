@@ -212,6 +212,87 @@
                 .replace(/'/g, '&#039;');
         }
 
+        function renderQuestionText(container, text) {
+            container.innerHTML = '';
+
+            const codeBlockRegex = /```(\w+)?\r?\n?([\s\S]*?)```/g;
+            let lastIndex = 0;
+            let match;
+
+            while ((match = codeBlockRegex.exec(text)) !== null) {
+                if (match.index > lastIndex) {
+                    const preamble = text.substring(lastIndex, match.index).trim();
+                    if (preamble) {
+                        const p = document.createElement('p');
+                        p.className = 'question-preamble mb-2';
+                        p.textContent = preamble;
+                        container.appendChild(p);
+                    }
+                }
+
+                const language = match[1] || '';
+                const code = match[2];
+                const pre = document.createElement('pre');
+                pre.className = 'code-block';
+                const codeEl = document.createElement('code');
+                codeEl.className = language ? `language-${language}` : '';
+                codeEl.textContent = code;
+                pre.appendChild(codeEl);
+                container.appendChild(pre);
+
+                lastIndex = match.index + match[0].length;
+            }
+
+            if (lastIndex < text.length) {
+                const remaining = text.substring(lastIndex).trim();
+                if (remaining) {
+                    const p = document.createElement('p');
+                    p.className = 'question-preamble mb-2';
+                    p.textContent = remaining;
+                    container.appendChild(p);
+                }
+            }
+
+            if (lastIndex === 0) {
+                container.textContent = text;
+            }
+        }
+
+        function getQuestionCategory(question) {
+            return question && question.category ? question.category : '';
+        }
+
+        function appendQuestionContent(container, question, index, icon) {
+            const header = document.createElement('div');
+            header.className = 'd-flex flex-wrap align-items-center gap-2 mb-2';
+
+            const numberBadge = document.createElement('span');
+            numberBadge.className = 'badge bg-secondary';
+            numberBadge.textContent = index + 1;
+            header.appendChild(numberBadge);
+
+            const category = getQuestionCategory(question);
+            if (category) {
+                const categoryBadge = document.createElement('span');
+                categoryBadge.className = 'badge rounded-pill bg-info text-dark';
+                categoryBadge.textContent = category;
+                header.appendChild(categoryBadge);
+            }
+
+            if (icon) {
+                const iconSpan = document.createElement('span');
+                iconSpan.textContent = icon;
+                header.appendChild(iconSpan);
+            }
+
+            container.appendChild(header);
+
+            const questionText = document.createElement('div');
+            questionText.className = 'mb-3';
+            renderQuestionText(questionText, question.question_text || '');
+            container.appendChild(questionText);
+        }
+
         // ============ Render Exam ============
         // Questions from API: { id, question_text, difficulty, answers: [{id, answer_text}] }
         function renderExam() {
@@ -247,13 +328,11 @@
 
                 div.innerHTML = `
                     <div class="card-body">
-                        <p class="mb-2">
-                            <span class="badge bg-secondary me-2">${idx + 1}</span>
-                            <strong>${escapeHtml(q.question_text)}</strong>
-                        </p>
+                        <div class="question-content"></div>
                         ${answersHtml}
                     </div>
                 `;
+                appendQuestionContent(div.querySelector('.question-content'), q, idx);
                 container.appendChild(div);
             });
 
@@ -353,7 +432,16 @@
             // Question-by-question breakdown using the original exam question data
             const qResults = result.question_results || {};
             if (examData && examData.questions && examData.questions.length > 0) {
-                let html = '<h5 class="text-start mb-3">Question Breakdown</h5><div class="text-start">';
+                const questionResultsEl = document.getElementById('questionResults');
+                questionResultsEl.innerHTML = '';
+
+                const title = document.createElement('h5');
+                title.className = 'text-start mb-3';
+                title.textContent = 'Question Breakdown';
+                questionResultsEl.appendChild(title);
+
+                const resultsList = document.createElement('div');
+                resultsList.className = 'text-start';
                 examData.questions.forEach((q, idx) => {
                     const isCorrect = qResults[String(q.id)] === true;
                     const icon = isCorrect ? '✅' : '❌';
@@ -363,25 +451,21 @@
                     const selectedEl = document.querySelector(`input[name="q_${q.id}"]:checked`);
                     const yourAnswerText = selectedEl ? selectedEl.dataset.answerText : '(not answered)';
 
-                    // Find the correct answer text from the answers list
-                    let correctAnswerText = '';
-                    if (!isCorrect && q.answers) {
-                        // We don't know which answer is correct from the client side without extra API call
-                        // Just show what they answered
-                    }
+                    const card = document.createElement('div');
+                    card.className = `card mb-2 ${cardClass}`;
+                    const cardBody = document.createElement('div');
+                    cardBody.className = 'card-body py-2 px-3';
+                    appendQuestionContent(cardBody, q, idx, icon);
 
-                    html += `
-                        <div class="card mb-2 ${cardClass}">
-                            <div class="card-body py-2 px-3">
-                                <p class="mb-1"><span class="badge bg-secondary me-2">${idx + 1}</span>
-                                    ${icon} <strong>${escapeHtml(q.question_text)}</strong></p>
-                                <p class="mb-0 small">Your answer: <span class="${isCorrect ? 'text-success' : 'text-danger'}">${escapeHtml(yourAnswerText)}</span></p>
-                            </div>
-                        </div>
-                    `;
+                    const answer = document.createElement('p');
+                    answer.className = 'mb-0 small';
+                    answer.innerHTML = `Your answer: <span class="${isCorrect ? 'text-success' : 'text-danger'}">${escapeHtml(yourAnswerText)}</span>`;
+                    cardBody.appendChild(answer);
+
+                    card.appendChild(cardBody);
+                    resultsList.appendChild(card);
                 });
-                html += '</div>';
-                document.getElementById('questionResults').innerHTML = html;
+                questionResultsEl.appendChild(resultsList);
             }
 
             showPanel('resultsPanel');

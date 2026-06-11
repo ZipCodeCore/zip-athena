@@ -8,6 +8,7 @@ import (
 	mathrand "math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ZipCodeCore/zip-athena/database"
@@ -320,6 +321,7 @@ func (h *Handler) StartExamHandler(w http.ResponseWriter, r *http.Request) {
 	type examQuestion struct {
 		ID           int          `json:"id"`
 		QuestionText string       `json:"question_text"`
+		Category     string       `json:"category"`
 		Difficulty   int          `json:"difficulty"`
 		Answers      []examAnswer `json:"answers"`
 	}
@@ -341,9 +343,20 @@ func (h *Handler) StartExamHandler(w http.ResponseWriter, r *http.Request) {
 		for i, a := range answers {
 			eas[i] = examAnswer{ID: a.ID, AnswerText: a.AnswerText}
 		}
+		categoryLabel := ""
+		if topic, err := h.db.GetTopic(q.TopicID); err == nil {
+			categoryLabel = strings.TrimSpace(topic.Name)
+			if categoryLabel == "" {
+				categoryLabel = strings.TrimSpace(topic.Category)
+			}
+		}
+		if categoryLabel == "" && len(q.Tags) > 0 {
+			categoryLabel = strings.TrimSpace(q.Tags[0])
+		}
 		questions = append(questions, examQuestion{
 			ID:           q.ID,
 			QuestionText: q.QuestionText,
+			Category:     categoryLabel,
 			Difficulty:   q.Difficulty,
 			Answers:      eas,
 		})
