@@ -95,6 +95,21 @@ func (db *SQLiteDB) ListExams() ([]*models.Exam, error) {
 	return exams, rows.Err()
 }
 
+func (db *SQLiteDB) DeleteExam(id int) error {
+	result, err := db.db.Exec(`DELETE FROM exams WHERE id = ?`, id)
+	if err != nil {
+		return err
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return ErrNotFound
+	}
+	return nil
+}
+
 // GetQuestionsByCategories returns up to `limit` questions from the given
 // categories and difficulty levels, chosen in random order from all matches.
 // DifficultyLevels mapping: 1 = difficulty 1-2, 2 = difficulty 3-4, 3 = difficulty 5-7.
@@ -156,6 +171,65 @@ func (db *SQLiteDB) GetQuestionsByCategories(categories []string, difficultyLeve
 	return all, nil
 }
 
+// GetQuestionsByTopicIDs returns up to `limit` questions from the given topic IDs
+// and difficulty levels, chosen in random order.
+func (db *SQLiteDB) GetQuestionsByTopicIDs(topicIDs []int, difficultyLevels []int, limit int) ([]*models.Question, error) {
+	if len(topicIDs) == 0 {
+		return nil, nil
+	}
+
+	diffRanges := difficultyRanges(difficultyLevels)
+
+	placeholders := make([]string, len(topicIDs))
+	args := []interface{}{}
+	for i, id := range topicIDs {
+		placeholders[i] = "?"
+		args = append(args, id)
+	}
+
+	query := `
+		SELECT DISTINCT q.id, q.topic_id, q.question_text, q.difficulty, q.tags, q.topic_question_id, q.created_at
+		FROM questions q
+		JOIN topics t ON q.topic_id = t.id
+		WHERE t.is_active = 1
+		  AND q.topic_id IN (` + joinStrings(placeholders, ",") + `)`
+
+	if len(diffRanges) > 0 {
+		conds := make([]string, len(diffRanges))
+		for i, r := range diffRanges {
+			conds[i] = "(q.difficulty >= ? AND q.difficulty <= ?)"
+			args = append(args, r[0], r[1])
+		}
+		query += " AND (" + joinStrings(conds, " OR ") + ")"
+	}
+
+	rows, err := db.db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var all []*models.Question
+	for rows.Next() {
+		q := &models.Question{}
+		var tagsJSON string
+		if err := rows.Scan(&q.ID, &q.TopicID, &q.QuestionText, &q.Difficulty, &tagsJSON, &q.TopicQuestionID, &q.CreatedAt); err != nil {
+			return nil, err
+		}
+		json.Unmarshal([]byte(tagsJSON), &q.Tags)
+		all = append(all, q)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	rand.Shuffle(len(all), func(i, j int) { all[i], all[j] = all[j], all[i] })
+	if limit > 0 && len(all) > limit {
+		all = all[:limit]
+	}
+	return all, nil
+}
+
 func (db *SQLiteDB) AssignExamToUser(examID, userID, assignedBy int) error {
 	user, err := db.GetUser(userID)
 	if err != nil {
@@ -172,6 +246,24 @@ func (db *SQLiteDB) AssignExamToUser(examID, userID, assignedBy int) error {
 		examID, userID, assignedBy, time.Now(),
 	)
 	return err
+}
+
+func (db *SQLiteDB) UnassignExamFromUser(examID, userID int) error {
+	result, err := db.db.Exec(
+		`DELETE FROM exam_assignments WHERE exam_id = ? AND user_id = ?`,
+		examID, userID,
+	)
+	if err != nil {
+		return err
+	}
+	rows, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows == 0 {
+		return ErrNotFound
+	}
+	return nil
 }
 
 func (db *SQLiteDB) GetAssignedExamsForUser(userID int) ([]*models.ExamInfo, error) {

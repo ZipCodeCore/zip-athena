@@ -10,39 +10,59 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-async function loadExamCategories() {
+async function loadExamTopics() {
     const container = document.getElementById('examCategoriesCheckboxes');
     try {
-        const response = await fetch('/instructor/exams/categories', {headers: {'X-User-ID': userId}});
-        const categories = await response.json();
-        if (!categories || categories.length === 0) {
-            container.innerHTML = '<small class="text-muted">No categories available.</small>';
+        const response = await fetch('/instructor/exams/topics', {headers: {'X-User-ID': userId}});
+        const topics = await response.json();
+        if (!topics || topics.length === 0) {
+            container.innerHTML = '<small class="text-muted">No topics available.</small>';
             return;
         }
         container.innerHTML = '';
-        categories.forEach((category) => {
-            const categoryValue = String(category);
-            const categoryId = `examCat_${categoryValue.replace(/[^a-zA-Z0-9_-]+/g, '_')}`;
-            const div = document.createElement('div');
-            div.className = 'form-check form-check-inline';
 
-            const input = document.createElement('input');
-            input.className = 'form-check-input exam-category-check';
-            input.type = 'checkbox';
-            input.value = categoryValue;
-            input.id = categoryId;
+        // Group by category for display
+        const byCategory = {};
+        topics.forEach((topic) => {
+            const cat = topic.category || 'Other';
+            if (!byCategory[cat]) byCategory[cat] = [];
+            byCategory[cat].push(topic);
+        });
 
-            const label = document.createElement('label');
-            label.className = 'form-check-label';
-            label.htmlFor = categoryId;
-            label.textContent = categoryValue.toUpperCase();
+        Object.keys(byCategory).sort().forEach((cat) => {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'mb-1';
 
-            div.appendChild(input);
-            div.appendChild(label);
-            container.appendChild(div);
+            const catLabel = document.createElement('small');
+            catLabel.className = 'text-muted fw-bold d-block';
+            catLabel.textContent = cat.toUpperCase();
+            groupDiv.appendChild(catLabel);
+
+            byCategory[cat].forEach((topic) => {
+                const topicId = `examTopic_${topic.id}`;
+                const div = document.createElement('div');
+                div.className = 'form-check form-check-inline';
+
+                const input = document.createElement('input');
+                input.className = 'form-check-input exam-topic-check';
+                input.type = 'checkbox';
+                input.value = String(topic.id);
+                input.id = topicId;
+
+                const label = document.createElement('label');
+                label.className = 'form-check-label';
+                label.htmlFor = topicId;
+                label.textContent = topic.name;
+
+                div.appendChild(input);
+                div.appendChild(label);
+                groupDiv.appendChild(div);
+            });
+
+            container.appendChild(groupDiv);
         });
     } catch (e) {
-        container.innerHTML = '<small class="text-danger">Error loading categories.</small>';
+        container.innerHTML = '<small class="text-danger">Error loading topics.</small>';
     }
 }
 
@@ -55,9 +75,9 @@ async function generateExam() {
         return;
     }
 
-    const checkedCats = Array.from(document.querySelectorAll('.exam-category-check:checked')).map((cb) => cb.value);
-    if (checkedCats.length === 0) {
-        alert('Please select at least one category.');
+    const checkedTopics = Array.from(document.querySelectorAll('.exam-topic-check:checked')).map((cb) => parseInt(cb.value, 10));
+    if (checkedTopics.length === 0) {
+        alert('Please select at least one topic.');
         return;
     }
 
@@ -76,7 +96,7 @@ async function generateExam() {
             headers: {'Content-Type': 'application/json', 'X-User-ID': userId},
             body: JSON.stringify({
                 name,
-                categories: checkedCats,
+                topic_ids: checkedTopics,
                 difficulty_levels: checkedDifficultyLevels,
                 question_count: questionCount,
             }),
@@ -239,6 +259,27 @@ async function assignExamToStudents() {
     }
 }
 
+async function deleteExam(examId, examName) {
+    if (!confirm(`Delete exam "${examName}"? This will also remove all assignments and attempts.`)) {
+        return;
+    }
+    try {
+        const response = await fetch(`/instructor/exams?exam_id=${examId}`, {
+            method: 'DELETE',
+            headers: {'X-User-ID': userId},
+        });
+        if (response.ok) {
+            loadExamStatus();
+            loadAssignedExamDropdown();
+        } else {
+            const text = await response.text();
+            alert('Failed to delete exam: ' + text);
+        }
+    } catch (e) {
+        alert('Network error: ' + e.message);
+    }
+}
+
 async function loadExamStatus() {
     const container = document.getElementById('examSummaryTable');
     container.innerHTML = '<p class="text-muted">Loading...</p>';
@@ -271,7 +312,10 @@ async function loadExamStatus() {
                 <td>${escapeHtml(difficultyLevelsDisplay)}</td>
                 <td>${exam.question_count}</td>
                 <td><a href="/exam.html?token=${encodeURIComponent(exam.access_token)}" target="_blank" class="small">${escapeHtml(examUrl)}</a></td>
-                <td><button class="btn btn-sm btn-primary" data-exam-id="${examId}" data-exam-name="${encodeURIComponent(exam.name)}" onclick="showExamDetail(parseInt(this.dataset.examId, 10), decodeURIComponent(this.dataset.examName))">View Scores</button></td>
+                <td>
+                    <button class="btn btn-sm btn-primary me-1" data-exam-id="${examId}" data-exam-name="${encodeURIComponent(exam.name)}" onclick="showExamDetail(parseInt(this.dataset.examId, 10), decodeURIComponent(this.dataset.examName))">View Scores</button>
+                    <button class="btn btn-sm btn-danger" data-exam-id="${examId}" data-exam-name="${encodeURIComponent(exam.name)}" onclick="deleteExam(parseInt(this.dataset.examId, 10), decodeURIComponent(this.dataset.examName))">Delete</button>
+                </td>
             </tr>`;
         });
         html += '</tbody></table></div>';
@@ -281,7 +325,30 @@ async function loadExamStatus() {
     }
 }
 
+async function unassignExamFromUser(examId, userId, username) {
+    if (!confirm(`Unassign exam from "${username}"?`)) {
+        return;
+    }
+    try {
+        const response = await fetch(`/instructor/exams/unassign?exam_id=${examId}&user_id=${userId}`, {
+            method: 'DELETE',
+            headers: {'X-User-ID': window._currentUserId},
+        });
+        if (response.ok) {
+            showExamDetail(examId, document.getElementById('examDetailTitle').textContent.replace('Scores: ', ''));
+        } else {
+            const text = await response.text();
+            alert('Failed to unassign: ' + text);
+        }
+    } catch (e) {
+        alert('Network error: ' + e.message);
+    }
+}
+
+let _currentDetailExamId = null;
+
 async function showExamDetail(examId, examName) {
+    _currentDetailExamId = examId;
     const panel = document.getElementById('examDetailPanel');
     const title = document.getElementById('examDetailTitle');
     const content = document.getElementById('examDetailContent');
@@ -302,7 +369,7 @@ async function showExamDetail(examId, examName) {
 
         let html = `<div class="table-responsive"><table class="table table-striped">
             <thead><tr>
-                <th>Student</th><th>Assigned</th><th>Completed</th><th>Score</th><th>Correct / Total</th>
+                <th>Student</th><th>Assigned</th><th>Completed</th><th>Score</th><th>Correct / Total</th><th>Actions</th>
             </tr></thead><tbody>`;
         status.student_results.forEach((result) => {
             const completed = result.completed_at
@@ -320,6 +387,7 @@ async function showExamDetail(examId, examName) {
                 <td>${completed}</td>
                 <td>${scoreHtml}</td>
                 <td>${correct}</td>
+                <td><button class="btn btn-sm btn-outline-danger" data-exam-id="${examId}" data-user-id="${result.user_id}" data-username="${encodeURIComponent(result.username)}" onclick="unassignExamFromUser(parseInt(this.dataset.examId,10), parseInt(this.dataset.userId,10), decodeURIComponent(this.dataset.username))">Unassign</button></td>
             </tr>`;
         });
         html += '</tbody></table></div>';
@@ -338,10 +406,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (!currentUser) return;
 
     userId = String(currentUser.id);
+    window._currentUserId = userId;
     document.getElementById('username').textContent = currentUser.username;
     document.getElementById('assignExamSelect').addEventListener('change', updateExamUrlDisplay);
 
-    await loadExamCategories();
+    await loadExamTopics();
     await loadAssignedExamDropdown();
     await loadExamAssignStudentsList();
 });
@@ -352,5 +421,7 @@ window.copyExamUrl = copyExamUrl;
 window.selectAllExamStudents = selectAllExamStudents;
 window.deselectAllExamStudents = deselectAllExamStudents;
 window.assignExamToStudents = assignExamToStudents;
+window.deleteExam = deleteExam;
 window.showExamDetail = showExamDetail;
 window.hideExamDetail = hideExamDetail;
+window.unassignExamFromUser = unassignExamFromUser;

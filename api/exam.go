@@ -26,7 +26,7 @@ func generateToken() (string, error) {
 
 // GenerateExamHandler handles POST /instructor/exams/generate
 // Creates a new exam by randomly selecting questions that match the given
-// categories and difficulty levels, then saves the exam.
+// categories/topics and difficulty levels, then saves the exam.
 func (h *Handler) GenerateExamHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -36,6 +36,7 @@ func (h *Handler) GenerateExamHandler(w http.ResponseWriter, r *http.Request) {
 	var body struct {
 		Name             string   `json:"name"`
 		Categories       []string `json:"categories"`
+		TopicIDs         []int    `json:"topic_ids"`
 		DifficultyLevels []int    `json:"difficulty_levels"`
 		QuestionCount    int      `json:"question_count"`
 	}
@@ -48,8 +49,8 @@ func (h *Handler) GenerateExamHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "name is required", http.StatusBadRequest)
 		return
 	}
-	if len(body.Categories) == 0 {
-		http.Error(w, "at least one category is required", http.StatusBadRequest)
+	if len(body.Categories) == 0 && len(body.TopicIDs) == 0 {
+		http.Error(w, "at least one category or topic is required", http.StatusBadRequest)
 		return
 	}
 	if len(body.DifficultyLevels) == 0 {
@@ -61,7 +62,13 @@ func (h *Handler) GenerateExamHandler(w http.ResponseWriter, r *http.Request) {
 		count = 30
 	}
 
-	questions, err := h.db.GetQuestionsByCategories(body.Categories, body.DifficultyLevels, count)
+	var questions []*models.Question
+	var err error
+	if len(body.TopicIDs) > 0 {
+		questions, err = h.db.GetQuestionsByTopicIDs(body.TopicIDs, body.DifficultyLevels, count)
+	} else {
+		questions, err = h.db.GetQuestionsByCategories(body.Categories, body.DifficultyLevels, count)
+	}
 	if err != nil {
 		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to fetch questions for exam generation")
 		http.Error(w, "Failed to fetch questions: "+err.Error(), http.StatusInternalServerError)
@@ -87,9 +94,15 @@ func (h *Handler) GenerateExamHandler(w http.ResponseWriter, r *http.Request) {
 	assignerIDStr := r.Header.Get("X-User-ID")
 	assignerID, _ := strconv.Atoi(assignerIDStr)
 
+	// Record categories: use provided categories, or derive from topic IDs
+	examCategories := body.Categories
+	if len(body.TopicIDs) > 0 {
+		examCategories = deriveTopicNames(questions)
+	}
+
 	exam := &models.Exam{
 		Name:             body.Name,
-		Categories:       body.Categories,
+		Categories:       examCategories,
 		DifficultyLevels: body.DifficultyLevels,
 		QuestionIDs:      questionIDs,
 		QuestionCount:    len(questionIDs),
@@ -116,6 +129,19 @@ func (h *Handler) GenerateExamHandler(w http.ResponseWriter, r *http.Request) {
 		"access_token":   exam.AccessToken,
 		"exam_url":       examURL,
 	})
+}
+
+// deriveTopicNames builds a deduplicated list of category labels from questions.
+func deriveTopicNames(questions []*models.Question) []string {
+	seen := map[string]bool{}
+	var result []string
+	for _, q := range questions {
+		if len(q.Tags) > 0 && !seen[q.Tags[0]] {
+			seen[q.Tags[0]] = true
+			result = append(result, q.Tags[0])
+		}
+	}
+	return result
 }
 
 // ListExamsHandler handles GET /instructor/exams
@@ -469,4 +495,102 @@ func (h *Handler) GetAvailableExamCategoriesHandler(w http.ResponseWriter, r *ht
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(categories)
+}
+
+// GetAvailableExamTopicsHandler handles GET /instructor/exams/topics
+// Returns all active topics (id, name, category) available for exam generation.
+func (h *Handler) GetAvailableExamTopicsHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	topics, err := h.db.ListAllTopics()
+	if err != nil {
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to list topics")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	type topicOption struct {
+		ID       int    `json:"id"`
+		Name     string `json:"name"`
+		Category string `json:"category"`
+	}
+	result := make([]topicOption, 0, len(topics))
+	for _, t := range topics {
+		result = append(result, topicOption{
+			ID:       t.ID,
+			Name:     t.Name,
+			Category: t.Category,
+		})
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
+// DeleteExamHandler handles DELETE /instructor/exams?exam_id={id}
+// Deletes an exam and its assignments/attempts.
+func (h *Handler) DeleteExamHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	examIDStr := r.URL.Query().Get("exam_id")
+	examID, err := strconv.Atoi(examIDStr)
+	if err != nil || examID <= 0 {
+		http.Error(w, "Invalid exam_id", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.db.DeleteExam(examID); err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "Exam not found", http.StatusNotFound)
+			return
+		}
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to delete exam")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{"success": true})
+}
+
+// UnassignExamFromUserHandler handles DELETE /instructor/exams/unassign?exam_id={id}&user_id={id}
+// Removes an exam assignment from a specific user.
+func (h *Handler) UnassignExamFromUserHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodDelete {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	examIDStr := r.URL.Query().Get("exam_id")
+	examID, err := strconv.Atoi(examIDStr)
+	if err != nil || examID <= 0 {
+		http.Error(w, "Invalid exam_id", http.StatusBadRequest)
+		return
+	}
+
+	userIDStr := r.URL.Query().Get("user_id")
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil || userID <= 0 {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.db.UnassignExamFromUser(examID, userID); err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "Assignment not found", http.StatusNotFound)
+			return
+		}
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to unassign exam")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{"success": true})
 }
