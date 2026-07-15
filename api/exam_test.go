@@ -448,3 +448,171 @@ func TestGetAvailableExamCategoriesHandler(t *testing.T) {
 		t.Errorf("Expected 'java' in categories, got %v", categories)
 	}
 }
+
+func TestGetAvailableExamTopicsHandler(t *testing.T) {
+	db, admin, _ := setupExamDB(t)
+	handler := NewHandler(db)
+
+	req := httptest.NewRequest(http.MethodGet, "/instructor/exams/topics", nil)
+	req.Header.Set("X-User-ID", fmt.Sprintf("%d", admin.ID))
+	w := httptest.NewRecorder()
+
+	handler.GetAvailableExamTopicsHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d: %s", w.Code, w.Body.String())
+	}
+
+	var topics []map[string]interface{}
+	json.NewDecoder(w.Body).Decode(&topics)
+	if len(topics) == 0 {
+		t.Fatal("Expected at least one topic")
+	}
+	found := false
+	for _, topic := range topics {
+		if topic["name"] == "Java Basics" {
+			found = true
+			if topic["category"] != "java" {
+				t.Errorf("Expected category 'java', got %v", topic["category"])
+			}
+		}
+	}
+	if !found {
+		t.Errorf("Expected 'Java Basics' in topics, got %v", topics)
+	}
+}
+
+func TestGenerateExamHandler_WithTopicIDs(t *testing.T) {
+	db, admin, _ := setupExamDB(t)
+	handler := NewHandler(db)
+
+	// Get the topic ID that was created in setupExamDB
+	topics, err := db.ListAllTopics()
+	if err != nil || len(topics) == 0 {
+		t.Fatal("No topics in DB")
+	}
+	topicID := topics[0].ID
+
+	body, _ := json.Marshal(map[string]interface{}{
+		"name":              "Topic-based Exam",
+		"topic_ids":         []int{topicID},
+		"difficulty_levels": []int{1, 2, 3},
+		"question_count":    3,
+	})
+
+	req := httptest.NewRequest(http.MethodPost, "/instructor/exams/generate", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-User-ID", fmt.Sprintf("%d", admin.ID))
+	w := httptest.NewRecorder()
+
+	handler.GenerateExamHandler(w, req)
+
+	if w.Code != http.StatusCreated {
+		t.Fatalf("Expected status 201, got %d: %s", w.Code, w.Body.String())
+	}
+
+	var result map[string]interface{}
+	json.NewDecoder(w.Body).Decode(&result)
+	if result["success"] != true {
+		t.Errorf("Expected success=true, got %v", result["success"])
+	}
+}
+
+func TestDeleteExamHandler(t *testing.T) {
+	db, admin, _ := setupExamDB(t)
+	handler := NewHandler(db)
+
+	exam := &models.Exam{
+		Name: "To Delete", Categories: []string{"java"}, DifficultyLevels: []int{1},
+		QuestionIDs: []int{1}, QuestionCount: 1, AccessToken: "deletetoken",
+		CreatedBy: admin.ID, CreatedAt: time.Now(),
+	}
+	db.CreateExam(exam)
+
+	req := httptest.NewRequest(http.MethodDelete,
+		fmt.Sprintf("/instructor/exams?exam_id=%d", exam.ID), nil)
+	req.Header.Set("X-User-ID", fmt.Sprintf("%d", admin.ID))
+	w := httptest.NewRecorder()
+
+	handler.DeleteExamHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d: %s", w.Code, w.Body.String())
+	}
+
+	// Verify deleted
+	if _, err := db.GetExam(exam.ID); err == nil {
+		t.Error("Expected exam to be deleted")
+	}
+}
+
+func TestDeleteExamHandler_NotFound(t *testing.T) {
+	db, admin, _ := setupExamDB(t)
+	handler := NewHandler(db)
+
+	req := httptest.NewRequest(http.MethodDelete, "/instructor/exams?exam_id=99999", nil)
+	req.Header.Set("X-User-ID", fmt.Sprintf("%d", admin.ID))
+	w := httptest.NewRecorder()
+
+	handler.DeleteExamHandler(w, req)
+
+	if w.Code != http.StatusNotFound {
+		t.Errorf("Expected status 404, got %d", w.Code)
+	}
+}
+
+func TestUnassignExamFromUserHandler(t *testing.T) {
+	db, admin, student := setupExamDB(t)
+	handler := NewHandler(db)
+
+	exam := &models.Exam{
+		Name: "Unassign Exam", Categories: []string{"java"}, DifficultyLevels: []int{1},
+		QuestionIDs: []int{1}, QuestionCount: 1, AccessToken: "unassigntoken2",
+		CreatedBy: admin.ID, CreatedAt: time.Now(),
+	}
+	db.CreateExam(exam)
+	db.AssignExamToUser(exam.ID, student.ID, admin.ID)
+
+	req := httptest.NewRequest(http.MethodDelete,
+		fmt.Sprintf("/instructor/exams/unassign?exam_id=%d&user_id=%d", exam.ID, student.ID), nil)
+	req.Header.Set("X-User-ID", fmt.Sprintf("%d", admin.ID))
+	w := httptest.NewRecorder()
+
+	handler.UnassignExamFromUserHandler(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Fatalf("Expected status 200, got %d: %s", w.Code, w.Body.String())
+	}
+
+	// Verify unassigned
+	exams, _ := db.GetAssignedExamsForUser(student.ID)
+	for _, e := range exams {
+		if e.ExamID == exam.ID {
+			t.Error("Expected exam to be unassigned from student")
+		}
+	}
+}
+
+func TestUnassignExamFromUserHandler_NotFound(t *testing.T) {
+	db, admin, student := setupExamDB(t)
+	handler := NewHandler(db)
+
+	exam := &models.Exam{
+		Name: "Not Assigned", Categories: []string{"java"}, DifficultyLevels: []int{1},
+		QuestionIDs: []int{1}, QuestionCount: 1, AccessToken: "notassignedtoken",
+		CreatedBy: admin.ID, CreatedAt: time.Now(),
+	}
+	db.CreateExam(exam)
+	// Do NOT assign
+
+	req := httptest.NewRequest(http.MethodDelete,
+		fmt.Sprintf("/instructor/exams/unassign?exam_id=%d&user_id=%d", exam.ID, student.ID), nil)
+	req.Header.Set("X-User-ID", fmt.Sprintf("%d", admin.ID))
+	w := httptest.NewRecorder()
+
+	handler.UnassignExamFromUserHandler(w, req)
+
+	if w.Code != http.StatusNotFound {
+		t.Errorf("Expected status 404, got %d", w.Code)
+	}
+}

@@ -226,9 +226,12 @@ func New(h *api.Handler) *chi.Mux {
 		// Assigned Exam routes
 		r.Post("/exams/generate", h.GenerateExamHandler)
 		r.Get("/exams", h.ListExamsHandler)
+		r.Delete("/exams", h.DeleteExamHandler)
 		r.Post("/exams/assign", h.AssignExamToStudentsHandler)
+		r.Delete("/exams/unassign", h.UnassignExamFromUserHandler)
 		r.Get("/exams/status", h.GetExamStatusHandler)
 		r.Get("/exams/categories", h.GetAvailableExamCategoriesHandler)
+		r.Get("/exams/topics", h.GetAvailableExamTopicsHandler)
 
 		// Topic Management routes
 		r.Route("/topics", func(r chi.Router) {

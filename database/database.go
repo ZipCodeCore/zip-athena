@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"math/rand"
 	"sort"
 	"strconv"
 	"strings"
@@ -190,9 +191,12 @@ type ExamRepository interface {
 	GetExam(id int) (*models.Exam, error)
 	GetExamByToken(token string) (*models.Exam, error)
 	ListExams() ([]*models.Exam, error)
+	DeleteExam(id int) error
 	GetQuestionsByCategories(categories []string, difficultyLevels []int, limit int) ([]*models.Question, error)
+	GetQuestionsByTopicIDs(topicIDs []int, difficultyLevels []int, limit int) ([]*models.Question, error)
 
 	AssignExamToUser(examID, userID, assignedBy int) error
+	UnassignExamFromUser(examID, userID int) error
 	GetAssignedExamsForUser(userID int) ([]*models.ExamInfo, error)
 
 	CreateExamAttempt(attempt *models.ExamAttempt) error
@@ -2767,6 +2771,28 @@ func (db *InMemoryDB) ListExams() ([]*models.Exam, error) {
 	return result, nil
 }
 
+func (db *InMemoryDB) DeleteExam(id int) error {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	if _, ok := db.exams[id]; !ok {
+		return ErrNotFound
+	}
+	delete(db.exams, id)
+	// Remove assignments for this exam
+	for aid, a := range db.examAssignments {
+		if a.ExamID == id {
+			delete(db.examAssignments, aid)
+		}
+	}
+	// Remove attempts for this exam
+	for aid, a := range db.examAttempts {
+		if a.ExamID == id {
+			delete(db.examAttempts, aid)
+		}
+	}
+	return nil
+}
+
 func (db *InMemoryDB) GetQuestionsByCategories(categories []string, difficultyLevels []int, limit int) ([]*models.Question, error) {
 	db.mu.RLock()
 	defer db.mu.RUnlock()
@@ -2817,6 +2843,53 @@ func (db *InMemoryDB) GetQuestionsByCategories(categories []string, difficultyLe
 	return result, nil
 }
 
+func (db *InMemoryDB) GetQuestionsByTopicIDs(topicIDs []int, difficultyLevels []int, limit int) ([]*models.Question, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	topicSet := map[int]bool{}
+	for _, id := range topicIDs {
+		topicSet[id] = true
+	}
+
+	diffRanges := difficultyRanges(difficultyLevels)
+
+	inDiff := func(d int) bool {
+		if len(diffRanges) == 0 {
+			return true
+		}
+		for _, r := range diffRanges {
+			if d >= r[0] && d <= r[1] {
+				return true
+			}
+		}
+		return false
+	}
+
+	var result []*models.Question
+	for _, q := range db.questions {
+		topic, ok := db.topics[q.TopicID]
+		if !ok || !topic.IsActive {
+			continue
+		}
+		if len(topicSet) > 0 && !topicSet[q.TopicID] {
+			continue
+		}
+		if !inDiff(q.Difficulty) {
+			continue
+		}
+		cp := *q
+		result = append(result, &cp)
+	}
+
+	// shuffle
+	rand.Shuffle(len(result), func(i, j int) { result[i], result[j] = result[j], result[i] })
+	if limit > 0 && len(result) > limit {
+		result = result[:limit]
+	}
+	return result, nil
+}
+
 func (db *InMemoryDB) AssignExamToUser(examID, userID, assignedBy int) error {
 	db.mu.Lock()
 	defer db.mu.Unlock()
@@ -2846,6 +2919,18 @@ func (db *InMemoryDB) AssignExamToUser(examID, userID, assignedBy int) error {
 	db.nextExamAssignID++
 	db.examAssignments[a.ID] = a
 	return nil
+}
+
+func (db *InMemoryDB) UnassignExamFromUser(examID, userID int) error {
+	db.mu.Lock()
+	defer db.mu.Unlock()
+	for id, a := range db.examAssignments {
+		if a.ExamID == examID && a.UserID == userID {
+			delete(db.examAssignments, id)
+			return nil
+		}
+	}
+	return ErrNotFound
 }
 
 func (db *InMemoryDB) GetAssignedExamsForUser(userID int) ([]*models.ExamInfo, error) {
