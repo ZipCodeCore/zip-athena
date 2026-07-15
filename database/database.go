@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"math/rand"
 	"sort"
 	"strconv"
 	"strings"
@@ -2882,10 +2883,7 @@ func (db *InMemoryDB) GetQuestionsByTopicIDs(topicIDs []int, difficultyLevels []
 	}
 
 	// shuffle
-	for i := len(result) - 1; i > 0; i-- {
-		j := i
-		result[i], result[j] = result[j], result[i]
-	}
+	rand.Shuffle(len(result), func(i, j int) { result[i], result[j] = result[j], result[i] })
 	if limit > 0 && len(result) > limit {
 		result = result[:limit]
 	}

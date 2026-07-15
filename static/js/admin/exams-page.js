@@ -325,17 +325,17 @@ async function loadExamStatus() {
     }
 }
 
-async function unassignExamFromUser(examId, userId, username) {
+async function unassignExamFromUser(examId, studentUserId, username) {
     if (!confirm(`Unassign exam from "${username}"?`)) {
         return;
     }
     try {
-        const response = await fetch(`/instructor/exams/unassign?exam_id=${examId}&user_id=${userId}`, {
+        const response = await fetch(`/instructor/exams/unassign?exam_id=${examId}&user_id=${studentUserId}`, {
             method: 'DELETE',
-            headers: {'X-User-ID': window._currentUserId},
+            headers: {'X-User-ID': userId},
         });
         if (response.ok) {
-            showExamDetail(examId, document.getElementById('examDetailTitle').textContent.replace('Scores: ', ''));
+            showExamDetail(examId, _currentDetailExamName);
         } else {
             const text = await response.text();
             alert('Failed to unassign: ' + text);
@@ -346,9 +346,11 @@ async function unassignExamFromUser(examId, userId, username) {
 }
 
 let _currentDetailExamId = null;
+let _currentDetailExamName = null;
 
 async function showExamDetail(examId, examName) {
     _currentDetailExamId = examId;
+    _currentDetailExamName = examName;
     const panel = document.getElementById('examDetailPanel');
     const title = document.getElementById('examDetailTitle');
     const content = document.getElementById('examDetailContent');
@@ -406,7 +408,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (!currentUser) return;
 
     userId = String(currentUser.id);
-    window._currentUserId = userId;
     document.getElementById('username').textContent = currentUser.username;
     document.getElementById('assignExamSelect').addEventListener('change', updateExamUrlDisplay);
 

@@ -94,10 +94,10 @@ func (h *Handler) GenerateExamHandler(w http.ResponseWriter, r *http.Request) {
 	assignerIDStr := r.Header.Get("X-User-ID")
 	assignerID, _ := strconv.Atoi(assignerIDStr)
 
-	// Record categories: use provided categories, or derive from topic IDs
+	// Record categories: use provided categories, or derive topic names from topic IDs
 	examCategories := body.Categories
 	if len(body.TopicIDs) > 0 {
-		examCategories = deriveTopicNames(questions)
+		examCategories = topicNamesFromIDs(h.db, body.TopicIDs)
 	}
 
 	exam := &models.Exam{
@@ -131,14 +131,24 @@ func (h *Handler) GenerateExamHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// deriveTopicNames builds a deduplicated list of category labels from questions.
-func deriveTopicNames(questions []*models.Question) []string {
+// topicNamesFromIDs resolves topic IDs to their names for display in exam metadata.
+func topicNamesFromIDs(db interface {
+	GetTopic(id int) (*models.Topic, error)
+}, topicIDs []int) []string {
 	seen := map[string]bool{}
 	var result []string
-	for _, q := range questions {
-		if len(q.Tags) > 0 && !seen[q.Tags[0]] {
-			seen[q.Tags[0]] = true
-			result = append(result, q.Tags[0])
+	for _, id := range topicIDs {
+		topic, err := db.GetTopic(id)
+		if err != nil {
+			continue
+		}
+		name := strings.TrimSpace(topic.Name)
+		if name == "" {
+			name = strings.TrimSpace(topic.Category)
+		}
+		if name != "" && !seen[name] {
+			seen[name] = true
+			result = append(result, name)
 		}
 	}
 	return result
