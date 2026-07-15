@@ -216,7 +216,11 @@ func (db *SQLiteDB) GetQuestionsByTopicIDs(topicIDs []int, difficultyLevels []in
 		if err := rows.Scan(&q.ID, &q.TopicID, &q.QuestionText, &q.Difficulty, &tagsJSON, &q.TopicQuestionID, &q.CreatedAt); err != nil {
 			return nil, err
 		}
-		json.Unmarshal([]byte(tagsJSON), &q.Tags)
+		if tagsJSON != "" {
+			if err := json.Unmarshal([]byte(tagsJSON), &q.Tags); err != nil {
+				q.Tags = []string{}
+			}
+		}
 		all = append(all, q)
 	}
 	if err := rows.Err(); err != nil {
