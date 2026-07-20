@@ -140,6 +140,8 @@
         let examData = null;
         let attemptId = null;
 
+        const EXAM_STATE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
         function logout() {
             localStorage.removeItem('user');
             window.location.href = '/index.html';
@@ -179,7 +181,7 @@
                 }
                 // Check for a previously saved in-progress exam
                 const activeKey = localStorage.getItem('activeExamStateKey');
-                if (activeKey) {
+                if (activeKey && /^examProgress_(token_|attempt_)\S+$/.test(activeKey)) {
                     const metaRaw = localStorage.getItem(`${activeKey}_meta`);
                     if (metaRaw) {
                         try {
@@ -439,7 +441,7 @@
                 if (!saved) return;
                 const state = JSON.parse(saved);
                 // Expire saved answers older than 7 days
-                if (state.savedAt && (Date.now() - state.savedAt) > 7 * 24 * 60 * 60 * 1000) {
+                if (state.savedAt && (Date.now() - state.savedAt) > EXAM_STATE_EXPIRY_MS) {
                     clearExamState();
                     return;
                 }
@@ -511,11 +513,8 @@
                 }
 
                 const result = await response.json();
-                try {
-                    showResults(result);
-                } finally {
-                    clearExamState();
-                }
+                showResults(result);
+                clearExamState();
             } catch (e) {
                 alert('Network error: ' + e.message);
                 document.getElementById('submitExamBtn').disabled = false;
