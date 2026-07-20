@@ -361,7 +361,7 @@
             showPanel('examPanel');
         }
 
-        function onAnswerChange() {
+        function onAnswerChange(skipSave) {
             if (!examData) return;
             const total = examData.questions.length;
             let answered = 0;
@@ -380,7 +380,7 @@
                 document.getElementById('submitWarning').textContent =
                     `${total - answered} question(s) not yet answered. You can still submit.`;
             }
-            saveExamState();
+            if (!skipSave) saveExamState();
         }
 
         // ============ Exam State Persistence ============
@@ -399,7 +399,7 @@
             examData.questions.forEach(q => {
                 const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
                 if (selected) {
-                    answers[String(q.id)] = parseInt(selected.value, 10);
+                    answers[q.id] = parseInt(selected.value, 10);
                 }
             });
             try {
@@ -425,10 +425,13 @@
                 const state = JSON.parse(saved);
                 if (!state.answers || Object.keys(state.answers).length === 0) return;
                 Object.entries(state.answers).forEach(([questionId, answerId]) => {
-                    const input = document.querySelector(`input[name="q_${questionId}"][value="${answerId}"]`);
+                    const qId = parseInt(questionId, 10);
+                    const aId = parseInt(answerId, 10);
+                    if (isNaN(qId) || isNaN(aId)) return;
+                    const input = document.querySelector(`input[name="q_${qId}"][value="${aId}"]`);
                     if (input) input.checked = true;
                 });
-                onAnswerChange();
+                onAnswerChange(true);
             } catch (e) {
                 console.error('Failed to restore exam answers:', e);
             }
@@ -485,8 +488,8 @@
                 }
 
                 const result = await response.json();
-                clearExamState();
                 showResults(result);
+                clearExamState();
             } catch (e) {
                 alert('Network error: ' + e.message);
                 document.getElementById('submitExamBtn').disabled = false;
