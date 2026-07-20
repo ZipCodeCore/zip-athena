@@ -177,6 +177,24 @@
                     renderExam();
                     return;
                 }
+                // Check for a previously saved in-progress exam
+                const activeKey = localStorage.getItem('activeExamStateKey');
+                if (activeKey) {
+                    const savedState = localStorage.getItem(activeKey);
+                    if (savedState) {
+                        try {
+                            const state = JSON.parse(savedState);
+                            if (state.examData && state.attemptId) {
+                                examData = state.examData;
+                                attemptId = state.attemptId;
+                                renderExam();
+                                return;
+                            }
+                        } catch (e) {
+                            console.error('Failed to parse saved exam state:', e);
+                        }
+                    }
+                }
                 showError('No exam token provided. Please use the link given to you by your instructor.');
                 return;
             }
@@ -339,6 +357,7 @@
                 container.appendChild(div);
             });
 
+            restoreExamAnswers();
             showPanel('examPanel');
         }
 
@@ -361,6 +380,64 @@
                 document.getElementById('submitWarning').textContent =
                     `${total - answered} question(s) not yet answered. You can still submit.`;
             }
+            saveExamState();
+        }
+
+        // ============ Exam State Persistence ============
+        function getExamStateKey() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+            if (token) return `examProgress_token_${token}`;
+            if (attemptId) return `examProgress_attempt_${attemptId}`;
+            return null;
+        }
+
+        function saveExamState() {
+            const key = getExamStateKey();
+            if (!key || !examData) return;
+            const answers = {};
+            examData.questions.forEach(q => {
+                const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                if (selected) {
+                    answers[String(q.id)] = parseInt(selected.value, 10);
+                }
+            });
+            try {
+                const state = {
+                    examData: examData,
+                    attemptId: attemptId,
+                    answers: answers,
+                    savedAt: Date.now()
+                };
+                localStorage.setItem(key, JSON.stringify(state));
+                localStorage.setItem('activeExamStateKey', key);
+            } catch (e) {
+                console.error('Failed to save exam state:', e);
+            }
+        }
+
+        function restoreExamAnswers() {
+            const key = getExamStateKey();
+            if (!key) return;
+            try {
+                const saved = localStorage.getItem(key);
+                if (!saved) return;
+                const state = JSON.parse(saved);
+                if (!state.answers || Object.keys(state.answers).length === 0) return;
+                Object.entries(state.answers).forEach(([questionId, answerId]) => {
+                    const input = document.querySelector(`input[name="q_${questionId}"][value="${answerId}"]`);
+                    if (input) input.checked = true;
+                });
+                onAnswerChange();
+            } catch (e) {
+                console.error('Failed to restore exam answers:', e);
+            }
+        }
+
+        function clearExamState() {
+            const key = getExamStateKey();
+            if (key) localStorage.removeItem(key);
+            localStorage.removeItem('activeExamStateKey');
         }
 
         // ============ Submit Exam ============
@@ -408,6 +485,7 @@
                 }
 
                 const result = await response.json();
+                clearExamState();
                 showResults(result);
             } catch (e) {
                 alert('Network error: ' + e.message);
