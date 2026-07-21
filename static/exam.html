@@ -140,6 +140,8 @@
         let examData = null;
         let attemptId = null;
 
+        const EXAM_STATE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
         function logout() {
             localStorage.removeItem('user');
             window.location.href = '/index.html';
@@ -176,6 +178,26 @@
                     attemptId = examData.attempt_id;
                     renderExam();
                     return;
+                }
+                // Check for a previously saved in-progress exam
+                const activeKey = localStorage.getItem('activeExamStateKey');
+                if (activeKey && /^examProgress_(token_|attempt_)[a-zA-Z0-9_-]+$/.test(activeKey)) {
+                    const metaRaw = localStorage.getItem(`${activeKey}_meta`);
+                    if (metaRaw) {
+                        try {
+                            const meta = JSON.parse(metaRaw);
+                            if (meta.examData && Array.isArray(meta.examData.questions) &&
+                                    meta.examData.questions.length > 0 &&
+                                    Number.isInteger(meta.attemptId) && meta.attemptId > 0) {
+                                examData = meta.examData;
+                                attemptId = meta.attemptId;
+                                renderExam();
+                                return;
+                            }
+                        } catch (e) {
+                            console.error('Failed to parse saved exam state:', e);
+                        }
+                    }
                 }
                 showError('No exam token provided. Please use the link given to you by your instructor.');
                 return;
@@ -339,10 +361,12 @@
                 container.appendChild(div);
             });
 
+            persistExamData();
+            restoreExamAnswers();
             showPanel('examPanel');
         }
 
-        function onAnswerChange() {
+        function onAnswerChange(skipSave) {
             if (!examData) return;
             const total = examData.questions.length;
             let answered = 0;
@@ -361,6 +385,88 @@
                 document.getElementById('submitWarning').textContent =
                     `${total - answered} question(s) not yet answered. You can still submit.`;
             }
+            if (!skipSave) saveExamState();
+        }
+
+        // ============ Exam State Persistence ============
+        function getExamStateKey() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
+            if (token) return `examProgress_token_${token}`;
+            if (attemptId) return `examProgress_attempt_${attemptId}`;
+            return null;
+        }
+
+        // Stores the full exam data once when the exam starts (not on every answer change)
+        function persistExamData() {
+            const key = getExamStateKey();
+            if (!key || !examData || !attemptId) return;
+            try {
+                localStorage.setItem(`${key}_meta`, JSON.stringify({
+                    examData,
+                    attemptId,
+                    savedAt: Date.now()
+                }));
+                localStorage.setItem('activeExamStateKey', key);
+            } catch (e) {
+                console.error('Failed to persist exam data:', e);
+            }
+        }
+
+        function saveExamState() {
+            const key = getExamStateKey();
+            if (!key || !examData) return;
+            const answers = {};
+            examData.questions.forEach(q => {
+                const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
+                if (selected) {
+                    answers[q.id] = parseInt(selected.value, 10);
+                }
+            });
+            try {
+                localStorage.setItem(`${key}_answers`, JSON.stringify({
+                    answers,
+                    savedAt: Date.now()
+                }));
+            } catch (e) {
+                console.error('Failed to save exam state:', e);
+            }
+        }
+
+        function restoreExamAnswers() {
+            const key = getExamStateKey();
+            if (!key) return;
+            try {
+                const saved = localStorage.getItem(`${key}_answers`);
+                if (!saved) return;
+                const state = JSON.parse(saved);
+                // Expire saved answers older than 7 days
+                if (state.savedAt && Number.isInteger(state.savedAt) &&
+                        (Date.now() - state.savedAt) > EXAM_STATE_EXPIRY_MS) {
+                    clearExamState();
+                    return;
+                }
+                if (!state.answers || Object.keys(state.answers).length === 0) return;
+                Object.entries(state.answers).forEach(([questionId, answerId]) => {
+                    const qId = parseInt(questionId, 10);
+                    const aId = parseInt(answerId, 10);
+                    if (isNaN(qId) || isNaN(aId)) return;
+                    const input = document.querySelector(`input[name="q_${qId}"][value="${aId}"]`);
+                    if (input) input.checked = true;
+                });
+                onAnswerChange(true);
+            } catch (e) {
+                console.error('Failed to restore exam answers:', e);
+            }
+        }
+
+        function clearExamState() {
+            const key = getExamStateKey();
+            if (key) {
+                localStorage.removeItem(`${key}_answers`);
+                localStorage.removeItem(`${key}_meta`);
+            }
+            localStorage.removeItem('activeExamStateKey');
         }
 
         // ============ Submit Exam ============
@@ -409,6 +515,7 @@
 
                 const result = await response.json();
                 showResults(result);
+                clearExamState();
             } catch (e) {
                 alert('Network error: ' + e.message);
                 document.getElementById('submitExamBtn').disabled = false;
