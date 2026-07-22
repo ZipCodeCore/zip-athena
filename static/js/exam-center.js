@@ -48,7 +48,7 @@ function renderPendingExams(exams) {
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <strong>${escapeHtml(e.exam_name)}</strong>
-                        <span class="badge bg-danger ms-2">${e.question_count} questions</span>
+                        <span class="badge bg-secondary ms-2">${e.question_count} questions</span>
                         <br>
                         <small class="text-muted">Assigned: ${new Date(e.assigned_at).toLocaleDateString()}</small>
                         <br>
@@ -84,10 +84,12 @@ function renderSubmittedExams(exams) {
         const scoreClass = scoreNum >= 80 ? 'bg-success' : scoreNum >= 60 ? 'bg-warning' : 'bg-danger';
         const completedDate = e.completed_at ? new Date(e.completed_at).toLocaleString() : 'Unknown';
 
-        // Link directly with attempt_id when available for reliability
-        const reviewLink = e.attempt_id
-            ? `/exam-review.html?attempt_id=${e.attempt_id}&user_id=${user.id}`
-            : `/exam-review.html?exam_id=${e.exam_id}&user_id=${user.id}`;
+        // Only show View Submission link when attempt_id is available
+        const viewSubmissionHtml = e.attempt_id
+            ? `<a href="/exam-review.html?attempt_id=${e.attempt_id}&user_id=${user.id}" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-eye"></i> View Submission
+               </a>`
+            : '';
 
         html += `
             <div class="list-group-item">
@@ -103,9 +105,7 @@ function renderSubmittedExams(exams) {
                         <small class="text-muted ms-2">(${e.correct_answers}/${e.total_questions} correct)</small>
                     </div>
                     <div class="d-flex flex-column gap-2 align-items-end">
-                        <a href="${reviewLink}" class="btn btn-outline-primary btn-sm">
-                            <i class="bi bi-eye"></i> View Submission
-                        </a>
+                        ${viewSubmissionHtml}
                         <button class="btn btn-outline-danger btn-sm"
                             data-exam-id="${e.exam_id}"
                             data-token="${escapeHtml(e.access_token)}"

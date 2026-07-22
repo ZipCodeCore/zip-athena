@@ -402,13 +402,6 @@ async function loadAssignedExamsBadge() {
             badge.textContent = pending;
             badge.style.display = 'inline-block';
         }
-
-        // Keep old badge in sync for any leftover code references
-        const oldBadge = document.getElementById('assignedExamsBadge');
-        if (pending > 0 && oldBadge) {
-            oldBadge.textContent = pending;
-            oldBadge.style.display = 'inline-block';
-        }
     } catch (error) {
         console.error('Error loading assigned exams badge:', error);
     }
