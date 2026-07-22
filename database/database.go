@@ -2963,6 +2963,8 @@ func (db *InMemoryDB) GetAssignedExamsForUser(userID int) ([]*models.ExamInfo, e
 		}
 		if bestAttempt != nil {
 			info.CompletedAt = bestAttempt.CompletedAt
+			aid := bestAttempt.ID
+			info.AttemptID = &aid
 			ca := bestAttempt.CorrectAnswers
 			info.CorrectAnswers = &ca
 			tq := bestAttempt.TotalQuestions
@@ -3077,16 +3079,24 @@ func (db *InMemoryDB) GetExamStatus(examID int) (*models.ExamStatus, error) {
 			AssignedAt: a.AssignedAt,
 		}
 		// Find most recent completed attempt
+		var bestAttemptID int
 		for _, att := range db.examAttempts {
 			if att.ExamID == examID && att.UserID == a.UserID && att.CompletedAt != nil {
-				r.CompletedAt = att.CompletedAt
-				ca := att.CorrectAnswers
-				r.CorrectAnswers = &ca
-				tq := att.TotalQuestions
-				r.TotalQuestions = &tq
-				s := att.Score
-				r.Score = &s
+				if bestAttemptID == 0 || att.ID > bestAttemptID {
+					bestAttemptID = att.ID
+					r.CompletedAt = att.CompletedAt
+					ca := att.CorrectAnswers
+					r.CorrectAnswers = &ca
+					tq := att.TotalQuestions
+					r.TotalQuestions = &tq
+					s := att.Score
+					r.Score = &s
+				}
 			}
+		}
+		if bestAttemptID > 0 {
+			aid := bestAttemptID
+			r.AttemptID = &aid
 		}
 		status.StudentResults = append(status.StudentResults, r)
 	}

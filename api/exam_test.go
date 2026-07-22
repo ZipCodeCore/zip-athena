@@ -616,3 +616,90 @@ func TestUnassignExamFromUserHandler_NotFound(t *testing.T) {
 		t.Errorf("Expected status 404, got %d", w.Code)
 	}
 }
+
+func TestGetExamSubmissionHandler(t *testing.T) {
+	db, admin, student := setupExamDB(t)
+	handler := NewHandler(db)
+
+	questions, _ := db.ListQuestions()
+	qIDs := []int{questions[0].ID}
+
+	exam := &models.Exam{
+		Name: "Submission Exam", Categories: []string{"java"}, DifficultyLevels: []int{1, 2, 3},
+		QuestionIDs: qIDs, QuestionCount: 1, AccessToken: "submissiontoken",
+		CreatedBy: admin.ID, CreatedAt: time.Now(),
+	}
+	db.CreateExam(exam)
+	db.AssignExamToUser(exam.ID, student.ID, admin.ID)
+
+	// Create and submit an attempt
+	attempt := &models.ExamAttempt{
+		ExamID: exam.ID, UserID: student.ID, StartedAt: time.Now(),
+		TotalQuestions: 1, Answers: map[string]int{}, QuestionResults: map[string]bool{},
+	}
+	db.CreateExamAttempt(attempt)
+
+	answers, _ := db.GetAnswersByQuestion(questions[0].ID)
+	var correctAnswerID int
+	for _, a := range answers {
+		if a.IsCorrect {
+			correctAnswerID = a.ID
+			break
+		}
+	}
+	db.SubmitExamAttempt(attempt.ID, map[string]int{fmt.Sprintf("%d", questions[0].ID): correctAnswerID})
+
+	t.Run("student can view own submission", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet,
+			fmt.Sprintf("/exam/submission?attempt_id=%d&user_id=%d", attempt.ID, student.ID), nil)
+		w := httptest.NewRecorder()
+		handler.GetExamSubmissionHandler(w, req)
+		if w.Code != http.StatusOK {
+			t.Fatalf("Expected 200, got %d: %s", w.Code, w.Body.String())
+		}
+		var result map[string]interface{}
+		json.NewDecoder(w.Body).Decode(&result)
+		if result["exam_name"] != "Submission Exam" {
+			t.Errorf("Expected exam_name 'Submission Exam', got %v", result["exam_name"])
+		}
+		qs, ok := result["questions"].([]interface{})
+		if !ok || len(qs) == 0 {
+			t.Fatal("Expected questions in response")
+		}
+	})
+
+	t.Run("admin can view any submission", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet,
+			fmt.Sprintf("/exam/submission?attempt_id=%d&user_id=%d", attempt.ID, admin.ID), nil)
+		w := httptest.NewRecorder()
+		handler.GetExamSubmissionHandler(w, req)
+		if w.Code != http.StatusOK {
+			t.Fatalf("Expected 200, got %d: %s", w.Code, w.Body.String())
+		}
+	})
+
+	t.Run("other student cannot view", func(t *testing.T) {
+		other := &models.User{Username: "other", Email: "other@test.com", IsAdmin: false}
+		db.CreateUser(other)
+		req := httptest.NewRequest(http.MethodGet,
+			fmt.Sprintf("/exam/submission?attempt_id=%d&user_id=%d", attempt.ID, other.ID), nil)
+		w := httptest.NewRecorder()
+		handler.GetExamSubmissionHandler(w, req)
+		if w.Code != http.StatusForbidden {
+			t.Errorf("Expected 403, got %d", w.Code)
+		}
+	})
+
+	t.Run("attempt_id includes attempt_id in status", func(t *testing.T) {
+		status, err := db.GetExamStatus(exam.ID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if len(status.StudentResults) == 0 {
+			t.Fatal("Expected at least one student result")
+		}
+		if status.StudentResults[0].AttemptID == nil {
+			t.Error("Expected AttemptID to be set in ExamStudentResult after submission")
+		}
+	})
+}
