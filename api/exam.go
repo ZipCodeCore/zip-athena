@@ -600,7 +600,7 @@ func (h *Handler) GetExamSubmissionHandler(w http.ResponseWriter, r *http.Reques
 	})
 }
 
-
+// GetAvailableExamCategoriesHandler handles GET /instructor/exams/categories
 // Returns all distinct topic categories available in the database.
 func (h *Handler) GetAvailableExamCategoriesHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
