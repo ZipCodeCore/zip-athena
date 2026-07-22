@@ -274,7 +274,7 @@ func (db *SQLiteDB) GetAssignedExamsForUser(userID int) ([]*models.ExamInfo, err
 	query := `
 		SELECT ea.id, ea.exam_id, ea.user_id, ea.assigned_at, ea.assigned_by,
 		       e.name, e.question_count, e.access_token,
-		       att.completed_at, att.correct_answers, att.total_questions, att.score
+		       att.id, att.completed_at, att.correct_answers, att.total_questions, att.score
 		FROM exam_assignments ea
 		JOIN exams e ON ea.exam_id = e.id
 		LEFT JOIN exam_attempts att ON att.exam_id = e.id
@@ -296,6 +296,7 @@ func (db *SQLiteDB) GetAssignedExamsForUser(userID int) ([]*models.ExamInfo, err
 	var result []*models.ExamInfo
 	for rows.Next() {
 		info := &models.ExamInfo{}
+		var attemptID sql.NullInt64
 		var completedAt sql.NullTime
 		var correctAnswers, totalQuestions sql.NullInt64
 		var score sql.NullFloat64
@@ -303,12 +304,16 @@ func (db *SQLiteDB) GetAssignedExamsForUser(userID int) ([]*models.ExamInfo, err
 		if err := rows.Scan(
 			&info.ID, &info.ExamID, &info.UserID, &info.AssignedAt, &info.AssignedBy,
 			&info.ExamName, &info.QuestionCount, &info.AccessToken,
-			&completedAt, &correctAnswers, &totalQuestions, &score,
+			&attemptID, &completedAt, &correctAnswers, &totalQuestions, &score,
 		); err != nil {
 			return nil, err
 		}
 		if completedAt.Valid {
 			info.CompletedAt = &completedAt.Time
+			if attemptID.Valid {
+				aid := int(attemptID.Int64)
+				info.AttemptID = &aid
+			}
 			if correctAnswers.Valid {
 				ca := int(correctAnswers.Int64)
 				info.CorrectAnswers = &ca
@@ -445,7 +450,7 @@ func (db *SQLiteDB) GetExamStatus(examID int) (*models.ExamStatus, error) {
 
 	query := `
 		SELECT u.id, u.username, ea.assigned_at,
-		       att.completed_at, att.correct_answers, att.total_questions, att.score
+		       att.id, att.completed_at, att.correct_answers, att.total_questions, att.score
 		FROM exam_assignments ea
 		JOIN users u ON ea.user_id = u.id
 		LEFT JOIN exam_attempts att ON att.exam_id = ea.exam_id
@@ -466,18 +471,23 @@ func (db *SQLiteDB) GetExamStatus(examID int) (*models.ExamStatus, error) {
 
 	for rows.Next() {
 		r := models.ExamStudentResult{}
+		var attemptID sql.NullInt64
 		var completedAt sql.NullTime
 		var correctAnswers, totalQuestions sql.NullInt64
 		var score sql.NullFloat64
 
 		if err := rows.Scan(
 			&r.UserID, &r.Username, &r.AssignedAt,
-			&completedAt, &correctAnswers, &totalQuestions, &score,
+			&attemptID, &completedAt, &correctAnswers, &totalQuestions, &score,
 		); err != nil {
 			return nil, err
 		}
 		if completedAt.Valid {
 			r.CompletedAt = &completedAt.Time
+			if attemptID.Valid {
+				aid := int(attemptID.Int64)
+				r.AttemptID = &aid
+			}
 			if correctAnswers.Valid {
 				ca := int(correctAnswers.Int64)
 				r.CorrectAnswers = &ca

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a3a5c">
+    <link rel="manifest" href="/manifest.json">
+    <title>Exam Review - Athena</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/classic.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .answer-option {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border: 1px solid transparent;
+        }
+        .answer-selected-correct {
+            background-color: #d1e7dd;
+            border-color: #0f5132;
+        }
+        .answer-selected-wrong {
+            background-color: #f8d7da;
+            border-color: #842029;
+        }
+        .answer-correct-not-selected {
+            background-color: #d1e7dd;
+            border-color: #0f5132;
+            opacity: 0.7;
+        }
+        .answer-neutral {
+            background-color: var(--bs-body-bg, #f8f9fa);
+            border-color: #dee2e6;
+        }
+        .question-card.correct-card {
+            border-left: 4px solid #198754;
+        }
+        .question-card.wrong-card {
+            border-left: 4px solid #dc3545;
+        }
+        .question-number {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand mb-0" href="/dashboard.html">
+                    <img src="/images/logo.png" alt="Athena Logo" style="height: 24px; margin-right: 8px;"><strong>Athena</strong> <span class="badge bg-danger">(Beta-1)</span>
+                </a>
+                <div class="form-check form-switch navbar-theme-switch ms-2">
+                    <input class="form-check-input theme-toggle" type="checkbox" id="themeToggle" aria-label="Toggle dark mode">
+                    <label class="form-check-label text-white small" for="themeToggle">Dark</label>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <span class="navbar-text text-white me-3" id="userDisplay"></span>
+                    <a href="/exam-center.html" class="btn btn-sm btn-outline-light me-2" id="examCenterLink">← Exam Center</a>
+                    <a href="/dashboard.html" class="btn btn-sm btn-outline-light me-2">Dashboard</a>
+                    <button class="btn btn-sm btn-outline-light" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+
+        <!-- Loading Panel -->
+        <div id="loadingPanel" class="text-center mt-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-3 text-muted">Loading submission...</p>
+        </div>
+
+        <!-- Error Panel -->
+        <div id="errorPanel" style="display:none;">
+            <div class="card text-center border-danger" style="max-width: 500px; margin: auto; margin-top: 80px;">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Error</h5>
+                </div>
+                <div class="card-body">
+                    <p id="errorMsg">An error occurred loading the submission.</p>
+                    <a href="/exam-center.html" class="btn btn-secondary">Back to Exam Center</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submission Review Panel -->
+        <div id="reviewPanel" style="display:none;">
+            <!-- Summary Card -->
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0"><i class="bi bi-clipboard-check"></i> <span id="examNameTitle">Exam Review</span></h4>
+                            <span class="badge bg-secondary" id="completedAtBadge"></span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="card bg-light h-100">
+                                        <div class="card-body py-2">
+                                            <h6 class="card-title text-muted small">Score</h6>
+                                            <h2 class="mb-0" id="scoreDisplay">—</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light h-100">
+                                        <div class="card-body py-2">
+                                            <h6 class="card-title text-muted small">Correct</h6>
+                                            <h2 class="mb-0 text-success" id="correctDisplay">—</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light h-100">
+                                        <div class="card-body py-2">
+                                            <h6 class="card-title text-muted small">Incorrect</h6>
+                                            <h2 class="mb-0 text-danger" id="incorrectDisplay">—</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light h-100">
+                                        <div class="card-body py-2">
+                                            <h6 class="card-title text-muted small">Total Questions</h6>
+                                            <h2 class="mb-0" id="totalDisplay">—</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions -->
+            <div id="questionsReview"></div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/exam-review.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/sw.js");
+        }
+    </script>
+</body>
+</html>

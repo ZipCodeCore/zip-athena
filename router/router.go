@@ -65,6 +65,7 @@ func New(h *api.Handler) *chi.Mux {
 	r.Get("/assigned-exams", h.GetAssignedExamsHandler)
 	r.Post("/exam/start", h.StartExamHandler)
 	r.Post("/exam/submit", h.SubmitExamHandler)
+	r.Get("/exam/submission", h.GetExamSubmissionHandler)
 
 	r.Route("/quizzes", func(r chi.Router) {
 		r.Get("/", h.GetQuizHandler)

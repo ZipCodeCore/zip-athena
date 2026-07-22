@@ -391,10 +391,13 @@ async function loadAssignedExamsBadge() {
         const exams = await response.json();
         if (!exams || exams.length === 0) return;
 
-        document.getElementById('assignedExamsBtn').style.display = 'inline-block';
+        // Show Exam Center link whenever there are any exams
+        document.getElementById('examCenterBtn').style.display = 'inline-block';
+        // Hide old inline button (superseded by Exam Center page)
+        document.getElementById('assignedExamsBtn').style.display = 'none';
 
         const pending = exams.filter(e => !e.completed_at).length;
-        const badge = document.getElementById('assignedExamsBadge');
+        const badge = document.getElementById('examCenterBadge');
         if (pending > 0) {
             badge.textContent = pending;
             badge.style.display = 'inline-block';

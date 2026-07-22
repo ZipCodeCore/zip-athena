@@ -482,6 +482,7 @@ type ExamStudentResult struct {
 	Score          *float64   `json:"score,omitempty"`
 	CorrectAnswers *int       `json:"correct_answers,omitempty"`
 	TotalQuestions *int       `json:"total_questions,omitempty"`
+	AttemptID      *int       `json:"attempt_id,omitempty"`
 }
 
 // ExamStatus is the instructor view of an exam and all student results
@@ -502,6 +503,7 @@ type ExamInfo struct {
 	Score          *float64   `json:"score,omitempty"`
 	CorrectAnswers *int       `json:"correct_answers,omitempty"`
 	TotalQuestions *int       `json:"total_questions,omitempty"`
+	AttemptID      *int       `json:"attempt_id,omitempty"`
 }
 
 // FlagReason constants (Phase 5)

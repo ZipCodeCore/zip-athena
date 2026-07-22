@@ -476,6 +476,130 @@ func (h *Handler) SubmitExamHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// GetExamSubmissionHandler handles GET /exam/submission?attempt_id={id}&user_id={id}
+// Returns the full detail of a submitted exam attempt (questions, answers, results).
+// The requesting user must either own the attempt or be an admin.
+func (h *Handler) GetExamSubmissionHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	attemptIDStr := r.URL.Query().Get("attempt_id")
+	attemptID, err := strconv.Atoi(attemptIDStr)
+	if err != nil || attemptID <= 0 {
+		http.Error(w, "Invalid attempt_id", http.StatusBadRequest)
+		return
+	}
+
+	userIDStr := r.URL.Query().Get("user_id")
+	userID, err := strconv.Atoi(userIDStr)
+	if err != nil || userID <= 0 {
+		http.Error(w, "Invalid user_id", http.StatusBadRequest)
+		return
+	}
+
+	attempt, err := h.db.GetExamAttempt(attemptID)
+	if err != nil {
+		if err == database.ErrNotFound {
+			http.Error(w, "Attempt not found", http.StatusNotFound)
+			return
+		}
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get exam attempt")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Allow access if the requesting user owns the attempt or is an admin
+	if attempt.UserID != userID {
+		requestingUser, err := h.db.GetUser(userID)
+		if err != nil || !requestingUser.IsAdmin {
+			http.Error(w, "Forbidden", http.StatusForbidden)
+			return
+		}
+	}
+
+	exam, err := h.db.GetExam(attempt.ExamID)
+	if err != nil {
+		h.logger.WithContext(r.Context()).WithError(err).Error("Failed to get exam for submission")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	type submissionAnswer struct {
+		ID         int    `json:"id"`
+		AnswerText string `json:"answer_text"`
+		IsCorrect  bool   `json:"is_correct"`
+	}
+	type submissionQuestion struct {
+		ID               int                `json:"id"`
+		QuestionText     string             `json:"question_text"`
+		Category         string             `json:"category"`
+		Difficulty       int                `json:"difficulty"`
+		SelectedAnswerID int                `json:"selected_answer_id"`
+		IsCorrect        bool               `json:"is_correct"`
+		Answers          []submissionAnswer `json:"answers"`
+	}
+
+	questions := make([]submissionQuestion, 0, len(exam.QuestionIDs))
+	for _, qid := range exam.QuestionIDs {
+		q, err := h.db.GetQuestion(qid)
+		if err != nil {
+			continue
+		}
+		answers, err := h.db.GetAnswersByQuestion(qid)
+		if err != nil {
+			continue
+		}
+
+		categoryLabel := ""
+		if topic, err := h.db.GetTopic(q.TopicID); err == nil {
+			categoryLabel = strings.TrimSpace(topic.Name)
+			if categoryLabel == "" {
+				categoryLabel = strings.TrimSpace(topic.Category)
+			}
+		}
+		if categoryLabel == "" && len(q.Tags) > 0 {
+			categoryLabel = strings.TrimSpace(q.Tags[0])
+		}
+
+		key := itoa(qid)
+		selectedAnswerID := attempt.Answers[key]
+		isCorrect := attempt.QuestionResults[key]
+
+		sas := make([]submissionAnswer, len(answers))
+		for i, a := range answers {
+			sas[i] = submissionAnswer{
+				ID:         a.ID,
+				AnswerText: a.AnswerText,
+				IsCorrect:  a.IsCorrect,
+			}
+		}
+
+		questions = append(questions, submissionQuestion{
+			ID:               q.ID,
+			QuestionText:     q.QuestionText,
+			Category:         categoryLabel,
+			Difficulty:       q.Difficulty,
+			SelectedAnswerID: selectedAnswerID,
+			IsCorrect:        isCorrect,
+			Answers:          sas,
+		})
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"attempt_id":       attempt.ID,
+		"exam_id":          attempt.ExamID,
+		"exam_name":        exam.Name,
+		"completed_at":     attempt.CompletedAt,
+		"score":            attempt.Score,
+		"correct_answers":  attempt.CorrectAnswers,
+		"total_questions":  attempt.TotalQuestions,
+		"questions":        questions,
+	})
+}
+
 // GetAvailableExamCategoriesHandler handles GET /instructor/exams/categories
 // Returns all distinct topic categories available in the database.
 func (h *Handler) GetAvailableExamCategoriesHandler(w http.ResponseWriter, r *http.Request) {

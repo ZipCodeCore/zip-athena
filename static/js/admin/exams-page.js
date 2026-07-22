@@ -383,13 +383,16 @@ async function showExamDetail(examId, examName) {
             const correct = result.correct_answers !== undefined && result.correct_answers !== null
                 ? `${result.correct_answers} / ${result.total_questions}`
                 : '—';
+            const viewSubmissionBtn = result.attempt_id
+                ? `<a href="/exam-review.html?attempt_id=${result.attempt_id}&user_id=${userId}" class="btn btn-sm btn-outline-primary me-1" target="_blank">View Submission</a>`
+                : '';
             html += `<tr>
                 <td>${escapeHtml(result.username)}</td>
                 <td>${new Date(result.assigned_at).toLocaleDateString()}</td>
                 <td>${completed}</td>
                 <td>${scoreHtml}</td>
                 <td>${correct}</td>
-                <td><button class="btn btn-sm btn-outline-danger" data-exam-id="${examId}" data-user-id="${result.user_id}" data-username="${encodeURIComponent(result.username)}" onclick="unassignExamFromUser(parseInt(this.dataset.examId,10), parseInt(this.dataset.userId,10), decodeURIComponent(this.dataset.username))">Unassign</button></td>
+                <td>${viewSubmissionBtn}<button class="btn btn-sm btn-outline-danger" data-exam-id="${examId}" data-user-id="${result.user_id}" data-username="${encodeURIComponent(result.username)}" onclick="unassignExamFromUser(parseInt(this.dataset.examId,10), parseInt(this.dataset.userId,10), decodeURIComponent(this.dataset.username))">Unassign</button></td>
             </tr>`;
         });
         html += '</tbody></table></div>';
